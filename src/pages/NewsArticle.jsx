@@ -127,7 +127,7 @@ export default function NewsArticle() {
       </div>
 
       {article.image_url && (
-        <img src={article.image_url} alt="" className="w-full aspect-[16/9] object-cover rounded-2xl mt-6" />
+        <img src={article.image_url} alt={article.title} className="w-full aspect-[16/9] object-cover rounded-2xl mt-6" />
       )}
 
       <div className="mt-8">

@@ -133,7 +133,7 @@ export default function AIAgentMastery() {
       >
         <div className="relative max-w-3xl mx-auto">
           <m.span
-            initial={{ opacity: 0, y: -10 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             className="inline-flex items-center gap-2 bg-white dark:bg-[#181818] border-[1.5px] border-border text-brand font-bold text-[12.5px] px-4 py-2 rounded-full shadow-[0_3px_10px_rgba(124,58,237,.1)]"
           >
@@ -141,7 +141,7 @@ export default function AIAgentMastery() {
           </m.span>
 
           <m.h1
-            initial={{ opacity: 0, y: 16 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
             className="font-display font-extrabold text-[36px] sm:text-[54px] leading-[1.05] text-ink tracking-[-1.5px] mt-5"
@@ -150,7 +150,7 @@ export default function AIAgentMastery() {
           </m.h1>
 
           <m.p
-            initial={{ opacity: 0, y: 16 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
             className="text-[17px] leading-relaxed text-body mt-5 max-w-lg mx-auto"
@@ -160,7 +160,7 @@ export default function AIAgentMastery() {
           </m.p>
 
           <m.div
-            initial={{ opacity: 0, y: 16 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
             className="flex flex-col sm:flex-row gap-3.5 items-center justify-center mt-8"

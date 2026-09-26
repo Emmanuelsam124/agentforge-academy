@@ -194,7 +194,7 @@ export default function Welcome() {
 
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 grid lg:grid-cols-2 gap-12 items-center">
         {/* Left: pitch */}
-        <m.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
+        <m.div initial={false} animate={{ opacity: 1, x: 0 }}>
           <div className="flex items-center gap-3 mb-6">
             <img src="/logo.jpeg" alt="Social Dev Technologies" className="w-12 h-12 object-contain rounded-lg" />
             <div>
@@ -229,7 +229,7 @@ export default function Welcome() {
 
         {/* Right: auth form */}
         <m.div
-          initial={{ opacity: 0, x: 20 }}
+          initial={false}
           animate={{ opacity: 1, x: 0 }}
           className="rounded-[22px] border-[1.5px] border-border-soft bg-white dark:bg-[#181818] shadow-[0_20px_44px_-16px_rgba(124,58,237,.18)] p-6 sm:p-8"
         >

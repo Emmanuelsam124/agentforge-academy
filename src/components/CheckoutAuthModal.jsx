@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { X, Loader2, AlertCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { setRememberMe } from '../lib/supabaseClient';
@@ -17,8 +17,8 @@ export default function CheckoutAuthModal({ open, onClose, onAuthenticated }) {
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-
-  if (!open) return null;
+  const modalRef = useRef(null);
+  const headingId = 'checkout-auth-modal-heading';
 
   const reset = () => {
     setStep('email');
@@ -32,6 +32,43 @@ export default function CheckoutAuthModal({ open, onClose, onAuthenticated }) {
     reset();
     onClose();
   };
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e) => e.key === 'Escape' && handleClose();
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
+  useEffect(() => {
+    if (!open || !modalRef.current) return;
+    // The email/code input already carries autoFocus, so only step in here
+    // if nothing inside the modal ended up focused (e.g. autoFocus didn't
+    // fire) — otherwise this would yank focus off that input.
+    if (!modalRef.current.contains(document.activeElement)) {
+      modalRef.current.focus();
+    }
+  }, [open]);
+
+  const handleTabTrap = (e) => {
+    if (e.key !== 'Tab' || !modalRef.current) return;
+    const focusable = modalRef.current.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  };
+
+  if (!open) return null;
 
   const handleSendCode = async (e) => {
     e?.preventDefault();
@@ -81,8 +118,14 @@ export default function CheckoutAuthModal({ open, onClose, onAuthenticated }) {
       onClick={handleClose}
     >
       <div
-        className="relative w-full max-w-sm bg-white dark:bg-[#181818] rounded-[22px] p-6 sm:p-7 shadow-[0_30px_70px_-20px_rgba(20,10,50,.5)]"
+        ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={headingId}
+        tabIndex={-1}
+        className="relative w-full max-w-sm bg-white dark:bg-[#181818] rounded-[22px] p-6 sm:p-7 shadow-[0_30px_70px_-20px_rgba(20,10,50,.5)] focus:outline-none"
         onClick={(e) => e.stopPropagation()}
+        onKeyDown={handleTabTrap}
       >
         <button
           onClick={handleClose}
@@ -100,7 +143,7 @@ export default function CheckoutAuthModal({ open, onClose, onAuthenticated }) {
 
         {step === 'email' ? (
           <>
-            <h2 className="font-display font-extrabold text-xl text-ink mb-1.5 pr-6">Almost there</h2>
+            <h2 id={headingId} className="font-display font-extrabold text-xl text-ink mb-1.5 pr-6">Almost there</h2>
             <p className="text-[13.5px] text-body mb-5">
               Enter your email — we'll send a 6-digit code to confirm it's you, then take you straight to payment.
             </p>
@@ -126,7 +169,7 @@ export default function CheckoutAuthModal({ open, onClose, onAuthenticated }) {
           </>
         ) : (
           <>
-            <h2 className="font-display font-extrabold text-xl text-ink mb-1.5 pr-6">Check your email</h2>
+            <h2 id={headingId} className="font-display font-extrabold text-xl text-ink mb-1.5 pr-6">Check your email</h2>
             <p className="text-[13.5px] text-body mb-5">
               Sent a 6-digit code to <strong className="text-ink">{email}</strong>. Enter it below to continue.
             </p>

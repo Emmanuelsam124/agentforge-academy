@@ -201,7 +201,7 @@ export default function WhatsAppBotGuide() {
         />
         <div className="relative max-w-3xl mx-auto">
           <m.span
-            initial={{ opacity: 0, y: -10 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             className="inline-flex items-center gap-2 bg-white dark:bg-[#181818] border-[1.5px] border-border text-brand font-bold text-[12.5px] px-4 py-2 rounded-full shadow-[0_3px_10px_rgba(124,58,237,.1)]"
           >
@@ -209,7 +209,7 @@ export default function WhatsAppBotGuide() {
           </m.span>
 
           <m.h1
-            initial={{ opacity: 0, y: 16 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
             className="font-display font-extrabold text-[34px] sm:text-[46px] leading-[1.08] text-ink tracking-[-1px] mt-5"
@@ -218,7 +218,7 @@ export default function WhatsAppBotGuide() {
           </m.h1>
 
           <m.p
-            initial={{ opacity: 0, y: 16 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
             className="text-[16px] leading-relaxed text-body mt-5 max-w-xl"
@@ -229,7 +229,7 @@ export default function WhatsAppBotGuide() {
           </m.p>
 
           <m.div
-            initial={{ opacity: 0 }}
+            initial={false}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
             className="flex flex-wrap gap-4 mt-6 text-[13px] text-body font-semibold"

@@ -1,9 +1,9 @@
-import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { m } from 'framer-motion';
 import { Hammer, Briefcase, Wallet, Users } from 'lucide-react';
 import { agents } from '../data/agents';
 import { departments, isVisibleToPublic } from '../data/departments';
+import { usePageSeo } from '../hooks/usePageSeo';
 
 const publicAgents = agents.filter((a) => isVisibleToPublic(a.difficulty));
 const realDepartments = departments.filter((d) => d.id !== 'all');
@@ -33,40 +33,15 @@ const PRINCIPLES = [
 ];
 
 export default function About() {
-  useEffect(() => {
-    const prevTitle = document.title;
-    const metaDesc = document.querySelector('meta[name="description"]');
-    const prevDesc = metaDesc?.getAttribute('content');
-
-    document.title = 'About — Social Dev Technologies';
-    if (metaDesc) {
-      metaDesc.setAttribute(
-        'content',
-        'Why Social Dev Technologies teaches AI agent building through hands-on sessions instead of passive video courses — our approach, principles, and who it\'s for.'
-      );
-    }
-
-    let canonicalEl = document.querySelector('link[rel="canonical"]');
-    const hadCanonical = Boolean(canonicalEl);
-    const prevCanonical = canonicalEl?.getAttribute('href');
-    if (!canonicalEl) {
-      canonicalEl = document.createElement('link');
-      canonicalEl.setAttribute('rel', 'canonical');
-      document.head.appendChild(canonicalEl);
-    }
-    canonicalEl.setAttribute('href', 'https://socialdevtechnologies.com/about');
-
-    return () => {
-      document.title = prevTitle;
-      if (metaDesc && prevDesc) metaDesc.setAttribute('content', prevDesc);
-      if (hadCanonical && prevCanonical) canonicalEl.setAttribute('href', prevCanonical);
-      else canonicalEl.remove();
-    };
-  }, []);
+  usePageSeo({
+    title: 'About — Social Dev Technologies',
+    description: 'Why Social Dev Technologies teaches AI agent building through hands-on sessions instead of passive video courses — our approach, principles, and who it\'s for.',
+    canonicalPath: '/about',
+  });
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
-      <m.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
+      <m.div initial={false} animate={{ opacity: 1, y: 0 }}>
         <span className="inline-flex items-center gap-2 text-[13px] font-bold px-4 py-1.5 rounded-full bg-[#F3EBFF] dark:bg-brand/15 text-brand">
           About us
         </span>

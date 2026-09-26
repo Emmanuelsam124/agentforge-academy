@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { m } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
+import { usePageSeo } from '../hooks/usePageSeo';
 
 const FAQS = [
   {
@@ -49,36 +50,11 @@ const FAQS = [
 export default function FAQ() {
   const [openIndex, setOpenIndex] = useState(0);
 
-  useEffect(() => {
-    const prevTitle = document.title;
-    const metaDesc = document.querySelector('meta[name="description"]');
-    const prevDesc = metaDesc?.getAttribute('content');
-
-    document.title = 'FAQ — Social Dev Technologies';
-    if (metaDesc) {
-      metaDesc.setAttribute(
-        'content',
-        'Common questions about Social Dev Technologies — pricing, access, refunds, certificates, and what you need to get started building AI agents.'
-      );
-    }
-
-    let canonicalEl = document.querySelector('link[rel="canonical"]');
-    const hadCanonical = Boolean(canonicalEl);
-    const prevCanonical = canonicalEl?.getAttribute('href');
-    if (!canonicalEl) {
-      canonicalEl = document.createElement('link');
-      canonicalEl.setAttribute('rel', 'canonical');
-      document.head.appendChild(canonicalEl);
-    }
-    canonicalEl.setAttribute('href', 'https://socialdevtechnologies.com/faq');
-
-    return () => {
-      document.title = prevTitle;
-      if (metaDesc && prevDesc) metaDesc.setAttribute('content', prevDesc);
-      if (hadCanonical && prevCanonical) canonicalEl.setAttribute('href', prevCanonical);
-      else canonicalEl.remove();
-    };
-  }, []);
+  usePageSeo({
+    title: 'FAQ — Social Dev Technologies',
+    description: 'Common questions about Social Dev Technologies — pricing, access, refunds, certificates, and what you need to get started building AI agents.',
+    canonicalPath: '/faq',
+  });
 
   // FAQPage structured data — eligible for FAQ rich results in Google Search.
   useEffect(() => {
@@ -99,7 +75,7 @@ export default function FAQ() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
-      <m.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
+      <m.div initial={false} animate={{ opacity: 1, y: 0 }}>
         <span className="inline-flex items-center gap-2 text-[13px] font-bold px-4 py-1.5 rounded-full bg-[#F3EBFF] dark:bg-brand/15 text-brand">
           FAQ
         </span>
@@ -110,6 +86,7 @@ export default function FAQ() {
         <div className="flex flex-col gap-3">
           {FAQS.map((f, i) => {
             const open = openIndex === i;
+            const panelId = `faq-panel-${i}`;
             return (
               <div
                 key={f.q}
@@ -117,13 +94,15 @@ export default function FAQ() {
               >
                 <button
                   onClick={() => setOpenIndex(open ? -1 : i)}
+                  aria-expanded={open}
+                  aria-controls={panelId}
                   className="w-full flex items-center justify-between gap-4 px-5 py-4 text-left"
                 >
                   <span className="font-bold text-ink text-[15px]">{f.q}</span>
                   <ChevronDown className={`w-4 h-4 text-gray-400 flex-shrink-0 transition-transform ${open ? 'rotate-180' : ''}`} />
                 </button>
                 {open && (
-                  <p className="px-5 pb-4 text-sm leading-relaxed text-body">{f.a}</p>
+                  <p id={panelId} className="px-5 pb-4 text-sm leading-relaxed text-body">{f.a}</p>
                 )}
               </div>
             );

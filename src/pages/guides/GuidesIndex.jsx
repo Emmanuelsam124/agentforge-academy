@@ -112,7 +112,7 @@ export default function GuidesIndex() {
               className="group flex flex-col bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl overflow-hidden transition-all hover:border-brand/40 hover:shadow-[0_10px_28px_-8px_rgba(124,58,237,.18)]"
             >
               {g.image_url ? (
-                <img src={g.image_url} alt="" className="w-full aspect-[16/9] object-cover" loading="lazy" />
+                <img src={g.image_url} alt={g.title} className="w-full aspect-[16/9] object-cover" loading="lazy" />
               ) : (
                 <div className="w-full aspect-[16/9] bg-[#F3EBFF] dark:bg-white/5 flex items-center justify-center text-4xl">
                   {g.emoji}

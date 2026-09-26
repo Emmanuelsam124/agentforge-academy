@@ -156,7 +156,7 @@ export default function GuidePage() {
       {guide.image_url && (
         <img
           src={guide.image_url}
-          alt=""
+          alt={guide.title}
           className="w-full aspect-[16/9] object-cover rounded-2xl mt-6"
         />
       )}

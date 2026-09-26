@@ -90,7 +90,7 @@ export default function News() {
                 className="flex flex-col bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-[18px] overflow-hidden transition-all hover:border-brand/40 hover:shadow-[0_10px_28px_-8px_rgba(124,58,237,.18)]"
               >
                 {a.image_url ? (
-                  <img src={a.image_url} alt="" className="w-full aspect-[16/9] object-cover" loading="lazy" />
+                  <img src={a.image_url} alt={a.title} className="w-full aspect-[16/9] object-cover" loading="lazy" />
                 ) : (
                   <div className="w-full aspect-[16/9] bg-[#F3EBFF] dark:bg-white/5 flex items-center justify-center">
                     <Newspaper className="w-8 h-8 text-brand/40" />

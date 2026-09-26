@@ -32,6 +32,7 @@ const links = [
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState(null);
   const menuRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
@@ -87,8 +88,21 @@ export default function Navbar() {
         <nav className="hidden lg:flex items-center gap-6 ml-6 font-semibold text-[14.5px] text-[#4A4463] dark:text-[#B7AFC9] flex-shrink-0">
           {links.map((link) =>
             link.children ? (
-              <div key={link.label} className="relative group flex-shrink-0">
+              <div
+                key={link.label}
+                className="relative group flex-shrink-0"
+                onMouseEnter={() => setOpenDropdown(link.label)}
+                onMouseLeave={() => setOpenDropdown((cur) => (cur === link.label ? null : cur))}
+                onFocus={() => setOpenDropdown(link.label)}
+                onBlur={(e) => {
+                  if (!e.currentTarget.contains(e.relatedTarget)) {
+                    setOpenDropdown((cur) => (cur === link.label ? null : cur));
+                  }
+                }}
+              >
                 <button
+                  aria-haspopup="true"
+                  aria-expanded={openDropdown === link.label}
                   className={`flex items-center gap-1 whitespace-nowrap transition-colors ${
                     link.children.some((c) => location.pathname.startsWith(c.to)) ? 'text-brand' : 'hover:text-ink'
                   }`}
@@ -97,8 +111,11 @@ export default function Navbar() {
                   <ChevronDown className="w-3.5 h-3.5" />
                 </button>
                 {/* Hover-opened, but rendered in the DOM at all times so the
-                    links inside are always crawlable. */}
-                <div className="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity">
+                    links inside are always crawlable. group-focus-within
+                    reveals it when a link inside gets Tab focus, since
+                    opacity/visibility alone (hover-only) locked keyboard
+                    users out of ever seeing the menu open. */}
+                <div className="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-opacity">
                   <div className="w-44 bg-white dark:bg-[#141319] border border-[#EFE9FB] dark:border-[#232228] rounded-xl shadow-[0_16px_40px_-12px_rgba(30,20,60,.3)] py-1.5 overflow-hidden">
                     {link.children.map((child) => (
                       <NavLink
