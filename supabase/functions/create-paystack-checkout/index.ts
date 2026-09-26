@@ -53,11 +53,17 @@ const ALLOWED_ORIGIN_PATTERNS = [
   /^http:\/\/localhost:\d+$/,
 ];
 
+const CANONICAL_ORIGIN = 'https://socialdevtechnologies.com';
+
+function isAllowedOrigin(origin) {
+  return ALLOWED_ORIGIN_PATTERNS.some((p) => p.test(origin));
+}
+
 function corsHeadersFor(req) {
   const origin = req.headers.get('Origin') ?? '';
-  const allowed = ALLOWED_ORIGIN_PATTERNS.some((p) => p.test(origin));
+  const allowed = isAllowedOrigin(origin);
   return {
-    'Access-Control-Allow-Origin': allowed ? origin : 'https://socialdevtechnologies.com',
+    'Access-Control-Allow-Origin': allowed ? origin : CANONICAL_ORIGIN,
     'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     Vary: 'Origin',
@@ -101,6 +107,13 @@ serve(async (req) => {
   }
   const amountNaira = PRICES[plan];
 
+  // Never build the Paystack callback_url from an unvalidated client-supplied
+  // origin — that's an open redirect (Paystack would happily bounce the payer
+  // to any host we hand it after a real charge succeeds). Reuse the same
+  // allowlist/matching logic as CORS above, and fall back to the canonical
+  // production origin when redirectOrigin is missing or doesn't match.
+  const safeRedirectOrigin = isAllowedOrigin(redirectOrigin ?? '') ? redirectOrigin : CANONICAL_ORIGIN;
+
   // Embed the verified user id + plan in Paystack's metadata. Paystack
   // signs the whole webhook payload with our secret key, so when it comes
   // back we can trust this exactly as much as we trust our own signature
@@ -120,7 +133,7 @@ serve(async (req) => {
       currency: 'NGN',
       reference,
       metadata: { user_id: user.id, plan },
-      callback_url: `${redirectOrigin || ''}/dashboard`,
+      callback_url: `${safeRedirectOrigin}/dashboard`,
     }),
   });
 
