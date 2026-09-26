@@ -5,7 +5,7 @@ import { usePageSeo } from '../hooks/usePageSeo';
 const PAGES = {
   terms: {
     title: 'Terms of Service',
-    updated: 'July 2026',
+    updated: 'September 2026',
     sections: [
       {
         heading: '1. Acceptance of Terms',
@@ -20,8 +20,8 @@ const PAGES = {
         body: 'You must provide accurate information when creating an account. You are responsible for maintaining the security of your account credentials. You may not share your account with others.',
       },
       {
-        heading: '4. Payments & Subscriptions',
-        body: 'Pro subscriptions are billed monthly and can be cancelled at any time. Live class enrollments are one-time payments and are non-refundable after the cohort begins. BYU Pathway student discounts require a valid @byupathway.edu email address.',
+        heading: '4. Payments & Access',
+        body: 'Builder 1, Builder 2, and Pro are one-time payments that grant permanent access to the guides included in that tier — there is no recurring billing and nothing to cancel. Vibe Coding and AI Agent Mastery are live, instructor-led cohorts sold as one-time payments that grant 6 months of access from enrollment; these are non-refundable after the cohort begins.',
       },
       {
         heading: '5. Intellectual Property',
@@ -43,7 +43,7 @@ const PAGES = {
   },
   privacy: {
     title: 'Privacy Policy',
-    updated: 'July 2026',
+    updated: 'September 2026',
     sections: [
       {
         heading: '1. Information We Collect',
@@ -54,27 +54,23 @@ const PAGES = {
         body: 'We use your information to provide and improve the Platform, process payments, send account notifications, and inform admins of new registrations. We do not sell your personal data to third parties.',
       },
       {
-        heading: '3. BYU Pathway Email Addresses',
-        body: 'If you sign up with a @byupathway.edu email, we automatically flag your account for the student discount program. This flag is visible to Platform administrators only.',
-      },
-      {
-        heading: '4. Data Storage',
+        heading: '3. Data Storage',
         body: 'Your data is stored securely using Supabase, which uses industry-standard encryption. Payment processing is handled by Paystack — we do not store card details.',
       },
       {
-        heading: '5. Cookies',
+        heading: '4. Cookies',
         body: 'We use essential cookies for authentication (keeping you logged in). We do not use advertising or tracking cookies.',
       },
       {
-        heading: '6. Your Rights',
+        heading: '5. Your Rights',
         body: 'You may request deletion of your account and data at any time by emailing support@socialdevtechnologies.com. We will process requests within 30 days.',
       },
       {
-        heading: '7. Third-Party Services',
+        heading: '6. Third-Party Services',
         body: 'The Platform uses Supabase (authentication & database), Paystack (payment processing), and Resend (transactional email). Each has its own privacy policy.',
       },
       {
-        heading: '8. Contact',
+        heading: '7. Contact',
         body: 'For privacy concerns, contact us at support@socialdevtechnologies.com.',
       },
     ],
@@ -107,7 +103,7 @@ export default function Legal() {
   return (
     <div className="min-h-screen">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <m.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
+        <m.div initial={false} animate={{ opacity: 1, y: 0 }}>
           <div className="flex gap-4 mb-8 text-sm">
             <Link to="/legal/terms" className={`font-semibold transition-colors ${page === 'terms' ? 'text-ink border-b-2 border-brand pb-1' : 'text-body hover:text-ink'}`}>Terms of Service</Link>
             <Link to="/legal/privacy" className={`font-semibold transition-colors ${page === 'privacy' ? 'text-ink border-b-2 border-brand pb-1' : 'text-body hover:text-ink'}`}>Privacy Policy</Link>
