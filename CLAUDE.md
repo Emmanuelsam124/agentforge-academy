@@ -8,7 +8,7 @@ Supabase project ref: `qkrfpuckvymjpewcszgs`. Two other webhook functions exist 
 
 ## Access model
 
-**Since the 2026-09-22 repricing, new sales are permanent guide purchases**, not subscriptions: Builder 1 ₦5,000 (12 guides), Builder 2 ₦7,000 (13 guides), Pro ₦10,000 (both). `paystack-webhook` inserts one `guide_purchases` row per course_id in the tier (see `supabase/guide-purchases-setup.sql`). Prices live in `src/data/pricing.js`, `paystack-webhook` `PRICES`, `create-paystack-checkout`, and the WhatsApp bot's `knowledge-base.ts` — all four must move together. Vibe Coding (₦50,000) and AI Agent Mastery (₦19,999) are separate live cohorts with 6-month access.
+**Since the 2026-09-22 repricing, new sales are permanent guide purchases**, not subscriptions: Builder 1 ₦5,000 (12 guides), Builder 2 ₦7,000 (13 guides), Pro ₦10,000 (both). `paystack-webhook` inserts one `guide_purchases` row per course_id in the tier (see `supabase/guide-purchases-setup.sql`). Prices live in `src/data/pricing.js`, `paystack-webhook` `PRICES`, `create-paystack-checkout`, and the WhatsApp bot's `knowledge-base.ts` — all four must move together. Vibe Coding (₦50,000) and AI Agent Mastery (₦19,999) are separate live cohorts with 6-month access. AI Agents Live (added 2026-09-27) is a third, separate product: a 2-day workshop with only 7 days of post-workshop access and real seat-based scarcity pricing — see below.
 
 `entitlements` table (RLS: no client write, service-role/Edge-Function/admin-RPC only):
 - `builder1_expires_at` / `builder2_expires_at` — the old 6-month subscriptions, kept working for grandfathered subscribers only.
@@ -33,7 +33,18 @@ GRANT  EXECUTE ON FUNCTION public.<name>(<arg types>) TO authenticated;
 
 A correctly-locked function's ACL reads `postgres=X, authenticated=X, service_role=X` with no leading `=X/postgres` entry (that empty grantee is `PUBLIC`) and no `anon` entry — check by querying `aclexplode(proacl)`, not just by eyeballing `REVOKE ... FROM PUBLIC` in the migration. The guides-CMS and live-session RPCs shipped without any of this and were anonymously callable until 2026-08-19; the `is_admin()` guard did hold, so nothing was exposed, but they were relying on a single layer. Check with `get_advisors(type: "security")`.
 
-`get_certificate_by_id` is deliberately left callable by `anon` — the public `/verify/:id` page depends on it.
+`get_certificate_by_id` is deliberately left callable by `anon` — the public `/verify/:id` page depends on it. `agentslive_seats_taken()` (`supabase/agentslive-seat-pricing.sql`) is the same kind of deliberate exception: it returns only an integer count (no PII), explicitly granted to `anon` rather than revoked, so the AI Agents Live page can show a real "seats left" figure to a visitor who isn't logged in yet.
+
+## AI Agents Live — real seat-based pricing (added 2026-09-27)
+
+`/ai-agents-live` (`src/pages/AgentsLive.jsx`) is a standalone 2-day workshop product, plan key `agentslive`, entitlement column `entitlements.agentslive_expires_at` (7-day grant, not 182 like the other live cohorts — see `supabase/agents-live-setup.sql`). It's deliberately **not** the same product as AI Agent Mastery (₦19,999, 6-month) even though the two are easy to confuse by name.
+
+The scarcity pricing is real, not decorative copy: the first 100 *granted* `agentslive` payments are ₦10,000; every one after that is ₦15,000 (founder-confirmed threshold/prices). Three places implement this and must stay in sync:
+- `create-paystack-checkout` computes the actual charge from a live `count(*) from payments where plan='agentslive' and status='granted'` via `resolveAgentsLivePrice()` — this is what Paystack actually charges. On a failed count query it fails closed to ₦15,000 (the higher price), never silently under-charging.
+- `paystack-webhook`'s `resolvePlan()` accepts **both** ₦10,000 and ₦15,000 (see `MULTI_TIER_PRICES`) as valid for plan `agentslive` — every other plan still has exactly one valid price.
+- `AgentsLive.jsx` reads the same count via the public `agentslive_seats_taken()` RPC to display the current price and "X seats left" — this is a separate read from what checkout charges (a client-side display value, re-verified server-side at checkout), so there's an inherent, accepted race: the displayed price can theoretically go stale between page load and the moment someone clicks pay if the 100th seat sells in between.
+
+The workshop's countdown timer counts down to `cohort_schedule` (`tier='agentslive'`) `start_date` at a hardcoded 7:00 PM WAT (`AGENTS_LIVE_START_HOUR_WAT` in `src/data/pricing.js`) — registration is treated as closing when the workshop starts; there is no separate, earlier registration-close deadline configured.
 
 ## Recent incident — resolved 2026-08-05
 

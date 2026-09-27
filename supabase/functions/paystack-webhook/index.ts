@@ -37,9 +37,19 @@ const PRICES = {
   pro: 10000,
   vibecoding: 50000,
   aimastery: 19999,
-  agentslive: 10000,
+  agentslive: 10000, // early-bird price — see MULTI_TIER_PRICES below for the full valid range
 };
 const AMOUNT_TOLERANCE = 1;
+
+// agentslive is the one plan with real seat-based scarcity pricing
+// (founder-confirmed 2026-09-27, matching what create-paystack-checkout
+// actually charges): the first 100 granted payments are ₦10,000, everyone
+// after is ₦15,000. Both amounts must resolve to plan 'agentslive' here —
+// resolvePlan() checks every price in this list instead of the single
+// PRICES[plan] value for any plan present in this map.
+const MULTI_TIER_PRICES = {
+  agentslive: [10000, 15000],
+};
 
 // Paystack can add its own transaction fee on top of the amount we set at
 // checkout, if this account's "customer bears the fee" preference is on
@@ -203,21 +213,22 @@ function timingSafeEqual(a, b) {
   return diff === 0;
 }
 
-// Every plan now has a distinct, non-overlapping price (5000/7000/10000/
-// 19999/50000) — still trust the plan embedded in metadata at checkout
-// creation (see create-paystack-checkout) as the primary signal, but
-// verify its price matches before granting anything. Only fall back to
-// amount-only resolution for payments with no metadata (e.g. a manual
-// charge created directly in the Paystack dashboard), where 'pro' is the
-// only plan this fallback checks for.
+// Every plan has a distinct price EXCEPT agentslive's early-bird tier,
+// which deliberately matches 'pro' (10000) — still trust the plan embedded
+// in metadata at checkout creation (see create-paystack-checkout) as the
+// primary signal, but verify its price matches before granting anything.
+// Only fall back to amount-only resolution for payments with no metadata
+// (e.g. a manual charge created directly in the Paystack dashboard), where
+// 'pro' is the only plan this fallback checks for.
 function resolvePlan(metadataPlan, amountNaira, currency) {
   if (currency !== 'NGN') return null;
 
   const withinRange = (price) =>
     amountNaira >= price - AMOUNT_TOLERANCE && amountNaira <= price * FEE_CEILING_MULTIPLIER;
 
-  if (metadataPlan && Object.hasOwn(PRICES, metadataPlan) && withinRange(PRICES[metadataPlan])) {
-    return metadataPlan;
+  if (metadataPlan && Object.hasOwn(PRICES, metadataPlan)) {
+    const validPrices = MULTI_TIER_PRICES[metadataPlan] ?? [PRICES[metadataPlan]];
+    if (validPrices.some(withinRange)) return metadataPlan;
   }
   if (withinRange(PRICES.pro)) return 'pro';
   return null;

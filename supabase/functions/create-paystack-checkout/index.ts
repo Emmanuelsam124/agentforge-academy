@@ -32,18 +32,43 @@ const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '
 // for metadata-less payments.
 //
 // agentslive (added 2026-09-27) is a separate 2-day live workshop, not a
-// tier of AI Agent Mastery — same price as 'pro' (10000) is coincidental;
-// resolvePlan() in the webhook keys off the plan string in metadata, not
-// the amount alone, so this collision is safe as long as checkout always
-// sets metadata.plan (it does, below).
+// tier of AI Agent Mastery — same starting price as 'pro' (10000) is
+// coincidental; resolvePlan() in the webhook keys off the plan string in
+// metadata, not the amount alone, so this collision is safe as long as
+// checkout always sets metadata.plan (it does, below).
+//
+// agentslive is also the one plan with REAL seat-based scarcity pricing
+// (founder-confirmed 2026-09-27): the first AGENTS_LIVE_SEAT_THRESHOLD
+// granted payments are AGENTS_LIVE_PRICE_EARLY, everyone after is
+// AGENTS_LIVE_PRICE_LATE — computed below from a live count, not this
+// static map. See resolveAgentsLivePrice().
 const PRICES = {
   builder1: 5000,
   builder2: 7000,
   pro: 10000,
   vibecoding: 50000,
   aimastery: 19999,
-  agentslive: 10000,
+  agentslive: 10000, // early-bird price; resolveAgentsLivePrice() may override
 };
+
+const AGENTS_LIVE_PRICE_EARLY = 10000;
+const AGENTS_LIVE_PRICE_LATE = 15000;
+const AGENTS_LIVE_SEAT_THRESHOLD = 100;
+
+// Counts granted 'agentslive' payments directly (service-role client
+// bypasses the payments table's "view your own rows only" RLS) rather than
+// calling the public agentslive_seats_taken() RPC — same number either way,
+// but this avoids a round trip through PostgREST for a value this function
+// already has a direct service-role connection for.
+async function resolveAgentsLivePrice(supabaseService) {
+  const { count, error } = await supabaseService
+    .from('payments')
+    .select('id', { count: 'exact', head: true })
+    .eq('plan', 'agentslive')
+    .eq('status', 'granted');
+  if (error) throw error;
+  return (count ?? 0) >= AGENTS_LIVE_SEAT_THRESHOLD ? AGENTS_LIVE_PRICE_LATE : AGENTS_LIVE_PRICE_EARLY;
+}
 
 // This function is called directly from the browser (Pricing.jsx via
 // supabase.functions.invoke), so it needs CORS headers and to answer the
@@ -106,7 +131,23 @@ serve(async (req) => {
   if (typeof plan !== 'string' || !Object.hasOwn(PRICES, plan)) {
     return jsonResponse({ error: 'Unknown plan' }, 400);
   }
-  const amountNaira = PRICES[plan];
+
+  // Created once here (not just at the bottom for checkout_attempts
+  // logging) since agentslive's real price needs a service-role read of
+  // the payments table before Paystack is ever called.
+  const serviceClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+
+  let amountNaira = PRICES[plan];
+  if (plan === 'agentslive') {
+    try {
+      amountNaira = await resolveAgentsLivePrice(serviceClient);
+    } catch (_err) {
+      // Fail closed to the higher price rather than risk under-charging if
+      // the seat count can't be read — never silently give the early-bird
+      // price on an error.
+      amountNaira = AGENTS_LIVE_PRICE_LATE;
+    }
+  }
 
   // Embed the verified user id + plan in Paystack's metadata. Paystack
   // signs the whole webhook payload with our secret key, so when it comes
@@ -142,7 +183,6 @@ serve(async (req) => {
   // — only the service role and admin RPCs touch this table). Best-effort:
   // a logging failure here must never block the actual checkout redirect.
   try {
-    const serviceClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
     await serviceClient.from('checkout_attempts').insert({
       user_id: user.id,
       plan,

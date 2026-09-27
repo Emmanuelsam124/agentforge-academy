@@ -69,7 +69,8 @@ Certificate of completion
 Next start date = shown on each programme's own page, NOT in these facts
 
 LIVE WORKSHOP (short-format, not a cohort)
-AI Agents Live | ₦10,000, one-time | 2 live days | build your own AI agent connected to messaging tools you already use (Telegram, WhatsApp, and others), plus a dashboard where multiple agents work together on tasks | 7 days of access to replays/resources after the 2 live days, not 6 months | no certificate | page: https://socialdevtechnologies.com/ai-agents-live
+AI Agents Live | ₦10,000 for the first 100 seats, ₦15,000 after, one-time | 2 live days | build your own AI agent connected to messaging tools you already use (Telegram, WhatsApp, and others), plus a dashboard where multiple agents work together on tasks | also covers offering this as a paid service to other businesses | 7 days of access to replays/resources after the 2 live days, not 6 months | no certificate | page: https://socialdevtechnologies.com/ai-agents-live
+The ₦10,000 -> ₦15,000 rise is real, not a countdown gimmick: the price is tied to an actual seat count, not a date. Never promise a specific "X seats left" number — that number changes in real time and the agent cannot see it live.
 `.trim();
 
 export const FACTS_PAYMENT = `
