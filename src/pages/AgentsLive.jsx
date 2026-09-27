@@ -9,8 +9,9 @@ import { usePro } from '../hooks/usePro';
 import { useCohortSchedule } from '../hooks/useCohortSchedule';
 import { usePaystackCheckout } from '../hooks/usePaystackCheckout';
 import CheckoutAuthModal from '../components/CheckoutAuthModal';
+import AgentsLiveFlowDiagram from '../components/AgentsLiveFlowDiagram';
 import { usePageSeo } from '../hooks/usePageSeo';
-import { supabase } from '../lib/supabaseClient';
+import { supabase, isSupabaseConfigured } from '../lib/supabaseClient';
 import {
   AGENTS_LIVE_PRICE_EARLY, AGENTS_LIVE_PRICE_LATE, AGENTS_LIVE_SEAT_THRESHOLD,
   AGENTS_LIVE_ACCESS_DAYS, AGENTS_LIVE_START_HOUR_WAT,
@@ -45,11 +46,6 @@ const DEMOS = [
     icon: LayoutGrid,
     src: '/videos/agents-live-dashboard-demo.mp4',
   },
-];
-
-const BUILDS = [
-  { icon: Send, name: 'Your own agent', text: 'Connected to Telegram, WhatsApp, and other tools you already use — it can read, reply, and act on your behalf.' },
-  { icon: LayoutGrid, name: 'A multi-agent dashboard', text: 'Several agents working together on one board, each assigned its own part of the job, like a small team.' },
 ];
 
 const CURRICULUM_DAYS = [
@@ -134,13 +130,12 @@ const FOR_YOU = [
   "You're fine starting from the fundamentals — no prior build required",
 ];
 const NOT_FOR_YOU = [
-  'You want 6 months of ongoing access and support — that\'s AI Agent Mastery, not this',
+  'You want ongoing access and support well past the workshop itself',
   "You can't make either day, live or replay, within the access window",
   'You want a fully autonomous system with zero setup on your part',
 ];
 
 const FAQS = [
-  { q: 'Is this the same as AI Agent Mastery?', a: 'No — AI Agent Mastery is a ₦19,999, 6-month live cohort building one personal-assistant agent. AI Agents Live is a ₦10,000, 2-day workshop: your own connected agent, plus a multi-agent dashboard.' },
   { q: 'Do I need coding experience?', a: "No. It's built to be followed step by step, whether or not you've built an agent before." },
   { q: "What do I actually walk away with?", a: 'Your own agent connected to Telegram, WhatsApp, and other tools, plus a working dashboard where multiple agents share a task list — both built by your own hands during the workshop.' },
   { q: 'What if I miss a live day?', a: `Replays are available for ${AGENTS_LIVE_ACCESS_DAYS} days after the workshop — plenty to catch up, though live is where you get help in real time.` },
@@ -164,6 +159,7 @@ function useAgentsLiveSeats() {
   const [seatsTaken, setSeatsTaken] = useState(null);
 
   useEffect(() => {
+    if (!isSupabaseConfigured) return undefined;
     let cancelled = false;
     supabase.rpc('agentslive_seats_taken').then(({ data, error }) => {
       if (!cancelled && !error && typeof data === 'number') setSeatsTaken(data);
@@ -356,6 +352,19 @@ export default function AgentsLive() {
         </div>
       </div>
 
+      {/* System showcase — same engineering pattern as the homepage's
+          AutomationFlowDiagram (loops forever from a fully-visible first
+          frame, prerender-safe), reworked to show this page's own story:
+          Telegram/WhatsApp in, a shared multi-agent dashboard out. */}
+      <div className="px-4 sm:px-6 lg:px-[5vw] pt-4 pb-16 max-w-5xl mx-auto">
+        <SectionHeading eyebrow="Under the hood">One agent, a whole team behind it</SectionHeading>
+        <p className="text-center text-body max-w-xl mx-auto -mt-5 mb-8 text-[14px] leading-relaxed">
+          A message comes in on Telegram or WhatsApp, your agent picks it up, and a team of agents on one shared
+          dashboard splits the work — this is the system you'll build.
+        </p>
+        <AgentsLiveFlowDiagram />
+      </div>
+
       {/* Demo videos */}
       <div id="demo" className="px-4 sm:px-6 lg:px-[5vw] py-16 max-w-5xl mx-auto scroll-mt-20">
         <SectionHeading eyebrow="See it working">This is what you'll build</SectionHeading>
@@ -366,21 +375,6 @@ export default function AgentsLive() {
         </div>
       </div>
 
-      {/* What you'll build */}
-      <div className="px-4 sm:px-6 lg:px-[5vw] py-16 max-w-5xl mx-auto">
-        <SectionHeading eyebrow="Two builds, one weekend">What you'll walk away with</SectionHeading>
-        <div className="grid sm:grid-cols-2 gap-4 max-w-3xl mx-auto">
-          {BUILDS.map((b) => (
-            <div key={b.name} className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl p-6 text-center">
-              <div className="w-11 h-11 mx-auto rounded-full bg-[#F3EBFF] dark:bg-brand/15 text-brand flex items-center justify-center mb-3">
-                <b.icon className="w-5 h-5" />
-              </div>
-              <h3 className="font-display font-bold text-[15px] text-ink mb-1.5">{b.name}</h3>
-              <p className="text-[13px] text-body leading-relaxed">{b.text}</p>
-            </div>
-          ))}
-        </div>
-      </div>
 
       {/* Curriculum */}
       <div className="bg-[#FBFAFF] dark:bg-[#141416] border-y border-border-soft px-4 sm:px-6 lg:px-[5vw] py-16">
