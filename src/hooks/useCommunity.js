@@ -47,6 +47,11 @@ export function useCommunityMessages(channelId) {
     if (!isSupabaseConfigured || !channelId) return undefined;
     let cancelled = false;
 
+    // Fire-and-forget: opening a room counts as having seen everything in
+    // it up to now. Failure here just means the unread badge stays lit a
+    // little longer, not a broken read — not worth surfacing to the user.
+    supabase.rpc('community_mark_channel_read', { p_channel_id: channelId });
+
     Promise.all([
       supabase
         .from('community_messages')
@@ -73,6 +78,10 @@ export function useCommunityMessages(channelId) {
         { event: 'INSERT', schema: 'public', table: 'community_messages', filter: `channel_id=eq.${channelId}` },
         ({ new: row }) => {
           setMessages((prev) => (prev.some((m) => m.id === row.id) ? prev : [...prev, row]));
+          // The room is open on screen right now, so a message landing in
+          // it counts as seen too — keeps the nav badge from lighting up
+          // for a room the user is actively looking at.
+          supabase.rpc('community_mark_channel_read', { p_channel_id: channelId });
         },
       )
       .on(
@@ -112,4 +121,39 @@ export function useCommunityMessages(channelId) {
   );
 
   return { messages, members, memberByUserId, loading, error, sendMessage, deleteMessage };
+}
+
+// A real "you have new messages" signal for the nav — not a decorative
+// badge (see DashboardTopBar.jsx's own note on why this dashboard doesn't
+// ship fake notification UI). Recomputes on any new message anywhere (RLS
+// still limits what postgres_changes actually delivers to this client) and
+// on any change to this user's own read-state, so marking a room read from
+// the Community page clears this badge immediately without needing a
+// shared React context between it and the sidebar/mobile nav.
+export function useCommunityUnread() {
+  const [hasUnread, setHasUnread] = useState(false);
+
+  const refresh = useCallback(() => {
+    if (!isSupabaseConfigured) return;
+    supabase.rpc('community_has_unread').then(({ data, error }) => {
+      if (!error) setHasUnread(Boolean(data));
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!isSupabaseConfigured) return undefined;
+    refresh();
+
+    const realtimeChannel = supabase
+      .channel(`community-unread-${crypto.randomUUID()}`)
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'community_messages' }, refresh)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'community_reads' }, refresh)
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(realtimeChannel);
+    };
+  }, [refresh]);
+
+  return hasUnread;
 }

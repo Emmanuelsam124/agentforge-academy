@@ -1,5 +1,9 @@
+import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { Home, Video, PlayCircle, MessagesSquare, UserCircle2, HelpCircle, LogOut, Shield, Hammer, Rocket, Gift, Sparkles } from 'lucide-react';
+import {
+  Home, Video, PlayCircle, MessagesSquare, UserCircle2, HelpCircle, LogOut, Shield,
+  Hammer, Rocket, Gift, Sparkles, MoreHorizontal, X,
+} from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { usePro } from '../../hooks/usePro';
 import { getBuilder2Agents, getBuilderPagePath } from '../../data/agents';
@@ -19,7 +23,12 @@ const NAV_ITEMS = [
   { to: '/dashboard/help', end: false, icon: HelpCircle, label: 'Help' },
 ];
 
-function NavItems({ onNavigate }) {
+// Only the mobile bottom nav needs a short primary row — the desktop
+// sidebar has the vertical room to just list everything. The rest live
+// behind "More" on mobile (see MoreSheet below).
+const MOBILE_PRIMARY_PATHS = new Set(['/dashboard', '/dashboard/live-sessions', '/dashboard/community']);
+
+function NavItems({ onNavigate, hasUnreadCommunity }) {
   return (
     <ul className="flex flex-col gap-1">
       {NAV_ITEMS.map(({ to, end, icon: Icon, label }) => (
@@ -36,7 +45,12 @@ function NavItems({ onNavigate }) {
               }`
             }
           >
-            <Icon className="w-[18px] h-[18px] flex-shrink-0" />
+            <span className="relative flex-shrink-0">
+              <Icon className="w-[18px] h-[18px]" />
+              {label === 'Community' && hasUnreadCommunity && (
+                <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-rose-500" />
+              )}
+            </span>
             {label}
           </NavLink>
         </li>
@@ -49,7 +63,7 @@ function NavItems({ onNavigate }) {
 // DashboardMobileNav bottom bar (see StudentDashboard.jsx), matching the
 // "collapses to a bottom nav on mobile" requirement rather than squeezing
 // this same component into a hamburger drawer.
-export default function DashboardSidebar() {
+export default function DashboardSidebar({ hasUnreadCommunity }) {
   const { user, signOut } = useAuth();
   const { isAdmin, hasBuilder1, hasBuilder2, hasVibeCoding } = usePro();
   const navigate = useNavigate();
@@ -72,7 +86,7 @@ export default function DashboardSidebar() {
       </NavLink>
 
       <nav className="flex-1 overflow-y-auto">
-        <NavItems />
+        <NavItems hasUnreadCommunity={hasUnreadCommunity} />
         {(hasBuilder1 || hasBuilder2 || hasVibeCoding || isAdmin) && (
           <>
             <div className="border-t border-[#EFE9FB] dark:border-[#232228] my-3" />
@@ -152,67 +166,110 @@ export default function DashboardSidebar() {
   );
 }
 
-export function DashboardMobileNav() {
+function MoreSheet({ onClose }) {
   const { isAdmin, hasBuilder1, hasBuilder2, hasVibeCoding } = usePro();
-  const showVibeCoding = hasVibeCoding || isAdmin;
-  const showBuilder1 = hasBuilder1 || isAdmin;
-  const showBuilder2 = (hasBuilder2 || isAdmin) && builder2FirstAgent;
+  const secondaryItems = NAV_ITEMS.filter(({ to }) => !MOBILE_PRIMARY_PATHS.has(to));
+
+  const rowClass = ({ isActive }) =>
+    `flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-semibold transition-colors ${
+      isActive
+        ? 'bg-[#F3EBFF] dark:bg-brand/15 text-brand'
+        : 'text-[#4A4463] dark:text-[#B7AFC9] hover:bg-[#FAF8FF] dark:hover:bg-white/5'
+    }`;
+
   return (
-    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-[#0A090F] border-t border-[#EFE9FB] dark:border-[#232228] flex items-stretch">
-      {NAV_ITEMS.map(({ to, end, icon: Icon, label }) => (
-        <NavLink
-          key={to}
-          to={to}
-          end={end}
-          className={({ isActive }) =>
-            `flex-1 flex flex-col items-center justify-center gap-0.5 py-2.5 text-[10.5px] font-semibold transition-colors ${
-              isActive ? 'text-brand' : 'text-gray-400'
-            }`
-          }
+    <div className="lg:hidden fixed inset-0 z-50 flex items-end">
+      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
+      <div className="relative w-full bg-white dark:bg-[#0A090F] rounded-t-2xl border-t border-[#EFE9FB] dark:border-[#232228] max-h-[75vh] overflow-y-auto pb-[env(safe-area-inset-bottom)]">
+        <div className="flex items-center justify-between px-4 py-3.5 border-b border-[#EFE9FB] dark:border-[#232228]">
+          <span className="font-display font-bold text-ink text-[15px]">More</span>
+          <button onClick={onClose} aria-label="Close" className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:bg-[#FAF8FF] dark:hover:bg-white/5">
+            <X className="w-4.5 h-4.5" />
+          </button>
+        </div>
+        <div className="flex flex-col gap-1 p-3">
+          {secondaryItems.map(({ to, end, icon: Icon, label }) => (
+            <NavLink key={to} to={to} end={end} onClick={onClose} className={rowClass}>
+              <Icon className="w-[18px] h-[18px] flex-shrink-0" /> {label}
+            </NavLink>
+          ))}
+          {(hasBuilder1 || hasBuilder2 || hasVibeCoding || isAdmin) && (
+            <>
+              <div className="border-t border-[#EFE9FB] dark:border-[#232228] my-2" />
+              <p className="text-[9px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-600 px-3.5 mb-0.5">My Courses</p>
+              {(hasVibeCoding || isAdmin) && (
+                <NavLink to="/vibe-coding/course" onClick={onClose} className={rowClass}>
+                  <Sparkles className="w-[18px] h-[18px] flex-shrink-0" /> Vibe Coding
+                </NavLink>
+              )}
+              {(hasBuilder1 || isAdmin) && (
+                <NavLink to="/builder-1-guide" onClick={onClose} className={rowClass}>
+                  <Hammer className="w-[18px] h-[18px] flex-shrink-0" /> Builder 1
+                </NavLink>
+              )}
+              {(hasBuilder2 || isAdmin) && builder2FirstAgent && (
+                <NavLink to={getBuilderPagePath(builder2FirstAgent)} onClick={onClose} className={rowClass}>
+                  <Rocket className="w-[18px] h-[18px] flex-shrink-0" /> Builder 2
+                </NavLink>
+              )}
+            </>
+          )}
+          {isAdmin && (
+            <>
+              <div className="border-t border-[#EFE9FB] dark:border-[#232228] my-2" />
+              <NavLink to="/admin" onClick={onClose} className="flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-semibold text-amber-700 dark:text-amber-400 hover:bg-[#FEF9E7] dark:hover:bg-amber-500/10 transition-colors">
+                <Shield className="w-[18px] h-[18px] flex-shrink-0" /> Admin
+              </NavLink>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Kept to a short primary row (Home, Live Sessions, Community, More) so it
+// never turns back into the wall-to-wall icon strip this replaced — every
+// course link, Account, Refer & Earn and Help moved into the "More" sheet
+// instead of fighting for space in a `flex-1` row that used to hold up to
+// 10 items on a phone-width screen.
+export function DashboardMobileNav({ hasUnreadCommunity }) {
+  const [moreOpen, setMoreOpen] = useState(false);
+  const primaryItems = NAV_ITEMS.filter(({ to }) => MOBILE_PRIMARY_PATHS.has(to));
+
+  return (
+    <>
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-[#0A090F] border-t border-[#EFE9FB] dark:border-[#232228] flex items-stretch">
+        {primaryItems.map(({ to, end, icon: Icon, label }) => (
+          <NavLink
+            key={to}
+            to={to}
+            end={end}
+            className={({ isActive }) =>
+              `flex-1 flex flex-col items-center justify-center gap-0.5 py-2.5 text-[10.5px] font-semibold transition-colors ${
+                isActive ? 'text-brand' : 'text-gray-400'
+              }`
+            }
+          >
+            <span className="relative">
+              <Icon className="w-5 h-5" />
+              {label === 'Community' && hasUnreadCommunity && (
+                <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-rose-500" />
+              )}
+            </span>
+            {label}
+          </NavLink>
+        ))}
+        <button
+          type="button"
+          onClick={() => setMoreOpen(true)}
+          className="flex-1 flex flex-col items-center justify-center gap-0.5 py-2.5 text-[10.5px] font-semibold text-gray-400"
         >
-          <Icon className="w-5 h-5" />
-          {label}
-        </NavLink>
-      ))}
-      {showVibeCoding && (
-        <NavLink
-          to="/vibe-coding/course"
-          className={({ isActive }) =>
-            `flex-1 flex flex-col items-center justify-center gap-0.5 py-2.5 text-[10.5px] font-semibold transition-colors ${
-              isActive ? 'text-brand' : 'text-gray-400'
-            }`
-          }
-        >
-          <Sparkles className="w-5 h-5" />
-          Vibe Coding
-        </NavLink>
-      )}
-      {showBuilder1 && (
-        <NavLink
-          to="/builder-1-guide"
-          className={({ isActive }) =>
-            `flex-1 flex flex-col items-center justify-center gap-0.5 py-2.5 text-[10.5px] font-semibold transition-colors ${
-              isActive ? 'text-brand' : 'text-gray-400'
-            }`
-          }
-        >
-          <Hammer className="w-5 h-5" />
-          Builder 1
-        </NavLink>
-      )}
-      {showBuilder2 && (
-        <NavLink
-          to={getBuilderPagePath(builder2FirstAgent)}
-          className={({ isActive }) =>
-            `flex-1 flex flex-col items-center justify-center gap-0.5 py-2.5 text-[10.5px] font-semibold transition-colors ${
-              isActive ? 'text-brand' : 'text-gray-400'
-            }`
-          }
-        >
-          <Rocket className="w-5 h-5" />
-          Builder 2
-        </NavLink>
-      )}
-    </nav>
+          <MoreHorizontal className="w-5 h-5" />
+          More
+        </button>
+      </nav>
+      {moreOpen && <MoreSheet onClose={() => setMoreOpen(false)} />}
+    </>
   );
 }

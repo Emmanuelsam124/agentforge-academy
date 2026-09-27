@@ -1,6 +1,7 @@
 import { Routes, Route, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useLiveSessions } from '../hooks/useLiveSessions';
+import { useCommunityUnread } from '../hooks/useCommunity';
 import DashboardSidebar, { DashboardMobileNav } from '../components/dashboard/DashboardSidebar';
 import DashboardTopBar from '../components/dashboard/DashboardTopBar';
 import JumpBackInCard from '../components/dashboard/JumpBackInCard';
@@ -24,10 +25,11 @@ function DashboardOutlet({ context }) {
 export default function StudentDashboard({ progress, onSelectAgent }) {
   const { user } = useAuth();
   const liveSessions = useLiveSessions(user);
+  const hasUnreadCommunity = useCommunityUnread();
 
   return (
     <div className="min-h-screen bg-bg">
-      <DashboardSidebar />
+      <DashboardSidebar hasUnreadCommunity={hasUnreadCommunity} />
       <div className="lg:pl-64 flex flex-col min-h-screen">
         <DashboardTopBar />
         <div className="flex-1 max-w-[1400px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 pb-20 lg:pb-6 grid lg:grid-cols-[1fr_300px] gap-8 items-start">
@@ -49,7 +51,7 @@ export default function StudentDashboard({ progress, onSelectAgent }) {
           </aside>
         </div>
       </div>
-      <DashboardMobileNav />
+      <DashboardMobileNav hasUnreadCommunity={hasUnreadCommunity} />
     </div>
   );
 }
