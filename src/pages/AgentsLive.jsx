@@ -33,20 +33,20 @@ import {
 // via the public agentslive_seats_taken() RPC so the displayed price never
 // drifts from what checkout charges.
 
-const DEMOS = [
-  {
-    title: 'Your agent, live on Telegram',
-    text: 'Message it like you would a person — it reads, decides, and replies, connected to the tools you gave it.',
-    icon: Send,
-    src: '/videos/agents-live-telegram-demo.mp4',
-  },
-  {
-    title: 'The multi-agent dashboard',
-    text: 'Several agents on one board, each with its own job, working a shared task list the way a small team would.',
-    icon: LayoutGrid,
-    src: '/videos/agents-live-dashboard-demo.mp4',
-  },
-];
+const DEMO_VIDEO = {
+  title: 'Your agent, live on Telegram',
+  text: 'Message it like you would a person — it reads, decides, and replies, connected to the tools you gave it.',
+  icon: Send,
+  src: '/videos/agents-live-telegram-demo.mp4',
+};
+
+const DEMO_IMAGE = {
+  title: 'The multi-agent dashboard',
+  text: 'Several agents on one board, each with its own job, working a shared task list the way a small team would.',
+  icon: LayoutGrid,
+  src: '/videos/agents-live-dashboard-demo.webp',
+  alt: 'A multi-agent task board showing four agents (Meeting Assistant, Web Research, Support Agent, Sales Agent) working through a shared list of tasks across Backlog, Todo, In Progress, In Review, and Blocked columns.',
+};
 
 const CURRICULUM_DAYS = [
   {
@@ -261,6 +261,26 @@ function DemoVideo({ demo }) {
   );
 }
 
+// Given full-width, bolder treatment (thicker brand border, glow, larger
+// type) rather than sharing the video's plain card style — this is the
+// one demo the founder wants standing out on the page.
+function DemoImage({ demo }) {
+  return (
+    <div className="bg-white dark:bg-[#181818] border-[2.5px] border-brand rounded-[20px] overflow-hidden shadow-[0_24px_48px_-20px_rgba(124,58,237,.55)]">
+      <div className="bg-[#0A090F]">
+        <img src={demo.src} alt={demo.alt} className="w-full h-auto block" />
+      </div>
+      <div className="p-6 sm:p-7">
+        <div className="flex items-center gap-2.5 mb-2">
+          <demo.icon className="w-5 h-5 text-brand flex-shrink-0" />
+          <h3 className="font-display font-extrabold text-[17px] sm:text-[19px] text-ink">{demo.title}</h3>
+        </div>
+        <p className="text-[13.5px] sm:text-[14.5px] text-body leading-relaxed">{demo.text}</p>
+      </div>
+    </div>
+  );
+}
+
 export default function AgentsLive() {
   const { hasAgentsLive } = usePro();
   const { agentslive: cohortDateRaw } = useCohortSchedule();
@@ -366,12 +386,11 @@ export default function AgentsLive() {
       </div>
 
       {/* Demo videos */}
-      <div id="demo" className="px-4 sm:px-6 lg:px-[5vw] py-16 max-w-5xl mx-auto scroll-mt-20">
+      <div id="demo" className="px-4 sm:px-6 lg:px-[5vw] py-16 max-w-4xl mx-auto scroll-mt-20">
         <SectionHeading eyebrow="See it working">This is what you'll build</SectionHeading>
-        <div className="grid sm:grid-cols-2 gap-5 max-w-4xl mx-auto">
-          {DEMOS.map((demo) => (
-            <DemoVideo key={demo.title} demo={demo} />
-          ))}
+        <div className="flex flex-col gap-6">
+          <DemoVideo demo={DEMO_VIDEO} />
+          <DemoImage demo={DEMO_IMAGE} />
         </div>
       </div>
 
