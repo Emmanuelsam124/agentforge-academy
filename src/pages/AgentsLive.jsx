@@ -120,7 +120,7 @@ const WHO_FOR = [
 
 const INSTRUCTOR = {
   name: 'Emmanuel A. Samuel',
-  title: 'Founder, Social Dev Technologies',
+  title: 'Web / AI Automation Engineer',
   photo: '/images/agentslive-instructor.jpg',
   bio: [
     "Seven years as a web engineer, the last two of those spent building AI agents — connecting them to real tools, real customers, and real revenue, not just demos.",
