@@ -118,6 +118,20 @@ const WHO_FOR = [
   { title: 'Anyone curious but budget-conscious', text: 'One weekend, one low price, two real things to show for it at the end.' },
 ];
 
+// TODO(founder): confirm the exact name/title to show here before this ships —
+// everything else below is what was given directly (7 years as a web
+// engineer, building agents for the last 2), nothing invented.
+const INSTRUCTOR = {
+  name: 'Your name here',
+  title: 'Founder, Social Dev Technologies',
+  photo: '/images/agentslive-instructor.jpg',
+  bio: [
+    "Seven years as a web engineer, the last two of those spent building AI agents — connecting them to real tools, real customers, and real revenue, not just demos.",
+    "In January of this year, one of those agents took over the customer-messaging work of a 3-person team, without a single new hire to replace them.",
+    'AI Agents Live is that exact system, taught live, over two days.',
+  ],
+};
+
 const FORMAT = [
   '2 live days — hands-on, building alongside the instructor, not watching a lecture',
   `${AGENTS_LIVE_ACCESS_DAYS} days of access to replays and resources after the live days end`,
@@ -356,13 +370,24 @@ export default function AgentsLive() {
             )}
           </m.span>
 
+          <m.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.05 }}
+            className="italic text-[14px] sm:text-[15px] text-body-strong max-w-lg mx-auto mt-5 leading-relaxed"
+          >
+            "In January of this year, I built my first AI agent to handle customer messages. Since then, it's done
+            the work of a 3-person team and I haven't paid a single staff salary for those roles."
+          </m.p>
+
           <m.h1
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="font-display font-extrabold text-[36px] sm:text-[54px] leading-[1.05] text-ink tracking-[-1.5px] mt-5"
+            className="font-display font-extrabold text-[32px] sm:text-[50px] leading-[1.08] text-ink tracking-[-1.5px] mt-5"
           >
-            Build your own AI agent <span className="text-brand">— live, in 2 days.</span>
+            Build the Exact Multi-Agent System That Replaced My Business Overhead
+            {' '}<span className="text-brand">— Live, in 2 Days.</span>
           </m.h1>
 
           <m.p
@@ -371,8 +396,9 @@ export default function AgentsLive() {
             transition={{ delay: 0.2 }}
             className="text-[17px] leading-relaxed text-body mt-5 max-w-lg mx-auto"
           >
-            Connect your own agent to Telegram, WhatsApp, and other tools you already use — then build a dashboard
-            where several agents work together on shared tasks. Two live days, hands-on, small group.
+            Stop copying tutorials that break. Join us on October 2nd to connect your own AI agents to Telegram and
+            WhatsApp, build a multi-agent dashboard, and cut repetitive manual work for good — even if you've never
+            coded before.
           </m.p>
 
           <m.div
@@ -425,6 +451,41 @@ export default function AgentsLive() {
         </div>
       </div>
 
+
+      {/* About the instructor */}
+      <div className="px-4 sm:px-6 lg:px-[5vw] pb-16 max-w-4xl mx-auto">
+        <div
+          className="relative overflow-hidden rounded-[28px] border border-white/10 px-6 sm:px-12 py-10 sm:py-12"
+          style={{ background: 'linear-gradient(135deg, #2C2350 0%, #1B1433 60%, #130E24 100%)' }}
+        >
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{ background: 'radial-gradient(55% 65% at 15% 20%, rgba(124,58,237,.35) 0%, transparent 70%)' }}
+          />
+          <div className="relative flex flex-col sm:flex-row items-center sm:items-start gap-7 sm:gap-9 text-center sm:text-left">
+            <div className="relative flex-shrink-0">
+              <div className="absolute -inset-1.5 rounded-full bg-gradient-to-br from-[#9D5CFF] to-[#7C3AED] opacity-70 blur-md" />
+              <img
+                src={INSTRUCTOR.photo}
+                alt={INSTRUCTOR.name}
+                className="relative w-28 h-28 sm:w-36 sm:h-36 rounded-full object-cover border-[3px] border-[#1B1433] shadow-[0_10px_30px_rgba(0,0,0,.4)]"
+              />
+            </div>
+            <div className="min-w-0">
+              <span className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-wide text-[#C9BFE8] bg-white/5 border border-white/10 px-3 py-1 rounded-full mb-3">
+                Meet your instructor
+              </span>
+              <h2 className="font-display font-extrabold text-[22px] sm:text-[26px] text-white leading-tight">{INSTRUCTOR.name}</h2>
+              <p className="text-[13.5px] font-semibold text-[#A99BD6] mt-1 mb-4">{INSTRUCTOR.title}</p>
+              <div className="flex flex-col gap-2.5">
+                {INSTRUCTOR.bio.map((p) => (
+                  <p key={p} className="text-[14px] sm:text-[15px] text-[#D8D2EE] leading-relaxed">{p}</p>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Curriculum */}
       <div className="bg-[#FBFAFF] dark:bg-[#141416] border-y border-border-soft px-4 sm:px-6 lg:px-[5vw] py-16">
