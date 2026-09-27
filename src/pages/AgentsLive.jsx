@@ -9,8 +9,9 @@ import { usePro } from '../hooks/usePro';
 import { useCohortSchedule } from '../hooks/useCohortSchedule';
 import { usePaystackCheckout } from '../hooks/usePaystackCheckout';
 import CheckoutAuthModal from '../components/CheckoutAuthModal';
+import AgentsLiveFlowDiagram from '../components/AgentsLiveFlowDiagram';
 import { usePageSeo } from '../hooks/usePageSeo';
-import { supabase } from '../lib/supabaseClient';
+import { supabase, isSupabaseConfigured } from '../lib/supabaseClient';
 import {
   AGENTS_LIVE_PRICE_EARLY, AGENTS_LIVE_PRICE_LATE, AGENTS_LIVE_SEAT_THRESHOLD,
   AGENTS_LIVE_ACCESS_DAYS, AGENTS_LIVE_START_HOUR_WAT,
@@ -163,6 +164,7 @@ function useAgentsLiveSeats() {
   const [seatsTaken, setSeatsTaken] = useState(null);
 
   useEffect(() => {
+    if (!isSupabaseConfigured) return undefined;
     let cancelled = false;
     supabase.rpc('agentslive_seats_taken').then(({ data, error }) => {
       if (!cancelled && !error && typeof data === 'number') setSeatsTaken(data);
@@ -353,6 +355,19 @@ export default function AgentsLive() {
             </div>
           )}
         </div>
+      </div>
+
+      {/* System showcase — same engineering pattern as the homepage's
+          AutomationFlowDiagram (loops forever from a fully-visible first
+          frame, prerender-safe), reworked to show this page's own story:
+          Telegram/WhatsApp in, a shared multi-agent dashboard out. */}
+      <div className="px-4 sm:px-6 lg:px-[5vw] pt-4 pb-16 max-w-5xl mx-auto">
+        <SectionHeading eyebrow="Under the hood">One agent, a whole team behind it</SectionHeading>
+        <p className="text-center text-body max-w-xl mx-auto -mt-5 mb-8 text-[14px] leading-relaxed">
+          A message comes in on Telegram or WhatsApp, your agent picks it up, and a team of agents on one shared
+          dashboard splits the work — this is the system you'll build.
+        </p>
+        <AgentsLiveFlowDiagram />
       </div>
 
       {/* Demo videos */}
