@@ -20,9 +20,6 @@ import { AGENTS_LIVE_PRICE, AGENTS_LIVE_ACCESS_DAYS } from '../data/pricing';
 // AIAgentMastery.jsx follows. The two demo videos below are meant to carry
 // that weight instead of naming anything.
 
-// Swap these `src` values for the real recordings once they're uploaded
-// (e.g. to public/videos/ or wherever they end up hosted) — until then the
-// <video> tag just shows its poster/fallback state.
 const DEMOS = [
   {
     title: 'Your agent, live on Telegram',
@@ -97,14 +94,25 @@ function SectionHeading({ eyebrow, children }) {
   );
 }
 
-// Plain <video> rather than an iframe embed — swap `src` in DEMOS above for
-// the real file once it's hosted. Falls back to a simple placeholder if the
-// file 404s, so the page never shows a broken player.
+// controlsList="nodownload" hides the download button from Chrome/Edge's
+// native controls, and blocking the context menu removes the obvious
+// "Save video as…" path. This is a casual-user deterrent, not real
+// protection — the browser still fetches the actual file to play it, so
+// anyone using devtools/network-tab can still save it. True prevention
+// would need a streaming/DRM host, which two marketing clips don't warrant.
 function DemoVideo({ demo }) {
   return (
     <div className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl overflow-hidden">
       <div className="aspect-video bg-[#0A090F] flex items-center justify-center relative">
-        <video controls className="w-full h-full" preload="none">
+        <video
+          controls
+          controlsList="nodownload noremoteplayback"
+          disablePictureInPicture
+          disableRemotePlayback
+          onContextMenu={(e) => e.preventDefault()}
+          className="w-full h-full"
+          preload="none"
+        >
           <source src={demo.src} type="video/mp4" />
         </video>
       </div>
