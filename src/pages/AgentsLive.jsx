@@ -134,13 +134,12 @@ const FOR_YOU = [
   "You're fine starting from the fundamentals — no prior build required",
 ];
 const NOT_FOR_YOU = [
-  'You want 6 months of ongoing access and support — that\'s AI Agent Mastery, not this',
+  'You want ongoing access and support well past the workshop itself',
   "You can't make either day, live or replay, within the access window",
   'You want a fully autonomous system with zero setup on your part',
 ];
 
 const FAQS = [
-  { q: 'Is this the same as AI Agent Mastery?', a: 'No — AI Agent Mastery is a ₦19,999, 6-month live cohort building one personal-assistant agent. AI Agents Live is a ₦10,000, 2-day workshop: your own connected agent, plus a multi-agent dashboard.' },
   { q: 'Do I need coding experience?', a: "No. It's built to be followed step by step, whether or not you've built an agent before." },
   { q: "What do I actually walk away with?", a: 'Your own agent connected to Telegram, WhatsApp, and other tools, plus a working dashboard where multiple agents share a task list — both built by your own hands during the workshop.' },
   { q: 'What if I miss a live day?', a: `Replays are available for ${AGENTS_LIVE_ACCESS_DAYS} days after the workshop — plenty to catch up, though live is where you get help in real time.` },
