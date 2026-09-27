@@ -87,26 +87,31 @@ const DELIVERABLES = [
   { icon: ShieldCheck, text: "Guardrails built in, so nothing acts without your sign-off" },
 ];
 
-// Real feedback (screenshots provided by the founder, 2026-09-27) from an
+// Real feedback — actual WhatsApp screenshots (provided by the founder,
+// 2026-09-27), shown as images rather than transcribed text, from an
 // earlier live class covering this same build — Telegram/WhatsApp agent
 // plus a multi-agent dashboard. AI Agents Live itself hasn't run its first
 // cohort yet, so this is captioned honestly as an earlier class, not framed
-// as "AI Agents Live graduates say…".
+// as "AI Agents Live graduates say…". `alt` is a plain transcription for
+// screen readers — the image is what actually renders.
 const TESTIMONIALS = [
   {
     name: 'Ijeoma',
     role: 'Student',
-    quote: "I never expected this level of depth in building AI agents. I built my first sales agent for a small business here in Aja, and my first ₦500k just landed. I paid hundreds of thousands in one AI class in Ikeja and was still unable to use what I learned — with this class, I was able to get my first gig.",
+    src: '/testimonials/agentslive-testimonial-ijeoma.png',
+    alt: "WhatsApp message from Ijeoma: \"I never expected this level of depth in building AI agents. I built my first sales agent for a small business here in Aja, and my first ₦500k just landed...\"",
   },
   {
     name: 'Ibrahim',
     role: 'Student',
-    quote: "I have successfully built my AI team. My Telegram and WhatsApp agents closed 7 deals for me. You need to increase the price of this class — it's too cheap for what I got.",
+    src: '/testimonials/agentslive-testimonial-ibrahim.png',
+    alt: "WhatsApp message from Ibrahim: \"I have successfully built my AI team. My Telegram and WhatsApp agents closed 7 deals for me. You need to increase the price of this class — it's too cheap for what I got.\"",
   },
   {
     name: 'Richmond',
     role: 'Student',
-    quote: 'I used to think that building with AI is difficult. This is the first time I am building something real that solves problems.',
+    src: '/testimonials/agentslive-testimonial-richmond.webp',
+    alt: 'WhatsApp message from Richmond: "I used to think that building with AI is difficult. This is the first time I am building something real that solves problems."',
   },
 ];
 
@@ -265,6 +270,7 @@ export default function AgentsLive() {
   const { agentslive: cohortDateRaw } = useCohortSchedule();
   const cohortDate = formatCohortDate(cohortDateRaw);
   const { seatsLeft, currentPrice } = useAgentsLiveSeats();
+  const [lightbox, setLightbox] = useState(null);
   const countdownTarget = useMemo(
     () => (cohortDateRaw ? new Date(`${cohortDateRaw}T${AGENTS_LIVE_START_HOUR_WAT}`) : null),
     [cohortDateRaw],
@@ -495,20 +501,34 @@ export default function AgentsLive() {
         </div>
       </div>
 
-      {/* Testimonials — real feedback (screenshots on file), see TESTIMONIALS
-          comment above for why this is captioned "an earlier class" rather
-          than implying AI Agents Live itself already has graduates. */}
+      {/* Testimonials — real screenshots (on file), see TESTIMONIALS comment
+          above for why this is captioned "an earlier class" rather than
+          implying AI Agents Live itself already has graduates. */}
       <div className="px-4 sm:px-6 lg:px-[5vw] pb-16 max-w-5xl mx-auto">
         <SectionHeading eyebrow="Real feedback, real results">From an earlier class covering this same build</SectionHeading>
+        <p className="text-center text-[12px] text-gray-400 -mt-6 mb-6">Tap a screenshot to read it in full</p>
         <div className="grid sm:grid-cols-3 gap-3.5 max-w-4xl mx-auto">
           {TESTIMONIALS.map((t) => (
-            <div key={t.name} className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl p-5">
-              <p className="text-[12.5px] text-body-strong leading-relaxed mb-3">&ldquo;{t.quote}&rdquo;</p>
-              <p className="text-[12px] font-bold text-ink">{t.name} <span className="font-normal text-gray-400">· {t.role}</span></p>
-            </div>
+            <button
+              key={t.name}
+              onClick={() => setLightbox(t)}
+              className="text-left bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl overflow-hidden hover:border-brand transition-colors"
+            >
+              <img src={t.src} alt={t.alt} className="w-full h-auto block" loading="lazy" />
+              <p className="text-[12px] font-bold text-ink px-4 py-3">{t.name} <span className="font-normal text-gray-400">· {t.role}</span></p>
+            </button>
           ))}
         </div>
       </div>
+
+      {lightbox && (
+        <div
+          className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 cursor-zoom-out"
+          onClick={() => setLightbox(null)}
+        >
+          <img src={lightbox.src} alt={lightbox.alt} className="max-w-full max-h-full rounded-2xl object-contain" />
+        </div>
+      )}
 
       {/* FAQ */}
       <div className="px-4 sm:px-6 lg:px-[5vw] py-16 max-w-5xl mx-auto">
