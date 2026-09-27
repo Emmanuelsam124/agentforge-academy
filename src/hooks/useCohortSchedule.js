@@ -28,7 +28,7 @@ function readEmbedded() {
  */
 export function useCohortSchedule() {
   const embedded = readEmbedded();
-  const [dates, setDates] = useState(() => embedded ?? { builder1: null, builder2: null, vibecoding: null, aimastery: null });
+  const [dates, setDates] = useState(() => embedded ?? { builder1: null, builder2: null, vibecoding: null, aimastery: null, agentslive: null });
   const [loading, setLoading] = useState(() => embedded === null);
 
   useEffect(() => {
@@ -44,7 +44,7 @@ export function useCohortSchedule() {
       .then(({ data, error }) => {
         if (cancelled) return;
         if (!error && data) {
-          const next = { builder1: null, builder2: null, vibecoding: null, aimastery: null };
+          const next = { builder1: null, builder2: null, vibecoding: null, aimastery: null, agentslive: null };
           for (const row of data) next[row.tier] = row.start_date;
           setDates(next);
           let script = document.getElementById(EMBED_ID);

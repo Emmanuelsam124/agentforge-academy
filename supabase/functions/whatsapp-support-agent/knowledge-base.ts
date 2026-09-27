@@ -61,12 +61,15 @@ LIVE COHORTS (instructor-led, real classes, a fixed group of students)
 AI Agent Mastery | ₦19,999, one-time | build one integrated personal-assistant agent: inbox, calendar, research, messaging | doing Builder 2 first helps, not required | page: https://socialdevtechnologies.com/ai-agent-mastery
 Vibe Coding Bootcamp | ₦50,000, one-time | 4 weeks, 8 live classes | from an idea to a deployed website, web app, and AI-powered product | no coding experience required | builds include a portfolio site, to-do app, Supabase CRUD app | page: https://socialdevtechnologies.com/vibe-coding
 
-TRUE OF BOTH LIVE COHORTS
+TRUE OF BOTH LIVE COHORTS (AI Agent Mastery, Vibe Coding Bootcamp)
 One-time payment | not a subscription
 6 months of access: live classes, recordings, resources
 Missed a live class = recordings are there to catch up
 Certificate of completion
 Next start date = shown on each programme's own page, NOT in these facts
+
+LIVE WORKSHOP (short-format, not a cohort)
+AI Agents Live | ₦10,000, one-time | 2 live days | build your own AI agent connected to messaging tools you already use (Telegram, WhatsApp, and others), plus a dashboard where multiple agents work together on tasks | 7 days of access to replays/resources after the 2 live days, not 6 months | no certificate | page: https://socialdevtechnologies.com/ai-agents-live
 `.trim();
 
 export const FACTS_PAYMENT = `
@@ -88,6 +91,7 @@ export const FACTS_CONTACT = `
 Website: https://socialdevtechnologies.com
 Pricing: https://socialdevtechnologies.com/pricing
 AI Agent Mastery: https://socialdevtechnologies.com/ai-agent-mastery
+AI Agents Live: https://socialdevtechnologies.com/ai-agents-live
 Vibe Coding Bootcamp: https://socialdevtechnologies.com/vibe-coding
 FAQ: https://socialdevtechnologies.com/faq
 Email: support@socialdevtechnologies.com
@@ -234,8 +238,8 @@ Q: "is it monthly?"
 
 Q: "when does the next cohort start?"
 - "The guides don't run in cohorts — they open the moment you pay. If you
-  mean a live programme, AI Agent Mastery and Vibe Coding each show their next
-  start date on their own page."
+  mean a live programme, AI Agent Mastery, Vibe Coding, and AI Agents Live
+  each show their next start date on their own page."
 
 Q: "i dont know how to code"
 - "That's who Builder 1 is built for. Every build comes with copy-paste

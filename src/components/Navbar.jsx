@@ -21,6 +21,7 @@ const links = [
       { to: '/ai-agent-mastery', label: 'AI Agent Mastery' },
       { to: '/ai-builder', label: 'AI Agent Guides' },
       { to: '/vibe-coding', label: 'Vibe Coding Bootcamp' },
+      { to: '/ai-agents-live', label: 'AI Agents Live (2-day workshop)' },
     ] },
   // Grouped under one "Learn" dropdown rather than separate top-level links.
   // Both stay real, separately-crawlable routes — the dropdown is only a

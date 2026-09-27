@@ -23,6 +23,7 @@ export default function Footer() {
             title="Platform"
             links={[
               { label: 'AI Agent Mastery', to: '/ai-agent-mastery' },
+              { label: 'AI Agents Live', to: '/ai-agents-live' },
               { label: 'Become an AI Builder', to: '/ai-builder' },
               { label: 'Vibe Coding Bootcamp', to: '/vibe-coding' },
               { label: 'Catalog', to: '/catalog' },

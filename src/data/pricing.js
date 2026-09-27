@@ -32,3 +32,15 @@ export const VIBECODING_PRICE = 50000;
 // either. Priced independently of Vibe Coding, not at parity with it
 // (changed from 25000 to 19999, 2026-09-22).
 export const AI_AGENT_MASTERY_PRICE = 19999;
+
+// AI Agents Live — a separate, short-format live workshop (added
+// 2026-09-27): 2 days, build a personal AI agent connected to messaging
+// tools plus a multi-agent dashboard. NOT the same product as AI Agent
+// Mastery above (that's a 6-month, ₦19,999 cohort) — deliberately its own
+// page/plan/price so the two are never confused. Same 10000 naira as PRO
+// is coincidental, not a collision risk: the webhook/checkout key off the
+// distinct plan string ('agentslive'), not the amount alone.
+export const AGENTS_LIVE_PRICE = 10000;
+// Access window after the 2 live days (recordings/resources/support) —
+// short on purpose, this is a workshop, not a cohort.
+export const AGENTS_LIVE_ACCESS_DAYS = 7;
