@@ -21,6 +21,25 @@ Supabase project ref: `qkrfpuckvymjpewcszgs`. Two other webhook functions exist 
 
 Admin panel (`/admin`, `src/pages/Admin.jsx`) uses SECURITY DEFINER RPCs in `supabase/admin-setup.sql` (`admin_get_all_profiles`, `admin_set_user_pro`, `admin_set_user_admin`) — self-check inside each function, only callable by an existing admin.
 
+## Student community (added 2026-09-27)
+
+`/dashboard/community` (`src/pages/dashboard/Community.jsx`) is a text-only chat: one `general` room for anyone who has ever bought anything, plus one room per product (`builder1`, `builder2`, `vibecoding`, `aimastery`, `agentslive`) — schema in `supabase/community-setup.sql`. No attachment/upload path exists anywhere in this feature, which is how "no images or videos" is enforced (never built, not filtered).
+
+- **Membership is permanent, not tied to whether a live cohort's access window has since expired** — `has_community_membership()` checks "ever granted" (`guide_purchases` row exists, or the relevant `entitlements.*_expires_at` is non-null), not `usePro()`'s "currently active" rule. This is a class alumni room, not a paywall. `is_admin` bypasses every channel.
+- Three new SECURITY DEFINER functions (`has_community_membership`, `my_community_channels`, `community_channel_members`) all got the same 3-statement revoke/grant dance as any other new RPC — verified via `aclexplode(proacl)`, none show up in `get_advisors`'s anon-executable list.
+- `community_channel_members(channel_id)` is scoped to callers who are themselves a member of that channel — it's "who else is in this room" for author names and @mention autocomplete, not a general user directory.
+- Realtime via `postgres_changes` on `community_messages` (added to the `supabase_realtime` publication) — this respects the table's own SELECT RLS policy, so a client only ever receives INSERT/DELETE broadcasts for rooms it's actually a member of.
+- Moderation is self-delete + admin-delete-any only for now (no mute/ban) — first-version scope, revisit if real usage shows more is needed.
+- `src/pages/dashboard/Community.jsx` mounts a `ChannelRoom` subcomponent keyed on `channel.id` per room — switching rooms is a clean remount rather than an effect resetting local composer state, which also sidesteps this repo's `react-hooks/set-state-in-effect` lint rule (see `usePro.js`'s guard-clause branch for the one place that rule is still pre-existing-violated — untouched, out of scope for this feature).
+- **Hardening pass before first merge** (`supabase/community-hardening.sql`, applied on top of `community-setup.sql`), verified with a role-simulation probe (`set local role authenticated` + `request.jwt.claims`, real production user id, wrapped in `begin;...rollback;`) rather than by eyeballing the SQL:
+  - `body` constraint now checks `char_length(trim(body))`, not raw length — an all-whitespace message used to pass.
+  - `mentioned_user_ids` is capped at 20 entries and the insert policy now requires every mentioned id to actually be a member of that channel (`has_community_membership`) — nothing reads this column yet, but it shouldn't silently accept garbage once something does.
+  - A `BEFORE INSERT` trigger (`community_enforce_rate_limit`, SECURITY DEFINER) caps a user at 20 messages per rolling 60 seconds across all rooms — a server-side flood guard, since client-side debouncing is trivially bypassed by anything scripting the REST API directly.
+
+## CORS (audited 2026-09-27)
+
+Every browser-facing Edge Function restricts `Access-Control-Allow-Origin` to `socialdevtechnologies.com` / `*.vercel.app` / `localhost:*` via a per-file `ALLOWED_ORIGIN_PATTERNS` + `corsHeadersFor(req)` helper (duplicated per function, not shared — check each one individually if changing the allow-list). `ai-gateway` was the one exception (`Access-Control-Allow-Origin: '*'`) — tightened to the same pattern. It's still safe for student Python scripts hitting it via `X-SDT-Key`: CORS is a browser-only mechanism, and a script never sends/enforces an `Origin` header, so restricting it only affects browser callers from *other* origins, not the intended script path. `vercel.json` also gained `X-Content-Type-Options: nosniff` and `Referrer-Policy: strict-origin-when-cross-origin` (the existing CSP/HSTS/X-Frame-Options/COOP were already in place and already allow `wss://*.supabase.co` for the community feature's Realtime).
+
 **Every new `admin_*` RPC needs three revokes, not one.** The internal `is_admin()` guard is necessary but isn't the whole job — two separate default-grant mechanisms make a fresh function reachable anonymously over `/rest/v1/rpc/<name>` unless both are revoked:
 1. Postgres grants `EXECUTE` to `PUBLIC` by default on `CREATE FUNCTION`, and `anon`/`authenticated` inherit from `PUBLIC`.
 2. This Supabase project's `ALTER DEFAULT PRIVILEGES` on the `public` schema *also* grants `EXECUTE` directly to `anon` (and `authenticated`), independent of `PUBLIC` — confirmed 2026-08-19 when `admin_update_testimonial` came out of `CREATE FUNCTION` with `anon` already in its ACL despite no explicit grant statement. Revoking only `FROM PUBLIC` leaves this direct grant untouched.

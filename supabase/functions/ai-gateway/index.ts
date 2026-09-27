@@ -29,19 +29,37 @@ const ANTHROPIC_VERSION = '2023-06-01';
 // per token is a safe floor for English prose and code.
 const estimateTokens = (text: string) => Math.ceil(text.length / 3.5);
 
-const cors = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-sdt-key',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-};
+// Wildcard CORS here was needless exposure: student Python scripts (the
+// X-SDT-Key path) never send an Origin header and ignore CORS entirely — a
+// browser is the ONLY caller CORS headers affect, so scripts are unaffected
+// by tightening this to the same allow-list every other Edge Function in
+// this repo already uses. Only a page on one of these origins can read the
+// response of a cross-origin browser call now.
+const ALLOWED_ORIGIN_PATTERNS = [
+  /^https:\/\/socialdevtechnologies\.com$/,
+  /^https:\/\/[a-z0-9-]+\.vercel\.app$/,
+  /^http:\/\/localhost:\d+$/,
+];
 
-const json = (body: unknown, status = 200) =>
-  new Response(JSON.stringify(body), {
-    status,
-    headers: { ...cors, 'Content-Type': 'application/json' },
-  });
+function corsHeadersFor(req: Request) {
+  const origin = req.headers.get('Origin') ?? '';
+  const allowed = ALLOWED_ORIGIN_PATTERNS.some((p) => p.test(origin));
+  return {
+    'Access-Control-Allow-Origin': allowed ? origin : 'https://socialdevtechnologies.com',
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-sdt-key',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    Vary: 'Origin',
+  };
+}
 
 serve(async (req) => {
+  const cors = corsHeadersFor(req);
+  const json = (body: unknown, status = 200) =>
+    new Response(JSON.stringify(body), {
+      status,
+      headers: { ...cors, 'Content-Type': 'application/json' },
+    });
+
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors });
   if (req.method !== 'POST') return json({ error: 'Method not allowed' }, 405);
 
