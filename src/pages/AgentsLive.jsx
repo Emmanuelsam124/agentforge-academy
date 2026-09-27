@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { m } from 'framer-motion';
 import {
@@ -40,12 +40,11 @@ const DEMO_VIDEO = {
   src: '/videos/agents-live-telegram-demo.mp4',
 };
 
-const DEMO_IMAGE = {
+const DEMO_LOOP = {
   title: 'The multi-agent dashboard',
   text: 'Several agents on one board, each with its own job, working a shared task list the way a small team would.',
   icon: LayoutGrid,
-  src: '/videos/agents-live-dashboard-demo.webp',
-  alt: 'A multi-agent task board showing four agents (Meeting Assistant, Web Research, Support Agent, Sales Agent) working through a shared list of tasks across Backlog, Todo, In Progress, In Review, and Blocked columns.',
+  src: '/videos/agents-live-dashboard-demo.mp4',
 };
 
 const CURRICULUM_DAYS = [
@@ -118,6 +117,17 @@ const WHO_FOR = [
   { title: 'Anyone who wants a new income stream', text: 'Once you can build this for yourself, the workshop also covers offering it to other businesses as a paid service.' },
   { title: 'Anyone curious but budget-conscious', text: 'One weekend, one low price, two real things to show for it at the end.' },
 ];
+
+const INSTRUCTOR = {
+  name: 'Emmanuel A. Samuel',
+  title: 'Web / AI Automation Engineer',
+  photo: '/images/agentslive-instructor.jpg',
+  bio: [
+    "Seven years as a web engineer, the last two of those spent building AI agents — connecting them to real tools, real customers, and real revenue, not just demos.",
+    "In January of this year, one of those agents took over the customer-messaging work of a 3-person team, without a single new hire to replace them.",
+    'AI Agents Live is that exact system, taught live, over two days.',
+  ],
+};
 
 const FORMAT = [
   '2 live days — hands-on, building alongside the instructor, not watching a lecture',
@@ -262,13 +272,45 @@ function DemoVideo({ demo }) {
 }
 
 // Given full-width, bolder treatment (thicker brand border, glow, larger
-// type) rather than sharing the video's plain card style — this is the
-// one demo the founder wants standing out on the page.
-function DemoImage({ demo }) {
+// type) rather than sharing the plain video card style — this is the one
+// demo meant to stand out on the page.
+//
+// Plays like a GIF (autoplay, muted, looped, no player chrome) rather than
+// showing a still image — the attempted animated-webp export turned out to
+// be a static single-frame thumbnail every time it was re-attached, so this
+// is the real, reliable way to get looping motion without depending on
+// animated-image export/support. Only plays while scrolled into view, same
+// pause-when-offscreen courtesy as AgentsLiveFlowDiagram, since this file
+// is a real ~18MB recording, not a lightweight loop.
+function DemoLoop({ demo }) {
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    const el = videoRef.current;
+    const io = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) el.play().catch(() => {});
+      else el.pause();
+    });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   return (
     <div className="bg-white dark:bg-[#181818] border-[2.5px] border-brand rounded-[20px] overflow-hidden shadow-[0_24px_48px_-20px_rgba(124,58,237,.55)]">
-      <div className="bg-[#0A090F]">
-        <img src={demo.src} alt={demo.alt} className="w-full h-auto block" />
+      <div className="aspect-video bg-[#0A090F] flex items-center justify-center relative">
+        <video
+          ref={videoRef}
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          disablePictureInPicture
+          disableRemotePlayback
+          onContextMenu={(e) => e.preventDefault()}
+          className="w-full h-full"
+        >
+          <source src={demo.src} type="video/mp4" />
+        </video>
       </div>
       <div className="p-6 sm:p-7">
         <div className="flex items-center gap-2.5 mb-2">
@@ -325,13 +367,24 @@ export default function AgentsLive() {
             )}
           </m.span>
 
+          <m.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.05 }}
+            className="italic text-[14px] sm:text-[15px] text-body-strong max-w-lg mx-auto mt-5 leading-relaxed"
+          >
+            "In January of this year, I built my first AI agent to handle customer messages. Since then, it's done
+            the work of a 3-person team and I haven't paid a single staff salary for those roles."
+          </m.p>
+
           <m.h1
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="font-display font-extrabold text-[36px] sm:text-[54px] leading-[1.05] text-ink tracking-[-1.5px] mt-5"
+            className="font-display font-extrabold text-[32px] sm:text-[50px] leading-[1.08] text-ink tracking-[-1.5px] mt-5"
           >
-            Build your own AI agent <span className="text-brand">— live, in 2 days.</span>
+            Build the Exact Multi-Agent System That Replaced My Business Overhead
+            {' '}<span className="text-brand">— Live, in 2 Days.</span>
           </m.h1>
 
           <m.p
@@ -340,8 +393,9 @@ export default function AgentsLive() {
             transition={{ delay: 0.2 }}
             className="text-[17px] leading-relaxed text-body mt-5 max-w-lg mx-auto"
           >
-            Connect your own agent to Telegram, WhatsApp, and other tools you already use — then build a dashboard
-            where several agents work together on shared tasks. Two live days, hands-on, small group.
+            Stop copying tutorials that break. Join us on October 2nd to connect your own AI agents to Telegram and
+            WhatsApp, build a multi-agent dashboard, and cut repetitive manual work for good — even if you've never
+            coded before.
           </m.p>
 
           <m.div
@@ -390,10 +444,45 @@ export default function AgentsLive() {
         <SectionHeading eyebrow="See it working">This is what you'll build</SectionHeading>
         <div className="flex flex-col gap-6">
           <DemoVideo demo={DEMO_VIDEO} />
-          <DemoImage demo={DEMO_IMAGE} />
+          <DemoLoop demo={DEMO_LOOP} />
         </div>
       </div>
 
+
+      {/* About the instructor */}
+      <div className="px-4 sm:px-6 lg:px-[5vw] pb-16 max-w-4xl mx-auto">
+        <div
+          className="relative overflow-hidden rounded-[28px] border border-white/10 px-6 sm:px-12 py-10 sm:py-12"
+          style={{ background: 'linear-gradient(135deg, #2C2350 0%, #1B1433 60%, #130E24 100%)' }}
+        >
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{ background: 'radial-gradient(55% 65% at 15% 20%, rgba(124,58,237,.35) 0%, transparent 70%)' }}
+          />
+          <div className="relative flex flex-col sm:flex-row items-center sm:items-start gap-7 sm:gap-9 text-center sm:text-left">
+            <div className="relative flex-shrink-0">
+              <div className="absolute -inset-1.5 rounded-full bg-gradient-to-br from-[#9D5CFF] to-[#7C3AED] opacity-70 blur-md" />
+              <img
+                src={INSTRUCTOR.photo}
+                alt={INSTRUCTOR.name}
+                className="relative w-28 h-28 sm:w-36 sm:h-36 rounded-full object-cover border-[3px] border-[#1B1433] shadow-[0_10px_30px_rgba(0,0,0,.4)]"
+              />
+            </div>
+            <div className="min-w-0">
+              <span className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-wide text-[#C9BFE8] bg-white/5 border border-white/10 px-3 py-1 rounded-full mb-3">
+                Meet your instructor
+              </span>
+              <h2 className="font-display font-extrabold text-[22px] sm:text-[26px] text-white leading-tight">{INSTRUCTOR.name}</h2>
+              <p className="text-[13.5px] font-semibold text-[#A99BD6] mt-1 mb-4">{INSTRUCTOR.title}</p>
+              <div className="flex flex-col gap-2.5">
+                {INSTRUCTOR.bio.map((p) => (
+                  <p key={p} className="text-[14px] sm:text-[15px] text-[#D8D2EE] leading-relaxed">{p}</p>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Curriculum */}
       <div className="bg-[#FBFAFF] dark:bg-[#141416] border-y border-border-soft px-4 sm:px-6 lg:px-[5vw] py-16">
