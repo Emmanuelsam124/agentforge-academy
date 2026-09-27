@@ -8,6 +8,11 @@ import { usePro } from '../hooks/usePro';
 import { useCohortSchedule } from '../hooks/useCohortSchedule';
 import { usePaystackCheckout } from '../hooks/usePaystackCheckout';
 import CheckoutAuthModal from '../components/CheckoutAuthModal';
+import AgentsLiveFlowDiagram from '../components/AgentsLiveFlowDiagram';
+import { DemoVideo, DemoLoop } from '../components/DemoMedia';
+import { DEMO_VIDEO, DEMO_LOOP } from '../data/demoMedia';
+import InstructorSection from '../components/InstructorSection';
+import AgentBuildTestimonials from '../components/AgentBuildTestimonials';
 import { usePageSeo } from '../hooks/usePageSeo';
 import { AI_AGENT_MASTERY_PRICE } from '../data/pricing';
 
@@ -19,6 +24,36 @@ import { AI_AGENT_MASTERY_PRICE } from '../data/pricing';
 // is built on anywhere on this page (founder-confirmed, 2026-09-22) —
 // every section describes the outcome (a working personal-assistant agent)
 // rather than the tooling used to get there.
+
+// 3 live days, confirmed by the founder 2026-09-27 — day 3 is dedicated to
+// monetizing the skill, not more assistant-building. Day 1/2 copy draws
+// only on the OUTCOMES already listed below (architecture/memory/inbox/
+// calendar on day 1, multi-step tasks/messaging/guardrails on day 2).
+const CURRICULUM_DAYS = [
+  {
+    day: 'Day 1',
+    title: 'Agent Architecture & Your First Connections',
+    text: 'Design an agent that holds context across tasks, then wire it into your real inbox and calendar so it starts triaging and scheduling for you.',
+    tags: ['AGENT ARCHITECTURE', 'INBOX', 'CALENDAR'],
+  },
+  {
+    day: 'Day 2',
+    title: 'Memory, Multi-Step Tasks & Guardrails',
+    text: "Give your agent memory so it improves with use, teach it to handle research and messaging tasks it can't finish in one shot, and add the guardrails that keep it asking before it acts.",
+    tags: ['MEMORY', 'RESEARCH & MESSAGING', 'GUARDRAILS'],
+  },
+  {
+    day: 'Day 3',
+    title: 'Monetizing Your New Skill',
+    text: 'Turn what you just built into an income stream — how to package and offer this same kind of build as a paid service to other businesses.',
+    tags: ['MONETIZATION', 'OFFERING IT AS A SERVICE'],
+  },
+];
+
+const FORMAT = [
+  '3 live days — hands-on, building alongside the instructor, not watching a lecture',
+  '6 months of access to classes, recordings, and resources after the live days end',
+];
 
 const CAPABILITIES = [
   { icon: Mail, name: 'Inbox', text: 'Reads, triages, and drafts replies to your email before you even open it.' },
@@ -86,7 +121,7 @@ const FAQS = [
   { q: 'What will my assistant actually be able to do?', a: 'By the end, an agent that can triage your inbox, manage your calendar, do research on request, and draft messages in your voice — with guardrails so it checks with you before anything risky.' },
   { q: 'Do I need to pay for any tools?', a: "The cohort is built around free-tier tools wherever possible — anything with an unavoidable cost is called out before you need it." },
   { q: 'What if I miss a live class?', a: 'Class recordings are available so you can catch up, though attending live is strongly recommended.' },
-  { q: 'How long will I have access?', a: "You'll have access for 6 months — live classes, recordings, resources, and your project." },
+  { q: 'How long will I have access?', a: "The cohort runs over 3 live days — the third dedicated to monetizing your new skill — and you'll have access for 6 months to the classes, recordings, resources, and your project." },
 ];
 
 function formatCohortDate(dateStr) {
@@ -175,6 +210,58 @@ export default function AIAgentMastery() {
               See what it'll do ↓
             </a>
           </m.div>
+        </div>
+      </div>
+
+      {/* System showcase — same diagram used on the AI Agents Live page,
+          since both pages describe an agent connected to real tools plus
+          a multi-agent dashboard. */}
+      <div className="px-4 sm:px-6 lg:px-[5vw] pt-4 pb-16 max-w-5xl mx-auto">
+        <SectionHeading eyebrow="Under the hood">One agent, a whole team behind it</SectionHeading>
+        <p className="text-center text-body max-w-xl mx-auto -mt-5 mb-8 text-[14px] leading-relaxed">
+          A message or task comes in, your agent picks it up, and a team of agents on one shared dashboard splits the
+          work — this is the system you'll build.
+        </p>
+        <AgentsLiveFlowDiagram />
+      </div>
+
+      {/* Demo videos */}
+      <div id="demo" className="px-4 sm:px-6 lg:px-[5vw] py-16 max-w-4xl mx-auto scroll-mt-20">
+        <SectionHeading eyebrow="See it working">This is what you'll build</SectionHeading>
+        <div className="flex flex-col gap-6">
+          <DemoVideo demo={DEMO_VIDEO} />
+          <DemoLoop demo={DEMO_LOOP} />
+        </div>
+      </div>
+
+      {/* About the instructor */}
+      <InstructorSection closingLine="AI Agent Mastery is that exact system, taught live, over the course of the cohort." />
+
+      {/* Curriculum */}
+      <div className="bg-[#FBFAFF] dark:bg-[#141416] border-y border-border-soft px-4 sm:px-6 lg:px-[5vw] py-16">
+        <div className="max-w-3xl mx-auto">
+          <SectionHeading eyebrow="The curriculum">Three days, one working assistant</SectionHeading>
+          <div className="flex flex-col gap-4 mb-8">
+            {CURRICULUM_DAYS.map((d) => (
+              <div key={d.day} className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl p-5 sm:p-6 text-left">
+                <span className="inline-flex items-center text-[11px] font-extrabold text-brand bg-[#F3EBFF] dark:bg-brand/15 px-2.5 py-1 rounded-full mb-2.5">{d.day}</span>
+                <h3 className="font-display font-bold text-[16px] sm:text-[18px] text-ink mb-1.5">{d.title}</h3>
+                <p className="text-[13px] text-body leading-relaxed mb-3">{d.text}</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {d.tags.map((tag) => (
+                    <span key={tag} className="text-[10.5px] font-bold uppercase tracking-wide text-gray-400 bg-[#FAF8FF] dark:bg-white/5 px-2 py-1 rounded-md">{tag}</span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="flex flex-col gap-2.5 text-left">
+            {FORMAT.map((item) => (
+              <div key={item} className="flex items-start gap-2.5 text-[13.5px] font-semibold text-body-strong">
+                <CheckCircle2 className="w-4 h-4 text-green mt-0.5 flex-shrink-0" /> <span>{item}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -304,6 +391,10 @@ export default function AIAgentMastery() {
         </div>
       </div>
 
+      {/* Testimonials — real screenshots (on file), see
+          AgentBuildTestimonials.jsx for the data. */}
+      <AgentBuildTestimonials />
+
       {/* FAQ */}
       <div className="px-4 sm:px-6 lg:px-[5vw] py-16 max-w-5xl mx-auto">
         <SectionHeading>Your questions, answered</SectionHeading>
@@ -345,7 +436,7 @@ export default function AIAgentMastery() {
           )}
           <ul className="flex flex-col gap-2.5 mb-6">
             {[
-              'Live instructor-led classes',
+              '3 live instructor-led days — day 3 on monetizing your new skill',
               '6 months access to classes, replays, and resources',
               'One integrated personal-assistant agent, built end to end',
               'Guardrails and safety checks built in from the start',
