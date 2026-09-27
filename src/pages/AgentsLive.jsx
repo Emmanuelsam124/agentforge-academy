@@ -238,24 +238,42 @@ function SectionHeading({ eyebrow, children }) {
   );
 }
 
-// controlsList="nodownload" hides the download button from Chrome/Edge's
-// native controls, and blocking the context menu removes the obvious
-// "Save video as…" path. This is a casual-user deterrent, not real
-// protection — the browser still fetches the actual file to play it, so
-// anyone using devtools/network-tab can still save it. True prevention
-// would need a streaming/DRM host, which two marketing clips don't warrant.
+// Both demos play like a GIF — autoplay, muted, looped, no player chrome —
+// rather than requiring a click. Only plays while scrolled into view
+// (pauses otherwise), same pause-when-offscreen courtesy as
+// AgentsLiveFlowDiagram, since these are real ~10-25MB recordings, not
+// lightweight loops. Blocking the context menu removes the obvious "Save
+// video as…" path — a casual-user deterrent, not real protection, since
+// the browser still fetches the actual file to play it.
+function useAutoplayInView(ref) {
+  useEffect(() => {
+    const el = ref.current;
+    const io = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) el.play().catch(() => {});
+      else el.pause();
+    });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [ref]);
+}
+
 function DemoVideo({ demo }) {
+  const videoRef = useRef(null);
+  useAutoplayInView(videoRef);
+
   return (
     <div className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl overflow-hidden">
       <div className="aspect-video bg-[#0A090F] flex items-center justify-center relative">
         <video
-          controls
-          controlsList="nodownload noremoteplayback"
+          ref={videoRef}
+          muted
+          loop
+          playsInline
+          preload="metadata"
           disablePictureInPicture
           disableRemotePlayback
           onContextMenu={(e) => e.preventDefault()}
           className="w-full h-full"
-          preload="none"
         >
           <source src={demo.src} type="video/mp4" />
         </video>
@@ -274,26 +292,9 @@ function DemoVideo({ demo }) {
 // Given full-width, bolder treatment (thicker brand border, glow, larger
 // type) rather than sharing the plain video card style — this is the one
 // demo meant to stand out on the page.
-//
-// Plays like a GIF (autoplay, muted, looped, no player chrome) rather than
-// showing a still image — the attempted animated-webp export turned out to
-// be a static single-frame thumbnail every time it was re-attached, so this
-// is the real, reliable way to get looping motion without depending on
-// animated-image export/support. Only plays while scrolled into view, same
-// pause-when-offscreen courtesy as AgentsLiveFlowDiagram, since this file
-// is a real ~18MB recording, not a lightweight loop.
 function DemoLoop({ demo }) {
   const videoRef = useRef(null);
-
-  useEffect(() => {
-    const el = videoRef.current;
-    const io = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) el.play().catch(() => {});
-      else el.pause();
-    });
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
+  useAutoplayInView(videoRef);
 
   return (
     <div className="bg-white dark:bg-[#181818] border-[2.5px] border-brand rounded-[20px] overflow-hidden shadow-[0_24px_48px_-20px_rgba(124,58,237,.55)]">
