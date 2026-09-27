@@ -118,11 +118,8 @@ const WHO_FOR = [
   { title: 'Anyone curious but budget-conscious', text: 'One weekend, one low price, two real things to show for it at the end.' },
 ];
 
-// TODO(founder): confirm the exact name/title to show here before this ships —
-// everything else below is what was given directly (7 years as a web
-// engineer, building agents for the last 2), nothing invented.
 const INSTRUCTOR = {
-  name: 'Your name here',
+  name: 'Emmanuel A. Samuel',
   title: 'Founder, Social Dev Technologies',
   photo: '/images/agentslive-instructor.jpg',
   bio: [
