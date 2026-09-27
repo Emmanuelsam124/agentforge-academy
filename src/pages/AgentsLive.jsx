@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { m } from 'framer-motion';
 import {
@@ -40,12 +40,11 @@ const DEMO_VIDEO = {
   src: '/videos/agents-live-telegram-demo.mp4',
 };
 
-const DEMO_IMAGE = {
+const DEMO_LOOP = {
   title: 'The multi-agent dashboard',
   text: 'Several agents on one board, each with its own job, working a shared task list the way a small team would.',
   icon: LayoutGrid,
-  src: '/videos/agents-live-dashboard-demo.webp',
-  alt: 'A multi-agent task board showing four agents (Meeting Assistant, Web Research, Support Agent, Sales Agent) working through a shared list of tasks across Backlog, Todo, In Progress, In Review, and Blocked columns.',
+  src: '/videos/agents-live-dashboard-demo.mp4',
 };
 
 const CURRICULUM_DAYS = [
@@ -262,13 +261,45 @@ function DemoVideo({ demo }) {
 }
 
 // Given full-width, bolder treatment (thicker brand border, glow, larger
-// type) rather than sharing the video's plain card style — this is the
-// one demo the founder wants standing out on the page.
-function DemoImage({ demo }) {
+// type) rather than sharing the plain video card style — this is the one
+// demo meant to stand out on the page.
+//
+// Plays like a GIF (autoplay, muted, looped, no player chrome) rather than
+// showing a still image — the attempted animated-webp export turned out to
+// be a static single-frame thumbnail every time it was re-attached, so this
+// is the real, reliable way to get looping motion without depending on
+// animated-image export/support. Only plays while scrolled into view, same
+// pause-when-offscreen courtesy as AgentsLiveFlowDiagram, since this file
+// is a real ~18MB recording, not a lightweight loop.
+function DemoLoop({ demo }) {
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    const el = videoRef.current;
+    const io = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) el.play().catch(() => {});
+      else el.pause();
+    });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   return (
     <div className="bg-white dark:bg-[#181818] border-[2.5px] border-brand rounded-[20px] overflow-hidden shadow-[0_24px_48px_-20px_rgba(124,58,237,.55)]">
-      <div className="bg-[#0A090F]">
-        <img src={demo.src} alt={demo.alt} className="w-full h-auto block" />
+      <div className="aspect-video bg-[#0A090F] flex items-center justify-center relative">
+        <video
+          ref={videoRef}
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          disablePictureInPicture
+          disableRemotePlayback
+          onContextMenu={(e) => e.preventDefault()}
+          className="w-full h-full"
+        >
+          <source src={demo.src} type="video/mp4" />
+        </video>
       </div>
       <div className="p-6 sm:p-7">
         <div className="flex items-center gap-2.5 mb-2">
@@ -390,7 +421,7 @@ export default function AgentsLive() {
         <SectionHeading eyebrow="See it working">This is what you'll build</SectionHeading>
         <div className="flex flex-col gap-6">
           <DemoVideo demo={DEMO_VIDEO} />
-          <DemoImage demo={DEMO_IMAGE} />
+          <DemoLoop demo={DEMO_LOOP} />
         </div>
       </div>
 
