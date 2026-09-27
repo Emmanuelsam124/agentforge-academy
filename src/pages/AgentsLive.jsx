@@ -48,11 +48,6 @@ const DEMOS = [
   },
 ];
 
-const BUILDS = [
-  { icon: Send, name: 'Your own agent', text: 'Connected to Telegram, WhatsApp, and other tools you already use — it can read, reply, and act on your behalf.' },
-  { icon: LayoutGrid, name: 'A multi-agent dashboard', text: 'Several agents working together on one board, each assigned its own part of the job, like a small team.' },
-];
-
 const CURRICULUM_DAYS = [
   {
     day: 'Day 1',
@@ -380,21 +375,6 @@ export default function AgentsLive() {
         </div>
       </div>
 
-      {/* What you'll build */}
-      <div className="px-4 sm:px-6 lg:px-[5vw] py-16 max-w-5xl mx-auto">
-        <SectionHeading eyebrow="Two builds, one weekend">What you'll walk away with</SectionHeading>
-        <div className="grid sm:grid-cols-2 gap-4 max-w-3xl mx-auto">
-          {BUILDS.map((b) => (
-            <div key={b.name} className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl p-6 text-center">
-              <div className="w-11 h-11 mx-auto rounded-full bg-[#F3EBFF] dark:bg-brand/15 text-brand flex items-center justify-center mb-3">
-                <b.icon className="w-5 h-5" />
-              </div>
-              <h3 className="font-display font-bold text-[15px] text-ink mb-1.5">{b.name}</h3>
-              <p className="text-[13px] text-body leading-relaxed">{b.text}</p>
-            </div>
-          ))}
-        </div>
-      </div>
 
       {/* Curriculum */}
       <div className="bg-[#FBFAFF] dark:bg-[#141416] border-y border-border-soft px-4 sm:px-6 lg:px-[5vw] py-16">
