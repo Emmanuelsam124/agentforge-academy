@@ -139,7 +139,7 @@ function ChannelRoom({ channel, currentUserId, isAdmin }) {
             const parentAuthor = parent ? memberByUserId(parent.user_id) : null;
             const canDelete = m.user_id === currentUserId || isAdmin;
             return (
-              <div key={m.id} className="flex items-start gap-2.5 group">
+              <div key={m.id} className="flex items-start gap-2.5">
                 <Avatar name={author?.display_name} />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-baseline gap-2">
@@ -154,7 +154,7 @@ function ChannelRoom({ channel, currentUserId, isAdmin }) {
                   <p className="text-[13.5px] text-body-strong leading-relaxed break-words whitespace-pre-wrap">
                     {renderBody(m.body)}
                   </p>
-                  <div className="flex items-center gap-3 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="flex items-center gap-3 mt-1">
                     <button
                       type="button"
                       onClick={() => { setReplyTo(m); textareaRef.current?.focus(); }}

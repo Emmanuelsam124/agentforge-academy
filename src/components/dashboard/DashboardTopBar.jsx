@@ -1,13 +1,16 @@
 import { useNavigate } from 'react-router-dom';
-import { Sun, Moon } from 'lucide-react';
+import { Sun, Moon, Bell } from 'lucide-react';
 import SearchBar from '../SearchBar';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 
-// No notifications bell here deliberately — there's no notifications backend
-// yet, and shipping a bell icon that never does anything would be exactly
-// the kind of "looks real, isn't" UI this dashboard is trying to avoid.
-export default function DashboardTopBar() {
+// The bell was deliberately left out until there was a real notifications
+// backend to drive it (a bell that never does anything is exactly the kind
+// of "looks real, isn't" UI this dashboard avoids). Community's unread
+// state (see useCommunityUnread) is real now, so this bell reflects that —
+// it's not yet a general notification feed, just the one real signal that
+// exists, and it takes you straight to it.
+export default function DashboardTopBar({ hasUnreadCommunity }) {
   const { user } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
@@ -21,6 +24,16 @@ export default function DashboardTopBar() {
         <SearchBar value="" onChange={(v) => navigate(`/catalog${v ? `?q=${encodeURIComponent(v)}` : ''}`)} />
       </div>
       <div className="flex items-center gap-3 ml-auto flex-shrink-0">
+        <button
+          onClick={() => navigate('/dashboard/community')}
+          aria-label={hasUnreadCommunity ? 'New community messages' : 'Community'}
+          className="relative w-9 h-9 flex items-center justify-center rounded-lg bg-[#F3EBFF] dark:bg-white/10 text-brand transition-colors"
+        >
+          <Bell className="w-4 h-4" />
+          {hasUnreadCommunity && (
+            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-rose-500" />
+          )}
+        </button>
         <button
           onClick={toggleTheme}
           aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
