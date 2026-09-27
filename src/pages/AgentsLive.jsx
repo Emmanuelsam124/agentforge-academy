@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { m } from 'framer-motion';
 import {
@@ -10,6 +10,10 @@ import { useCohortSchedule } from '../hooks/useCohortSchedule';
 import { usePaystackCheckout } from '../hooks/usePaystackCheckout';
 import CheckoutAuthModal from '../components/CheckoutAuthModal';
 import AgentsLiveFlowDiagram from '../components/AgentsLiveFlowDiagram';
+import { DemoVideo, DemoLoop } from '../components/DemoMedia';
+import { DEMO_VIDEO, DEMO_LOOP } from '../data/demoMedia';
+import InstructorSection from '../components/InstructorSection';
+import AgentBuildTestimonials from '../components/AgentBuildTestimonials';
 import { usePageSeo } from '../hooks/usePageSeo';
 import { supabase, isSupabaseConfigured } from '../lib/supabaseClient';
 import {
@@ -32,20 +36,6 @@ import {
 // (same threshold/prices as PRICING here) — this page reads that same count
 // via the public agentslive_seats_taken() RPC so the displayed price never
 // drifts from what checkout charges.
-
-const DEMO_VIDEO = {
-  title: 'Your agent, live on Telegram',
-  text: 'Message it like you would a person — it reads, decides, and replies, connected to the tools you gave it.',
-  icon: Send,
-  src: '/videos/agents-live-telegram-demo.mp4',
-};
-
-const DEMO_LOOP = {
-  title: 'The multi-agent dashboard',
-  text: 'Several agents on one board, each with its own job, working a shared task list the way a small team would.',
-  icon: LayoutGrid,
-  src: '/videos/agents-live-dashboard-demo.mp4',
-};
 
 const CURRICULUM_DAYS = [
   {
@@ -82,34 +72,6 @@ const DELIVERABLES = [
   { icon: ShieldCheck, text: "Guardrails built in, so nothing acts without your sign-off" },
 ];
 
-// Real feedback — actual WhatsApp screenshots (provided by the founder,
-// 2026-09-27), shown as images rather than transcribed text, from an
-// earlier live class covering this same build — Telegram/WhatsApp agent
-// plus a multi-agent dashboard. AI Agents Live itself hasn't run its first
-// cohort yet, so this is captioned honestly as an earlier class, not framed
-// as "AI Agents Live graduates say…". `alt` is a plain transcription for
-// screen readers — the image is what actually renders.
-const TESTIMONIALS = [
-  {
-    name: 'Ijeoma',
-    role: 'Student',
-    src: '/testimonials/agentslive-testimonial-ijeoma.png',
-    alt: "WhatsApp message from Ijeoma: \"I never expected this level of depth in building AI agents. I built my first sales agent for a small business here in Aja, and my first ₦500k just landed...\"",
-  },
-  {
-    name: 'Ibrahim',
-    role: 'Student',
-    src: '/testimonials/agentslive-testimonial-ibrahim.png',
-    alt: "WhatsApp message from Ibrahim: \"I have successfully built my AI team. My Telegram and WhatsApp agents closed 7 deals for me. You need to increase the price of this class — it's too cheap for what I got.\"",
-  },
-  {
-    name: 'Richmond',
-    role: 'Student',
-    src: '/testimonials/agentslive-testimonial-richmond.webp',
-    alt: 'WhatsApp message from Richmond: "I used to think that building with AI is difficult. This is the first time I am building something real that solves problems."',
-  },
-];
-
 const WHO_FOR = [
   { title: "You came to the webinar but didn't join the cohort", text: "This is the fast, low-cost way to actually build something — in two days, not a 6-month commitment." },
   { title: 'Founders & operators', text: 'You want a working agent and a working dashboard, not a slide deck about AI.' },
@@ -117,17 +79,6 @@ const WHO_FOR = [
   { title: 'Anyone who wants a new income stream', text: 'Once you can build this for yourself, the workshop also covers offering it to other businesses as a paid service.' },
   { title: 'Anyone curious but budget-conscious', text: 'One weekend, one low price, two real things to show for it at the end.' },
 ];
-
-const INSTRUCTOR = {
-  name: 'Emmanuel A. Samuel',
-  title: 'Web / AI Automation Engineer',
-  photo: '/images/agentslive-instructor.jpg',
-  bio: [
-    "Seven years as a web engineer, the last two of those spent building AI agents — connecting them to real tools, real customers, and real revenue, not just demos.",
-    "In January of this year, one of those agents took over the customer-messaging work of a 3-person team, without a single new hire to replace them.",
-    'AI Agents Live is that exact system, taught live, over two days.',
-  ],
-};
 
 const FORMAT = [
   '2 live days — hands-on, building alongside the instructor, not watching a lecture',
@@ -238,98 +189,11 @@ function SectionHeading({ eyebrow, children }) {
   );
 }
 
-// Both demos play like a GIF — autoplay, muted, looped, no player chrome —
-// rather than requiring a click. Only plays while scrolled into view
-// (pauses otherwise), same pause-when-offscreen courtesy as
-// AgentsLiveFlowDiagram, since these are real ~10-25MB recordings, not
-// lightweight loops. Blocking the context menu removes the obvious "Save
-// video as…" path — a casual-user deterrent, not real protection, since
-// the browser still fetches the actual file to play it.
-function useAutoplayInView(ref) {
-  useEffect(() => {
-    const el = ref.current;
-    const io = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) el.play().catch(() => {});
-      else el.pause();
-    });
-    io.observe(el);
-    return () => io.disconnect();
-  }, [ref]);
-}
-
-function DemoVideo({ demo }) {
-  const videoRef = useRef(null);
-  useAutoplayInView(videoRef);
-
-  return (
-    <div className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl overflow-hidden">
-      <div className="aspect-video bg-[#0A090F] flex items-center justify-center relative">
-        <video
-          ref={videoRef}
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          disablePictureInPicture
-          disableRemotePlayback
-          onContextMenu={(e) => e.preventDefault()}
-          className="w-full h-full"
-        >
-          <source src={demo.src} type="video/mp4" />
-        </video>
-      </div>
-      <div className="p-5">
-        <div className="flex items-center gap-2.5 mb-1.5">
-          <demo.icon className="w-4 h-4 text-brand flex-shrink-0" />
-          <h3 className="font-display font-bold text-[14.5px] text-ink">{demo.title}</h3>
-        </div>
-        <p className="text-[12.5px] text-body leading-relaxed">{demo.text}</p>
-      </div>
-    </div>
-  );
-}
-
-// Given full-width, bolder treatment (thicker brand border, glow, larger
-// type) rather than sharing the plain video card style — this is the one
-// demo meant to stand out on the page.
-function DemoLoop({ demo }) {
-  const videoRef = useRef(null);
-  useAutoplayInView(videoRef);
-
-  return (
-    <div className="bg-white dark:bg-[#181818] border-[2.5px] border-brand rounded-[20px] overflow-hidden shadow-[0_24px_48px_-20px_rgba(124,58,237,.55)]">
-      <div className="aspect-video bg-[#0A090F] flex items-center justify-center relative">
-        <video
-          ref={videoRef}
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          disablePictureInPicture
-          disableRemotePlayback
-          onContextMenu={(e) => e.preventDefault()}
-          className="w-full h-full"
-        >
-          <source src={demo.src} type="video/mp4" />
-        </video>
-      </div>
-      <div className="p-6 sm:p-7">
-        <div className="flex items-center gap-2.5 mb-2">
-          <demo.icon className="w-5 h-5 text-brand flex-shrink-0" />
-          <h3 className="font-display font-extrabold text-[17px] sm:text-[19px] text-ink">{demo.title}</h3>
-        </div>
-        <p className="text-[13.5px] sm:text-[14.5px] text-body leading-relaxed">{demo.text}</p>
-      </div>
-    </div>
-  );
-}
-
 export default function AgentsLive() {
   const { hasAgentsLive } = usePro();
   const { agentslive: cohortDateRaw } = useCohortSchedule();
   const cohortDate = formatCohortDate(cohortDateRaw);
   const { seatsLeft, currentPrice } = useAgentsLiveSeats();
-  const [lightbox, setLightbox] = useState(null);
   const countdownTarget = useMemo(
     () => (cohortDateRaw ? new Date(`${cohortDateRaw}T${AGENTS_LIVE_START_HOUR_WAT}`) : null),
     [cohortDateRaw],
@@ -451,39 +315,7 @@ export default function AgentsLive() {
 
 
       {/* About the instructor */}
-      <div className="px-4 sm:px-6 lg:px-[5vw] pb-16 max-w-4xl mx-auto">
-        <div
-          className="relative overflow-hidden rounded-[28px] border border-white/10 px-6 sm:px-12 py-10 sm:py-12"
-          style={{ background: 'linear-gradient(135deg, #2C2350 0%, #1B1433 60%, #130E24 100%)' }}
-        >
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{ background: 'radial-gradient(55% 65% at 15% 20%, rgba(124,58,237,.35) 0%, transparent 70%)' }}
-          />
-          <div className="relative flex flex-col sm:flex-row items-center sm:items-start gap-7 sm:gap-9 text-center sm:text-left">
-            <div className="relative flex-shrink-0">
-              <div className="absolute -inset-1.5 rounded-full bg-gradient-to-br from-[#9D5CFF] to-[#7C3AED] opacity-70 blur-md" />
-              <img
-                src={INSTRUCTOR.photo}
-                alt={INSTRUCTOR.name}
-                className="relative w-28 h-28 sm:w-36 sm:h-36 rounded-full object-cover border-[3px] border-[#1B1433] shadow-[0_10px_30px_rgba(0,0,0,.4)]"
-              />
-            </div>
-            <div className="min-w-0">
-              <span className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-wide text-[#C9BFE8] bg-white/5 border border-white/10 px-3 py-1 rounded-full mb-3">
-                Meet your instructor
-              </span>
-              <h2 className="font-display font-extrabold text-[22px] sm:text-[26px] text-white leading-tight">{INSTRUCTOR.name}</h2>
-              <p className="text-[13.5px] font-semibold text-[#A99BD6] mt-1 mb-4">{INSTRUCTOR.title}</p>
-              <div className="flex flex-col gap-2.5">
-                {INSTRUCTOR.bio.map((p) => (
-                  <p key={p} className="text-[14px] sm:text-[15px] text-[#D8D2EE] leading-relaxed">{p}</p>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <InstructorSection closingLine="AI Agents Live is that exact system, taught live, over two days." />
 
       {/* Curriculum */}
       <div className="bg-[#FBFAFF] dark:bg-[#141416] border-y border-border-soft px-4 sm:px-6 lg:px-[5vw] py-16">
@@ -604,34 +436,10 @@ export default function AgentsLive() {
         </div>
       </div>
 
-      {/* Testimonials — real screenshots (on file), see TESTIMONIALS comment
-          above for why this is captioned "an earlier class" rather than
-          implying AI Agents Live itself already has graduates. */}
-      <div className="px-4 sm:px-6 lg:px-[5vw] pb-16 max-w-5xl mx-auto">
-        <SectionHeading eyebrow="Real feedback, real results">From an earlier class covering this same build</SectionHeading>
-        <p className="text-center text-[12px] text-gray-400 -mt-6 mb-6">Tap a screenshot to read it in full</p>
-        <div className="grid sm:grid-cols-3 gap-3.5 max-w-4xl mx-auto">
-          {TESTIMONIALS.map((t) => (
-            <button
-              key={t.name}
-              onClick={() => setLightbox(t)}
-              className="text-left bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl overflow-hidden hover:border-brand transition-colors"
-            >
-              <img src={t.src} alt={t.alt} className="w-full h-auto block" loading="lazy" />
-              <p className="text-[12px] font-bold text-ink px-4 py-3">{t.name} <span className="font-normal text-gray-400">· {t.role}</span></p>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {lightbox && (
-        <div
-          className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 cursor-zoom-out"
-          onClick={() => setLightbox(null)}
-        >
-          <img src={lightbox.src} alt={lightbox.alt} className="max-w-full max-h-full rounded-2xl object-contain" />
-        </div>
-      )}
+      {/* Testimonials — real screenshots (on file), captioned "an earlier
+          class" rather than implying AI Agents Live itself already has
+          graduates. See AgentBuildTestimonials.jsx for the data. */}
+      <AgentBuildTestimonials />
 
       {/* FAQ */}
       <div className="px-4 sm:px-6 lg:px-[5vw] py-16 max-w-5xl mx-auto">
