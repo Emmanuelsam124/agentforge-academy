@@ -175,13 +175,24 @@ export default function AIAgentMastery() {
             🤖 Live cohort — enrollment open
           </m.span>
 
+          <m.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.05 }}
+            className="italic text-[14px] sm:text-[15px] text-body-strong max-w-lg mx-auto mt-5 leading-relaxed"
+          >
+            "In January of this year, I built my first AI agent to handle customer messages. Since then, it's done
+            the work of a 3-person team and I haven't paid a single staff salary for those roles."
+          </m.p>
+
           <m.h1
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="font-display font-extrabold text-[36px] sm:text-[54px] leading-[1.05] text-ink tracking-[-1.5px] mt-5"
+            className="font-display font-extrabold text-[32px] sm:text-[50px] leading-[1.08] text-ink tracking-[-1.5px] mt-5"
           >
-            Build the assistant that <span className="text-brand">does it for you.</span>
+            Build the Exact Multi-Agent System That Replaced My Business Overhead
+            {' '}<span className="text-brand">— Live, in 3 Days.</span>
           </m.h1>
 
           <m.p
@@ -190,8 +201,9 @@ export default function AIAgentMastery() {
             transition={{ delay: 0.2 }}
             className="text-[17px] leading-relaxed text-body mt-5 max-w-lg mx-auto"
           >
-            Not another single-purpose bot — a real personal AI assistant that triages your inbox, runs your calendar,
-            does your research, and drafts your messages. You build it, live, in a small cohort.
+            Stop copying tutorials that break. {cohortDate ? `Join us on ${cohortDate}` : 'Join the live cohort'} to
+            connect your own AI agents to Telegram and WhatsApp, build a multi-agent dashboard, and cut repetitive
+            manual work for good — even if you've never coded before.
           </m.p>
 
           <m.div
@@ -204,10 +216,10 @@ export default function AIAgentMastery() {
               href="#pricing"
               className="bg-brand text-white font-extrabold text-base px-8 py-4 rounded-2xl shadow-[0_10px_22px_rgba(124,58,237,.4)] hover:bg-brand-deep transition-colors"
             >
-              Join the cohort — ₦{AI_AGENT_MASTERY_PRICE.toLocaleString()} →
+              Join — ₦{AI_AGENT_MASTERY_PRICE.toLocaleString()} →
             </a>
-            <a href="#capabilities" className="text-body-strong font-bold text-[14.5px] hover:text-brand transition-colors">
-              See what it'll do ↓
+            <a href="#demo" className="text-body-strong font-bold text-[14.5px] hover:text-brand transition-colors">
+              Watch it in action ↓
             </a>
           </m.div>
         </div>
