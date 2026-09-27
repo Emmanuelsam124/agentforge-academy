@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { m } from 'framer-motion';
 import {
@@ -239,21 +239,37 @@ function SectionHeading({ eyebrow, children }) {
 }
 
 // Both demos play like a GIF — autoplay, muted, looped, no player chrome —
-// rather than requiring a click, and rather than gating on scroll position:
-// plays immediately on load and keeps looping regardless of whether it's
-// currently in view. Blocking the context menu removes the obvious "Save
+// rather than requiring a click. Only plays while scrolled into view
+// (pauses otherwise), same pause-when-offscreen courtesy as
+// AgentsLiveFlowDiagram, since these are real ~10-25MB recordings, not
+// lightweight loops. Blocking the context menu removes the obvious "Save
 // video as…" path — a casual-user deterrent, not real protection, since
 // the browser still fetches the actual file to play it.
+function useAutoplayInView(ref) {
+  useEffect(() => {
+    const el = ref.current;
+    const io = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) el.play().catch(() => {});
+      else el.pause();
+    });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [ref]);
+}
+
 function DemoVideo({ demo }) {
+  const videoRef = useRef(null);
+  useAutoplayInView(videoRef);
+
   return (
     <div className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl overflow-hidden">
       <div className="aspect-video bg-[#0A090F] flex items-center justify-center relative">
         <video
-          autoPlay
+          ref={videoRef}
           muted
           loop
           playsInline
-          preload="auto"
+          preload="metadata"
           disablePictureInPicture
           disableRemotePlayback
           onContextMenu={(e) => e.preventDefault()}
@@ -277,15 +293,18 @@ function DemoVideo({ demo }) {
 // type) rather than sharing the plain video card style — this is the one
 // demo meant to stand out on the page.
 function DemoLoop({ demo }) {
+  const videoRef = useRef(null);
+  useAutoplayInView(videoRef);
+
   return (
     <div className="bg-white dark:bg-[#181818] border-[2.5px] border-brand rounded-[20px] overflow-hidden shadow-[0_24px_48px_-20px_rgba(124,58,237,.55)]">
       <div className="aspect-video bg-[#0A090F] flex items-center justify-center relative">
         <video
-          autoPlay
+          ref={videoRef}
           muted
           loop
           playsInline
-          preload="auto"
+          preload="metadata"
           disablePictureInPicture
           disableRemotePlayback
           onContextMenu={(e) => e.preventDefault()}
