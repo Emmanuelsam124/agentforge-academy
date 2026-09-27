@@ -21,6 +21,17 @@ Supabase project ref: `qkrfpuckvymjpewcszgs`. Two other webhook functions exist 
 
 Admin panel (`/admin`, `src/pages/Admin.jsx`) uses SECURITY DEFINER RPCs in `supabase/admin-setup.sql` (`admin_get_all_profiles`, `admin_set_user_pro`, `admin_set_user_admin`) — self-check inside each function, only callable by an existing admin.
 
+## Student community (added 2026-09-27)
+
+`/dashboard/community` (`src/pages/dashboard/Community.jsx`) is a text-only chat: one `general` room for anyone who has ever bought anything, plus one room per product (`builder1`, `builder2`, `vibecoding`, `aimastery`, `agentslive`) — schema in `supabase/community-setup.sql`. No attachment/upload path exists anywhere in this feature, which is how "no images or videos" is enforced (never built, not filtered).
+
+- **Membership is permanent, not tied to whether a live cohort's access window has since expired** — `has_community_membership()` checks "ever granted" (`guide_purchases` row exists, or the relevant `entitlements.*_expires_at` is non-null), not `usePro()`'s "currently active" rule. This is a class alumni room, not a paywall. `is_admin` bypasses every channel.
+- Three new SECURITY DEFINER functions (`has_community_membership`, `my_community_channels`, `community_channel_members`) all got the same 3-statement revoke/grant dance as any other new RPC — verified via `aclexplode(proacl)`, none show up in `get_advisors`'s anon-executable list.
+- `community_channel_members(channel_id)` is scoped to callers who are themselves a member of that channel — it's "who else is in this room" for author names and @mention autocomplete, not a general user directory.
+- Realtime via `postgres_changes` on `community_messages` (added to the `supabase_realtime` publication) — this respects the table's own SELECT RLS policy, so a client only ever receives INSERT/DELETE broadcasts for rooms it's actually a member of.
+- Moderation is self-delete + admin-delete-any only for now (no mute/ban) — first-version scope, revisit if real usage shows more is needed.
+- `src/pages/dashboard/Community.jsx` mounts a `ChannelRoom` subcomponent keyed on `channel.id` per room — switching rooms is a clean remount rather than an effect resetting local composer state, which also sidesteps this repo's `react-hooks/set-state-in-effect` lint rule (see `usePro.js`'s guard-clause branch for the one place that rule is still pre-existing-violated — untouched, out of scope for this feature).
+
 **Every new `admin_*` RPC needs three revokes, not one.** The internal `is_admin()` guard is necessary but isn't the whole job — two separate default-grant mechanisms make a fresh function reachable anonymously over `/rest/v1/rpc/<name>` unless both are revoked:
 1. Postgres grants `EXECUTE` to `PUBLIC` by default on `CREATE FUNCTION`, and `anon`/`authenticated` inherit from `PUBLIC`.
 2. This Supabase project's `ALTER DEFAULT PRIVILEGES` on the `public` schema *also* grants `EXECUTE` directly to `anon` (and `authenticated`), independent of `PUBLIC` — confirmed 2026-08-19 when `admin_update_testimonial` came out of `CREATE FUNCTION` with `anon` already in its ACL despite no explicit grant statement. Revoking only `FROM PUBLIC` leaves this direct grant untouched.
