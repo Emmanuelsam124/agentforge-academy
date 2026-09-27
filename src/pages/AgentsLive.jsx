@@ -258,7 +258,7 @@ export default function AgentsLive() {
             transition={{ delay: 0.2 }}
             className="text-[17px] leading-relaxed text-body mt-5 max-w-lg mx-auto"
           >
-            Stop copying tutorials that break. Join us on October 2nd to connect your own AI agents to Telegram and
+            Stop copying tutorials that break. Join us on October 9th to connect your own AI agents to Telegram and
             WhatsApp, build a multi-agent dashboard, and cut repetitive manual work for good — even if you've never
             coded before.
           </m.p>
