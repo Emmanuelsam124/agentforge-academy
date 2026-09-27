@@ -30,12 +30,19 @@ const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '
 // resolvePlan() trusts the metadata.plan set below for exact
 // identification, only falling back to amount-only matching (pro-only)
 // for metadata-less payments.
+//
+// agentslive (added 2026-09-27) is a separate 2-day live workshop, not a
+// tier of AI Agent Mastery — same price as 'pro' (10000) is coincidental;
+// resolvePlan() in the webhook keys off the plan string in metadata, not
+// the amount alone, so this collision is safe as long as checkout always
+// sets metadata.plan (it does, below).
 const PRICES = {
   builder1: 5000,
   builder2: 7000,
   pro: 10000,
   vibecoding: 50000,
   aimastery: 19999,
+  agentslive: 10000,
 };
 
 // This function is called directly from the browser (Pricing.jsx via

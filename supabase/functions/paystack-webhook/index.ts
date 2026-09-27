@@ -24,12 +24,20 @@ const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY') ?? '';
 // priced independently (aimastery cut from 25000 to 19999 and vibecoding
 // raised from 25000 to 50000, both 2026-09-23). resolvePlan() below trusts
 // metadata.plan first, and checkout always sets it.
+//
+// agentslive (added 2026-09-27): a separate 2-day live workshop, distinct
+// from aimastery — grants a short 7-day entitlement window, not 182 days
+// (see the isPermanentGuidePlan branch below). Same price as 'pro' is
+// coincidental and safe: resolvePlan() matches on the metadata.plan string
+// first, so a ₦10,000 checkout tagged plan:'agentslive' never resolves as
+// 'pro' as long as checkout keeps setting metadata.plan (it does).
 const PRICES = {
   builder1: 5000,
   builder2: 7000,
   pro: 10000,
   vibecoding: 50000,
   aimastery: 19999,
+  agentslive: 10000,
 };
 const AMOUNT_TOLERANCE = 1;
 
@@ -50,6 +58,7 @@ const PLAN_LABELS = {
   pro: 'Pro',
   vibecoding: 'Vibe Coding Bootcamp',
   aimastery: 'AI Agent Mastery',
+  agentslive: 'AI Agents Live',
 };
 
 function emailShell(innerHtml) {
@@ -92,7 +101,7 @@ async function buildCohortLines(supabase, plan) {
   // cohort or live-session perks attached, so there's nothing to surface.
   if (plan === 'builder1' || plan === 'builder2' || plan === 'pro') return '';
   const { data } = await supabase.from('cohort_schedule').select('tier, start_date').eq('tier', plan);
-  const labels = { vibecoding: 'Vibe Coding Bootcamp', aimastery: 'AI Agent Mastery' };
+  const labels = { vibecoding: 'Vibe Coding Bootcamp', aimastery: 'AI Agent Mastery', agentslive: 'AI Agents Live' };
   const today = new Date(new Date().toDateString());
   const lines = (data || [])
     .filter((row) => row.start_date && new Date(`${row.start_date}T00:00:00`) >= today)
@@ -115,6 +124,9 @@ async function buildCohortLines(supabase, plan) {
 //   a self-paced build queue), plus its prompt library.
 // - aimastery: live-taught like vibecoding, but no prompt-library bullet —
 //   this program has no equivalent reference-library table.
+// - agentslive: live-taught like aimastery, but a short 7-day access
+//   window (2-day workshop, not a 6-month cohort) — its accessLine and
+//   bullets say so explicitly rather than reusing the 6-month copy below.
 function welcomeHtml(name, planLabel, cohortLines, plan) {
   const isPermanentGuides = plan === 'builder1' || plan === 'builder2' || plan === 'pro';
   let bullets;
@@ -129,6 +141,12 @@ function welcomeHtml(name, planLabel, cohortLines, plan) {
       <li>Your live classes and replays are on your dashboard under Live Sessions.</li>
       <li>Stuck on something? Reach us on WhatsApp: <a href="https://wa.me/2349066006963" style="color:#7C3AED;">wa.me/2349066006963</a></li>
     `;
+  } else if (plan === 'agentslive') {
+    bullets = `
+      <li>Your live class links and replays are on your dashboard under Live Sessions.</li>
+      <li>You have 7 days to revisit the replays and resources — download or note anything you want to keep.</li>
+      <li>Stuck on something? Reach us on WhatsApp: <a href="https://wa.me/2349066006963" style="color:#7C3AED;">wa.me/2349066006963</a></li>
+    `;
   } else {
     bullets = `
       <li>All you need is a free Gemini API key from Google AI Studio — no paid AI subscription required.</li>
@@ -138,7 +156,9 @@ function welcomeHtml(name, planLabel, cohortLines, plan) {
   }
   const accessLine = isPermanentGuides
     ? `You're in! Your <strong>${planLabel}</strong> access is live right now — yours to keep, no expiry.`
-    : `You're in! Your <strong>${planLabel}</strong> access is live right now, for the next 6 months.`;
+    : plan === 'agentslive'
+      ? `You're in! Your <strong>${planLabel}</strong> access is live right now, for the 2 live days plus 7 days to revisit everything after.`
+      : `You're in! Your <strong>${planLabel}</strong> access is live right now, for the next 6 months.`;
   return `
     <p style="font-size:15px;color:#1A1333;">Hey ${name},</p>
     <p style="font-size:15px;color:#3A3358;line-height:1.6;">
@@ -322,9 +342,10 @@ serve(async (req) => {
       .upsert(rows, { onConflict: 'user_id,course_id', ignoreDuplicates: true });
   } else {
     // vibecoding/aimastery are one-time payments for 6 months of live
-    // cohort access (founder-confirmed).
+    // cohort access (founder-confirmed). agentslive is a 2-day workshop —
+    // only 7 days of post-workshop access, not 182 (see agents-live-setup.sql).
     const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + 182);
+    expiresAt.setDate(expiresAt.getDate() + (plan === 'agentslive' ? 7 : 182));
     const expiresAtIso = expiresAt.toISOString();
 
     const entitlementUpdate = { payment_provider: 'paystack' };
@@ -332,6 +353,8 @@ serve(async (req) => {
       entitlementUpdate.vibecoding_expires_at = expiresAtIso;
     } else if (plan === 'aimastery') {
       entitlementUpdate.aimastery_expires_at = expiresAtIso;
+    } else if (plan === 'agentslive') {
+      entitlementUpdate.agentslive_expires_at = expiresAtIso;
     }
 
     await supabase
