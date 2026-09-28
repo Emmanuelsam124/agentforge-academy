@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { m } from 'framer-motion';
 import {
   Mail, Lock, User, Loader2, CheckCircle2,
@@ -35,8 +35,13 @@ export default function Welcome() {
   const { signUp, signIn, sendLoginCode, verifyLoginCode, resetPassword, signInWithGoogle, isConfigured, user } = useAuth();
   const { theme } = useTheme();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
-  const [mode, setMode] = useState('signup');
+  // Redirected-here visitors (StudentDashboard's auth guard, on landing on
+  // /dashboard signed out — the common case now that the installed PWA's
+  // start_url opens straight into it) are almost always existing students,
+  // not new signups, so land them on "Log In" instead of the default.
+  const [mode, setMode] = useState(() => (searchParams.get('mode') === 'login' ? 'login' : 'signup'));
   const [loginMethod, setLoginMethod] = useState('password'); // 'password' | 'code' | 'forgot'
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');

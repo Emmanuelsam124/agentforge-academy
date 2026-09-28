@@ -1,4 +1,5 @@
-import { Routes, Route, Outlet } from 'react-router-dom';
+import { Routes, Route, Outlet, Navigate } from 'react-router-dom';
+import { Loader2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useLiveSessions } from '../hooks/useLiveSessions';
 import { useCommunityUnread } from '../hooks/useCommunity';
@@ -24,9 +25,31 @@ function DashboardOutlet({ context }) {
 }
 
 export default function StudentDashboard({ progress, onSelectAgent }) {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const liveSessions = useLiveSessions(user);
   const hasUnreadCommunity = useCommunityUnread();
+
+  // Nothing here previously checked whether anyone was actually signed in —
+  // /dashboard silently rendered this whole authenticated shell with blank/
+  // empty data for a signed-out visitor, with no login form or link
+  // anywhere in it. Harmless on the regular site (you only ever arrived
+  // here already logged in), but the installed PWA's start_url opens
+  // straight into /dashboard, and iOS's "Add to Home Screen" apps get a
+  // storage container isolated from Safari itself — so a signed-out first
+  // launch is now the common case, not an edge case, and needs a real way
+  // out. `loading` (still resolving the stored session) must be checked
+  // separately from `!user` (confirmed signed out), or a valid session
+  // that just hasn't loaded yet gets bounced before it has a chance to.
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-bg">
+        <Loader2 className="w-6 h-6 animate-spin text-brand" />
+      </div>
+    );
+  }
+  if (!user) {
+    return <Navigate to="/welcome?mode=login" replace />;
+  }
 
   return (
     <div className="min-h-screen bg-bg">
