@@ -37,17 +37,33 @@ export default defineConfig({
         ],
       },
       workbox: {
-        // Precache only built JS/CSS — never HTML. This site's whole
-        // prerendering setup (see src/main.jsx's createRoot comment, and
-        // CLAUDE.md) depends on every navigation getting fresh HTML from
-        // the network; a service worker serving a cached index.html would
-        // reintroduce the exact stale/mismatched-content problem that
-        // machinery exists to avoid. navigateFallback disabled means
-        // navigation requests always go to the network, same as if there
-        // were no service worker at all — this only adds an installable
-        // manifest + offline caching for static assets.
+        // Precache only images/icons — never HTML, and (deliberately) never
+        // assets/*.{js,css} either, despite that seeming like the obvious
+        // thing to precache. Those two files have FIXED, non-hashed names
+        // (see the build.rollupOptions comment below — required so the
+        // locally-prerendered HTML's script/link tags never drift from a
+        // separate Vercel build). Workbox's precache entries came out as
+        // {url: "assets/index.js", revision: null} on every single build
+        // regardless of actual content changes — confirmed by rebuilding
+        // after a real source change and seeing the same null. Workbox
+        // treats an unchanged {url, revision} pair as "already cached,
+        // nothing to do" and skips re-fetching it, so a device that
+        // installed the app once would keep serving whatever JS/CSS was
+        // live at that moment forever, through every later deploy, with no
+        // way to self-correct short of a full uninstall. This is exactly
+        // why vercel.json already gives /assets/* a short 5-minute
+        // must-revalidate Cache-Control instead of the usual immutable
+        // far-future one — the fixed-filename tradeoff was already solved
+        // for at the HTTP layer before this service worker existed, and
+        // precaching these two files fought that existing design instead
+        // of complementing it. The runtimeCaching rule below still covers
+        // them (it matches the same .js/.css extensions), and
+        // StaleWhileRevalidate there correctly revalidates against the
+        // network on every request regardless of any revision metadata —
+        // so they're still cached for instant repeat loads, just without
+        // precaching's broken update story.
         navigateFallback: null,
-        globPatterns: ['assets/*.{js,css}', '*.{png,webp,svg,ico}'],
+        globPatterns: ['*.{png,webp,svg,ico}'],
         runtimeCaching: [
           {
             // Same-origin static assets only — StaleWhileRevalidate so a

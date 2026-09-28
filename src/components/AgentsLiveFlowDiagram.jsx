@@ -221,7 +221,19 @@ export default function AgentsLiveFlowDiagram() {
       </div>
 
       <div className="relative overflow-x-auto">
-        <div className="relative min-w-[600px] aspect-[1000/440]" style={{ containerType: 'inline-size' }}>
+        <div className="relative min-w-[600px]" style={{ containerType: 'inline-size' }}>
+          {/* Establishes the box's height the old bulletproof way — a
+              normal-flow spacer with padding-top as a percentage, which the
+              CSS spec always resolves against the *containing block's
+              width*, in every browser, unconditionally. Deliberately not
+              `aspect-[1000/440]`: that shorthand needs the browser to
+              derive height from an aspect-ratio on a non-replaced element
+              that also establishes size containment (container-type:
+              inline-size) — exactly the kind of combination engines have
+              disagreed on, and it reportedly rendered as a blank box on at
+              least one real device even though it looked fine here in
+              Chromium (no WebKit available in this sandbox to confirm). */}
+          <div style={{ paddingTop: `${(H / W) * 100}%` }} />
           <svg viewBox={`0 0 ${W} ${H}`} className="absolute inset-0 w-full h-full" aria-hidden="true">
             <defs>
               <pattern id="ald-grid" width="22" height="22" patternUnits="userSpaceOnUse">
