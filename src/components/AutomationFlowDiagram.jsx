@@ -210,7 +210,14 @@ export default function AutomationFlowDiagram() {
       </div>
 
       <div className="relative overflow-x-auto">
-        <div className="relative min-w-[600px] aspect-[1000/440]" style={{ containerType: 'inline-size' }}>
+        <div className="relative min-w-[600px]" style={{ containerType: 'inline-size' }}>
+          {/* See AgentsLiveFlowDiagram.jsx's identical comment — a
+              padding-top spacer instead of `aspect-[1000/440]`, since that
+              shorthand needs the browser to derive height from an
+              aspect-ratio on a non-replaced element that also establishes
+              size containment (container-type: inline-size), which at
+              least one real device rendered as a blank box. */}
+          <div style={{ paddingTop: `${(H / W) * 100}%` }} />
           <svg viewBox={`0 0 ${W} ${H}`} className="absolute inset-0 w-full h-full" aria-hidden="true">
             <defs>
               <pattern id="afd-grid" width="22" height="22" patternUnits="userSpaceOnUse">
