@@ -5,6 +5,7 @@ import { useCommunityUnread } from '../hooks/useCommunity';
 import DashboardSidebar, { DashboardMobileNav } from '../components/dashboard/DashboardSidebar';
 import DashboardTopBar from '../components/dashboard/DashboardTopBar';
 import JumpBackInCard from '../components/dashboard/JumpBackInCard';
+import InstallBanner from '../components/dashboard/InstallBanner';
 import Home from './dashboard/Home';
 import LiveSessions from './dashboard/LiveSessions';
 import Replays from './dashboard/Replays';
@@ -32,23 +33,26 @@ export default function StudentDashboard({ progress, onSelectAgent }) {
       <DashboardSidebar hasUnreadCommunity={hasUnreadCommunity} />
       <div className="lg:pl-64 flex flex-col min-h-screen">
         <DashboardTopBar hasUnreadCommunity={hasUnreadCommunity} />
-        <div className="flex-1 max-w-[1400px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 pb-20 lg:pb-6 grid lg:grid-cols-[1fr_300px] gap-8 items-start">
-          <main className="min-w-0">
-            <Routes>
-              <Route element={<DashboardOutlet context={{ progress, onSelectAgent, liveSessions }} />}>
-                <Route index element={<Home />} />
-                <Route path="live-sessions" element={<LiveSessions />} />
-                <Route path="replays" element={<Replays />} />
-                <Route path="community" element={<Community />} />
-                <Route path="account" element={<Account />} />
-                <Route path="refer" element={<Refer />} />
-                <Route path="help" element={<Help />} />
-              </Route>
-            </Routes>
-          </main>
-          <aside className="hidden lg:block sticky top-24">
-            <JumpBackInCard nextSession={liveSessions.nextSession} />
-          </aside>
+        <div className="flex-1 max-w-[1400px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 pb-20 lg:pb-6">
+          <InstallBanner />
+          <div className="grid lg:grid-cols-[1fr_300px] gap-8 items-start">
+            <main className="min-w-0">
+              <Routes>
+                <Route element={<DashboardOutlet context={{ progress, onSelectAgent, liveSessions }} />}>
+                  <Route index element={<Home />} />
+                  <Route path="live-sessions" element={<LiveSessions />} />
+                  <Route path="replays" element={<Replays />} />
+                  <Route path="community" element={<Community />} />
+                  <Route path="account" element={<Account />} />
+                  <Route path="refer" element={<Refer />} />
+                  <Route path="help" element={<Help />} />
+                </Route>
+              </Routes>
+            </main>
+            <aside className="hidden lg:block sticky top-24">
+              <JumpBackInCard nextSession={liveSessions.nextSession} />
+            </aside>
+          </div>
         </div>
       </div>
       <DashboardMobileNav hasUnreadCommunity={hasUnreadCommunity} />
