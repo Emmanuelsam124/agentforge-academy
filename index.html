@@ -100,6 +100,16 @@
     <!-- Theme colour (browser chrome on Android) -->
     <meta name="theme-color" content="#7C3AED" />
 
+    <!-- iOS "Add to Home Screen" support — Safari doesn't read the web
+         manifest for these, they're Apple-specific meta/link tags.
+         vite-plugin-pwa injects <link rel="manifest"> automatically at
+         build time; these three it does not, so they're added here by
+         hand. -->
+    <link rel="apple-touch-icon" href="/pwa-192.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="SDT" />
+
     <!-- Structured data: organization identity + sitelinks search box -->
     <script type="application/ld+json">
       {

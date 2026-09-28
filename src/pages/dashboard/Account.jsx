@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { UserCircle2, Mail, Save, Loader2, CheckCircle2, KeyRound } from 'lucide-react';
+import { UserCircle2, Mail, Save, Loader2, CheckCircle2, KeyRound, Smartphone, Download } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { supabase, isSupabaseConfigured } from '../../lib/supabaseClient';
 import { industries } from '../../data/industries';
+import { useInstallPrompt } from '../../hooks/useInstallPrompt';
 
 export default function Account() {
   const { user } = useAuth();
+  const { installed, canPrompt, isIOS, promptInstall } = useInstallPrompt();
   const [name, setName] = useState('');
   const [industry, setIndustry] = useState('');
   const [customIndustry, setCustomIndustry] = useState('');
@@ -131,6 +133,32 @@ export default function Account() {
               </div>
             </div>
           </div>
+
+          {!installed && (
+            <div className="rounded-2xl border-[1.5px] border-border-soft bg-white dark:bg-[#181818] p-5 space-y-3">
+              <div className="flex items-start gap-3">
+                <Smartphone className="w-4 h-4 text-gray-400 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-semibold text-ink">Install this dashboard as an app</p>
+                  <p className="text-xs text-gray-400 mt-0.5">
+                    {isIOS
+                      ? 'In Safari, tap the Share icon, then "Add to Home Screen".'
+                      : canPrompt
+                        ? 'One tap from your home screen or desktop — no browser tabs, no address bar.'
+                        : 'Look for an install icon in your browser\'s address bar, or check its menu for "Install app".'}
+                  </p>
+                </div>
+              </div>
+              {canPrompt && (
+                <button
+                  onClick={promptInstall}
+                  className="flex items-center gap-2 bg-brand hover:bg-brand-deep text-white font-bold text-sm px-5 py-2.5 rounded-xl transition-colors"
+                >
+                  <Download className="w-4 h-4" /> Install app
+                </button>
+              )}
+            </div>
+          )}
         </div>
       )}
     </div>
