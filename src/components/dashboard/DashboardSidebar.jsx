@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
   Home, Video, PlayCircle, MessagesSquare, UserCircle2, HelpCircle, LogOut, Shield,
-  Hammer, Rocket, Gift, Sparkles, MoreHorizontal, X,
+  Hammer, Rocket, Gift, Sparkles, Bot, Flame, MoreHorizontal, X,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { usePro } from '../../hooks/usePro';
@@ -59,13 +59,65 @@ function NavItems({ onNavigate, hasUnreadCommunity }) {
   );
 }
 
+// Shared between the desktop sidebar and the mobile "More" sheet so every
+// entitled product gets one entry here — AI Agent Mastery and AI Agents
+// Live have real destinations already (a dedicated course page for the
+// former, the tier-scoped /dashboard/live-sessions for the latter, same
+// place their own pricing-card "you're enrolled" links already send
+// people) but were never wired into this list. `rowClass` lets each
+// caller keep its own exact NavLink styling (desktop vs. the sheet's
+// slightly taller rows) without duplicating this whole block.
+function MyCoursesSection({ rowClass, onNavigate }) {
+  const { isAdmin, hasBuilder1, hasBuilder2, hasVibeCoding, hasAiMastery, hasAgentsLive } = usePro();
+  if (!(hasBuilder1 || hasBuilder2 || hasVibeCoding || hasAiMastery || hasAgentsLive || isAdmin)) return null;
+
+  return (
+    <>
+      <div className="border-t border-[#EFE9FB] dark:border-[#232228] my-3" />
+      <p className="text-[9px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-600 px-3.5 mb-1.5">My Courses</p>
+      {(hasVibeCoding || isAdmin) && (
+        <NavLink to="/vibe-coding/course" onClick={onNavigate} className={rowClass}>
+          <Sparkles className="w-[18px] h-[18px] flex-shrink-0" /> Vibe Coding
+        </NavLink>
+      )}
+      {(hasBuilder1 || isAdmin) && (
+        <NavLink to="/builder-1-guide" onClick={onNavigate} className={rowClass}>
+          <Hammer className="w-[18px] h-[18px] flex-shrink-0" /> Builder 1
+        </NavLink>
+      )}
+      {(hasBuilder2 || isAdmin) && builder2FirstAgent && (
+        <NavLink to={getBuilderPagePath(builder2FirstAgent)} onClick={onNavigate} className={rowClass}>
+          <Rocket className="w-[18px] h-[18px] flex-shrink-0" /> Builder 2
+        </NavLink>
+      )}
+      {(hasAiMastery || isAdmin) && (
+        <NavLink to="/ai-agent-mastery/course" onClick={onNavigate} className={rowClass}>
+          <Bot className="w-[18px] h-[18px] flex-shrink-0" /> AI Agent Mastery
+        </NavLink>
+      )}
+      {(hasAgentsLive || isAdmin) && (
+        <NavLink to="/dashboard/live-sessions" onClick={onNavigate} className={rowClass}>
+          <Flame className="w-[18px] h-[18px] flex-shrink-0" /> AI Agents Live
+        </NavLink>
+      )}
+    </>
+  );
+}
+
+const desktopRowClass = ({ isActive }) =>
+  `flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-semibold transition-colors ${
+    isActive
+      ? 'bg-[#F3EBFF] dark:bg-brand/15 text-brand'
+      : 'text-[#4A4463] dark:text-[#B7AFC9] hover:bg-[#FAF8FF] dark:hover:bg-white/5 hover:text-ink'
+  }`;
+
 // Desktop-only persistent left sidebar — mobile nav is the separate
 // DashboardMobileNav bottom bar (see StudentDashboard.jsx), matching the
 // "collapses to a bottom nav on mobile" requirement rather than squeezing
 // this same component into a hamburger drawer.
 export default function DashboardSidebar({ hasUnreadCommunity }) {
   const { user, signOut } = useAuth();
-  const { isAdmin, hasBuilder1, hasBuilder2, hasVibeCoding } = usePro();
+  const { isAdmin } = usePro();
   const navigate = useNavigate();
 
   const displayName = user?.user_metadata?.display_name || user?.email || '';
@@ -87,54 +139,7 @@ export default function DashboardSidebar({ hasUnreadCommunity }) {
 
       <nav className="flex-1 overflow-y-auto">
         <NavItems hasUnreadCommunity={hasUnreadCommunity} />
-        {(hasBuilder1 || hasBuilder2 || hasVibeCoding || isAdmin) && (
-          <>
-            <div className="border-t border-[#EFE9FB] dark:border-[#232228] my-3" />
-            <p className="text-[9px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-600 px-3.5 mb-1.5">My Courses</p>
-            {(hasVibeCoding || isAdmin) && (
-              <NavLink
-                to="/vibe-coding/course"
-                className={({ isActive }) =>
-                  `flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-semibold transition-colors ${
-                    isActive
-                      ? 'bg-[#F3EBFF] dark:bg-brand/15 text-brand'
-                      : 'text-[#4A4463] dark:text-[#B7AFC9] hover:bg-[#FAF8FF] dark:hover:bg-white/5 hover:text-ink'
-                  }`
-                }
-              >
-                <Sparkles className="w-[18px] h-[18px] flex-shrink-0" /> Vibe Coding
-              </NavLink>
-            )}
-            {(hasBuilder1 || isAdmin) && (
-              <NavLink
-                to="/builder-1-guide"
-                className={({ isActive }) =>
-                  `flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-semibold transition-colors ${
-                    isActive
-                      ? 'bg-[#F3EBFF] dark:bg-brand/15 text-brand'
-                      : 'text-[#4A4463] dark:text-[#B7AFC9] hover:bg-[#FAF8FF] dark:hover:bg-white/5 hover:text-ink'
-                  }`
-                }
-              >
-                <Hammer className="w-[18px] h-[18px] flex-shrink-0" /> Builder 1
-              </NavLink>
-            )}
-            {(hasBuilder2 || isAdmin) && builder2FirstAgent && (
-              <NavLink
-                to={getBuilderPagePath(builder2FirstAgent)}
-                className={({ isActive }) =>
-                  `flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-semibold transition-colors ${
-                    isActive
-                      ? 'bg-[#F3EBFF] dark:bg-brand/15 text-brand'
-                      : 'text-[#4A4463] dark:text-[#B7AFC9] hover:bg-[#FAF8FF] dark:hover:bg-white/5 hover:text-ink'
-                  }`
-                }
-              >
-                <Rocket className="w-[18px] h-[18px] flex-shrink-0" /> Builder 2
-              </NavLink>
-            )}
-          </>
-        )}
+        <MyCoursesSection rowClass={desktopRowClass} />
         {isAdmin && (
           <>
             <div className="border-t border-[#EFE9FB] dark:border-[#232228] my-3" />
@@ -167,7 +172,7 @@ export default function DashboardSidebar({ hasUnreadCommunity }) {
 }
 
 function MoreSheet({ onClose }) {
-  const { isAdmin, hasBuilder1, hasBuilder2, hasVibeCoding } = usePro();
+  const { isAdmin } = usePro();
   const secondaryItems = NAV_ITEMS.filter(({ to }) => !MOBILE_PRIMARY_PATHS.has(to));
 
   const rowClass = ({ isActive }) =>
@@ -193,27 +198,7 @@ function MoreSheet({ onClose }) {
               <Icon className="w-[18px] h-[18px] flex-shrink-0" /> {label}
             </NavLink>
           ))}
-          {(hasBuilder1 || hasBuilder2 || hasVibeCoding || isAdmin) && (
-            <>
-              <div className="border-t border-[#EFE9FB] dark:border-[#232228] my-2" />
-              <p className="text-[9px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-600 px-3.5 mb-0.5">My Courses</p>
-              {(hasVibeCoding || isAdmin) && (
-                <NavLink to="/vibe-coding/course" onClick={onClose} className={rowClass}>
-                  <Sparkles className="w-[18px] h-[18px] flex-shrink-0" /> Vibe Coding
-                </NavLink>
-              )}
-              {(hasBuilder1 || isAdmin) && (
-                <NavLink to="/builder-1-guide" onClick={onClose} className={rowClass}>
-                  <Hammer className="w-[18px] h-[18px] flex-shrink-0" /> Builder 1
-                </NavLink>
-              )}
-              {(hasBuilder2 || isAdmin) && builder2FirstAgent && (
-                <NavLink to={getBuilderPagePath(builder2FirstAgent)} onClick={onClose} className={rowClass}>
-                  <Rocket className="w-[18px] h-[18px] flex-shrink-0" /> Builder 2
-                </NavLink>
-              )}
-            </>
-          )}
+          <MyCoursesSection rowClass={rowClass} onNavigate={onClose} />
           {isAdmin && (
             <>
               <div className="border-t border-[#EFE9FB] dark:border-[#232228] my-2" />
