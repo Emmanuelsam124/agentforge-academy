@@ -1,7 +1,16 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { registerSW } from 'virtual:pwa-register'
 import './index.css'
 import App from './App.jsx'
+
+// Manual registration (vite.config.js sets injectRegister: null) — see that
+// file's comment for why: auto-injecting a <script> into index.html isn't
+// safe here, since scripts/inject-home.mjs replaces this build's entire
+// <body> afterward. Registering from inside the bundle itself sidesteps
+// that entirely. `immediate: true` registers on load rather than waiting
+// for the window `load` event workbox-window otherwise defers to.
+registerSW({ immediate: true })
 
 // index.html loads the Google Fonts stylesheets with media="print" so they
 // don't block first paint; flip each to media="all" once it's actually
