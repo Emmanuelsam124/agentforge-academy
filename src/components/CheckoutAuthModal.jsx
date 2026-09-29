@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { X, Loader2, AlertCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { setRememberMe } from '../lib/supabaseClient';
@@ -20,6 +20,17 @@ export default function CheckoutAuthModal({ open, onClose, onAuthenticated, requ
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  // Every new code cancels the previous one, and school mailboxes (e.g.
+  // @byupathway.edu) can be slow — so a quick "resend" while the first email
+  // is still in flight makes the eventually-arriving code useless. Hold the
+  // resend button for a while after each send.
+  const [resendWait, setResendWait] = useState(0);
+
+  useEffect(() => {
+    if (resendWait <= 0) return undefined;
+    const id = setTimeout(() => setResendWait((n) => n - 1), 1000);
+    return () => clearTimeout(id);
+  }, [resendWait]);
 
   if (!open) return null;
 
@@ -29,6 +40,7 @@ export default function CheckoutAuthModal({ open, onClose, onAuthenticated, requ
     setCode('');
     setError('');
     setLoading(false);
+    setResendWait(0);
   };
 
   const handleClose = () => {
@@ -56,6 +68,7 @@ export default function CheckoutAuthModal({ open, onClose, onAuthenticated, requ
       const { error: err } = await sendCheckoutCode(email.trim());
       if (err) throw err;
       setStep('code');
+      setResendWait(120);
     } catch (err) {
       setError(err.message || 'Could not send a code. Please try again.');
     } finally {
@@ -76,8 +89,8 @@ export default function CheckoutAuthModal({ open, onClose, onAuthenticated, requ
       if (err) throw err;
       reset();
       onAuthenticated();
-    } catch (err) {
-      setError(err.message || "That code didn't work. Please try again.");
+    } catch {
+      setError("That code didn't work. If you asked for more than one code, use the newest email.");
       setLoading(false);
     }
   };
@@ -139,6 +152,9 @@ export default function CheckoutAuthModal({ open, onClose, onAuthenticated, requ
             <p className="text-[13.5px] text-body mb-5">
               Sent a 6-digit code to <strong className="text-ink">{email}</strong>. Enter it below to continue.
             </p>
+            <p className="text-[12.5px] text-body mb-5 -mt-2">
+              School inboxes can take a few minutes. Wait for this email before requesting another code — a new code cancels the old one. Check spam too.
+            </p>
             <form onSubmit={handleVerify} className="space-y-3">
               <input
                 type="text"
@@ -161,10 +177,10 @@ export default function CheckoutAuthModal({ open, onClose, onAuthenticated, requ
               <button
                 type="button"
                 onClick={handleSendCode}
-                disabled={loading}
-                className="text-xs font-semibold text-brand hover:underline w-full text-center"
+                disabled={loading || resendWait > 0}
+                className="text-xs font-semibold text-brand hover:underline disabled:opacity-50 disabled:no-underline w-full text-center"
               >
-                Resend code
+                {resendWait > 0 ? `Resend code in ${Math.floor(resendWait / 60)}:${String(resendWait % 60).padStart(2, '0')}` : 'Resend code'}
               </button>
             </form>
           </>
