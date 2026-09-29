@@ -123,8 +123,8 @@ export default function CheckoutAuthModal({ open, onClose, onAuthenticated, requ
             <h2 className="font-display font-extrabold text-xl text-ink mb-1.5 pr-6">Almost there</h2>
             <p className="text-[13.5px] text-body mb-5">
               {requiredEmailDomain
-                ? `Enter your ${requiredEmailDomain} email — we'll send a 6-digit code to confirm it's yours, then take you to payment at the student price.`
-                : "Enter your email — we'll send a 6-digit code to confirm it's you, then take you straight to payment."}
+                ? `Enter your ${requiredEmailDomain} email — we'll send a verification code to confirm it's yours, then take you to payment at the student price.`
+                : "Enter your email — we'll send a verification code to confirm it's you, then take you straight to payment."}
             </p>
             <form onSubmit={handleSendCode} className="space-y-3">
               <input
@@ -150,7 +150,7 @@ export default function CheckoutAuthModal({ open, onClose, onAuthenticated, requ
           <>
             <h2 className="font-display font-extrabold text-xl text-ink mb-1.5 pr-6">Check your email</h2>
             <p className="text-[13.5px] text-body mb-5">
-              Sent a 6-digit code to <strong className="text-ink">{email}</strong>. Enter it below to continue.
+              Sent a verification code to <strong className="text-ink">{email}</strong>. Enter the full code below to continue.
             </p>
             <p className="text-[12.5px] text-body mb-5 -mt-2">
               School inboxes can take a few minutes. Wait for this email before requesting another code — a new code cancels the old one. Check spam too.
@@ -163,7 +163,7 @@ export default function CheckoutAuthModal({ open, onClose, onAuthenticated, requ
                 required
                 value={code}
                 onChange={(e) => setCode(e.target.value)}
-                placeholder="123456"
+                placeholder="Enter your code"
                 className="w-full px-4 py-3 rounded-xl border border-border text-sm text-ink bg-transparent tracking-[0.4em] text-center font-mono focus:outline-none focus:ring-2 focus:ring-brand/40"
               />
               <button
