@@ -384,7 +384,7 @@ export default function Welcome() {
                   ) : (
                     <>
                       <div>
-                        <label className="block text-sm font-medium text-body-strong mb-1.5">6-digit code</label>
+                        <label className="block text-sm font-medium text-body-strong mb-1.5">Code from your email</label>
                         <div className="relative">
                           <KeyRound className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                           <input
@@ -393,7 +393,7 @@ export default function Welcome() {
                             autoFocus
                             value={code}
                             onChange={(e) => setCode(e.target.value)}
-                            placeholder="123456"
+                            placeholder="Enter your code"
                             className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-white dark:bg-[#0A090F] border border-border dark:border-[#353539] text-sm text-ink placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand tracking-widest"
                           />
                         </div>
