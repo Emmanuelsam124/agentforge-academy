@@ -139,6 +139,12 @@ serve(async (req) => {
   // of the fragile "match the payer's email" approach.
   const reference = `sdt_${plan}_${user.id}_${Date.now()}`;
 
+  // Where Paystack sends the browser afterwards. The client supplies it, so
+  // restrict it to our own sites (same list as CORS) rather than trusting it.
+  const callbackOrigin = ALLOWED_ORIGIN_PATTERNS.some((p) => p.test(String(redirectOrigin ?? '')))
+    ? redirectOrigin
+    : 'https://socialdevtechnologies.com';
+
   const paystackRes = await fetch('https://api.paystack.co/transaction/initialize', {
     method: 'POST',
     headers: {
@@ -151,7 +157,7 @@ serve(async (req) => {
       currency: 'NGN',
       reference,
       metadata: { user_id: user.id, plan },
-      callback_url: `${redirectOrigin || ''}/dashboard`,
+      callback_url: `${callbackOrigin}/dashboard`,
     }),
   });
 
