@@ -1,11 +1,11 @@
+import { useSyncExternalStore } from 'react';
 import { Link } from 'react-router-dom';
 import { m } from 'framer-motion';
 import {
   CheckCircle2, ArrowRight, CalendarDays, Info, CircleHelp, Loader2, AlertCircle,
-  Bot, Mail, Calendar, Search, MessageSquare, ShieldCheck, X, Zap,
+  Bot, Mail, Calendar, Search, MessageSquare, ShieldCheck, X, Zap, Timer,
 } from 'lucide-react';
 import { usePro } from '../hooks/usePro';
-import { useCohortSchedule } from '../hooks/useCohortSchedule';
 import { usePaystackCheckout } from '../hooks/usePaystackCheckout';
 import CheckoutAuthModal from '../components/CheckoutAuthModal';
 import AgentsLiveFlowDiagram from '../components/AgentsLiveFlowDiagram';
@@ -14,6 +14,7 @@ import { DEMO_VIDEO, DEMO_LOOP } from '../data/demoMedia';
 import InstructorSection from '../components/InstructorSection';
 import AgentBuildTestimonials from '../components/AgentBuildTestimonials';
 import { usePageSeo } from '../hooks/usePageSeo';
+import { nextAiMasteryCohortStart, formatCohortRange } from '../data/aiMasteryCohort';
 import { useAuth } from '../context/AuthContext';
 import {
   AI_AGENT_MASTERY_PRICE, AI_AGENT_MASTERY_STUDENT_PRICE, STUDENT_EMAIL_DOMAIN, isStudentEmail,
@@ -127,11 +128,56 @@ const FAQS = [
   { q: 'How long will I have access?', a: "The cohort runs over 3 live days — the third dedicated to monetizing your new skill — and you'll have access for 6 months to the classes, recordings, resources, and your project." },
 ];
 
-function formatCohortDate(dateStr) {
-  if (!dateStr) return null;
-  const date = new Date(`${dateStr}T00:00:00`);
-  if (date < new Date(new Date().toDateString())) return null;
-  return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+// Cohorts roll weekly (Fri/Sat/Sun 7 PM WAT, first one 9 Oct 2026) — see
+// src/data/aiMasteryCohort.js. These leaf components tick on their own so the
+// rest of the page doesn't re-render every second, and return null on the
+// server/prerender snapshot so a frozen date is never baked into the HTML
+// (same reasoning as VibeCoding.jsx's CohortCountdown).
+function subscribeToTick(onChange) {
+  const id = setInterval(onChange, 1000);
+  return () => clearInterval(id);
+}
+const getNowSeconds = () => Math.floor(Date.now() / 1000);
+
+function useNextCohort() {
+  const nowSec = useSyncExternalStore(subscribeToTick, getNowSeconds, () => null);
+  if (nowSec === null) return null;
+  const start = nextAiMasteryCohortStart(nowSec * 1000);
+  return { start, secondsLeft: Math.max(0, Math.floor(start.getTime() / 1000) - nowSec) };
+}
+
+function CohortRange() {
+  const cohort = useNextCohort();
+  return cohort ? `${formatCohortRange(cohort.start)}, 7:00 PM WAT` : 'the next live cohort';
+}
+
+function CohortCountdown() {
+  const cohort = useNextCohort();
+  if (!cohort) return null;
+  const { secondsLeft } = cohort;
+  const days = Math.floor(secondsLeft / 86400);
+  const units = [
+    { value: days, label: days === 1 ? 'day' : 'days' },
+    { value: Math.floor(secondsLeft / 3600) % 24, label: 'hrs' },
+    { value: Math.floor(secondsLeft / 60) % 60, label: 'min' },
+    { value: secondsLeft % 60, label: 'sec' },
+  ];
+  return (
+    <div data-client-only className="mt-8 flex flex-col items-center gap-2.5">
+      <span className="inline-flex items-center gap-1.5 text-[12.5px] font-bold uppercase tracking-wide text-body">
+        <Timer className="w-3.5 h-3.5 text-brand" /> Next cohort starts in
+      </span>
+      <div className="flex items-center gap-2 sm:gap-2.5">
+        {units.map((unit) => (
+          <div key={unit.label} className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-xl px-3 sm:px-3.5 py-2 min-w-[58px] sm:min-w-[64px] text-center">
+            <div className="font-display font-extrabold text-xl sm:text-2xl text-ink tabular-nums leading-none">{String(unit.value).padStart(2, '0')}</div>
+            <div className="text-[10.5px] font-bold uppercase tracking-wide text-gray-400 mt-1">{unit.label}</div>
+          </div>
+        ))}
+      </div>
+      <p className="text-[12px] text-body">Registration for each cohort closes when it starts — join after that and you're in the following week's.</p>
+    </div>
+  );
 }
 
 function SectionHeading({ eyebrow, children }) {
@@ -149,8 +195,6 @@ function SectionHeading({ eyebrow, children }) {
 
 export default function AIAgentMastery() {
   const { hasAiMastery } = usePro();
-  const { aimastery: cohortDateRaw } = useCohortSchedule();
-  const cohortDate = formatCohortDate(cohortDateRaw);
   const {
     checkout, loadingKey: checkoutLoading, error: checkoutError,
     authModalOpen, requiredEmailDomain, closeAuthModal, handleAuthenticated,
@@ -209,7 +253,7 @@ export default function AIAgentMastery() {
             transition={{ delay: 0.2 }}
             className="text-[17px] leading-relaxed text-body mt-5 max-w-lg mx-auto"
           >
-            Stop copying tutorials that break. {cohortDate ? `Join us on ${cohortDate}` : 'Join the live cohort'} to
+            Stop copying tutorials that break. Join us <strong className="text-body-strong"><CohortRange /></strong> to
             connect your own AI agents to Telegram and WhatsApp, build a multi-agent dashboard, and cut repetitive
             manual work for good — even if you've never coded before.
           </m.p>
@@ -230,6 +274,8 @@ export default function AIAgentMastery() {
               Watch it in action ↓
             </a>
           </m.div>
+
+          <CohortCountdown />
         </div>
       </div>
 
@@ -455,14 +501,12 @@ export default function AIAgentMastery() {
           {isStudent && (
             <p className="text-[12.5px] font-bold text-green mb-3">BYU-Pathway student price applied</p>
           )}
-          {cohortDate && (
-            <span className="inline-flex items-center gap-1 bg-white dark:bg-[#141319] text-brand font-bold text-[12px] px-2.5 py-1 rounded-full w-fit mb-4">
-              <CalendarDays className="w-3.5 h-3.5" /> Cohort starts {cohortDate}
-            </span>
-          )}
+          <span className="inline-flex items-center gap-1 bg-white dark:bg-[#141319] text-brand font-bold text-[12px] px-2.5 py-1 rounded-full w-fit mb-4">
+            <CalendarDays className="w-3.5 h-3.5" /> Next cohort: <CohortRange />
+          </span>
           <ul className="flex flex-col gap-2.5 mb-6">
             {[
-              '3 live instructor-led days — day 3 on monetizing your new skill',
+              '3 live evenings (Fri, Sat, Sun at 7 PM WAT) — day 3 on monetizing your new skill',
               '6 months access to classes, replays, and resources',
               'One integrated personal-assistant agent, built end to end',
               'Guardrails and safety checks built in from the start',
