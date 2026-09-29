@@ -4,7 +4,7 @@ import { m } from 'framer-motion';
 import {
   Users, Shield, Zap, GraduationCap, Search, RefreshCw, Download,
   CheckCircle2, XCircle, Crown, AlertCircle, Loader2, Mail, ChevronDown, Sparkles,
-  Filter, ArrowUpDown, Hammer, Rocket, Code2, Bot, Video,
+  Filter, ArrowUpDown, Hammer, Rocket, Code2, Bot,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
@@ -146,13 +146,12 @@ function PlanBadge({ user }) {
 
 function UserRow({
   u, index, expanded, onToggleExpand, actionLoading,
-  onToggleBuilder1, onToggleBuilder2, onTogglePro, onToggleAdmin, onToggleVibeCoding, onToggleAiMastery, onToggleAgentsLive, currentUserId,
+  onToggleBuilder1, onToggleBuilder2, onTogglePro, onToggleAdmin, onToggleVibeCoding, onToggleAiMastery, currentUserId,
 }) {
   const hasB1 = isActive(u.builder1_expires_at);
   const hasB2 = isActive(u.builder2_expires_at);
   const hasVibeCoding = isActive(u.vibecoding_expires_at);
   const hasAiMastery = isActive(u.aimastery_expires_at);
-  const hasAgentsLive = isActive(u.agentslive_expires_at);
   const userIsPro = hasB1 && hasB2;
   return (
     <>
@@ -199,11 +198,6 @@ function UserRow({
             {hasAiMastery && (
               <span className="inline-flex items-center gap-1 text-xs font-bold bg-[#EAFAF1] dark:bg-green/10 text-green border border-green/20 px-2 py-0.5 rounded-full">
                 AI Agent Mastery
-              </span>
-            )}
-            {hasAgentsLive && (
-              <span className="inline-flex items-center gap-1 text-xs font-bold bg-[#EAFAF1] dark:bg-green/10 text-green border border-green/20 px-2 py-0.5 rounded-full">
-                AI Agents Live
               </span>
             )}
           </div>
@@ -338,25 +332,6 @@ function UserRow({
                 <Bot className="w-3 h-3" />
               )}
               AI Agent Mastery
-            </button>
-
-            {/* Toggle AI Agents Live — separate product, 7-day access window not 6 months */}
-            <button
-              onClick={() => onToggleAgentsLive(u.id, hasAgentsLive)}
-              disabled={!!actionLoading || u.is_admin}
-              title={hasAgentsLive ? 'Revoke AI Agents Live' : 'Grant AI Agents Live (7 days)'}
-              className={`flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg transition-colors disabled:opacity-40 ${
-                hasAgentsLive
-                  ? 'bg-[#EAFAF1] dark:bg-green/10 text-green hover:bg-[#FDEEF4] dark:hover:bg-rose/10 hover:text-rose'
-                  : 'bg-[#FAF8FF] dark:bg-white/5 text-body-strong hover:bg-[#EAFAF1] dark:hover:bg-green/10 hover:text-green'
-              }`}
-            >
-              {actionLoading === u.id + '_agentslive' ? (
-                <Loader2 className="w-3 h-3 animate-spin" />
-              ) : (
-                <Video className="w-3 h-3" />
-              )}
-              AI Agents Live
             </button>
 
             {/* Toggle Admin */}
@@ -549,26 +524,6 @@ export default function AdminUsers() {
     }
   };
 
-  const toggleAgentsLive = async (targetId, currentActive) => {
-    setActionLoading(targetId + '_agentslive');
-    try {
-      const { error: err } = await supabase.rpc('admin_set_user_agentslive', {
-        target_user_id: targetId,
-        set_active: !currentActive,
-      });
-      if (err) throw err;
-      const expiry = !currentActive ? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString() : null;
-      setUsers((prev) => prev.map((u) =>
-        u.id === targetId ? { ...u, agentslive_expires_at: expiry } : u
-      ));
-      showToast(!currentActive ? 'AI Agents Live access granted (7 days).' : 'AI Agents Live access revoked.');
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setActionLoading(null);
-    }
-  };
-
   const toggleAdmin = async (targetId, currentAdmin) => {
     setActionLoading(targetId + '_admin');
     try {
@@ -742,7 +697,6 @@ export default function AdminUsers() {
                     onTogglePro={togglePro}
                     onToggleVibeCoding={toggleVibeCoding}
                     onToggleAiMastery={toggleAiMastery}
-                    onToggleAgentsLive={toggleAgentsLive}
                     onToggleAdmin={toggleAdmin}
                     currentUserId={user?.id}
                   />

@@ -12,7 +12,6 @@ export function usePro() {
   const [hasBuilder2, setHasBuilder2] = useState(false);
   const [hasVibeCoding, setHasVibeCoding] = useState(false);
   const [hasAiMastery, setHasAiMastery] = useState(false);
-  const [hasAgentsLive, setHasAgentsLive] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [proLoading, setProLoading] = useState(true);
 
@@ -22,7 +21,6 @@ export function usePro() {
       setHasBuilder2(false);
       setHasVibeCoding(false);
       setHasAiMastery(false);
-      setHasAgentsLive(false);
       setIsAdmin(false);
       setProLoading(false);
       return;
@@ -40,7 +38,7 @@ export function usePro() {
     Promise.all([
       supabase
         .from('entitlements')
-        .select('builder1_expires_at, builder2_expires_at, vibecoding_expires_at, aimastery_expires_at, agentslive_expires_at, is_admin')
+        .select('builder1_expires_at, builder2_expires_at, vibecoding_expires_at, aimastery_expires_at, is_admin')
         .eq('user_id', user.id)
         .single(),
       supabase.from('guide_purchases').select('tier').eq('user_id', user.id),
@@ -51,8 +49,7 @@ export function usePro() {
         setHasBuilder2(false);
         setHasVibeCoding(false);
         setHasAiMastery(false);
-        setHasAgentsLive(false);
-        setIsAdmin(false);
+          setIsAdmin(false);
         setProLoading(false);
         return;
       }
@@ -63,7 +60,6 @@ export function usePro() {
       setHasBuilder2(admin || isActive(data.builder2_expires_at) || ownedTiers.has('builder2'));
       setHasVibeCoding(admin || isActive(data.vibecoding_expires_at));
       setHasAiMastery(admin || isActive(data.aimastery_expires_at));
-      setHasAgentsLive(admin || isActive(data.agentslive_expires_at));
       setProLoading(false);
     });
 
@@ -78,5 +74,5 @@ export function usePro() {
   // both are separate products, not part of the builder1/builder2 "Pro" bundle.
   const isPro = isAdmin || (hasBuilder1 && hasBuilder2);
 
-  return { hasBuilder1, hasBuilder2, hasVibeCoding, hasAiMastery, hasAgentsLive, isPro, isAdmin, proLoading };
+  return { hasBuilder1, hasBuilder2, hasVibeCoding, hasAiMastery, isPro, isAdmin, proLoading };
 }

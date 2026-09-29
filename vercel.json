@@ -1,4 +1,7 @@
 {
+  "redirects": [
+    { "source": "/ai-agents-live", "destination": "/ai-agent-mastery", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/news", "destination": "/api/news-index" },
     { "source": "/news/:slug", "destination": "/api/news-article?slug=:slug" },

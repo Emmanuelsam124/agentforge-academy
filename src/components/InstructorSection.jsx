@@ -9,8 +9,8 @@ const INSTRUCTOR = {
 };
 
 // Shared "About the instructor" card — same photo, name, title, and bio on
-// both AgentsLive.jsx and AIAgentMastery.jsx (founder direction,
-// 2026-09-27). `closingLine` is the one sentence that names the specific
+// AIAgentMastery.jsx (it was shared with the AI Agents Live page, removed
+// 2026-09-29; founder direction, 2026-09-27). `closingLine` is the one sentence that names the specific
 // product/format being taught, since that can't be identical across pages.
 export default function InstructorSection({ closingLine }) {
   return (

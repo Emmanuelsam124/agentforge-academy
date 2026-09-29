@@ -3,8 +3,9 @@ import { useState } from 'react';
 // Real feedback — actual WhatsApp screenshots (provided by the founder,
 // 2026-09-27), shown as images rather than transcribed text, from an
 // earlier live class covering this same kind of build — an agent
-// connected to real messaging channels, doing real work. Shared between
-// AgentsLive.jsx and AIAgentMastery.jsx (founder direction, 2026-09-27).
+// connected to real messaging channels, doing real work. Originally shared
+// with the AI Agents Live page (removed 2026-09-29); now used by
+// AIAgentMastery.jsx.
 // `alt` is a plain transcription for screen readers — the image is what
 // actually renders.
 const TESTIMONIALS = [

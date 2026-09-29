@@ -14,7 +14,10 @@ export default function ConfirmEmail() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const tokenHash = params.get('token_hash');
-  const type = params.get('type') || 'signup';
+  // Only the token types our own emails use — the link is user-controllable,
+  // so don't let it request e.g. an email-change or invite verification.
+  const requestedType = params.get('type');
+  const type = ['signup', 'magiclink', 'email'].includes(requestedType) ? requestedType : 'signup';
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
