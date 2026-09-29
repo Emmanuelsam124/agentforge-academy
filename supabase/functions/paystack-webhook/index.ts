@@ -244,33 +244,40 @@ async function findOrCreateStudentUser(supabase, email) {
   return await lookup(); // lost a race with a concurrent signup
 }
 
-// One-time login code + a scanner-safe link (lands on /auth/confirm, which only
-// verifies when a person presses the button — mail scanners that pre-open links
-// would otherwise burn the token, and the code shares it).
+// One-click login link for pay-first students. Points at /auth/confirm, which
+// only verifies when a person presses its button — mail scanners that pre-open
+// links would otherwise burn the one-time token. The emailed 6/8-digit code is
+// deliberately NOT shown: it shares that token, and typing it anywhere would
+// need a step the login page doesn't have (requesting a code there sends a new
+// one and invalidates this one), so it only confused people.
 async function studentLoginBlock(supabase, email) {
-  const fallback = `
-    <p style="font-size:15px;color:#3A3358;line-height:1.6;">
+  const safeEmail = escapeHtml(email);
+  const fallbackSteps = `
+    <p style="font-size:14px;color:#3A3358;line-height:1.6;">
       To log in, go to <a href="https://socialdevtechnologies.com/welcome" style="color:#7C3AED;">socialdevtechnologies.com/welcome</a>,
-      choose <strong>“Log in with an emailed code instead”</strong>, and enter this email address.
+      choose <strong>“Log in with an emailed code instead”</strong>, enter <strong>${safeEmail}</strong>, and type the code we send you.
     </p>`;
   try {
     const { data, error } = await supabase.auth.admin.generateLink({ type: 'magiclink', email });
     const props = data?.properties;
-    if (error || !props?.email_otp || !props?.hashed_token) return fallback;
+    if (error || !props?.hashed_token) {
+      return `<p style="font-size:15px;color:#3A3358;line-height:1.6;">There's no password to remember — you log in with a code we email to <strong>${safeEmail}</strong>.</p>${fallbackSteps}`;
+    }
     const link = `https://socialdevtechnologies.com/auth/confirm?token_hash=${encodeURIComponent(props.hashed_token)}&type=${encodeURIComponent(props.verification_type || 'magiclink')}`;
     return `
-      <p style="font-size:15px;color:#3A3358;line-height:1.6;">Here's how to log in — your account uses this email address:</p>
-      <p style="font-size:28px;font-weight:800;letter-spacing:6px;text-align:center;color:#1A1333;margin:12px 0;">${props.email_otp}</p>
-      <div style="text-align:center;margin:8px 0 16px;">
-        <a href="${link}" style="display:inline-block;background:#1A1333;color:#fff;padding:10px 22px;border-radius:10px;text-decoration:none;font-weight:700;">Log in with one click</a>
+      <p style="font-size:15px;color:#3A3358;line-height:1.6;">
+        There's no password to remember. Your account is under <strong>${safeEmail}</strong> — press the button to log in now:
+      </p>
+      <div style="text-align:center;margin:18px 0;">
+        <a href="${link}" style="display:inline-block;background:#7C3AED;color:#ffffff;padding:14px 32px;border-radius:10px;text-decoration:none;font-weight:800;font-size:16px;">Log in to my account</a>
       </div>
       <p style="font-size:13px;color:#8A82AD;line-height:1.6;">
-        The code and button work for about an hour. After that, go to socialdevtechnologies.com/welcome, choose
-        “Log in with an emailed code instead”, and enter this email address to get a fresh one.
+        The button works for about an hour. Later on (or if it has expired), you can always log in again with a fresh code:
+        go to socialdevtechnologies.com/welcome, choose “Log in with an emailed code instead”, and enter ${safeEmail}.
       </p>`;
   } catch (err) {
     console.error('studentLoginBlock failed:', err);
-    return fallback;
+    return `<p style="font-size:15px;color:#3A3358;line-height:1.6;">There's no password to remember — you log in with a code we email to <strong>${safeEmail}</strong>.</p>${fallbackSteps}`;
   }
 }
 

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Loader2, AlertCircle, MailCheck } from 'lucide-react';
 import { supabase, setRememberMe } from '../lib/supabaseClient';
 
@@ -30,7 +30,7 @@ export default function ConfirmEmail() {
       if (err) throw err;
       navigate('/dashboard', { replace: true });
     } catch {
-      setError('This link has already been used or has expired. Go back to the page you were on and request a new code.');
+      setError('This link has already been used or has expired.');
       setLoading(false);
     }
   };
@@ -47,6 +47,14 @@ export default function ConfirmEmail() {
               <div className="flex items-start gap-2 text-sm text-rose bg-[#FDEEF4] dark:bg-rose/10 border border-rose/20 rounded-lg px-3 py-2.5 mb-4 text-left">
                 <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" /> {error}
               </div>
+            )}
+            {error && (
+              <Link
+                to="/welcome?mode=login"
+                className="block w-full text-center bg-brand hover:bg-brand-deep text-white font-bold px-5 py-3 rounded-xl mb-3 transition-colors"
+              >
+                Log in with a fresh emailed code →
+              </Link>
             )}
             <button
               onClick={confirm}
