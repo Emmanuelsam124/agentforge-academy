@@ -26,6 +26,10 @@ const NAV_ITEMS = [
 // Only the mobile bottom nav needs a short primary row — the desktop
 // sidebar has the vertical room to just list everything. The rest live
 // behind "More" on mobile (see MoreSheet below).
+// Stable id for the dashboard tour (DashboardTour.jsx) to find each nav item:
+// '/dashboard' -> 'home', '/dashboard/community' -> 'community', etc.
+const tourId = (to) => to.replace('/dashboard', '').replace(/^\//, '') || 'home';
+
 const MOBILE_PRIMARY_PATHS = new Set(['/dashboard', '/dashboard/live-sessions', '/dashboard/community']);
 
 function NavItems({ onNavigate, hasUnreadCommunity }) {
@@ -37,6 +41,7 @@ function NavItems({ onNavigate, hasUnreadCommunity }) {
             to={to}
             end={end}
             onClick={onNavigate}
+            data-tour={tourId(to)}
             className={({ isActive }) =>
               `flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-semibold transition-colors ${
                 isActive
@@ -74,7 +79,7 @@ function MyCoursesSection({ rowClass, onNavigate }) {
   return (
     <>
       <div className="border-t border-[#EFE9FB] dark:border-[#232228] my-3" />
-      <p className="text-[9px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-600 px-3.5 mb-1.5">My Courses</p>
+      <p data-tour="my-courses" className="text-[9px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-600 px-3.5 mb-1.5">My Courses</p>
       {(hasVibeCoding || isAdmin) && (
         <NavLink to="/vibe-coding/course" onClick={onNavigate} className={rowClass}>
           <Sparkles className="w-[18px] h-[18px] flex-shrink-0" /> Vibe Coding
@@ -230,6 +235,7 @@ export function DashboardMobileNav({ hasUnreadCommunity }) {
             key={to}
             to={to}
             end={end}
+            data-tour={tourId(to)}
             className={({ isActive }) =>
               `flex-1 flex flex-col items-center justify-center gap-0.5 py-2.5 text-[10.5px] font-semibold transition-colors ${
                 isActive ? 'text-brand' : 'text-gray-400'
@@ -247,6 +253,7 @@ export function DashboardMobileNav({ hasUnreadCommunity }) {
         ))}
         <button
           type="button"
+          data-tour="more"
           onClick={() => setMoreOpen(true)}
           className="flex-1 flex flex-col items-center justify-center gap-0.5 py-2.5 text-[10.5px] font-semibold text-gray-400"
         >
