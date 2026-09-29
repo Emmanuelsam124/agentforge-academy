@@ -33,6 +33,15 @@ export const VIBECODING_PRICE = 50000;
 // (changed from 25000 to 19999, 2026-09-22).
 export const AI_AGENT_MASTERY_PRICE = 19999;
 
+// BYU-Pathway student discount on AI Agent Mastery (2026-09-29). Applied
+// server-side by create-paystack-checkout only when the signed-in account's
+// email is confirmed AND ends in this domain; this constant is for display,
+// and must move with that function's AIMASTERY_STUDENT_PRICE and the
+// webhook's MULTI_TIER_PRICES.aimastery.
+export const AI_AGENT_MASTERY_STUDENT_PRICE = 10000;
+export const STUDENT_EMAIL_DOMAIN = '@byupathway.edu';
+export const isStudentEmail = (email) => !!email && email.trim().toLowerCase().endsWith(STUDENT_EMAIL_DOMAIN);
+
 // AI Agents Live — a separate, short-format live workshop (added
 // 2026-09-27): 2 days, build a personal AI agent connected to messaging
 // tools plus a multi-agent dashboard. NOT the same product as AI Agent

@@ -10,7 +10,10 @@ import { setRememberMe } from '../lib/supabaseClient';
 // sendCheckoutCode's comment in AuthContext.jsx for why that's safe).
 // /welcome's own signup/login forms are untouched — this is an additional,
 // faster path for checkout specifically, not a replacement.
-export default function CheckoutAuthModal({ open, onClose, onAuthenticated }) {
+// requiredEmailDomain (e.g. '@byupathway.edu') is set for the student-price
+// flow: it only gates which address we'll send a code to, for a clear early
+// error. The real check is server-side in create-paystack-checkout.
+export default function CheckoutAuthModal({ open, onClose, onAuthenticated, requiredEmailDomain }) {
   const { sendCheckoutCode, verifyLoginCode } = useAuth();
   const [step, setStep] = useState('email'); // 'email' | 'code'
   const [email, setEmail] = useState('');
@@ -38,6 +41,10 @@ export default function CheckoutAuthModal({ open, onClose, onAuthenticated }) {
     setError('');
     if (!email.trim()) {
       setError('Enter your email address.');
+      return;
+    }
+    if (requiredEmailDomain && !email.trim().toLowerCase().endsWith(requiredEmailDomain)) {
+      setError(`The student price needs an email ending in ${requiredEmailDomain}.`);
       return;
     }
     setLoading(true);
@@ -102,7 +109,9 @@ export default function CheckoutAuthModal({ open, onClose, onAuthenticated }) {
           <>
             <h2 className="font-display font-extrabold text-xl text-ink mb-1.5 pr-6">Almost there</h2>
             <p className="text-[13.5px] text-body mb-5">
-              Enter your email — we'll send a 6-digit code to confirm it's you, then take you straight to payment.
+              {requiredEmailDomain
+                ? `Enter your ${requiredEmailDomain} email — we'll send a 6-digit code to confirm it's yours, then take you to payment at the student price.`
+                : "Enter your email — we'll send a 6-digit code to confirm it's you, then take you straight to payment."}
             </p>
             <form onSubmit={handleSendCode} className="space-y-3">
               <input
@@ -111,7 +120,7 @@ export default function CheckoutAuthModal({ open, onClose, onAuthenticated }) {
                 autoFocus
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
+                placeholder={requiredEmailDomain ? `you${requiredEmailDomain}` : 'you@example.com'}
                 className="w-full px-4 py-3 rounded-xl border border-border text-sm text-ink bg-transparent focus:outline-none focus:ring-2 focus:ring-brand/40"
               />
               <button

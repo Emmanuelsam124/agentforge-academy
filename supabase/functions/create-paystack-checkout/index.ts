@@ -51,6 +51,11 @@ const PRICES = {
   agentslive: 10000, // early-bird price; resolveAgentsLivePrice() may override
 };
 
+// aimastery discount for verified BYU-Pathway students (2026-09-29).
+// paystack-webhook's MULTI_TIER_PRICES.aimastery must accept this amount.
+const AIMASTERY_STUDENT_PRICE = 10000;
+const STUDENT_EMAIL_DOMAIN = '@byupathway.edu';
+
 const AGENTS_LIVE_PRICE_EARLY = 10000;
 const AGENTS_LIVE_PRICE_LATE = 15000;
 const AGENTS_LIVE_SEAT_THRESHOLD = 100;
@@ -127,9 +132,26 @@ serve(async (req) => {
     return jsonResponse({ error: 'Invalid JSON body' }, 400);
   }
 
-  const { plan, redirectOrigin } = body;
+  const { plan, redirectOrigin, studentDiscount } = body;
   if (typeof plan !== 'string' || !Object.hasOwn(PRICES, plan)) {
     return jsonResponse({ error: 'Unknown plan' }, 400);
+  }
+
+  // BYU-Pathway discount: only ever from the JWT-verified user record, never
+  // from anything the client sends. email_confirmed_at is set once the
+  // emailed code (or Google) has proven they control the address, which is
+  // the same verification every other purchase relies on. Applies whenever
+  // an eligible account buys aimastery; the client's studentDiscount flag
+  // only decides whether an ineligible account gets a clear error (it
+  // asked for the discount) or just the normal price.
+  const isVerifiedStudent =
+    !!user.email_confirmed_at &&
+    (user.email ?? '').trim().toLowerCase().endsWith(STUDENT_EMAIL_DOMAIN);
+  if (plan === 'aimastery' && studentDiscount === true && !isVerifiedStudent) {
+    return jsonResponse(
+      { error: `The student price needs a verified ${STUDENT_EMAIL_DOMAIN} email. Sign in with that address and confirm the emailed code.` },
+      403,
+    );
   }
 
   // Created once here (not just at the bottom for checkout_attempts
@@ -138,6 +160,9 @@ serve(async (req) => {
   const serviceClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
   let amountNaira = PRICES[plan];
+  if (plan === 'aimastery' && isVerifiedStudent) {
+    amountNaira = AIMASTERY_STUDENT_PRICE;
+  }
   if (plan === 'agentslive') {
     try {
       amountNaira = await resolveAgentsLivePrice(serviceClient);
