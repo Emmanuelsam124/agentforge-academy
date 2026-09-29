@@ -298,9 +298,13 @@ on conflict (id) do nothing;
 -- 12. Scheduling — same pg_cron + pg_net + vault-secret wiring as every other
 --    cron job in this project (extensions and the cron_secret vault entry
 --    already exist from email-system-setup.sql).
+--    Switched daily -> weekly (Monday 06:00 UTC) on 2026-09-18 to cut token
+--    consumption; renamed 'news-digest-daily' -> 'news-digest-weekly' when
+--    this was applied in production (old job unscheduled, not altered in
+--    place, so history is clean if anyone diffs cron.job by name).
 select cron.schedule(
-  'news-digest-daily',
-  '0 6 * * *', -- daily 06:00 UTC — gives the admin the whole day to review before sending
+  'news-digest-weekly',
+  '0 6 * * 1', -- weekly, Monday 06:00 UTC — gives the admin the day to review before sending
   $$
   select net.http_post(
     url := 'https://qkrfpuckvymjpewcszgs.supabase.co/functions/v1/generate-news-digest',
@@ -315,14 +319,16 @@ select cron.schedule(
 
 -- 13. Catch-up run. The 06:00 job above has no retry-later-in-the-day path:
 --     when generate-news-digest fails outright, nothing drafts until the next
---     run 24h later. On 2026-08-23/24 a gemini-3.7-flash "high demand" 503
+--     run a week later. On 2026-08-23/24 a gemini-3.7-flash "high demand" 503
 --     outage lasted 30+ hours and zeroed out two consecutive days before
---     anyone noticed. This fires 6h after the primary run, gated on the day
---     having no rows yet — a no-op on a normal day, one more shot on a
---     failed one.
+--     anyone noticed (back when this ran daily). This fires 6h after the
+--     primary run, gated on the day having no rows yet — a no-op on a normal
+--     week, one more shot on a failed one. Runs the same weekday as the
+--     primary job, not daily, since a daily gate would fire spuriously every
+--     non-digest day of the week now that the primary is weekly.
 select cron.schedule(
-  'news-digest-catchup',
-  '0 12 * * *',
+  'news-digest-weekly-catchup',
+  '0 12 * * 1',
   $cron$
   do $do$
   begin
