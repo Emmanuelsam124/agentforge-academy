@@ -14,7 +14,10 @@ import { DEMO_VIDEO, DEMO_LOOP } from '../data/demoMedia';
 import InstructorSection from '../components/InstructorSection';
 import AgentBuildTestimonials from '../components/AgentBuildTestimonials';
 import { usePageSeo } from '../hooks/usePageSeo';
-import { AI_AGENT_MASTERY_PRICE } from '../data/pricing';
+import { useAuth } from '../context/AuthContext';
+import {
+  AI_AGENT_MASTERY_PRICE, AI_AGENT_MASTERY_STUDENT_PRICE, STUDENT_EMAIL_DOMAIN, isStudentEmail,
+} from '../data/pricing';
 
 // This page sells ONE product: AI Agent Mastery. Same pattern as
 // VibeCoding.jsx — checkout is hardcoded to plan: 'aimastery', this page
@@ -150,8 +153,13 @@ export default function AIAgentMastery() {
   const cohortDate = formatCohortDate(cohortDateRaw);
   const {
     checkout, loadingKey: checkoutLoading, error: checkoutError,
-    authModalOpen, closeAuthModal, handleAuthenticated,
+    authModalOpen, requiredEmailDomain, closeAuthModal, handleAuthenticated,
   } = usePaystackCheckout();
+  const { user } = useAuth();
+  // Mirrors the server rule (create-paystack-checkout): the signed-in
+  // account must have a confirmed BYU-Pathway address. Display only.
+  const isStudent = !!user?.email_confirmed_at && isStudentEmail(user.email);
+  const price = isStudent ? AI_AGENT_MASTERY_STUDENT_PRICE : AI_AGENT_MASTERY_PRICE;
 
   usePageSeo({
     title: 'AI Agent Mastery | Social Dev Technologies',
@@ -439,8 +447,14 @@ export default function AIAgentMastery() {
             LIVE COHORT
           </span>
           <div className="font-display font-extrabold text-[36px] text-ink mt-2 mb-1">
-            ₦{AI_AGENT_MASTERY_PRICE.toLocaleString()} <span className="text-base font-bold text-body">one-time</span>
+            {isStudent && (
+              <span className="text-lg font-bold text-body line-through mr-2">₦{AI_AGENT_MASTERY_PRICE.toLocaleString()}</span>
+            )}
+            ₦{price.toLocaleString()} <span className="text-base font-bold text-body">one-time</span>
           </div>
+          {isStudent && (
+            <p className="text-[12.5px] font-bold text-green mb-3">BYU-Pathway student price applied</p>
+          )}
           {cohortDate && (
             <span className="inline-flex items-center gap-1 bg-white dark:bg-[#141319] text-brand font-bold text-[12px] px-2.5 py-1 rounded-full w-fit mb-4">
               <CalendarDays className="w-3.5 h-3.5" /> Cohort starts {cohortDate}
@@ -473,8 +487,23 @@ export default function AIAgentMastery() {
               className="flex items-center justify-center gap-2 w-full bg-brand hover:bg-brand-deep disabled:opacity-60 text-white font-extrabold px-5 py-3.5 rounded-xl shadow-[0_10px_22px_rgba(124,58,237,.35)] transition-colors"
             >
               {checkoutLoading === 'aimastery' ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-              {checkoutLoading === 'aimastery' ? 'Starting checkout…' : `Join the cohort — ₦${AI_AGENT_MASTERY_PRICE.toLocaleString()} →`}
+              {checkoutLoading === 'aimastery' ? 'Starting checkout…' : `Join the cohort — ₦${price.toLocaleString()} →`}
             </button>
+          )}
+
+          {!hasAiMastery && !isStudent && (
+            <div className="mt-4 rounded-xl border border-brand/25 bg-white dark:bg-[#141319] px-4 py-3 text-[13px] text-body-strong">
+              <strong className="text-ink">BYU-Pathway student?</strong> Pay ₦{AI_AGENT_MASTERY_STUDENT_PRICE.toLocaleString()} instead.
+              Verify your {STUDENT_EMAIL_DOMAIN} email and the student price is applied.{' '}
+              <button
+                type="button"
+                onClick={() => checkout('aimastery', { studentDiscount: true })}
+                disabled={checkoutLoading === 'aimastery'}
+                className="font-bold text-brand hover:underline disabled:opacity-60"
+              >
+                Verify my student email →
+              </button>
+            </div>
           )}
 
           <p className="flex items-start gap-1.5 text-[12px] text-body mt-4">
@@ -505,7 +534,7 @@ export default function AIAgentMastery() {
         </div>
       </div>
 
-      <CheckoutAuthModal open={authModalOpen} onClose={closeAuthModal} onAuthenticated={handleAuthenticated} />
+      <CheckoutAuthModal open={authModalOpen} onClose={closeAuthModal} onAuthenticated={handleAuthenticated} requiredEmailDomain={requiredEmailDomain} />
     </div>
   );
 }

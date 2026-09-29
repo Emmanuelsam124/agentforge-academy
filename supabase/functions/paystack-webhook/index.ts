@@ -49,6 +49,11 @@ const AMOUNT_TOLERANCE = 1;
 // PRICES[plan] value for any plan present in this map.
 const MULTI_TIER_PRICES = {
   agentslive: [10000, 15000],
+  // Full price, or the ₦10,000 BYU-Pathway student price. Eligibility is
+  // enforced at checkout creation (create-paystack-checkout, verified
+  // @byupathway.edu email) — only that function can start a ₦10,000
+  // aimastery charge, so the webhook just needs to recognise it.
+  aimastery: [19999, 10000],
 };
 
 // Paystack can add its own transaction fee on top of the amount we set at
