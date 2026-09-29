@@ -48,7 +48,6 @@ export const routes = [
   '/ai-builder',
   '/vibe-coding',
   '/ai-agent-mastery',
-  '/ai-agents-live',
   '/builder-1-guide',
   '/session/build-real-product',
   '/session/daily-news-agent',

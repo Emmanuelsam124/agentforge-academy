@@ -58,7 +58,8 @@ Auto-issued, no request needed
 Come with a public verification link
 
 LIVE COHORTS (instructor-led, real classes, a fixed group of students)
-AI Agent Mastery | ₦19,999, one-time | build one integrated personal-assistant agent: inbox, calendar, research, messaging | doing Builder 2 first helps, not required | page: https://socialdevtechnologies.com/ai-agent-mastery
+AI Agent Mastery | ₦19,999, one-time | 3 live evenings (Friday, Saturday, Sunday) at 7:00pm WAT, third day on monetizing the skill | a new cohort starts every week, first one Friday 9 October 2026; someone who pays after a cohort has begun joins the following week's | build one integrated personal-assistant agent: inbox, calendar, research, messaging | doing Builder 2 first helps, not required | page: https://socialdevtechnologies.com/ai-agent-mastery
+AI Agent Mastery student price | ₦10,000 instead of ₦19,999 | for BYU-Pathway students, using their @byupathway.edu email | on the AI Agent Mastery page they choose the student option, enter that address, pay, and the login is emailed to it afterwards | this is a fixed, published price, not a negotiated discount, so quoting it is fine | a person who mistyped their email or never received the login = a support issue, escalate
 Vibe Coding Bootcamp | ₦50,000, one-time | 4 weeks, 8 live classes | from an idea to a deployed website, web app, and AI-powered product | no coding experience required | builds include a portfolio site, to-do app, Supabase CRUD app | page: https://socialdevtechnologies.com/vibe-coding
 
 TRUE OF BOTH LIVE COHORTS (AI Agent Mastery, Vibe Coding Bootcamp)
@@ -66,11 +67,7 @@ One-time payment | not a subscription
 6 months of access: live classes, recordings, resources
 Missed a live class = recordings are there to catch up
 Certificate of completion
-Next start date = shown on each programme's own page, NOT in these facts
-
-LIVE WORKSHOP (short-format, not a cohort)
-AI Agents Live | ₦10,000 for the first 100 seats, ₦15,000 after, one-time | 2 live days | build your own AI agent connected to messaging tools you already use (Telegram, WhatsApp, and others), plus a dashboard where multiple agents work together on tasks | also covers offering this as a paid service to other businesses | 7 days of access to replays/resources after the 2 live days, not 6 months | no certificate | page: https://socialdevtechnologies.com/ai-agents-live
-The ₦10,000 -> ₦15,000 rise is real, not a countdown gimmick: the price is tied to an actual seat count, not a date. Never promise a specific "X seats left" number — that number changes in real time and the agent cannot see it live.
+Next start date = AI Agent Mastery: see the weekly schedule above. Vibe Coding: shown on its own page, NOT in these facts
 `.trim();
 
 export const FACTS_PAYMENT = `
@@ -92,7 +89,6 @@ export const FACTS_CONTACT = `
 Website: https://socialdevtechnologies.com
 Pricing: https://socialdevtechnologies.com/pricing
 AI Agent Mastery: https://socialdevtechnologies.com/ai-agent-mastery
-AI Agents Live: https://socialdevtechnologies.com/ai-agents-live
 Vibe Coding Bootcamp: https://socialdevtechnologies.com/vibe-coding
 FAQ: https://socialdevtechnologies.com/faq
 Email: support@socialdevtechnologies.com
@@ -107,7 +103,9 @@ export const ALWAYS_ESCALATE = `
   access") — the agent cannot see accounts or payments and must never guess.
 - Refund requests, chargebacks, or payment disputes.
 - Discounts, coupons, custom pricing, group/corporate rates, sponsorships,
-  scholarships, or any negotiation on price.
+  scholarships, or any negotiation on price. (The published BYU-Pathway
+  student price above is a fixed fact you can state, not a discount to
+  negotiate.)
 - Partnership, affiliate, referral-payout, press, or hiring enquiries.
 - Complaints, or anyone who sounds upset.
 - Legal, tax, invoicing, or compliance questions.
@@ -239,8 +237,9 @@ Q: "is it monthly?"
 
 Q: "when does the next cohort start?"
 - "The guides don't run in cohorts — they open the moment you pay. If you
-  mean a live programme, AI Agent Mastery, Vibe Coding, and AI Agents Live
-  each show their next start date on their own page."
+  mean a live programme: AI Agent Mastery has a new cohort every Friday at
+  7pm WAT, starting 9 October, and Vibe Coding shows its start date on its
+  own page."
 
 Q: "i dont know how to code"
 - "That's who Builder 1 is built for. Every build comes with copy-paste

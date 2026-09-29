@@ -301,9 +301,9 @@ export default function AIAgentMastery() {
         </div>
       </div>
 
-      {/* System showcase — same diagram used on the AI Agents Live page,
-          since both pages describe an agent connected to real tools plus
-          a multi-agent dashboard. */}
+      {/* System showcase — an agent connected to real tools plus a
+          multi-agent dashboard. (The diagram component keeps its old
+          AgentsLive name; renaming it is churn with no user impact.) */}
       <div className="px-4 sm:px-6 lg:px-[5vw] pt-4 pb-16 max-w-5xl mx-auto">
         <SectionHeading eyebrow="Under the hood">One agent, a whole team behind it</SectionHeading>
         <p className="text-center text-body max-w-xl mx-auto -mt-5 mb-8 text-[14px] leading-relaxed">

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
   Home, Video, PlayCircle, MessagesSquare, UserCircle2, HelpCircle, LogOut, Shield,
-  Hammer, Rocket, Gift, Sparkles, Bot, Flame, MoreHorizontal, X,
+  Hammer, Rocket, Gift, Sparkles, Bot, MoreHorizontal, X,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { usePro } from '../../hooks/usePro';
@@ -73,8 +73,8 @@ function NavItems({ onNavigate, hasUnreadCommunity }) {
 // caller keep its own exact NavLink styling (desktop vs. the sheet's
 // slightly taller rows) without duplicating this whole block.
 function MyCoursesSection({ rowClass, onNavigate }) {
-  const { isAdmin, hasBuilder1, hasBuilder2, hasVibeCoding, hasAiMastery, hasAgentsLive } = usePro();
-  if (!(hasBuilder1 || hasBuilder2 || hasVibeCoding || hasAiMastery || hasAgentsLive || isAdmin)) return null;
+  const { isAdmin, hasBuilder1, hasBuilder2, hasVibeCoding, hasAiMastery } = usePro();
+  if (!(hasBuilder1 || hasBuilder2 || hasVibeCoding || hasAiMastery || isAdmin)) return null;
 
   return (
     <>
@@ -98,11 +98,6 @@ function MyCoursesSection({ rowClass, onNavigate }) {
       {(hasAiMastery || isAdmin) && (
         <NavLink to="/ai-agent-mastery/course" onClick={onNavigate} className={rowClass}>
           <Bot className="w-[18px] h-[18px] flex-shrink-0" /> AI Agent Mastery
-        </NavLink>
-      )}
-      {(hasAgentsLive || isAdmin) && (
-        <NavLink to="/dashboard/live-sessions" onClick={onNavigate} className={rowClass}>
-          <Flame className="w-[18px] h-[18px] flex-shrink-0" /> AI Agents Live
         </NavLink>
       )}
     </>

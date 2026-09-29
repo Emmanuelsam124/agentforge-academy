@@ -41,37 +41,3 @@ export const AI_AGENT_MASTERY_PRICE = 19999;
 export const AI_AGENT_MASTERY_STUDENT_PRICE = 10000;
 export const STUDENT_EMAIL_DOMAIN = '@byupathway.edu';
 export const isStudentEmail = (email) => !!email && email.trim().toLowerCase().endsWith(STUDENT_EMAIL_DOMAIN);
-
-// AI Agents Live — a separate, short-format live workshop (added
-// 2026-09-27): 2 days, build a personal AI agent connected to messaging
-// tools plus a multi-agent dashboard. NOT the same product as AI Agent
-// Mastery above (that's a 6-month, ₦19,999 cohort) — deliberately its own
-// page/plan/price so the two are never confused. Same 10000 naira as PRO
-// is coincidental, not a collision risk: the webhook/checkout key off the
-// distinct plan string ('agentslive'), not the amount alone.
-//
-// Real seat-based scarcity pricing (founder-confirmed 2026-09-27): the
-// first AGENTS_LIVE_SEAT_THRESHOLD paid seats are AGENTS_LIVE_PRICE_EARLY;
-// every seat after that is AGENTS_LIVE_PRICE_LATE. This is NOT decorative —
-// create-paystack-checkout computes the real charge from the same
-// threshold against a live count of granted 'agentslive' payments (via
-// agentslive-seat-pricing.sql's agentslive_seats_taken() RPC), and
-// paystack-webhook's resolvePlan() accepts both amounts as valid for this
-// plan. Keep all three numbers below in sync with those two files — a
-// mismatch here just makes the displayed price wrong, but a mismatch there
-// makes a real charge get flagged as unrecognized.
-export const AGENTS_LIVE_PRICE_EARLY = 10000;
-export const AGENTS_LIVE_PRICE_LATE = 15000;
-export const AGENTS_LIVE_SEAT_THRESHOLD = 100;
-// Kept as the "starting at" price for places that just need one number
-// (WhatsApp bot facts, SEO description) — the page itself always shows the
-// live, seat-count-derived price instead of this constant.
-export const AGENTS_LIVE_PRICE = AGENTS_LIVE_PRICE_EARLY;
-// Access window after the 2 live days (recordings/resources/support) —
-// short on purpose, this is a workshop, not a cohort.
-export const AGENTS_LIVE_ACCESS_DAYS = 7;
-// Registration/price-lock deadline: the moment the workshop starts (no
-// separate earlier cutoff was set) — 7:00 PM WAT on the cohort_schedule
-// 'agentslive' start_date. WAT is UTC+1 with no DST, so this offset is safe
-// to hardcode.
-export const AGENTS_LIVE_START_HOUR_WAT = '19:00:00+01:00';

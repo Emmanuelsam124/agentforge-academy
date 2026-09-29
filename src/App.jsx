@@ -19,7 +19,6 @@ import WhatsAppBotGuide from './pages/WhatsAppBotGuide';
 import AIBuilder from './pages/AIBuilder';
 import VibeCoding from './pages/VibeCoding';
 import AIAgentMastery from './pages/AIAgentMastery';
-import AgentsLive from './pages/AgentsLive';
 import Builder1Guide from './pages/Builder1Guide';
 import PortfolioSessionGuide from './pages/PortfolioSessionGuide';
 import DailyNewsSessionGuide from './pages/DailyNewsSessionGuide';
@@ -199,7 +198,6 @@ function AppShell() {
             <Route path="/vibe-coding/course" element={<Suspense fallback={null}><VibeCodingCourse /></Suspense>} />
             <Route path="/ai-agent-mastery" element={<AIAgentMastery />} />
             <Route path="/ai-agent-mastery/course" element={<Suspense fallback={null}><AIAgentMasteryCourse /></Suspense>} />
-            <Route path="/ai-agents-live" element={<AgentsLive />} />
             <Route path="/builder-1-guide" element={<Builder1Guide />} />
             <Route path="/session/build-real-product" element={<PortfolioSessionGuide />} />
             <Route path="/session/daily-news-agent" element={<DailyNewsSessionGuide />} />

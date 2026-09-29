@@ -1,7 +1,7 @@
 import { useOutletContext } from 'react-router-dom';
 import { Video, Calendar, Loader2 } from 'lucide-react';
 
-const TIER_LABELS = { builder1: 'Builder 1', builder2: 'Builder 2', vibecoding: 'Vibe Coding', aimastery: 'AI Agent Mastery', agentslive: 'AI Agents Live' };
+const TIER_LABELS = { builder1: 'Builder 1', builder2: 'Builder 2', vibecoding: 'Vibe Coding', aimastery: 'AI Agent Mastery' };
 
 function formatDay(dateStr) {
   return new Date(dateStr).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });

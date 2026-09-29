@@ -40,6 +40,12 @@ function corsHeadersFor(req) {
   };
 }
 
+// Names come from user-controlled data (a display name, or the part of an
+// email before the @), so escape them before they go into email HTML.
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+}
+
 function emailShell(innerHtml) {
   return `
     <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:32px 24px;background:#FBFAFF;">
@@ -76,7 +82,7 @@ const fmtDay = (d, opts) => d.toLocaleDateString('en-GB', { timeZone: 'Africa/La
 
 function hourReminderHtml(name) {
   return `
-    <p style="font-size:15px;color:#1A1333;">Hey ${name},</p>
+    <p style="font-size:15px;color:#1A1333;">Hey ${escapeHtml(name)},</p>
     <p style="font-size:15px;color:#3A3358;line-height:1.6;">
       Your <strong>AI Agent Mastery</strong> class starts in <strong>1 hour</strong> — <strong>7:00 PM WAT</strong> tonight.
     </p>
@@ -94,7 +100,7 @@ function hourReminderHtml(name) {
 
 function reminderHtml(name, dayLines) {
   return `
-    <p style="font-size:15px;color:#1A1333;">Hey ${name},</p>
+    <p style="font-size:15px;color:#1A1333;">Hey ${escapeHtml(name)},</p>
     <p style="font-size:15px;color:#3A3358;line-height:1.6;">
       Your <strong>AI Agent Mastery</strong> cohort starts <strong>today at 7:00 PM WAT</strong>. Here's the full schedule — all three evenings at 7:00 PM WAT:
     </p>
