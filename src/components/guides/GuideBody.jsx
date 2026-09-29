@@ -196,6 +196,23 @@ export default function GuideBody({ blocks }) {
           case 'cta':
             return <Cta key={i} block={block} />;
 
+          case 'image':
+            return (
+              <figure key={i} className="my-6">
+                <img
+                  src={block.src}
+                  alt={block.alt || ''}
+                  loading="lazy"
+                  className="w-full rounded-2xl border border-border bg-white"
+                />
+                {block.caption && (
+                  <figcaption className="text-[13px] text-body text-center mt-2.5">
+                    <Rich text={block.caption} />
+                  </figcaption>
+                )}
+              </figure>
+            );
+
           case 'paragraph':
           default:
             return (

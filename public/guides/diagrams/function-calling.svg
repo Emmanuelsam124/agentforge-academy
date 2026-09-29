@@ -1,0 +1,54 @@
+<svg viewBox="0 0 800 520" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="fc-title fc-desc" font-family="system-ui, -apple-system, Segoe UI, sans-serif">
+  <title id="fc-title">The tool-use round trip</title>
+  <desc id="fc-desc">A five-step sequence between your application and Claude. Step 1: your app sends a user message plus tool definitions, each with a name, description and input_schema. Step 2: Claude replies with stop_reason tool_use and a tool_use block naming a tool and its arguments — it does not run any code itself. Step 3: your application executes that function locally, for example a weather lookup. Step 4: your app sends the result back as a tool_result block tied to the same tool_use id. Step 5: Claude reads the result and replies with the final answer in plain text.</desc>
+
+  <defs>
+    <marker id="fc-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7C3AED"/>
+    </marker>
+  </defs>
+
+  <!-- Two lane headers -->
+  <text x="150" y="28" font-size="13" font-weight="700" fill="#1A1333" text-anchor="middle">Your application</text>
+  <text x="650" y="28" font-size="13" font-weight="700" fill="#1A1333" text-anchor="middle">Claude</text>
+  <line x1="150" y1="38" x2="150" y2="486" stroke="#E6DDFA" stroke-width="1.5"/>
+  <line x1="650" y1="38" x2="650" y2="486" stroke="#E6DDFA" stroke-width="1.5"/>
+
+  <!-- Step 1 -->
+  <circle cx="150" cy="66" r="13" fill="#7C3AED"/><text x="150" y="71" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">1</text>
+  <line x1="163" y1="66" x2="628" y2="66" stroke="#7C3AED" stroke-width="2" marker-end="url(#fc-arrow)"/>
+  <text x="180" y="58" font-size="12" fill="#3A3358" font-weight="600">Sends the user message, plus a tool definition:</text>
+  <text x="180" y="90" font-size="11.5" font-family="ui-monospace, Menlo, monospace" fill="#5A5473">name: "get_weather", description: "...", input_schema: { location }</text>
+
+  <!-- Step 2 -->
+  <circle cx="650" cy="130" r="13" fill="#7C3AED"/><text x="650" y="135" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">2</text>
+  <line x1="637" y1="130" x2="163" y2="130" stroke="#7C3AED" stroke-width="2" marker-end="url(#fc-arrow)"/>
+  <rect x="400" y="108" width="230" height="52" rx="10" fill="#F3EBFF" stroke="#E6DDFA"/>
+  <text x="412" y="126" font-size="11.5" font-weight="700" fill="#3A3358">stop_reason: "tool_use"</text>
+  <text x="412" y="142" font-size="11.5" font-family="ui-monospace, Menlo, monospace" fill="#5A5473">tool_use { name, input }</text>
+  <text x="180" y="152" font-size="11.5" fill="#5A5473">Claude names a tool and its arguments — it never runs code itself.</text>
+
+  <!-- Step 3 -->
+  <circle cx="150" cy="200" r="13" fill="#7C3AED"/><text x="150" y="205" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">3</text>
+  <rect x="180" y="182" width="300" height="44" rx="10" fill="#1A1333"/>
+  <text x="196" y="200" font-size="11.5" font-family="ui-monospace, Menlo, monospace" fill="#EFEFE5">run get_weather(location="SF")</text>
+  <text x="196" y="216" font-size="11" fill="#B7AFC9">Your code executes the function locally.</text>
+
+  <!-- Step 4 -->
+  <circle cx="150" cy="264" r="13" fill="#7C3AED"/><text x="150" y="269" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">4</text>
+  <line x1="163" y1="264" x2="628" y2="264" stroke="#7C3AED" stroke-width="2" marker-end="url(#fc-arrow)"/>
+  <text x="180" y="256" font-size="12" fill="#3A3358" font-weight="600">Sends the result back, tied to the same call:</text>
+  <text x="180" y="288" font-size="11.5" font-family="ui-monospace, Menlo, monospace" fill="#5A5473">tool_result { tool_use_id, content: "15°C, cloudy" }</text>
+
+  <!-- Step 5 -->
+  <circle cx="650" cy="328" r="13" fill="#7C3AED"/><text x="650" y="333" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">5</text>
+  <line x1="637" y1="328" x2="163" y2="328" stroke="#7C3AED" stroke-width="2" marker-end="url(#fc-arrow)"/>
+  <rect x="400" y="306" width="230" height="44" rx="10" fill="#F3EBFF" stroke="#E6DDFA"/>
+  <text x="412" y="324" font-size="11.5" font-weight="700" fill="#3A3358">Final text reply</text>
+  <text x="412" y="340" font-size="11" fill="#5A5473">"It's 15°C and cloudy in SF."</text>
+
+  <rect x="30" y="392" width="740" height="1" fill="#E6DDFA"/>
+  <text x="30" y="420" font-size="12" fill="#5A5473">Claude decides WHEN to call a tool — from the request and each tool's description — and your</text>
+  <text x="30" y="438" font-size="12" fill="#5A5473">application always decides WHAT the tool actually does. Two round trips, one per turn, and the</text>
+  <text x="30" y="456" font-size="12" fill="#5A5473">second one is where the model finally sees the outside world's answer.</text>
+</svg>

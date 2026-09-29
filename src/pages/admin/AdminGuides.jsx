@@ -20,6 +20,7 @@ import ImageUploadField from '../../components/admin/ImageUploadField';
 //   !tip Title | text             -> callout (also !warn)
 //   [widget:prompt-generator]     -> embeds an interactive widget
 //   [cta:/path|Label|Builder 1]   -> call-to-action (tier optional)
+//   [image:/path.svg|Alt text|Caption]  -> inline diagram/illustration (caption optional)
 //   - item                        -> checklist (all lines must start "- ")
 //   table: Caption (optional)     -> comparison table — a caption line (optional)
 //   | Col A | Col B |                followed by a header row, a required
@@ -45,6 +46,7 @@ export function blocksToText(blocks) {
         // tier and eyebrow are both optional; empty slots are kept so the
         // positions stay stable (…|tier|eyebrow]).
         case 'cta': return `[cta:${b.to}|${b.label}|${b.tier || ''}|${b.eyebrow || ''}]\n${b.text}`;
+        case 'image': return `[image:${b.src}|${b.alt || ''}|${b.caption || ''}]`;
         case 'checklist':
         case 'list': return (b.items || []).map((i) => `- ${i}`).join('\n');
         case 'table': {
@@ -109,6 +111,13 @@ export function textToBlocks(text) {
       }
       const widgetMatch = first.match(/^\[widget:([a-z-]+)\]$/i);
       if (widgetMatch) return { type: 'widget', name: widgetMatch[1] };
+
+      const imageMatch = first.match(/^\[image:([^|\]]+)\|([^|\]]*)(?:\|([^\]]*))?\]$/);
+      if (imageMatch) {
+        const block = { type: 'image', src: imageMatch[1].trim(), alt: imageMatch[2]?.trim() || '' };
+        if (imageMatch[3]?.trim()) block.caption = imageMatch[3].trim();
+        return block;
+      }
 
       const ctaMatch = first.match(/^\[cta:([^|\]]+)\|([^|\]]*)(?:\|([^|\]]*))?(?:\|([^\]]*))?\]$/);
       if (ctaMatch) {
@@ -380,7 +389,7 @@ export default function AdminGuides() {
               rows={16}
               value={form.bodyText}
               onChange={(e) => setForm((f) => ({ ...f, bodyText: e.target.value }))}
-              placeholder={'Blank line between blocks.\n\nintro: Opening line under the title\n# Eyebrow | Section heading\n## Bold subheading\n### 1. A numbered best practice\nIts explanation on the next line.\n- checklist item\n> a quote\n!tip Title | callout text\n!warn Title | warning callout\nlink: /some-page | Link text   (optional line under a callout)\n[widget:prompt-generator]\n[cta:/catalog|Button label|Builder 1|Eyebrow]\nCTA description on the next line.\ntable: Optional caption\n| | Column A | Column B |\n| --- | --- | --- |\n| **Row label** | cell | cell |\n\nAnything else is a paragraph. Use **bold** for emphasis.'}
+              placeholder={'Blank line between blocks.\n\nintro: Opening line under the title\n# Eyebrow | Section heading\n## Bold subheading\n### 1. A numbered best practice\nIts explanation on the next line.\n- checklist item\n> a quote\n!tip Title | callout text\n!warn Title | warning callout\nlink: /some-page | Link text   (optional line under a callout)\n[widget:prompt-generator]\n[cta:/catalog|Button label|Builder 1|Eyebrow]\nCTA description on the next line.\n[image:/guides/diagrams/example.svg|Alt text|Optional caption]\ntable: Optional caption\n| | Column A | Column B |\n| --- | --- | --- |\n| **Row label** | cell | cell |\n\nAnything else is a paragraph. Use **bold** for emphasis.'}
             />
           </div>
 
