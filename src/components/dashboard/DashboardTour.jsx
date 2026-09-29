@@ -100,7 +100,7 @@ function resolveSteps() {
   return out;
 }
 
-export default function DashboardTour({ userId }) {
+export default function DashboardTour({ userId, paused = false }) {
   const [steps, setSteps] = useState(null); // null = closed
   const [index, setIndex] = useState(0);
   const [rect, setRect] = useState(null);
@@ -129,10 +129,11 @@ export default function DashboardTour({ userId }) {
     } catch {
       seen = true; // can't remember it -> don't nag
     }
-    if (seen) return undefined;
+    // Held back while another first-login popup (e.g. create-password) is up.
+    if (seen || paused) return undefined;
     const id = setTimeout(start, 900);
     return () => clearTimeout(id);
-  }, [userId, start]);
+  }, [userId, start, paused]);
 
   useEffect(() => {
     window.addEventListener(TOUR_START_EVENT, start);
