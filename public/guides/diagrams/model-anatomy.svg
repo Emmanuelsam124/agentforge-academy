@@ -1,0 +1,67 @@
+<svg viewBox="0 0 800 610" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ma-title ma-desc" font-family="system-ui, -apple-system, Segoe UI, sans-serif">
+  <title id="ma-title">How model weights are packaged and run</title>
+  <desc id="ma-desc">Training produces weight files. SafeTensors stores weights in a file separate from config.json and tokenizer.json; GGUF bundles weights, tokenizer and metadata into one file. A Modelfile then sits on top of the weights as a run file, setting parameters like temperature without changing the weights themselves, before the model runs.</desc>
+
+  <defs>
+    <marker id="ma-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7C3AED"/>
+    </marker>
+  </defs>
+
+  <!-- Stage A: weights -->
+  <rect x="180" y="14" width="440" height="76" rx="16" fill="#F8F6FF" stroke="#E6DDFA" stroke-width="1.5"/>
+  <g transform="translate(206,32)">
+    <rect x="0" y="0" width="8" height="8" fill="#7C3AED"/><rect x="12" y="0" width="8" height="8" fill="#C4B5FD"/><rect x="24" y="0" width="8" height="8" fill="#7C3AED"/>
+    <rect x="0" y="12" width="8" height="8" fill="#C4B5FD"/><rect x="12" y="12" width="8" height="8" fill="#7C3AED"/><rect x="24" y="12" width="8" height="8" fill="#C4B5FD"/>
+    <rect x="0" y="24" width="8" height="8" fill="#7C3AED"/><rect x="12" y="24" width="8" height="8" fill="#7C3AED"/><rect x="24" y="24" width="8" height="8" fill="#C4B5FD"/>
+  </g>
+  <text x="254" y="38" font-size="15.5" font-weight="700" fill="#1A1333">The weights (parameters)</text>
+  <text x="254" y="58" font-size="12.5" fill="#5A5473">Billions of numbers tuned during training —</text>
+  <text x="254" y="74" font-size="12.5" fill="#5A5473">just bytes on disk without a schema to read them.</text>
+
+  <line x1="400" y1="90" x2="400" y2="122" stroke="#7C3AED" stroke-width="2" marker-end="url(#ma-arrow)"/>
+
+  <text x="400" y="146" font-size="12" font-weight="700" fill="#5A5473" text-anchor="middle" letter-spacing="0.5">PACKAGED FOR STORAGE — TWO COMMON FORMATS</text>
+
+  <!-- SafeTensors card -->
+  <rect x="30" y="166" width="340" height="220" rx="16" fill="#FFFFFF" stroke="#E6DDFA" stroke-width="1.5"/>
+  <text x="52" y="196" font-size="15" font-weight="700" fill="#1A1333">SafeTensors (Hugging Face)</text>
+  <rect x="52" y="212" width="296" height="34" rx="8" fill="#F3EBFF"/>
+  <text x="64" y="233" font-size="12.5" fill="#3A3358" font-family="ui-monospace, Menlo, monospace">model.safetensors</text>
+  <text x="200" y="233" font-size="11.5" fill="#5A5473">weights only</text>
+  <rect x="52" y="254" width="296" height="34" rx="8" fill="#F3EBFF"/>
+  <text x="64" y="275" font-size="12.5" fill="#3A3358" font-family="ui-monospace, Menlo, monospace">config.json</text>
+  <text x="180" y="275" font-size="11.5" fill="#5A5473">architecture</text>
+  <rect x="52" y="296" width="296" height="34" rx="8" fill="#F3EBFF"/>
+  <text x="64" y="317" font-size="12.5" fill="#3A3358" font-family="ui-monospace, Menlo, monospace">tokenizer.json</text>
+  <text x="200" y="317" font-size="11.5" fill="#5A5473">vocab + merges</text>
+  <text x="52" y="352" font-size="12" fill="#5A5473">Separate files, loaded together by a</text>
+  <text x="52" y="368" font-size="12" fill="#5A5473">serving framework (e.g. Transformers, vLLM).</text>
+
+  <!-- GGUF card -->
+  <rect x="430" y="166" width="340" height="220" rx="16" fill="#FFFFFF" stroke="#7C3AED" stroke-width="1.5"/>
+  <text x="452" y="196" font-size="15" font-weight="700" fill="#1A1333">GGUF (llama.cpp)</text>
+  <rect x="452" y="212" width="296" height="118" rx="8" fill="#F3EBFF"/>
+  <text x="600" y="256" font-size="12.5" font-weight="600" fill="#3A3358" text-anchor="middle">weights</text>
+  <text x="600" y="276" font-size="12.5" font-weight="600" fill="#3A3358" text-anchor="middle">+ tokenizer</text>
+  <text x="600" y="296" font-size="12.5" font-weight="600" fill="#3A3358" text-anchor="middle">+ architecture + quantization info</text>
+  <text x="452" y="352" font-size="12" fill="#5A5473">One portable file — nothing else</text>
+  <text x="452" y="368" font-size="12" fill="#5A5473">to download or keep in sync.</text>
+
+  <line x1="600" y1="386" x2="600" y2="418" stroke="#7C3AED" stroke-width="2" marker-end="url(#ma-arrow)"/>
+
+  <!-- Stage C: run file -->
+  <rect x="330" y="432" width="440" height="132" rx="16" fill="#1A1333"/>
+  <text x="354" y="456" font-size="12" font-weight="700" fill="#C4B5FD" letter-spacing="0.5">THE RUN FILE — e.g. an Ollama Modelfile</text>
+  <text x="354" y="480" font-size="12.5" font-family="ui-monospace, Menlo, monospace" fill="#EFEFE5">FROM ./llama-3.1-8b.Q4_K_M.gguf</text>
+  <text x="354" y="498" font-size="12.5" font-family="ui-monospace, Menlo, monospace" fill="#EFEFE5">PARAMETER temperature 0.7</text>
+  <text x="354" y="516" font-size="12.5" font-family="ui-monospace, Menlo, monospace" fill="#EFEFE5">SYSTEM "You are a helpful assistant."</text>
+  <text x="354" y="546" font-size="11.5" fill="#B7AFC9">Doesn't touch a single weight — just tells the</text>
+  <text x="354" y="560" font-size="11.5" fill="#B7AFC9">runtime how to load and talk to the model above.</text>
+
+  <line x1="550" y1="386" x2="480" y2="432" stroke="#7C3AED" stroke-width="2" marker-end="url(#ma-arrow)"/>
+
+  <line x1="550" y1="564" x2="550" y2="588" stroke="#7C3AED" stroke-width="2" marker-end="url(#ma-arrow)"/>
+  <rect x="465" y="588" width="170" height="16" rx="8" fill="none"/>
+  <text x="550" y="602" font-size="12.5" font-weight="700" fill="#7C3AED" text-anchor="middle">Model, running</text>
+</svg>

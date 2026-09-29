@@ -18,6 +18,7 @@
 //   widget      { name }                         — an interactive React island
 //   cta         { to, label, tier?, eyebrow?, text }
 //   table       { caption?, header[], rows[][] }  — comparison table, **bold** per cell
+//   image       { src, alt, caption? }            — inline diagram/illustration, own card
 
 export function escapeHtml(str) {
   return String(str ?? '')
@@ -76,6 +77,10 @@ export function renderGuideBlocksToHtml(blocks) {
           }</tbody></table>`;
         case 'cta':
           return `<p><a href="${escapeHtml(block.to)}">${escapeHtml(block.label)}</a> — ${renderInline(block.text)}</p>`;
+        case 'image':
+          return `<figure><img src="${escapeHtml(block.src)}" alt="${escapeHtml(block.alt || '')}" loading="lazy" />${
+            block.caption ? `<figcaption>${renderInline(block.caption)}</figcaption>` : ''
+          }</figure>`;
         // Interactive islands have no meaningful server-rendered form; the
         // surrounding prose already explains what they do, so emitting
         // nothing is better than emitting an empty shell for a crawler.

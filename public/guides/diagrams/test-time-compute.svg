@@ -1,0 +1,56 @@
+<svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ttc-title ttc-desc" font-family="system-ui, -apple-system, Segoe UI, sans-serif">
+  <title id="ttc-title">Standard response vs. extended thinking</title>
+  <desc id="ttc-desc">Two lanes compare a standard response, where Claude goes straight from the user's question to a final answer, against extended thinking, where a thinking block sits in between and spends a budget of reasoning tokens — set by the budget_tokens parameter, minimum 1,024 — before the final answer is produced. Same model weights in both lanes; the difference is how much computation is spent at inference time, after training is already finished.</desc>
+
+  <defs>
+    <marker id="ttc-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7C3AED"/>
+    </marker>
+  </defs>
+
+  <text x="30" y="28" font-size="12" font-weight="700" fill="#5A5473" letter-spacing="0.3">STANDARD REQUEST</text>
+
+  <rect x="30" y="42" width="130" height="56" rx="12" fill="#F3EBFF" stroke="#E6DDFA"/>
+  <text x="95" y="66" font-size="12.5" font-weight="600" fill="#3A3358" text-anchor="middle">User</text>
+  <text x="95" y="82" font-size="12.5" font-weight="600" fill="#3A3358" text-anchor="middle">question</text>
+
+  <line x1="160" y1="70" x2="192" y2="70" stroke="#7C3AED" stroke-width="2" marker-end="url(#ttc-arrow)"/>
+
+  <rect x="200" y="42" width="300" height="56" rx="12" fill="#FFFFFF" stroke="#E6DDFA"/>
+  <text x="350" y="64" font-size="12.5" font-weight="600" fill="#3A3358" text-anchor="middle">Claude generates the reply</text>
+  <text x="350" y="82" font-size="12" fill="#5A5473" text-anchor="middle">directly — no reasoning step shown</text>
+
+  <line x1="500" y1="70" x2="532" y2="70" stroke="#7C3AED" stroke-width="2" marker-end="url(#ttc-arrow)"/>
+
+  <rect x="540" y="42" width="130" height="56" rx="12" fill="#F3EBFF" stroke="#E6DDFA"/>
+  <text x="605" y="66" font-size="12.5" font-weight="600" fill="#3A3358" text-anchor="middle">Final</text>
+  <text x="605" y="82" font-size="12.5" font-weight="600" fill="#3A3358" text-anchor="middle">answer</text>
+
+  <rect x="30" y="128" width="740" height="1" fill="#E6DDFA"/>
+
+  <text x="30" y="164" font-size="12" font-weight="700" fill="#5A5473" letter-spacing="0.3">EXTENDED THINKING (TEST-TIME COMPUTE)</text>
+
+  <rect x="30" y="178" width="130" height="56" rx="12" fill="#F3EBFF" stroke="#E6DDFA"/>
+  <text x="95" y="202" font-size="12.5" font-weight="600" fill="#3A3358" text-anchor="middle">User</text>
+  <text x="95" y="218" font-size="12.5" font-weight="600" fill="#3A3358" text-anchor="middle">question</text>
+
+  <line x1="160" y1="206" x2="192" y2="206" stroke="#7C3AED" stroke-width="2" marker-end="url(#ttc-arrow)"/>
+
+  <rect x="200" y="164" width="330" height="120" rx="12" fill="#1A1333"/>
+  <text x="222" y="188" font-size="12" font-weight="700" fill="#C4B5FD">THINKING BLOCK</text>
+  <text x="222" y="210" font-size="12" fill="#EFEFE5">Spends reasoning tokens working the</text>
+  <text x="222" y="226" font-size="12" fill="#EFEFE5">problem before writing a reply.</text>
+  <text x="222" y="252" font-size="11.5" font-family="ui-monospace, Menlo, monospace" fill="#B7AFC9">thinking.budget_tokens: 10000</text>
+  <text x="222" y="270" font-size="11" fill="#8A8299">(minimum 1,024 — a target, not a hard floor spent)</text>
+
+  <line x1="530" y1="224" x2="562" y2="224" stroke="#7C3AED" stroke-width="2" marker-end="url(#ttc-arrow)"/>
+
+  <rect x="570" y="196" width="130" height="56" rx="12" fill="#F3EBFF" stroke="#E6DDFA"/>
+  <text x="635" y="220" font-size="12.5" font-weight="600" fill="#3A3358" text-anchor="middle">Final</text>
+  <text x="635" y="236" font-size="12.5" font-weight="600" fill="#3A3358" text-anchor="middle">answer</text>
+
+  <rect x="30" y="316" width="740" height="1" fill="#E6DDFA"/>
+  <text x="30" y="346" font-size="12" fill="#5A5473">Same model weights in both lanes. The difference is how much computation is spent per answer at</text>
+  <text x="30" y="364" font-size="12" fill="#5A5473">inference time — after training is already finished — trading latency for accuracy on harder problems,</text>
+  <text x="30" y="382" font-size="12" fill="#5A5473">with diminishing returns as the thinking budget grows.</text>
+</svg>

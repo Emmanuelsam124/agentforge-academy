@@ -1,0 +1,88 @@
+<svg viewBox="0 0 800 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="rag-title rag-desc" font-family="system-ui, -apple-system, Segoe UI, sans-serif">
+  <title id="rag-title">Retrieval-augmented generation, end to end</title>
+  <desc id="rag-desc">Indexing, done ahead of time: documents are split into chunks, each chunk is turned into a vector by an embedding model, and the vectors are stored in a vector database. At query time: the user's question is turned into a vector by the same embedding model, the vector database finds the stored chunks whose vectors are closest by a similarity measure such as cosine similarity, using an index structure such as HNSW, the top-scoring chunks are retrieved, and those chunks plus the original question are combined into an augmented prompt that the language model uses to generate an answer grounded in the retrieved text.</desc>
+
+  <defs>
+    <marker id="rag-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7C3AED"/>
+    </marker>
+    <marker id="rag-arrow-soft" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8A8299"/>
+    </marker>
+  </defs>
+
+  <text x="30" y="26" font-size="12" font-weight="700" fill="#5A5473" letter-spacing="0.3">INDEXING — DONE AHEAD OF TIME</text>
+
+  <rect x="30" y="40" width="140" height="64" rx="12" fill="#F3EBFF" stroke="#E6DDFA"/>
+  <text x="100" y="68" font-size="12.5" font-weight="600" fill="#3A3358" text-anchor="middle">Source</text>
+  <text x="100" y="84" font-size="12.5" font-weight="600" fill="#3A3358" text-anchor="middle">documents</text>
+
+  <line x1="170" y1="72" x2="200" y2="72" stroke="#7C3AED" stroke-width="2" marker-end="url(#rag-arrow)"/>
+
+  <rect x="208" y="40" width="150" height="64" rx="12" fill="#FFFFFF" stroke="#E6DDFA"/>
+  <text x="283" y="68" font-size="12.5" font-weight="600" fill="#3A3358" text-anchor="middle">Chunking</text>
+  <text x="283" y="84" font-size="11" fill="#5A5473" text-anchor="middle">split into passages</text>
+
+  <line x1="358" y1="72" x2="388" y2="72" stroke="#7C3AED" stroke-width="2" marker-end="url(#rag-arrow)"/>
+
+  <rect x="396" y="40" width="168" height="64" rx="12" fill="#FFFFFF" stroke="#E6DDFA"/>
+  <text x="480" y="68" font-size="12.5" font-weight="600" fill="#3A3358" text-anchor="middle">Embedding model</text>
+  <text x="480" y="84" font-size="11" fill="#5A5473" text-anchor="middle">text → vector</text>
+
+  <line x1="564" y1="72" x2="594" y2="72" stroke="#7C3AED" stroke-width="2" marker-end="url(#rag-arrow)"/>
+
+  <rect x="602" y="40" width="168" height="64" rx="12" fill="#1A1333"/>
+  <text x="686" y="68" font-size="12.5" font-weight="700" fill="#EFEFE5" text-anchor="middle">Vector database</text>
+  <text x="686" y="84" font-size="11" fill="#B7AFC9" text-anchor="middle">stores every vector</text>
+
+  <path d="M686,104 L686,150 L480,150 L480,196" fill="none" stroke="#8A8299" stroke-width="1.5" stroke-dasharray="4,4" marker-end="url(#rag-arrow-soft)"/>
+  <text x="500" y="146" font-size="11" fill="#8A8299">same index, queried later</text>
+
+  <rect x="30" y="196" width="740" height="1" fill="#E6DDFA"/>
+  <text x="30" y="222" font-size="12" font-weight="700" fill="#5A5473" letter-spacing="0.3">AT QUERY TIME</text>
+
+  <rect x="30" y="236" width="140" height="64" rx="12" fill="#F3EBFF" stroke="#E6DDFA"/>
+  <text x="100" y="264" font-size="12.5" font-weight="600" fill="#3A3358" text-anchor="middle">User's</text>
+  <text x="100" y="280" font-size="12.5" font-weight="600" fill="#3A3358" text-anchor="middle">question</text>
+
+  <line x1="170" y1="268" x2="200" y2="268" stroke="#7C3AED" stroke-width="2" marker-end="url(#rag-arrow)"/>
+
+  <rect x="208" y="236" width="150" height="64" rx="12" fill="#FFFFFF" stroke="#E6DDFA"/>
+  <text x="283" y="264" font-size="12.5" font-weight="600" fill="#3A3358" text-anchor="middle">Embedding model</text>
+  <text x="283" y="280" font-size="11" fill="#5A5473" text-anchor="middle">the same one</text>
+
+  <line x1="358" y1="268" x2="388" y2="268" stroke="#7C3AED" stroke-width="2" marker-end="url(#rag-arrow)"/>
+
+  <rect x="396" y="236" width="188" height="64" rx="12" fill="#FFFFFF" stroke="#E6DDFA"/>
+  <text x="490" y="260" font-size="12.5" font-weight="600" fill="#3A3358" text-anchor="middle">Vector database</text>
+  <text x="490" y="276" font-size="10.5" fill="#5A5473" text-anchor="middle">nearest-neighbor search</text>
+  <text x="490" y="290" font-size="10.5" fill="#5A5473" text-anchor="middle">(e.g. HNSW, cosine similarity)</text>
+
+  <line x1="584" y1="268" x2="614" y2="268" stroke="#7C3AED" stroke-width="2" marker-end="url(#rag-arrow)"/>
+
+  <rect x="622" y="236" width="148" height="64" rx="12" fill="#F3EBFF" stroke="#E6DDFA"/>
+  <text x="696" y="260" font-size="12" font-weight="600" fill="#3A3358" text-anchor="middle">Top-k chunks</text>
+  <text x="696" y="276" font-size="10.5" fill="#5A5473" text-anchor="middle">closest by</text>
+  <text x="696" y="290" font-size="10.5" fill="#5A5473" text-anchor="middle">meaning, not keywords</text>
+
+  <path d="M696,300 L696,330 L360,330 L360,362" fill="none" stroke="#7C3AED" stroke-width="2" marker-end="url(#rag-arrow)"/>
+  <path d="M100,300 L100,330 L280,330 L280,362" fill="none" stroke="#8A8299" stroke-width="1.5" stroke-dasharray="4,4" marker-end="url(#rag-arrow-soft)"/>
+  <text x="130" y="326" font-size="10.5" fill="#8A8299">+ the original question</text>
+
+  <rect x="150" y="368" width="230" height="64" rx="12" fill="#FFFFFF" stroke="#7C3AED" stroke-width="1.5"/>
+  <text x="265" y="394" font-size="12.5" font-weight="700" fill="#3A3358" text-anchor="middle">Augmented prompt</text>
+  <text x="265" y="412" font-size="11" fill="#5A5473" text-anchor="middle">retrieved chunks + question</text>
+
+  <line x1="380" y1="400" x2="410" y2="400" stroke="#7C3AED" stroke-width="2" marker-end="url(#rag-arrow)"/>
+
+  <rect x="418" y="368" width="120" height="64" rx="12" fill="#1A1333"/>
+  <text x="478" y="404" font-size="13" font-weight="700" fill="#EFEFE5" text-anchor="middle">LLM</text>
+
+  <line x1="538" y1="400" x2="568" y2="400" stroke="#7C3AED" stroke-width="2" marker-end="url(#rag-arrow)"/>
+
+  <rect x="576" y="368" width="194" height="64" rx="12" fill="#F3EBFF" stroke="#E6DDFA"/>
+  <text x="673" y="394" font-size="12.5" font-weight="600" fill="#3A3358" text-anchor="middle">Grounded answer</text>
+  <text x="673" y="410" font-size="10.5" fill="#5A5473" text-anchor="middle">traceable to real source text</text>
+
+  <text x="30" y="462" font-size="12" fill="#5A5473">The model never sees the whole knowledge base — only the handful of chunks the search step decided were relevant.</text>
+</svg>
