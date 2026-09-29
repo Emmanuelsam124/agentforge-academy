@@ -16,7 +16,12 @@ const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 const DAY_MS = 24 * 60 * 60 * 1000;
 const REMINDER_WINDOW_MS = 24 * 60 * 60 * 1000;
 
-const EMAIL_TYPE = 'aimastery_class_reminder';
+// Two reminders per cohort, told apart by how close the start is when the
+// function runs: the Friday-morning cron (~9h out) sends the full-schedule
+// email, the Friday-evening cron (~1h out) sends the short "starting soon"
+// nudge. Each has its own email_log type, so dedup never lets one block the other.
+const HOUR_WINDOW_MS = 90 * 60 * 1000;
+const EMAIL_TYPES = { morning: 'aimastery_class_reminder', hour: 'aimastery_class_reminder_1h' };
 
 const ALLOWED_ORIGIN_PATTERNS = [
   /^https:\/\/socialdevtechnologies\.com$/,
@@ -68,6 +73,24 @@ async function sendResendEmail(to, subject, html) {
 }
 
 const fmtDay = (d, opts) => d.toLocaleDateString('en-GB', { timeZone: 'Africa/Lagos', ...opts });
+
+function hourReminderHtml(name) {
+  return `
+    <p style="font-size:15px;color:#1A1333;">Hey ${name},</p>
+    <p style="font-size:15px;color:#3A3358;line-height:1.6;">
+      Your <strong>AI Agent Mastery</strong> class starts in <strong>1 hour</strong> — <strong>7:00 PM WAT</strong> tonight.
+    </p>
+    <p style="font-size:15px;color:#3A3358;line-height:1.6;">
+      Your join link is on your dashboard under <strong>Live Sessions</strong>. Log in now so you're ready when we start.
+    </p>
+    <div style="text-align:center;margin:28px 0;">
+      <a href="https://socialdevtechnologies.com/dashboard/live-sessions"
+         style="display:inline-block;background:#7C3AED;color:#fff;padding:12px 28px;border-radius:10px;text-decoration:none;font-weight:700;">
+        Join the class →
+      </a>
+    </div>
+  `;
+}
 
 function reminderHtml(name, dayLines) {
   return `
@@ -134,6 +157,8 @@ serve(async (req) => {
     return jsonResponse({ ok: true, skipped: true, reason: 'No cohort starts in the next 24 hours' });
   }
   const startIso = new Date(startMs).toISOString();
+  const kind = startMs - now <= HOUR_WINDOW_MS ? 'hour' : 'morning';
+  const emailType = EMAIL_TYPES[kind];
 
   // Everyone who registered for THIS cohort: paid after the previous cohort
   // began (they were told they'd join the next one) and before this one began.
@@ -169,7 +194,7 @@ serve(async (req) => {
   const { data: alreadySent } = await serviceClient
     .from('email_log')
     .select('user_id')
-    .eq('email_type', EMAIL_TYPE)
+    .eq('email_type', emailType)
     .contains('metadata', { cohort_start: startIso });
   const sentSet = new Set((alreadySent || []).map((r) => r.user_id));
 
@@ -180,25 +205,28 @@ serve(async (req) => {
 
   const todo = (profiles || []).filter((p) => p.email && !sentSet.has(p.id));
   if (dryRun) {
-    return jsonResponse({ ok: true, dryRun: true, cohortStart: startIso, registered: userIds.length, wouldSend: todo.length });
+    return jsonResponse({ ok: true, dryRun: true, kind, cohortStart: startIso, registered: userIds.length, wouldSend: todo.length });
   }
 
   let sent = 0;
   for (const p of todo) {
     const name = p.display_name || p.email.split('@')[0];
-    const subject = 'Your AI Agent Mastery cohort starts today at 7 PM WAT';
-    const ok = await sendResendEmail(p.email, subject, emailShell(reminderHtml(name, dayLines)));
+    const subject = kind === 'hour'
+      ? 'Starting in 1 hour: AI Agent Mastery, 7 PM WAT tonight'
+      : 'Your AI Agent Mastery cohort starts today at 7 PM WAT';
+    const html = kind === 'hour' ? hourReminderHtml(name) : reminderHtml(name, dayLines);
+    const ok = await sendResendEmail(p.email, subject, emailShell(html));
     if (ok) {
       sent += 1;
       await serviceClient.from('email_log').insert({
         user_id: p.id,
         email: p.email,
-        email_type: EMAIL_TYPE,
+        email_type: emailType,
         subject,
         metadata: { cohort_start: startIso },
       });
     }
   }
 
-  return jsonResponse({ ok: true, cohortStart: startIso, registered: userIds.length, matched: todo.length, sent });
+  return jsonResponse({ ok: true, kind, cohortStart: startIso, registered: userIds.length, matched: todo.length, sent });
 });
