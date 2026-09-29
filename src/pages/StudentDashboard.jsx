@@ -7,6 +7,7 @@ import DashboardSidebar, { DashboardMobileNav } from '../components/dashboard/Da
 import DashboardTopBar from '../components/dashboard/DashboardTopBar';
 import JumpBackInCard from '../components/dashboard/JumpBackInCard';
 import InstallBanner from '../components/dashboard/InstallBanner';
+import DashboardTour from '../components/dashboard/DashboardTour';
 import Home from './dashboard/Home';
 import LiveSessions from './dashboard/LiveSessions';
 import Replays from './dashboard/Replays';
@@ -79,6 +80,7 @@ export default function StudentDashboard({ progress, onSelectAgent }) {
         </div>
       </div>
       <DashboardMobileNav hasUnreadCommunity={hasUnreadCommunity} />
+      <DashboardTour userId={user.id} />
     </div>
   );
 }

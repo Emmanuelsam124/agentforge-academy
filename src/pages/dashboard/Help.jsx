@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { HelpCircle, MessageCircle, Mail, ArrowRight } from 'lucide-react';
+import { HelpCircle, MessageCircle, Mail, ArrowRight, Compass } from 'lucide-react';
+import { TOUR_START_EVENT } from '../../components/dashboard/DashboardTour';
 
 export default function Help() {
   return (
@@ -9,6 +10,21 @@ export default function Help() {
       </h1>
 
       <div className="flex flex-col gap-3 max-w-lg">
+        <button
+          type="button"
+          onClick={() => window.dispatchEvent(new Event(TOUR_START_EVENT))}
+          className="flex items-center gap-4 rounded-2xl border-[1.5px] border-border-soft bg-white dark:bg-[#181818] hover:bg-[#FAF8FF] dark:hover:bg-white/5 p-5 transition-colors text-left"
+        >
+          <div className="w-11 h-11 rounded-xl bg-[#F3EBFF] dark:bg-brand/15 flex items-center justify-center flex-shrink-0">
+            <Compass className="w-5 h-5 text-brand" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="font-bold text-ink">Take the dashboard tour</p>
+            <p className="text-sm text-body">A quick walk through where everything is.</p>
+          </div>
+          <ArrowRight className="w-4 h-4 text-gray-400 flex-shrink-0" />
+        </button>
+
         <Link
           to="/faq"
           className="flex items-center gap-4 rounded-2xl border-[1.5px] border-border-soft bg-white dark:bg-[#181818] hover:bg-[#FAF8FF] dark:hover:bg-white/5 p-5 transition-colors"
