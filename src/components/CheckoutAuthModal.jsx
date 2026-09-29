@@ -155,6 +155,9 @@ export default function CheckoutAuthModal({ open, onClose, onAuthenticated, requ
             <p className="text-[12.5px] text-body mb-5 -mt-2">
               School inboxes can take a few minutes. Wait for this email before requesting another code — a new code cancels the old one. Check spam too.
             </p>
+            <p className="text-[12.5px] text-body mb-5 -mt-2">
+              Logging in later? Go to socialdevtechnologies.com/welcome, choose “Log in with an emailed code instead”, and use this same email.
+            </p>
             <form onSubmit={handleVerify} className="space-y-3">
               <input
                 type="text"
