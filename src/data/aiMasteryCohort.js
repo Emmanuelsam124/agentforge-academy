@@ -35,3 +35,20 @@ export function formatCohortRange(start) {
   const b = fmtDay(last, { weekday: 'short', day: 'numeric', month: 'long' });
   return `${a} – ${b}`;
 }
+
+// The cohort a signed-in student should see on their dashboard: the one
+// currently running (from its Friday 7 PM WAT start until the Sunday
+// evening's class is over, ~3 days), otherwise the next one.
+const RUNNING_MS = 2 * DAY_MS + 5 * 60 * 60 * 1000; // through Sunday midnight WAT
+export function dashboardCohortStart(now = Date.now()) {
+  if (now >= FIRST_START_UTC) {
+    const weeks = Math.floor((now - FIRST_START_UTC) / WEEK_MS);
+    const current = FIRST_START_UTC + weeks * WEEK_MS;
+    if (now < current + RUNNING_MS) return new Date(current);
+  }
+  return nextAiMasteryCohortStart(now);
+}
+
+export function formatClassDay(date) {
+  return date.toLocaleDateString('en-GB', { timeZone: 'Africa/Lagos', weekday: 'long', day: 'numeric', month: 'long' });
+}
