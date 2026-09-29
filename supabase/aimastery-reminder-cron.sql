@@ -17,3 +17,20 @@ select cron.schedule(
   );
   $$
 );
+
+-- One-hour-before reminder (added 2026-09-29): Fridays 17:00 UTC (18:00 WAT),
+-- one hour before the 19:00 WAT start. Same function; it picks the short
+-- "starts in 1 hour" email when the start is within 90 minutes.
+select cron.schedule(
+  'aimastery-class-reminder-1h-weekly',
+  '0 17 * * 5',
+  $$
+  select net.http_post(
+    url := 'https://qkrfpuckvymjpewcszgs.supabase.co/functions/v1/send-aimastery-class-reminders',
+    headers := jsonb_build_object(
+      'Content-Type', 'application/json',
+      'x-cron-secret', (select decrypted_secret from vault.decrypted_secrets where name = 'cron_secret')
+    )
+  );
+  $$
+);
