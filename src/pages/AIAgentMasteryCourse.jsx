@@ -4,10 +4,83 @@ import {
   Bot, Lock, Loader2, CheckCircle2, Circle, Video, PlayCircle, ExternalLink,
   Copy, Check, Calendar, BookOpen, ListChecks,
 } from 'lucide-react';
+import { supabase } from '../lib/supabaseClient';
+import { dashboardCohortStart, aiMasteryCohortDays, formatClassDay } from '../data/aiMasteryCohort';
 import { useAuth } from '../context/AuthContext';
 import { usePro } from '../hooks/usePro';
 import { useLiveSessions } from '../hooks/useLiveSessions';
 import { usePageSeo } from '../hooks/usePageSeo';
+
+// The three class evenings of the current/next weekly cohort, each with a
+// "Join class" button. The room URL lives in public.aimastery_room (RLS: only
+// enrolled students/admins can read it) and the buttons stay disabled until
+// its join_enabled flag is switched on — see supabase/aimastery-room.sql.
+const CLASS_DAYS = [
+  { day: 'Day 1', title: 'Agent Architecture & Your First Connections' },
+  { day: 'Day 2', title: 'Memory, Multi-Step Tasks & Guardrails' },
+  { day: 'Day 3', title: 'Monetizing Your New Skill' },
+];
+
+function JoinRoomCards() {
+  const [room, setRoom] = useState(null);
+  const [start] = useState(() => dashboardCohortStart());
+  const days = aiMasteryCohortDays(start);
+
+  useEffect(() => {
+    let cancelled = false;
+    supabase
+      .from('aimastery_room')
+      .select('join_link, join_enabled')
+      .eq('id', 1)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (!cancelled && data) setRoom(data);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const canJoin = Boolean(room?.join_enabled && room?.join_link);
+
+  return (
+    <div className="mb-8">
+      <div className="flex items-center gap-2 mb-3">
+        <Video className="w-4 h-4 text-brand" />
+        <h2 className="font-display font-bold text-lg text-ink">Join room</h2>
+        <span className="text-xs text-body">Fri, Sat &amp; Sun · 7:00 PM WAT</span>
+      </div>
+      <div className="grid sm:grid-cols-3 gap-4">
+        {CLASS_DAYS.map((c, i) => (
+          <div key={c.day} className="rounded-2xl border-[1.5px] border-border-soft bg-white dark:bg-[#181818] p-5 flex flex-col">
+            <span className="inline-flex w-fit text-[11px] font-extrabold text-brand bg-[#F3EBFF] dark:bg-brand/15 px-2.5 py-1 rounded-full mb-2.5">{c.day}</span>
+            <p className="font-display font-bold text-[15px] text-ink leading-snug">{c.title}</p>
+            <p className="text-[13px] text-body mt-1.5 mb-4">{formatClassDay(days[i])} · 7:00 PM WAT</p>
+            {canJoin ? (
+              <a
+                href={room.join_link}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-auto inline-flex items-center justify-center gap-2 text-sm font-bold text-white bg-brand hover:bg-brand-deep px-4 py-2.5 rounded-xl transition-colors"
+              >
+                <Video className="w-4 h-4" /> Join class
+              </a>
+            ) : (
+              <button
+                type="button"
+                disabled
+                className="mt-auto inline-flex items-center justify-center gap-2 text-sm font-bold text-gray-400 bg-[#F3F1F8] dark:bg-white/5 px-4 py-2.5 rounded-xl cursor-not-allowed"
+              >
+                <Lock className="w-4 h-4" /> Join class
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
+      {!canJoin && <p className="text-xs text-body mt-2.5">The join button opens when class is about to start.</p>}
+    </div>
+  );
+}
 
 function formatDate(dateStr) {
   return new Date(dateStr).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
@@ -204,7 +277,10 @@ export default function AIAgentMasteryCourse() {
           </Link>
         </div>
       ) : (
-        <AIAgentMasteryCourseBody liveSessions={liveSessions} selectedId={selectedId} setSelectedId={setSelectedId} />
+        <>
+          <JoinRoomCards />
+          <AIAgentMasteryCourseBody liveSessions={liveSessions} selectedId={selectedId} setSelectedId={setSelectedId} />
+        </>
       )}
     </div>
   );
