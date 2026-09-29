@@ -89,6 +89,14 @@ export function AuthProvider({ children }) {
     return supabase.auth.updateUser({ password: newPassword });
   }, []);
 
+  // First password for a pay-first BYU student (paystack-webhook creates the
+  // account with user_metadata.needs_password = true). Clearing that flag in
+  // the same call is what stops SetPasswordModal from showing again.
+  const setInitialPassword = useCallback(async (newPassword) => {
+    if (!isSupabaseConfigured) return { error: { message: 'Supabase is not configured.' } };
+    return supabase.auth.updateUser({ password: newPassword, data: { needs_password: false } });
+  }, []);
+
   const signInWithGoogle = useCallback(async () => {
     if (!isSupabaseConfigured) return { error: { message: 'Supabase is not configured.' } };
     return supabase.auth.signInWithOAuth({
@@ -147,6 +155,7 @@ export function AuthProvider({ children }) {
     verifyLoginCode,
     resetPassword,
     updatePassword,
+    setInitialPassword,
     signInWithGoogle,
     signOut,
   };

@@ -237,7 +237,9 @@ async function findOrCreateStudentUser(supabase, email) {
   const { data, error } = await supabase.auth.admin.createUser({
     email,
     email_confirm: false,
-    user_metadata: { display_name: email.split('@')[0], is_byu_student: true },
+    // needs_password: the dashboard shows a one-time "create your password"
+    // popup on their first login and clears this flag (SetPasswordModal).
+    user_metadata: { display_name: email.split('@')[0], is_byu_student: true, needs_password: true },
   });
   if (data?.user?.id) return data.user.id;
   console.error('student createUser failed:', error?.message);
@@ -261,23 +263,24 @@ async function studentLoginBlock(supabase, email) {
     const { data, error } = await supabase.auth.admin.generateLink({ type: 'magiclink', email });
     const props = data?.properties;
     if (error || !props?.hashed_token) {
-      return `<p style="font-size:15px;color:#3A3358;line-height:1.6;">There's no password to remember — you log in with a code we email to <strong>${safeEmail}</strong>.</p>${fallbackSteps}`;
+      return `<p style="font-size:15px;color:#3A3358;line-height:1.6;">Your account is under <strong>${safeEmail}</strong>. You'll create a password after your first login.</p>${fallbackSteps}`;
     }
     const link = `https://socialdevtechnologies.com/auth/confirm?token_hash=${encodeURIComponent(props.hashed_token)}&type=${encodeURIComponent(props.verification_type || 'magiclink')}`;
     return `
       <p style="font-size:15px;color:#3A3358;line-height:1.6;">
-        There's no password to remember. Your account is under <strong>${safeEmail}</strong> — press the button to log in now:
+        Your account is under <strong>${safeEmail}</strong>. Press the button to log in — you'll be asked to create a password right away,
+        so next time you can log in with your email and password:
       </p>
       <div style="text-align:center;margin:18px 0;">
         <a href="${link}" style="display:inline-block;background:#7C3AED;color:#ffffff;padding:14px 32px;border-radius:10px;text-decoration:none;font-weight:800;font-size:16px;">Log in to my account</a>
       </div>
       <p style="font-size:13px;color:#8A82AD;line-height:1.6;">
         The button works for about an hour. Later on (or if it has expired), you can always log in again with a fresh code:
-        go to socialdevtechnologies.com/welcome, choose “Log in with an emailed code instead”, and enter ${safeEmail}.
+        go to socialdevtechnologies.com/welcome and choose “Log in with an emailed code instead” with ${safeEmail}.
       </p>`;
   } catch (err) {
     console.error('studentLoginBlock failed:', err);
-    return `<p style="font-size:15px;color:#3A3358;line-height:1.6;">There's no password to remember — you log in with a code we email to <strong>${safeEmail}</strong>.</p>${fallbackSteps}`;
+    return `<p style="font-size:15px;color:#3A3358;line-height:1.6;">Your account is under <strong>${safeEmail}</strong>. You'll create a password after your first login.</p>${fallbackSteps}`;
   }
 }
 
