@@ -206,6 +206,10 @@ export default function AIAgentMastery() {
   // callback_url), since they have no session to land on the dashboard with.
   const [searchParams] = useSearchParams();
   const justPaidStudent = searchParams.get('paid') === 'student';
+  // Paystack appends the transaction reference to callback_url; shown so a
+  // student who mistyped their email (or never got the login) can quote it
+  // and we can find their payment straight away.
+  const paymentReference = (searchParams.get('reference') || searchParams.get('trxref') || '').slice(0, 80);
   // Mirrors the server rule (create-paystack-checkout): the signed-in
   // account must have a confirmed BYU-Pathway address. Display only.
   const isStudent = !!user?.email_confirmed_at && isStudentEmail(user.email);
@@ -223,6 +227,11 @@ export default function AIAgentMastery() {
         <div className="bg-green/10 border-b border-green/30 text-center px-4 py-3 text-[13.5px] font-semibold text-body-strong">
           Payment received — check your BYU-Pathway inbox for your login code. It can take a few minutes to arrive (check Junk too).
           You can also log in any time at <Link to="/welcome" className="text-brand underline">socialdevtechnologies.com/welcome</Link> with “Log in with an emailed code”.
+          <span className="block mt-1.5 font-normal">
+            Wrong email, or nothing arrived after a while? Message us on{' '}
+            <a href="https://wa.me/2349066006963" target="_blank" rel="noreferrer" className="text-brand underline">WhatsApp</a>
+            {paymentReference ? <> with your payment reference: <span className="font-mono font-semibold">{paymentReference}</span></> : ' with the email you paid with'}.
+          </span>
         </div>
       )}
 
