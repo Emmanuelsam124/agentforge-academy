@@ -67,6 +67,7 @@ const Certificates = lazy(() => import('./pages/Certificates'));
 const CertificateView = lazy(() => import('./pages/CertificateView'));
 const VerifyCertificate = lazy(() => import('./pages/VerifyCertificate'));
 const ResetPassword = lazy(() => import('./pages/ResetPassword'));
+const ConfirmEmail = lazy(() => import('./pages/ConfirmEmail'));
 const VibeCodingPrompts = lazy(() => import('./pages/VibeCodingPrompts'));
 // Private, auth-gated course content (recording links, passcodes) — must
 // never be prerendered/eager-imported, same reasoning as StudentDashboard.
@@ -136,6 +137,14 @@ function AppShell() {
               element={
                 <Suspense fallback={null}>
                   <ResetPassword />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/auth/confirm"
+              element={
+                <Suspense fallback={null}>
+                  <ConfirmEmail />
                 </Suspense>
               }
             />
