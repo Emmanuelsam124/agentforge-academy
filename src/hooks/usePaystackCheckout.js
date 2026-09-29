@@ -78,7 +78,9 @@ export function usePaystackCheckout() {
     // address can't get the price (the server would refuse it), so swap to
     // the verify-your-student-email flow instead of a dead-end error. The
     // server still makes the real eligibility call either way.
-    if (extra.studentDiscount && user && !isStudentEmail(user.email)) {
+    // Already signed in with a confirmed BYU address -> falls through and
+    // pays directly, no second verification.
+    if (extra.studentDiscount && user && !(isStudentEmail(user.email) && user.email_confirmed_at)) {
       await signOut();
       pendingRef.current = { plan, extra };
       setRequiredEmailDomain(extra?.studentDiscount ? STUDENT_EMAIL_DOMAIN : undefined);
