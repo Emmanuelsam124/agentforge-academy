@@ -1,5 +1,5 @@
-import { useSyncExternalStore } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useSyncExternalStore } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { m } from 'framer-motion';
 import {
   CheckCircle2, ArrowRight, CalendarDays, Info, CircleHelp, Loader2, AlertCircle,
@@ -8,6 +8,7 @@ import {
 import { usePro } from '../hooks/usePro';
 import { usePaystackCheckout } from '../hooks/usePaystackCheckout';
 import CheckoutAuthModal from '../components/CheckoutAuthModal';
+import StudentCheckoutModal from '../components/StudentCheckoutModal';
 import AgentsLiveFlowDiagram from '../components/AgentsLiveFlowDiagram';
 import { DemoVideo, DemoLoop } from '../components/DemoMedia';
 import { DEMO_VIDEO, DEMO_LOOP } from '../data/demoMedia';
@@ -200,6 +201,11 @@ export default function AIAgentMastery() {
     authModalOpen, requiredEmailDomain, closeAuthModal, handleAuthenticated,
   } = usePaystackCheckout();
   const { user } = useAuth();
+  const [studentModalOpen, setStudentModalOpen] = useState(false);
+  // Paystack sends pay-first BYU students back here (create-student-checkout's
+  // callback_url), since they have no session to land on the dashboard with.
+  const [searchParams] = useSearchParams();
+  const justPaidStudent = searchParams.get('paid') === 'student';
   // Mirrors the server rule (create-paystack-checkout): the signed-in
   // account must have a confirmed BYU-Pathway address. Display only.
   const isStudent = !!user?.email_confirmed_at && isStudentEmail(user.email);
@@ -213,6 +219,13 @@ export default function AIAgentMastery() {
 
   return (
     <div>
+      {justPaidStudent && (
+        <div className="bg-green/10 border-b border-green/30 text-center px-4 py-3 text-[13.5px] font-semibold text-body-strong">
+          Payment received — check your BYU-Pathway inbox for your login code. It can take a few minutes to arrive (check Junk too).
+          You can also log in any time at <Link to="/welcome" className="text-brand underline">socialdevtechnologies.com/welcome</Link> with “Log in with an emailed code”.
+        </div>
+      )}
+
       {/* Hero */}
       <div
         className="relative overflow-hidden pt-16 pb-14 px-4 sm:px-6 lg:px-[5vw] text-center"
@@ -537,15 +550,14 @@ export default function AIAgentMastery() {
 
           {!hasAiMastery && !isStudent && (
             <div className="mt-4 rounded-xl border border-brand/25 bg-white dark:bg-[#141319] px-4 py-3 text-[13px] text-body-strong">
-              <strong className="text-ink">BYU-Pathway student?</strong> Pay ₦{AI_AGENT_MASTERY_STUDENT_PRICE.toLocaleString()} instead.
-              Verify your {STUDENT_EMAIL_DOMAIN} email and the student price is applied.{' '}
+              <strong className="text-ink">BYU-Pathway student?</strong> Pay ₦{AI_AGENT_MASTERY_STUDENT_PRICE.toLocaleString()} instead — just enter your
+              {' '}{STUDENT_EMAIL_DOMAIN} email, pay, and we email your login after.{' '}
               <button
                 type="button"
-                onClick={() => checkout('aimastery', { studentDiscount: true })}
-                disabled={checkoutLoading === 'aimastery'}
-                className="font-bold text-brand hover:underline disabled:opacity-60"
+                onClick={() => setStudentModalOpen(true)}
+                className="font-bold text-brand hover:underline"
               >
-                Verify my student email →
+                Pay with my student email →
               </button>
             </div>
           )}
@@ -578,6 +590,7 @@ export default function AIAgentMastery() {
         </div>
       </div>
 
+      <StudentCheckoutModal open={studentModalOpen} onClose={() => setStudentModalOpen(false)} />
       <CheckoutAuthModal open={authModalOpen} onClose={closeAuthModal} onAuthenticated={handleAuthenticated} requiredEmailDomain={requiredEmailDomain} />
     </div>
   );
