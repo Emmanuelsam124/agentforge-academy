@@ -224,7 +224,7 @@ export function DashboardMobileNav({ hasUnreadCommunity }) {
 
   return (
     <>
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-[#0A090F] border-t border-[#EFE9FB] dark:border-[#232228] flex items-stretch">
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-[#0A090F] border-t border-[#EFE9FB] dark:border-[#232228] flex items-stretch pb-[env(safe-area-inset-bottom)]">
         {primaryItems.map(({ to, end, icon: Icon, label }) => (
           <NavLink
             key={to}

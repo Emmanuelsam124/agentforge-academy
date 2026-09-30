@@ -115,7 +115,7 @@ export default function AdminReferrals() {
                   </span>
                 </div>
                 <p className="text-[12.5px] text-body">
-                  Referred a {e.plan} signup on{' '}
+                  Commission on a {e.plan} purchase on{' '}
                   {new Date(e.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
                   {e.paid_at && (
                     <>

@@ -41,3 +41,10 @@ export const AI_AGENT_MASTERY_PRICE = 19999;
 export const AI_AGENT_MASTERY_STUDENT_PRICE = 10000;
 export const STUDENT_EMAIL_DOMAIN = '@byupathway.edu';
 export const isStudentEmail = (email) => !!email && email.trim().toLowerCase().endsWith(STUDENT_EMAIL_DOMAIN);
+
+// Referral commission: a referrer earns this share of every qualifying payment
+// by someone they referred, for any product the referrer is enrolled in
+// (2026-09-30, replaced the flat ₦5,000). Display-only here — the payout itself
+// is computed by paystack-webhook (REFERRAL_COMMISSION_RATE), so the two must
+// move together.
+export const REFERRAL_COMMISSION_PERCENT = 10;

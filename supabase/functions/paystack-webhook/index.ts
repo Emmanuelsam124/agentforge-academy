@@ -34,6 +34,10 @@ const PRICES = {
 };
 const AMOUNT_TOLERANCE = 1;
 
+// Share of a referred person's payment credited to their referrer. Must match
+// REFERRAL_COMMISSION_PERCENT in src/data/pricing.js (display copy).
+const REFERRAL_COMMISSION_RATE = 0.1;
+
 // Plans that have more than one valid price. resolvePlan() checks every price
 // in this list instead of the single PRICES[plan] value.
 const MULTI_TIER_PRICES = {
@@ -459,11 +463,12 @@ serve(async (req) => {
   // by hand later (admin_mark_referral_earning_paid in referrals-setup.sql)
   // — there is no automatic transfer anywhere in this flow.
   //
-  // At most one payout per referred student, ever, no matter how many
-  // separate plans they go on to buy — referral_earnings.referral_id is
-  // UNIQUE, so `ignoreDuplicates` here is just avoiding a thrown error on
-  // the expected-common case of a second qualifying purchase; the database
-  // constraint is what actually enforces the cap.
+  // Commission is REFERRAL_COMMISSION_RATE of the amount paid, and only when
+  // the referrer is themselves enrolled in the product being bought
+  // (referrer_owned_plans in referrals-percentage.sql — one definition of
+  // "enrolled", shared with the code-minting gate). Every qualifying payment
+  // earns one row; referral_earnings.payment_id is UNIQUE, so a retried
+  // delivery of the same charge can't credit twice.
   try {
     if (paymentRow?.id) {
       const { data: referral } = await supabase
@@ -473,15 +478,19 @@ serve(async (req) => {
         .maybeSingle();
 
       if (referral) {
-        await supabase.from('referral_earnings').upsert(
-          {
-            referral_id: referral.id,
-            referrer_id: referral.referrer_id,
-            payment_id: paymentRow.id,
-            plan,
-          },
-          { onConflict: 'referral_id', ignoreDuplicates: true },
-        );
+        const { data: ownedPlans } = await supabase.rpc('referrer_owned_plans', { p_user: referral.referrer_id });
+        if (Array.isArray(ownedPlans) && ownedPlans.includes(plan)) {
+          await supabase.from('referral_earnings').upsert(
+            {
+              referral_id: referral.id,
+              referrer_id: referral.referrer_id,
+              payment_id: paymentRow.id,
+              plan,
+              amount: Math.round(amountNaira * REFERRAL_COMMISSION_RATE * 100) / 100,
+            },
+            { onConflict: 'payment_id', ignoreDuplicates: true },
+          );
+        }
       }
     }
   } catch (_err) {

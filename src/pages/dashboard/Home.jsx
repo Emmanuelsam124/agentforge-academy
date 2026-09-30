@@ -134,7 +134,7 @@ export default function Home() {
               See all <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
-          <div className="grid sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {upcoming.slice(0, 2).map((s) => (
               <div key={s.id} className="rounded-xl border-[1.5px] border-border-soft bg-white dark:bg-[#181818] p-4">
                 <p className="font-bold text-ink text-sm truncate">{s.title}</p>
