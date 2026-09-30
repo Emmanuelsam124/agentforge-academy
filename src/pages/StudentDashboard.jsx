@@ -66,13 +66,13 @@ export default function StudentDashboard({ progress, onSelectAgent }) {
   }
 
   return (
-    <div className="min-h-screen bg-bg">
+    <div className="min-h-screen bg-bg overflow-x-clip">
       <DashboardSidebar hasUnreadCommunity={hasUnreadCommunity} />
       <div className="lg:pl-64 flex flex-col min-h-screen">
         <DashboardTopBar hasUnreadCommunity={hasUnreadCommunity} />
-        <div className="flex-1 max-w-[1400px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 pb-20 lg:pb-6">
+        <div className="flex-1 max-w-[1400px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 pb-[calc(5rem+env(safe-area-inset-bottom))] lg:pb-6">
           <InstallBanner />
-          <div className="grid lg:grid-cols-[1fr_300px] gap-8 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_300px] gap-8 items-start">
             <main className="min-w-0">
               <Routes>
                 <Route element={<DashboardOutlet context={{ progress, onSelectAgent, liveSessions }} />}>

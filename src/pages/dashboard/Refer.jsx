@@ -3,17 +3,13 @@ import { Gift, Loader2, Link2, Check, Users } from 'lucide-react';
 import { supabase } from '../../lib/supabaseClient';
 import { SITE_URL } from '../../lib/ogCards';
 import { copyShareLink } from '../../components/shareTargets';
+import { REFERRAL_COMMISSION_PERCENT } from '../../data/pricing';
 
-const PAYOUT_PER_REFERRAL = 5000;
-
-const STATUS_BADGE = {
-  paid: { label: 'Paid', cls: 'bg-[#EAFBF1] text-green dark:bg-green/15' },
-  pending: { label: 'Payout pending', cls: 'bg-amber-50 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400' },
-};
+const naira = (n) => `₦${Number(n || 0).toLocaleString()}`;
 
 // Gated on the RPC's own answer, not a client-side entitlement check.
-// get_or_create_my_referral_code() allows anyone who has ever held a
-// Builder 1/2 entitlement — current or expired — so re-deriving that same
+// get_or_create_my_referral_code() allows anyone who has ever bought any
+// product — current or expired — so re-deriving that same
 // "ever purchased" rule here from usePro() (which only tracks *currently
 // active* access) would drift from the database's actual rule the moment
 // someone's access lapses. Letting the RPC's error decide keeps there being
@@ -53,10 +49,8 @@ export default function Refer() {
   }, []);
 
   const link = code ? `${SITE_URL}/?ref=${code}` : '';
-  const paidCount = referrals.filter((r) => r.earning_status === 'paid').length;
-  const pendingCount = referrals.filter((r) => r.earning_status === 'pending').length;
-  const totalPaid = paidCount * PAYOUT_PER_REFERRAL;
-  const totalPending = pendingCount * PAYOUT_PER_REFERRAL;
+  const totalPaid = referrals.reduce((sum, r) => sum + Number(r.earned_paid || 0), 0);
+  const totalPending = referrals.reduce((sum, r) => sum + Number(r.earned_pending || 0), 0);
 
   const copyLink = async () => {
     if (await copyShareLink(link)) {
@@ -79,8 +73,8 @@ export default function Refer() {
         <Gift className="w-8 h-8 text-brand mx-auto mb-3" />
         <h1 className="font-display text-xl font-extrabold text-ink mb-1.5">Refer & Earn</h1>
         <p className="text-body max-w-sm mx-auto">
-          Enroll in Builder 1, Builder 2, or Pro to get your referral link — you'll earn ₦{PAYOUT_PER_REFERRAL.toLocaleString()}
-          {' '}for every student you send our way who signs up for a plan.
+          Enroll in any of our courses to get your referral link — you'll earn {REFERRAL_COMMISSION_PERCENT}% of
+          {' '}the amount every student you send our way pays for a course you're enrolled in.
         </p>
       </div>
     );
@@ -93,7 +87,7 @@ export default function Refer() {
           <Gift className="w-6 h-6 text-brand" /> Refer & Earn
         </h1>
         <p className="text-body mt-1.5">
-          Share your link. When someone signs up for Builder 1, Builder 2, or Pro through it, you earn ₦{PAYOUT_PER_REFERRAL.toLocaleString()}.
+          Share your link. When someone signs up through it and pays for any course you're enrolled in, you earn {REFERRAL_COMMISSION_PERCENT}% of what they pay.
         </p>
       </div>
 
@@ -120,11 +114,11 @@ export default function Refer() {
           <p className="text-[11px] font-semibold text-body mt-0.5">Signed up</p>
         </div>
         <div className="bg-white dark:bg-[#181818] border border-border-soft rounded-2xl p-4 text-center">
-          <p className="text-2xl font-display font-extrabold text-ink">₦{totalPaid.toLocaleString()}</p>
+          <p className="text-2xl font-display font-extrabold text-ink">{naira(totalPaid)}</p>
           <p className="text-[11px] font-semibold text-body mt-0.5">Paid out</p>
         </div>
         <div className="bg-white dark:bg-[#181818] border border-border-soft rounded-2xl p-4 text-center">
-          <p className="text-2xl font-display font-extrabold text-ink">₦{totalPending.toLocaleString()}</p>
+          <p className="text-2xl font-display font-extrabold text-ink">{naira(totalPending)}</p>
           <p className="text-[11px] font-semibold text-body mt-0.5">Pending</p>
         </div>
       </div>
@@ -143,7 +137,8 @@ export default function Refer() {
         ) : (
           <div className="divide-y divide-border-soft">
             {referrals.map((r, i) => {
-              const badge = r.earning_status ? STATUS_BADGE[r.earning_status] : null;
+              const pending = Number(r.earned_pending || 0);
+              const paid = Number(r.earned_paid || 0);
               return (
                 <div key={i} className="flex items-center justify-between gap-3 py-3">
                   <div className="min-w-0">
@@ -152,13 +147,23 @@ export default function Refer() {
                       Signed up {new Date(r.signed_up_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
                     </p>
                   </div>
-                  <span
-                    className={`flex-shrink-0 text-[11px] font-bold px-2.5 py-1 rounded-full ${
-                      badge ? badge.cls : 'bg-gray-100 dark:bg-white/5 text-gray-400'
-                    }`}
-                  >
-                    {badge ? badge.label : "Hasn't enrolled yet"}
-                  </span>
+                  <div className="flex-shrink-0 flex flex-col items-end gap-1">
+                    {paid === 0 && pending === 0 && (
+                      <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-gray-100 dark:bg-white/5 text-gray-400">
+                        No qualifying purchase yet
+                      </span>
+                    )}
+                    {paid > 0 && (
+                      <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-[#EAFBF1] text-green dark:bg-green/15">
+                        {naira(paid)} paid
+                      </span>
+                    )}
+                    {pending > 0 && (
+                      <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400">
+                        {naira(pending)} pending
+                      </span>
+                    )}
+                  </div>
                 </div>
               );
             })}

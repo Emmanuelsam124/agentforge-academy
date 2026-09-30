@@ -44,7 +44,7 @@ export default function Dashboard({ progress, onSelectAgent }) {
   return (
     <div className="space-y-10">
       {/* Top stats */}
-      <section className="grid sm:grid-cols-3 gap-4">
+      <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="rounded-2xl bg-[#F3EBFF] dark:bg-[#181818] p-5">
           <div className="flex items-center gap-2 text-brand mb-2">
             <Sparkles className="w-5 h-5" />
@@ -119,7 +119,7 @@ export default function Dashboard({ progress, onSelectAgent }) {
       {/* Progress by difficulty */}
       <section>
         <h2 className="font-display text-lg font-bold text-ink mb-4">Progress by Difficulty</h2>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {visibleDifficulties.map((level) => {
             const tierAgents = agents.filter((a) => a.difficulty === level.id);
             const tierCompleted = tierAgents.filter((a) => completed.includes(a.id));
@@ -179,7 +179,7 @@ export default function Dashboard({ progress, onSelectAgent }) {
       {recommendations.length > 0 && (
         <section>
           <h2 className="font-display text-lg font-bold text-ink mb-4">Recommended Next</h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {recommendations.map((agent) => {
               const difficulty = getDifficulty(agent.difficulty);
               const className = "flex items-center gap-3 text-left bg-white dark:bg-[#181818] hover:bg-[#FAF8FF] dark:hover:bg-white/5 border-[1.5px] border-border-soft rounded-xl p-4 transition-colors";

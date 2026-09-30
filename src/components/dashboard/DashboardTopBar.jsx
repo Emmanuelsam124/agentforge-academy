@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Sun, Moon, Bell } from 'lucide-react';
 import SearchBar from '../SearchBar';
 import { useAuth } from '../../context/AuthContext';
@@ -19,11 +19,15 @@ export default function DashboardTopBar({ hasUnreadCommunity }) {
   const initial = displayName.charAt(0).toUpperCase();
 
   return (
-    <header className="sticky top-0 z-30 bg-[#FFFDFF]/95 dark:bg-[#0A090F]/95 backdrop-blur border-b border-[#EFE9FB] dark:border-[#232228] px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-4">
-      <div className="flex-1 max-w-xs">
+    <header className="sticky top-0 z-30 bg-[#FFFDFF]/95 dark:bg-[#0A090F]/95 backdrop-blur border-b border-[#EFE9FB] dark:border-[#232228] px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-3 sm:gap-4">
+      {/* The sidebar (and its logo) is desktop-only, so phones get the mark here. */}
+      <Link to="/" aria-label="Social Dev Technologies home" className="lg:hidden flex-shrink-0">
+        <img src="/logo-icon.webp" alt="" className="w-9 h-9 object-contain rounded-lg" />
+      </Link>
+      <div className="flex-1 min-w-0 max-w-xs">
         <SearchBar value="" onChange={(v) => navigate(`/catalog${v ? `?q=${encodeURIComponent(v)}` : ''}`)} />
       </div>
-      <div className="flex items-center gap-3 ml-auto flex-shrink-0">
+      <div className="flex items-center gap-2 sm:gap-3 ml-auto flex-shrink-0">
         <button
           onClick={() => navigate('/dashboard/community')}
           aria-label={hasUnreadCommunity ? 'New community messages' : 'Community'}
