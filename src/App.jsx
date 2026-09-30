@@ -96,9 +96,9 @@ function AppShell() {
   // suppression pattern as the webinar keynote.
   const isDashboard = location.pathname.startsWith('/dashboard');
   const hideChrome = isWebinar || isDashboard;
-  // The AI Agent Mastery classroom is a working area, not a marketing page —
-  // keep the Navbar but drop the site footer.
-  const hideFooter = hideChrome || location.pathname.replace(/\/+$/, '') === '/ai-agent-mastery/course';
+  // The AI Agent Mastery classroom keeps the site footer on desktop only —
+  // on phones it's dropped, same as the dashboard.
+  const footerDesktopOnly = location.pathname.replace(/\/+$/, '') === '/ai-agent-mastery/course';
 
   return (
     // LazyMotion + the `m` components (rather than `motion`) keep framer-
@@ -215,7 +215,7 @@ function AppShell() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
-        {!hideFooter && <Footer />}
+        {!hideChrome && (footerDesktopOnly ? <div className="hidden lg:block"><Footer /></div> : <Footer />)}
         {!hideChrome && <WhatsAppFloatButton />}
 
         {selectedAgent && (
