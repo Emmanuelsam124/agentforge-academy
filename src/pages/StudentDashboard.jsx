@@ -5,7 +5,6 @@ import { useAuth } from '../context/AuthContext';
 import { useLiveSessions } from '../hooks/useLiveSessions';
 import { useCommunityUnread } from '../hooks/useCommunity';
 import DashboardSidebar, { DashboardMobileNav } from '../components/dashboard/DashboardSidebar';
-import Footer from '../components/Footer';
 import DashboardTopBar from '../components/dashboard/DashboardTopBar';
 import JumpBackInCard from '../components/dashboard/JumpBackInCard';
 import InstallBanner from '../components/dashboard/InstallBanner';
@@ -91,10 +90,6 @@ export default function StudentDashboard({ progress, onSelectAgent }) {
               <JumpBackInCard nextSession={liveSessions.nextSession} />
             </aside>
           </div>
-        </div>
-        {/* Desktop only: on phones the fixed bottom nav owns the bottom edge. */}
-        <div className="hidden lg:block">
-          <Footer />
         </div>
       </div>
       <DashboardMobileNav hasUnreadCommunity={hasUnreadCommunity} />
