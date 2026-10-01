@@ -1,5 +1,5 @@
-import { useState, useSyncExternalStore } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useEffect, useState, useSyncExternalStore } from 'react';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { m } from 'framer-motion';
 import {
   CheckCircle2, ArrowRight, CalendarDays, Info, CircleHelp, Loader2, AlertCircle,
@@ -194,6 +194,52 @@ function SectionHeading({ eyebrow, children }) {
   );
 }
 
+// A bare <a href="#pricing"> only scrolls reliably when the target is already
+// laid out and stays put. Here the demo video/loop and testimonial images above
+// the pricing section load late and shift the page after the browser has
+// computed its scroll position, so the click could land short of the section;
+// and arriving from another route (/ai-agent-mastery#pricing) never scrolls at
+// all, because React Router renders the page after the browser's hash jump.
+// So scroll explicitly, then keep the section pinned while the page height
+// changes, until things settle, or the person scrolls themselves. Returns a
+// cleanup function.
+function scrollToSection(id) {
+  const el = document.getElementById(id);
+  if (!el) return () => {};
+  const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  const go = (behavior) => el.scrollIntoView({ behavior, block: 'start' });
+  go(reduceMotion ? 'auto' : 'smooth');
+
+  // scrollIntoView honours the section's scroll-mt, so that's where its top should end up.
+  const margin = parseFloat(getComputedStyle(el).scrollMarginTop) || 0;
+  const correct = () => {
+    if (Math.abs(el.getBoundingClientRect().top - margin) > 8) go('auto');
+  };
+  const observer = new ResizeObserver(correct);
+  observer.observe(document.body);
+  const interrupts = ['wheel', 'touchstart', 'keydown', 'mousedown'];
+  let stopped = false;
+  const stop = () => {
+    if (stopped) return;
+    stopped = true;
+    observer.disconnect();
+    clearTimeout(timer);
+    interrupts.forEach((type) => window.removeEventListener(type, stop));
+  };
+  const timer = setTimeout(() => {
+    correct();
+    stop();
+  }, 3000);
+  interrupts.forEach((type) => window.addEventListener(type, stop, { passive: true }));
+  return stop;
+}
+
+function jumpToPricing(e) {
+  e.preventDefault();
+  scrollToSection('pricing');
+  window.history.replaceState(null, '', '#pricing');
+}
+
 export default function AIAgentMastery() {
   const { hasAiMastery } = usePro();
   const {
@@ -202,6 +248,11 @@ export default function AIAgentMastery() {
   } = usePaystackCheckout();
   const { user } = useAuth();
   const [studentModalOpen, setStudentModalOpen] = useState(false);
+  const { hash } = useLocation();
+  useEffect(() => {
+    if (!hash) return undefined;
+    return scrollToSection(hash.slice(1));
+  }, [hash]);
   // Paystack sends pay-first BYU students back here (create-student-checkout's
   // callback_url), since they have no session to land on the dashboard with.
   const [searchParams] = useSearchParams();
@@ -288,6 +339,7 @@ export default function AIAgentMastery() {
           >
             <a
               href="#pricing"
+              onClick={jumpToPricing}
               className="bg-brand text-white font-extrabold text-base px-8 py-4 rounded-2xl shadow-[0_10px_22px_rgba(124,58,237,.4)] hover:bg-brand-deep transition-colors"
             >
               Join the next cohort →
@@ -592,6 +644,7 @@ export default function AIAgentMastery() {
           </div>
           <a
             href="#pricing"
+            onClick={jumpToPricing}
             className="bg-yellow text-ink font-extrabold text-base px-7 py-[15px] rounded-2xl shadow-[0_10px_20px_rgba(0,0,0,.18)] hover:brightness-95 transition-all flex-shrink-0 flex items-center gap-2"
           >
             Join the cohort <ArrowRight className="w-4 h-4" />
