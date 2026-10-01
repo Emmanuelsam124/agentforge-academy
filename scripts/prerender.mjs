@@ -14,16 +14,27 @@
 //      (and public/prerendered-home.html for "/", since the source root
 //      index.html must stay Vite's build *template*, not built output).
 //   3. Commit the generated public/ files and push.
-// Re-run whenever session/marketing content changes.
+// Re-run whenever session/marketing content changes — a snapshot older than the
+// page it stands in for flashes the OLD content on load, until React replaces it.
+// To refresh just some routes, pass them: `npm run prerender -- /ai-agent-mastery`.
 import { spawn } from 'node:child_process';
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import puppeteer from 'puppeteer';
-import { routes } from './prerender-routes.mjs';
+import { routes as allRoutes } from './prerender-routes.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const publicDir = path.join(__dirname, '..', 'public');
+// Optional route filter (see the header). Unknown routes are an error, not a no-op.
+const requested = process.argv.slice(2);
+const unknown = requested.filter((r) => !allRoutes.includes(r));
+if (unknown.length > 0) {
+  console.error(`[prerender] unknown route(s): ${unknown.join(', ')}`);
+  process.exit(1);
+}
+const routes = requested.length > 0 ? allRoutes.filter((r) => requested.includes(r)) : allRoutes;
+
 const PORT = 4173;
 const BASE_URL = `http://localhost:${PORT}`;
 
