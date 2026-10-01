@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { X, Loader2, AlertCircle } from 'lucide-react';
-import { supabase } from '../lib/supabaseClient';
+import { invokeWithRetry } from '../lib/invokeFunction';
 import { STUDENT_EMAIL_DOMAIN, AI_AGENT_MASTERY_STUDENT_PRICE, isStudentEmail } from '../data/pricing';
 
 // BYU-Pathway "pay first" checkout: no sign-in, no code up front. Whoever
@@ -36,7 +36,7 @@ export default function StudentCheckoutModal({ open, onClose }) {
     }
     setLoading(true);
     try {
-      const { data, error: fnError } = await supabase.functions.invoke('create-student-checkout', {
+      const { data, error: fnError } = await invokeWithRetry('create-student-checkout', {
         body: { email: clean, redirectOrigin: window.location.origin },
       });
       if (fnError) throw fnError;

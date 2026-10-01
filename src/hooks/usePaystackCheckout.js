@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../lib/supabaseClient';
+import { invokeWithRetry } from '../lib/invokeFunction';
 import { isStudentEmail, STUDENT_EMAIL_DOMAIN } from '../data/pricing';
 
 /**
@@ -48,7 +49,7 @@ export function usePaystackCheckout() {
         return;
       }
 
-      const { data, error: fnError } = await supabase.functions.invoke('create-paystack-checkout', {
+      const { data, error: fnError } = await invokeWithRetry('create-paystack-checkout', {
         body: { plan, redirectOrigin: window.location.origin, ...extra },
       });
       if (fnError) {
