@@ -290,7 +290,7 @@ export default function AIAgentMastery() {
               href="#pricing"
               className="bg-brand text-white font-extrabold text-base px-8 py-4 rounded-2xl shadow-[0_10px_22px_rgba(124,58,237,.4)] hover:bg-brand-deep transition-colors"
             >
-              Join — ₦{AI_AGENT_MASTERY_PRICE.toLocaleString()} →
+              Join the next cohort →
             </a>
             <a href="#demo" className="text-body-strong font-bold text-[14.5px] hover:text-brand transition-colors">
               Watch it in action ↓
