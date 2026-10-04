@@ -6,6 +6,7 @@ import { departments } from '../data/departments';
 import { getAgentBySlug, getBuilderPagePath } from '../data/agents';
 import ArticleBody from '../components/news/ArticleBody';
 import ShareRow from '../components/ShareRow';
+import EmailCapture from '../components/EmailCapture';
 import ShareRail from '../components/ShareRail';
 import NotFound from './NotFound';
 
@@ -149,6 +150,8 @@ export default function NewsArticle() {
       )}
 
       <ShareRow section="news" slug={article.slug} title={article.title} />
+
+      <EmailCapture source="news-article" className="mt-8" />
 
       <a
         href={article.source_url}

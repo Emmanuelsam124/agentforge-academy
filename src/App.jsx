@@ -67,6 +67,8 @@ const CertificateView = lazy(() => import('./pages/CertificateView'));
 const VerifyCertificate = lazy(() => import('./pages/VerifyCertificate'));
 const ResetPassword = lazy(() => import('./pages/ResetPassword'));
 const ConfirmEmail = lazy(() => import('./pages/ConfirmEmail'));
+// Landing pages for the links in the starter-series emails (confirm / unsubscribe).
+const SubscribeStatus = lazy(() => import('./pages/SubscribeStatus'));
 const VibeCodingPrompts = lazy(() => import('./pages/VibeCodingPrompts'));
 // Private, auth-gated course content (recording links, passcodes) — must
 // never be prerendered/eager-imported, same reasoning as StudentDashboard.
@@ -147,6 +149,22 @@ function AppShell() {
               element={
                 <Suspense fallback={null}>
                   <ConfirmEmail />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/subscribe/confirm"
+              element={
+                <Suspense fallback={null}>
+                  <SubscribeStatus mode="confirm" />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/unsubscribe"
+              element={
+                <Suspense fallback={null}>
+                  <SubscribeStatus mode="unsubscribe" />
                 </Suspense>
               }
             />

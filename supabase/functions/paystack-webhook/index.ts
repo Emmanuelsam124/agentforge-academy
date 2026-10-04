@@ -48,6 +48,15 @@ const MULTI_TIER_PRICES = {
   aimastery: [19999, 10000],
 };
 
+// Pro upgrade-by-difference (2026-10-04): a buyer who already owns ONE
+// permanent guide tier pays Pro minus what that tier cost and gets the other
+// tier. Keyed by the tier they already own. Must equal the same table in
+// create-paystack-checkout (both derive it from PRICES).
+const UPGRADE_PRICES = {
+  builder1: PRICES.pro - PRICES.builder1,
+  builder2: PRICES.pro - PRICES.builder2,
+};
+
 // Paystack can add its own transaction fee on top of the amount we set at
 // checkout, if this account's "customer bears the fee" preference is on
 // (Paystack Dashboard → Settings → Preferences → Transaction fees). When
@@ -127,6 +136,26 @@ async function buildCohortLines(supabase, plan) {
   return `<ul style="font-size:14px;color:#3A3358;line-height:1.7;padding-left:20px;margin:16px 0;">${lines.join('')}</ul>`;
 }
 
+// One-tier buyers can unlock the other tier for the difference to Pro
+// (create-paystack-checkout decides the price from what they own; these
+// figures are derived from the same PRICES so the email can't quote a stale one).
+function upgradeUpsell(plan) {
+  if (plan !== 'builder1' && plan !== 'builder2') return '';
+  const otherLabel = plan === 'builder1' ? 'Builder 2' : 'Builder 1';
+  const upgradePrice = UPGRADE_PRICES[plan];
+  const normalPrice = PRICES[plan === 'builder1' ? 'builder2' : 'builder1'];
+  return `
+    <div style="margin:20px 0;padding:14px 16px;border:1.5px solid #EEE6FB;border-radius:12px;background:#FFFFFF;">
+      <p style="margin:0 0 6px;font-size:14px;font-weight:700;color:#1A1333;">Want ${otherLabel} too?</p>
+      <p style="margin:0;font-size:14px;color:#3A3358;line-height:1.6;">
+        Because you own ${PLAN_LABELS[plan]}, you can unlock ${otherLabel} for just
+        <strong>₦${upgradePrice.toLocaleString('en-US')}</strong> instead of ₦${normalPrice.toLocaleString('en-US')} —
+        you only pay the difference to Pro. Find it on the
+        <a href="https://socialdevtechnologies.com/pricing" style="color:#7C3AED;">pricing page</a> whenever you're ready.
+      </p>
+    </div>`;
+}
+
 // Distinct bullet variants:
 // - builder1/builder2/pro (permanent guides, added 2026-09-22): no cohort
 //   lines, no "6 months" framing (access is permanent), no credits mention
@@ -167,6 +196,7 @@ function welcomeHtml(name, planLabel, cohortLines, plan, loginBlock = '') {
     </p>
     ${loginBlock}
     ${cohortLines}
+    ${upgradeUpsell(plan)}
     <p style="font-size:15px;color:#3A3358;line-height:1.6;">A few things before you start:</p>
     <ul style="font-size:14px;color:#3A3358;line-height:1.7;padding-left:20px;">
       ${bullets}
@@ -217,6 +247,11 @@ function resolvePlan(metadataPlan, amountNaira, currency) {
   const withinRange = (price) =>
     amountNaira >= price - AMOUNT_TOLERANCE && amountNaira <= price * FEE_CEILING_MULTIPLIER;
 
+  // 'proupgrade' only says "this amount is one of the two upgrade prices"; the
+  // handler re-checks it against what the user actually owns before granting.
+  if (metadataPlan === 'proupgrade') {
+    return Object.values(UPGRADE_PRICES).some(withinRange) ? 'proupgrade' : null;
+  }
   if (metadataPlan && Object.hasOwn(PRICES, metadataPlan)) {
     const validPrices = MULTI_TIER_PRICES[metadataPlan] ?? [PRICES[metadataPlan]];
     if (validPrices.some(withinRange)) return metadataPlan;
@@ -402,14 +437,43 @@ serve(async (req) => {
     return new Response('User not found', { status: 404 });
   }
 
-  const isPermanentGuidePlan = plan === 'builder1' || plan === 'builder2' || plan === 'pro';
+  // A Pro upgrade is recorded as a 'pro' purchase (the state the buyer ends up
+  // in) at the amount actually paid. Before granting, re-derive from the
+  // buyer's real guide_purchases which tier they're missing and what it should
+  // have cost — the signed metadata only proves the checkout was ours, not that
+  // it still makes sense (e.g. two upgrade checkouts opened and both paid).
+  let upgradeGrantTiers = null;
+  if (plan === 'proupgrade') {
+    const { data: ownedRows } = await supabase.from('guide_purchases').select('tier').eq('user_id', userId);
+    const owned = new Set((ownedRows ?? []).map((r) => r.tier));
+    const ownsExactlyOne = owned.has('builder1') !== owned.has('builder2');
+    const ownedTier = owned.has('builder1') ? 'builder1' : 'builder2';
+    const expected = UPGRADE_PRICES[ownedTier];
+    const amountMatches =
+      ownsExactlyOne && amountNaira >= expected - AMOUNT_TOLERANCE && amountNaira <= expected * FEE_CEILING_MULTIPLIER;
+    if (!amountMatches) {
+      await supabase.from('payments').insert({
+        user_id: userId,
+        provider: 'paystack',
+        provider_transaction_id: txId,
+        amount: amountNaira,
+        currency,
+        status: 'flagged_upgrade_not_applicable',
+      });
+      return new Response('Upgrade did not match the buyer’s purchases', { status: 200 });
+    }
+    upgradeGrantTiers = [ownedTier === 'builder1' ? 'builder2' : 'builder1'];
+  }
+  const effectivePlan = plan === 'proupgrade' ? 'pro' : plan;
+
+  const isPermanentGuidePlan = effectivePlan === 'builder1' || effectivePlan === 'builder2' || effectivePlan === 'pro';
 
   if (isPermanentGuidePlan) {
     // builder1/builder2/pro grant permanent access via guide_purchases,
     // never entitlements.builder1_expires_at/builder2_expires_at — those
     // two columns stay reserved for grandfathered pre-2026-09-22
     // subscribers and are never written to by a new purchase.
-    const tiers = plan === 'pro' ? ['builder1', 'builder2'] : [plan];
+    const tiers = upgradeGrantTiers ?? (effectivePlan === 'pro' ? ['builder1', 'builder2'] : [effectivePlan]);
     const rows = tiers.flatMap((tier) =>
       TIER_COURSE_IDS[tier].map((course_id) => ({ user_id: userId, course_id, tier, provider_transaction_id: txId })),
     );
@@ -451,7 +515,7 @@ serve(async (req) => {
       provider_transaction_id: txId,
       amount: amountNaira,
       currency,
-      plan,
+      plan: effectivePlan,
       status: 'granted',
     })
     .select('id')
@@ -479,13 +543,13 @@ serve(async (req) => {
 
       if (referral) {
         const { data: ownedPlans } = await supabase.rpc('referrer_owned_plans', { p_user: referral.referrer_id });
-        if (Array.isArray(ownedPlans) && ownedPlans.includes(plan)) {
+        if (Array.isArray(ownedPlans) && ownedPlans.includes(effectivePlan)) {
           await supabase.from('referral_earnings').upsert(
             {
               referral_id: referral.id,
               referrer_id: referral.referrer_id,
               payment_id: paymentRow.id,
-              plan,
+              plan: effectivePlan,
               amount: Math.round(amountNaira * REFERRAL_COMMISSION_RATE * 100) / 100,
             },
             { onConflict: 'payment_id', ignoreDuplicates: true },
@@ -511,19 +575,19 @@ serve(async (req) => {
       const recipientEmail = profileRow?.email || email;
       if (recipientEmail) {
         const name = profileRow?.display_name || recipientEmail.split('@')[0];
-        const planLabel = PLAN_LABELS[plan] || plan;
-        const cohortLines = await buildCohortLines(supabase, plan);
+        const planLabel = PLAN_LABELS[effectivePlan] || effectivePlan;
+        const cohortLines = await buildCohortLines(supabase, effectivePlan);
         const subject = `Welcome to ${planLabel} — you're in!`;
         // Pay-first students have never logged in: give them the way in.
         const loginBlock = isStudentPayFirst ? await studentLoginBlock(supabase, studentEmail) : '';
-        const ok = await sendResendEmail(recipientEmail, subject, emailShell(welcomeHtml(name, planLabel, cohortLines, plan, loginBlock)));
+        const ok = await sendResendEmail(recipientEmail, subject, emailShell(welcomeHtml(name, planLabel, cohortLines, effectivePlan, loginBlock)));
         if (ok) {
           await supabase.from('email_log').insert({
             user_id: userId,
             email: recipientEmail,
             email_type: 'welcome',
             subject,
-            metadata: { plan },
+            metadata: { plan: effectivePlan, ...(plan === 'proupgrade' ? { upgrade: true } : {}) },
           });
         }
       }

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Newspaper, Loader2 } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
 import { departments } from '../data/departments';
+import EmailCapture from '../components/EmailCapture';
 
 const PAGE_SIZE = 12;
 
@@ -132,6 +133,8 @@ export default function News() {
           )}
         </>
       )}
+
+      <EmailCapture source="news-index" className="max-w-2xl mx-auto" />
     </div>
   );
 }

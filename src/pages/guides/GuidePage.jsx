@@ -5,6 +5,7 @@ import { supabase } from '../../lib/supabaseClient';
 import { usePageSeo } from '../../hooks/usePageSeo';
 import GuideBody from '../../components/guides/GuideBody';
 import ShareRow from '../../components/ShareRow';
+import EmailCapture from '../../components/EmailCapture';
 import ShareRail from '../../components/ShareRail';
 import NotFound from '../NotFound';
 
@@ -185,6 +186,8 @@ export default function GuidePage() {
           it after the related-links grid buries it under a second call to
           action. */}
       <ShareRow section="guides" slug={guide.slug} title={guide.title} />
+
+      <EmailCapture source="guide-page" className="mt-8" />
 
       {related.length > 0 && (
         <div className="mt-10 pt-8 border-t border-border-soft">

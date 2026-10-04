@@ -28,6 +28,12 @@ function corsHeadersFor(req) {
   };
 }
 
+// Names come from user-controlled data (a display name, or the part of an
+// email before the @), so escape them before they go into email HTML.
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+}
+
 function emailShell(innerHtml) {
   return `
     <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:32px 24px;background:#FBFAFF;">
@@ -36,7 +42,8 @@ function emailShell(innerHtml) {
       </div>
       ${innerHtml}
       <div style="margin-top:32px;padding-top:16px;border-top:1px solid #EEE6FB;font-size:12px;color:#8A82AD;text-align:center;">
-        Social Dev Technologies · You're receiving this because you have an account with us.<br/>
+        Social Dev Technologies · You're receiving this because you started a checkout on socialdevtechnologies.com.
+        It's one of two reminders we send for a checkout — never more.<br/>
         Questions? Reply to this email or contact support@socialdevtechnologies.com.
       </div>
     </div>
@@ -60,24 +67,149 @@ async function sendResendEmail(to, subject, html) {
   return res.ok;
 }
 
-const PLAN_LABELS = { builder1: 'Builder 1', builder2: 'Builder 2', pro: 'Pro' };
+// AI Agent Mastery is a rolling weekly cohort (Fri/Sat/Sun 7:00 PM WAT, first
+// one Fri 9 Oct 2026). This is the third copy of that arithmetic — keep
+// FIRST_START_UTC in step with src/data/aiMasteryCohort.js and
+// send-aimastery-class-reminders.
+const FIRST_START_UTC = Date.UTC(2026, 9, 9, 18, 0, 0);
+const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 
-function abandonedCheckoutHtml(name, planLabel) {
+function nextMasteryCohortLine(now = Date.now()) {
+  const weeks = now < FIRST_START_UTC ? 0 : Math.floor((now - FIRST_START_UTC) / WEEK_MS) + 1;
+  const start = new Date(FIRST_START_UTC + weeks * WEEK_MS);
+  const day = start.toLocaleDateString('en-GB', { timeZone: 'Africa/Lagos', weekday: 'long', day: 'numeric', month: 'long' });
+  return `The next cohort starts <strong>${day} at 7:00 PM WAT</strong> (classes run Friday to Sunday).`;
+}
+
+// What each checkout_attempts.plan is, where to send the person back to, and
+// the plain facts worth repeating. Every claim here is already published on
+// the product's own page — don't add anything here that isn't (e.g. a refund
+// promise). Prices are deliberately left out of the live-cohort entries:
+// AI Agent Mastery has a separate student price, and the page shows the one
+// that applies to the visitor.
+const PRODUCTS = {
+  builder1: {
+    label: 'Builder 1',
+    path: '/pricing',
+    facts: [
+      '12 step-by-step AI agent guides, with the copy-paste prompts for every build',
+      'A one-time payment of ₦5,000 — permanent access, no subscription, no expiry',
+      'All you need is a free Gemini API key from Google AI Studio',
+    ],
+  },
+  builder2: {
+    label: 'Builder 2',
+    path: '/pricing',
+    facts: [
+      '13 multi-step, API-integrated agent builds, each with its portfolio write-up prompt',
+      'A one-time payment of ₦7,000 — permanent access, no subscription, no expiry',
+      'All you need is a free Gemini API key from Google AI Studio',
+    ],
+  },
+  pro: {
+    label: 'Pro',
+    path: '/pricing',
+    facts: [
+      'Every guide — Builder 1 and Builder 2 together, no prerequisite',
+      'A one-time payment of ₦10,000 — cheaper than buying both separately, permanent access',
+      'All you need is a free Gemini API key from Google AI Studio',
+    ],
+  },
+  proupgrade: {
+    label: 'Pro upgrade',
+    path: '/pricing',
+    facts: [
+      'You already own one track, so you only pay the difference to unlock the other one',
+      'Permanent access — no subscription, no expiry',
+    ],
+  },
+  vibecoding: {
+    label: 'Vibe Coding Bootcamp',
+    path: '/vibe-coding',
+    facts: [
+      '4 weeks and 8 live classes, taught live',
+      'Go from an idea to a deployed website, web app and AI-powered product — no coding experience required',
+      'Live classes, replays and the prompt library are all on your dashboard',
+    ],
+  },
+  aimastery: {
+    label: 'AI Agent Mastery',
+    path: '/ai-agent-mastery',
+    facts: [
+      'Three live evenings, Friday to Sunday at 7:00 PM WAT',
+      'Build one personal-assistant agent end to end — inbox, calendar, research and messaging',
+      'Classes and replays are on your dashboard',
+    ],
+    extra: () => nextMasteryCohortLine(),
+  },
+};
+
+const FALLBACK_PRODUCT = { label: 'Social Dev Technologies', path: '/pricing', facts: [] };
+
+function ctaLink(product, stage) {
+  const url = `https://socialdevtechnologies.com${product.path}?utm_source=email&utm_medium=checkout_recovery&utm_campaign=stage${stage}`;
   return `
-    <p style="font-size:15px;color:#1A1333;">Hey ${name},</p>
-    <p style="font-size:15px;color:#3A3358;line-height:1.6;">
-      Looks like you started checking out for <strong>${planLabel}</strong> but didn't finish —
-      your access hasn't been activated yet. If something went wrong or you had questions, just
-      reply to this email.
-    </p>
     <div style="text-align:center;margin:28px 0;">
-      <a href="https://socialdevtechnologies.com/pricing"
+      <a href="${url}"
          style="display:inline-block;background:#7C3AED;color:#fff;padding:12px 28px;border-radius:10px;text-decoration:none;font-weight:700;">
-        Finish checkout →
+        Finish my checkout →
       </a>
-    </div>
+    </div>`;
+}
+
+function factsList(product) {
+  if (!product.facts.length) return '';
+  return `
+    <ul style="font-size:14px;color:#3A3358;line-height:1.7;padding-left:20px;margin:16px 0;">
+      ${product.facts.map((f) => `<li>${escapeHtml(f)}</li>`).join('')}
+    </ul>`;
+}
+
+function stage1Html(name, product) {
+  const extra = product.extra ? `<p style="font-size:14px;color:#3A3358;line-height:1.6;">${product.extra()}</p>` : '';
+  return `
+    <p style="font-size:15px;color:#1A1333;">Hey ${escapeHtml(name)},</p>
+    <p style="font-size:15px;color:#3A3358;line-height:1.6;">
+      You started checking out for <strong>${escapeHtml(product.label)}</strong> but the payment didn't go through,
+      so your access isn't active yet. Here's what you'd be getting:
+    </p>
+    ${factsList(product)}
+    ${extra}
+    ${ctaLink(product, 1)}
+    <p style="font-size:14px;color:#3A3358;line-height:1.6;">
+      If your card was declined or the payment page timed out, it's safe to try again — you're only charged when a
+      payment succeeds. Using a different card, or another payment option if the page offers one, often fixes it.
+    </p>
   `;
 }
+
+function stage2Html(name, product) {
+  const extra = product.extra ? `<p style="font-size:14px;color:#3A3358;line-height:1.6;">${product.extra()}</p>` : '';
+  return `
+    <p style="font-size:15px;color:#1A1333;">Hey ${escapeHtml(name)},</p>
+    <p style="font-size:15px;color:#3A3358;line-height:1.6;">
+      Quick follow-up on <strong>${escapeHtml(product.label)}</strong>. If something stopped you — a payment problem, a
+      question about whether it's right for you, or just bad timing — we'd rather help than leave it hanging.
+    </p>
+    ${factsList(product)}
+    ${extra}
+    ${ctaLink(product, 2)}
+    <p style="font-size:14px;color:#3A3358;line-height:1.6;">
+      Not sure it fits? Reply to this email, or message us on WhatsApp:
+      <a href="https://wa.me/2349066006963" style="color:#7C3AED;">wa.me/2349066006963</a>
+      (we reply 10am–5pm WAT, Monday to Saturday).
+    </p>
+  `;
+}
+
+const SUBJECTS = {
+  1: (label) => `${label}: your checkout didn't finish`,
+  2: (label) => `Any questions about ${label}?`,
+};
+
+// Safety cap per run — the query already limits to one row per person, so this
+// only matters if a backlog builds up (e.g. the function was disabled for days).
+const MAX_SENDS_PER_RUN = 150;
 
 serve(async (req) => {
   const corsHeaders = corsHeadersFor(req);
@@ -118,32 +250,40 @@ serve(async (req) => {
     if (authError) return jsonResponse({ error: 'Unauthorized' }, 403);
   }
 
-  // 2 hours gives a real card-decline retry or a slow bank redirect time to
-  // resolve on its own before we treat it as abandoned.
-  const { data: candidates, error: queryError } = await serviceClient.rpc('service_get_abandoned_checkouts', {
-    p_hours: 2,
-  });
+  // Who is due which email is decided in SQL (supabase/checkout-recovery.sql):
+  // one row per person, stage 1 an hour after they started, stage 2 a day
+  // after, nobody who already owns the product, nobody past two emails.
+  const { data: candidates, error: queryError } = await serviceClient.rpc('service_get_checkout_recovery_candidates');
   if (queryError) {
-    console.error('service_get_abandoned_checkouts failed:', queryError.message);
+    console.error('service_get_checkout_recovery_candidates failed:', queryError.message);
     return jsonResponse({ error: 'Could not load abandoned checkouts' }, 500);
   }
 
   let sent = 0;
-  for (const c of candidates || []) {
+  for (const c of (candidates || []).slice(0, MAX_SENDS_PER_RUN)) {
     if (!c.email) continue;
-    const name = c.display_name || c.email.split('@')[0];
-    const planLabel = PLAN_LABELS[c.plan] || c.plan;
-    const subject = `Still want ${planLabel}? Your checkout wasn't completed`;
-    const ok = await sendResendEmail(c.email, subject, emailShell(abandonedCheckoutHtml(name, planLabel)));
-    if (ok) {
-      sent += 1;
-      await serviceClient.from('email_log').insert({
-        user_id: c.user_id,
-        email: c.email,
-        email_type: 'abandoned_checkout',
-        subject,
-        metadata: { checkout_attempt_id: c.attempt_id, plan: c.plan },
-      });
+    try {
+      const name = c.display_name || c.email.split('@')[0];
+      const product = PRODUCTS[c.plan] || FALLBACK_PRODUCT;
+      const stage = c.stage === 2 ? 2 : 1;
+      const subject = SUBJECTS[stage](product.label);
+      const html = emailShell(stage === 2 ? stage2Html(name, product) : stage1Html(name, product));
+      const ok = await sendResendEmail(c.email, subject, html);
+      if (ok) {
+        sent += 1;
+        // The log row is what stops the next hourly run sending this again,
+        // so a failed insert must be loud, not silent.
+        const { error: logError } = await serviceClient.from('email_log').insert({
+          user_id: c.user_id,
+          email: c.email,
+          email_type: 'abandoned_checkout',
+          subject,
+          metadata: { checkout_attempt_id: c.attempt_id, plan: c.plan, stage },
+        });
+        if (logError) console.error('email_log insert failed (will re-send next run):', logError.message);
+      }
+    } catch (err) {
+      console.error('abandoned checkout email failed:', err);
     }
   }
 
