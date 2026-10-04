@@ -41,6 +41,15 @@ const PRICES = {
   aimastery: 19999,
 };
 
+// Pro upgrade-by-difference (2026-10-04): someone who already owns ONE
+// permanent guide tier pays Pro minus what that tier cost, and gets the other
+// tier. Keyed by the tier they already own. Derived from PRICES so it can't
+// drift from them; paystack-webhook derives the same table and re-checks it.
+const UPGRADE_PRICES = {
+  builder1: PRICES.pro - PRICES.builder1, // owns Builder 1 -> unlocks Builder 2
+  builder2: PRICES.pro - PRICES.builder2, // owns Builder 2 -> unlocks Builder 1
+};
+
 // aimastery discount for verified BYU-Pathway students (2026-09-29).
 // paystack-webhook's MULTI_TIER_PRICES.aimastery must accept this amount.
 const AIMASTERY_STUDENT_PRICE = 10000;
@@ -104,7 +113,7 @@ serve(async (req) => {
   }
 
   const { plan, redirectOrigin, studentDiscount } = body;
-  if (typeof plan !== 'string' || !Object.hasOwn(PRICES, plan)) {
+  if (typeof plan !== 'string' || (plan !== 'proupgrade' && !Object.hasOwn(PRICES, plan))) {
     return jsonResponse({ error: 'Unknown plan' }, 400);
   }
 
@@ -132,6 +141,28 @@ serve(async (req) => {
     amountNaira = AIMASTERY_STUDENT_PRICE;
   }
 
+  // The upgrade price is decided here from the caller's own permanent guide
+  // purchases (the same rows usePro.js / the webhook read) — never from
+  // anything the client sends. Exactly one tier owned = eligible; none or both
+  // = nothing sensible to sell, so refuse rather than guess.
+  let upgradeFrom;
+  if (plan === 'proupgrade') {
+    const { data: owned, error: ownedError } = await serviceClient
+      .from('guide_purchases')
+      .select('tier')
+      .eq('user_id', user.id);
+    if (ownedError) return jsonResponse({ error: 'Could not check your purchases. Please try again.' }, 500);
+    const tiers = new Set((owned ?? []).map((r) => r.tier));
+    if (tiers.has('builder1') && tiers.has('builder2')) {
+      return jsonResponse({ error: 'You already own every guide.' }, 409);
+    }
+    if (!tiers.has('builder1') && !tiers.has('builder2')) {
+      return jsonResponse({ error: 'The Pro upgrade is for people who already own Builder 1 or Builder 2.' }, 403);
+    }
+    upgradeFrom = tiers.has('builder1') ? 'builder1' : 'builder2';
+    amountNaira = UPGRADE_PRICES[upgradeFrom];
+  }
+
   // Embed the verified user id + plan in Paystack's metadata. Paystack
   // signs the whole webhook payload with our secret key, so when it comes
   // back we can trust this exactly as much as we trust our own signature
@@ -156,7 +187,7 @@ serve(async (req) => {
       amount: amountNaira * 100, // kobo
       currency: 'NGN',
       reference,
-      metadata: { user_id: user.id, plan },
+      metadata: { user_id: user.id, plan, ...(upgradeFrom ? { upgrade_from: upgradeFrom } : {}) },
       callback_url: `${callbackOrigin}/dashboard`,
     }),
   });

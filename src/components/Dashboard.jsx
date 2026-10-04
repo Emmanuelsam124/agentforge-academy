@@ -6,9 +6,12 @@ import ProgressBar from './ProgressBar';
 import XPBadge from './XPBadge';
 import AgentCard from './AgentCard';
 import { usePro } from '../hooks/usePro';
+import { useUpgradeOffer } from '../hooks/useUpgradeOffer';
+import UpgradeOfferCard from './UpgradeOfferCard';
 
 export default function Dashboard({ progress, onSelectAgent }) {
   const { hasBuilder1, hasBuilder2, isAdmin, isPro } = usePro();
+  const { offer: upgradeOffer } = useUpgradeOffer();
   const { completed, xp, streak, history, isCompleted } = progress;
 
   // Advanced/World Class are admin-only — hide them from the catalog counts
@@ -92,8 +95,12 @@ export default function Dashboard({ progress, onSelectAgent }) {
         </section>
       )}
 
+      {/* One-tier owners get the upgrade-by-difference offer; everyone else
+          locked out of a tier gets the generic plans banner. */}
+      {!isPro && upgradeOffer && <UpgradeOfferCard offer={upgradeOffer} />}
+
       {/* Upsell for locked tiers */}
-      {!isPro && (
+      {!isPro && !upgradeOffer && (
         <section
           className="rounded-2xl px-6 sm:px-7 py-6 flex items-center justify-between flex-wrap gap-4"
           style={{ background: 'linear-gradient(120deg, #7C3AED, #9D5CFF)' }}

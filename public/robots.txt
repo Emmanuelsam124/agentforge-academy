@@ -4,6 +4,8 @@ Disallow: /admin
 Disallow: /dashboard
 Disallow: /certificates
 Disallow: /certificate/
+Disallow: /subscribe/
+Disallow: /unsubscribe
 
 Sitemap: https://socialdevtechnologies.com/sitemap.xml
 Sitemap: https://socialdevtechnologies.com/news-sitemap.xml

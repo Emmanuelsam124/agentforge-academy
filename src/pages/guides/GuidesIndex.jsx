@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { BookOpen, ArrowRight, Loader2 } from 'lucide-react';
 import { supabase } from '../../lib/supabaseClient';
 import { usePageSeo } from '../../hooks/usePageSeo';
+import EmailCapture from '../../components/EmailCapture';
 
 const CANONICAL_PATH = '/guides';
 const DESCRIPTION =
@@ -130,6 +131,8 @@ export default function GuidesIndex() {
           ))}
         </div>
       )}
+
+      <EmailCapture source="guides-index" className="max-w-2xl mx-auto mt-12" />
     </div>
   );
 }

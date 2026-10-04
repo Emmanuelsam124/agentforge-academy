@@ -4,6 +4,7 @@ import { CheckCircle2, AlertCircle, Infinity as InfinityIcon, Loader2, Zap, Info
 import { useTheme } from '../context/ThemeContext';
 import { usePro } from '../hooks/usePro';
 import { usePaystackCheckout } from '../hooks/usePaystackCheckout';
+import { useUpgradeOffer } from '../hooks/useUpgradeOffer';
 import CheckoutAuthModal from '../components/CheckoutAuthModal';
 import { agents } from '../data/agents';
 import { BUILDER1_PRICE, BUILDER2_PRICE, PRO_PRICE, VIBECODING_PRICE, AI_AGENT_MASTERY_PRICE } from '../data/pricing';
@@ -66,9 +67,33 @@ const LIVE_COHORTS = [
   },
 ];
 
+// Shown instead of a full-price button when the visitor owns exactly one guide
+// tier: the upgrade-by-difference price (see useUpgradeOffer). `target` is the
+// tier/bundle this card sells, so the offer only replaces the button on the
+// cards it actually applies to.
+function UpgradeButton({ offer, loading, onClick, target }) {
+  const label = target === 'pro' ? 'Upgrade to Pro' : `Unlock ${offer.missingLabel}`;
+  return (
+    <div>
+      <button
+        onClick={onClick}
+        disabled={loading}
+        className="flex items-center justify-center gap-2 w-full bg-brand hover:bg-brand-deep disabled:opacity-60 text-white font-extrabold px-6 py-3.5 rounded-xl shadow-[0_10px_22px_rgba(124,58,237,.35)] transition-colors"
+      >
+        {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+        {loading ? 'Starting checkout…' : `${label} — pay ₦${offer.price.toLocaleString()}`}
+      </button>
+      <p className="text-center text-[12.5px] text-body mt-2">
+        You own {offer.ownedLabel}, so you only pay the difference to Pro — not ₦{offer.listPrice.toLocaleString()}.
+      </p>
+    </div>
+  );
+}
+
 export default function Pricing() {
   const { theme } = useTheme();
   const { hasBuilder1, hasBuilder2, isPro, hasVibeCoding, hasAiMastery } = usePro();
+  const { offer: upgradeOffer } = useUpgradeOffer();
   const cohortAccess = { hasVibeCoding, hasAiMastery };
 
   usePageSeo({
@@ -148,6 +173,8 @@ export default function Pricing() {
             <div className="rounded-xl bg-[#EAFAF1] dark:bg-green/10 border border-green/30 px-4 py-3 text-center text-sm font-bold text-green">
               You already have Builder 1
             </div>
+          ) : upgradeOffer?.missingLabel === 'Builder 1' ? (
+            <UpgradeButton offer={upgradeOffer} target="builder1" loading={checkoutLoading === 'proupgrade'} onClick={() => handleCheckout('proupgrade')} />
           ) : (
             <button
               onClick={() => handleCheckout('builder1')}
@@ -189,6 +216,8 @@ export default function Pricing() {
             <div className="rounded-xl bg-[#EAFAF1] dark:bg-green/10 border border-green/30 px-4 py-3 text-center text-sm font-bold text-green">
               You already have Builder 2
             </div>
+          ) : upgradeOffer?.missingLabel === 'Builder 2' ? (
+            <UpgradeButton offer={upgradeOffer} target="builder2" loading={checkoutLoading === 'proupgrade'} onClick={() => handleCheckout('proupgrade')} />
           ) : (
             <button
               onClick={() => handleCheckout('builder2')}
@@ -238,6 +267,8 @@ export default function Pricing() {
             <div className="rounded-xl bg-[#EAFAF1] dark:bg-green/10 border border-green/30 px-4 py-3 text-center text-sm font-bold text-green">
               You're on Pro — enjoy full access!
             </div>
+          ) : upgradeOffer ? (
+            <UpgradeButton offer={upgradeOffer} target="pro" loading={checkoutLoading === 'proupgrade'} onClick={() => handleCheckout('proupgrade')} />
           ) : (
             <button
               onClick={() => handleCheckout('pro')}

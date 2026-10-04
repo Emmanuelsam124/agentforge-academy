@@ -22,6 +22,15 @@ export const BUILDER2_PRICE = 7000;
 // "just get Pro" the default for anyone leaning toward wanting both.
 export const PRO_PRICE = 10000;
 
+// Pro upgrade-by-difference (2026-10-04): someone who already owns ONE guide
+// tier unlocks the other for the difference to Pro — Builder 1 owners pay
+// ₦5,000 for Builder 2 (list ₦7,000), Builder 2 owners pay ₦3,000 for Builder 1
+// (list ₦5,000). Derived, so it follows any price change above. Display only:
+// create-paystack-checkout decides the real amount from the caller's own
+// purchases and paystack-webhook re-checks it (both derive the same table).
+export const PRO_UPGRADE_FROM_BUILDER1 = PRO_PRICE - BUILDER1_PRICE;
+export const PRO_UPGRADE_FROM_BUILDER2 = PRO_PRICE - BUILDER2_PRICE;
+
 // Vibe Coding bootcamp — a separate live-cohort product, not a tier of the
 // builder1/builder2/pro ladder above. Priced independently. Added 2026-09-08,
 // repriced from 25000 to 50000 on 2026-09-23.
