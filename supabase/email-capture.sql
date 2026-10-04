@@ -127,10 +127,13 @@ revoke execute on function public.admin_get_lead_funnel() from public;
 revoke execute on function public.admin_get_lead_funnel() from anon;
 grant execute on function public.admin_get_lead_funnel() to authenticated;
 
--- Hourly drip run. Same shared cron secret as every other email job.
+-- Hourly drip run, waking hours only (07:40–19:40 UTC = 08:40–20:40 WAT; pg_cron
+-- runs in UTC), so step 2/3 emails and retried welcomes never land overnight.
+-- The welcome itself is sent the moment someone confirms, at any hour — they just
+-- asked for it. Same shared cron secret as every other email job.
 select cron.schedule(
   'lead-drip-hourly',
-  '40 * * * *',
+  '40 7-19 * * *',
   $$
   select net.http_post(
     url := 'https://qkrfpuckvymjpewcszgs.supabase.co/functions/v1/email-leads',

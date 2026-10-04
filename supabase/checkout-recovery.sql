@@ -133,13 +133,18 @@ revoke execute on function public.service_get_checkout_recovery_candidates() fro
 revoke execute on function public.service_get_checkout_recovery_candidates() from authenticated;
 
 -- 4. Run hourly instead of daily at 10:00 UTC — a 1-hour first touch is
---    pointless on a once-a-day schedule. (Job 2 in cron.job on the live
---    project; looked up by name rather than id.)
+--    pointless on a once-a-day schedule — but only during waking hours:
+--    07:20–19:20 UTC is 08:20–20:20 WAT (Nigeria is UTC+1 all year, and
+--    pg_cron runs in UTC). Around the clock would put a reminder in someone's
+--    inbox at 3 AM; the old daily job ran at 11 AM WAT. An attempt abandoned at
+--    night is simply picked up on the first run of the next morning.
+--    (Job 2 in cron.job on the live project, still named
+--    'abandoned-checkout-daily'; looked up by name rather than id.)
 do $$
 declare v_id bigint;
 begin
   select jobid into v_id from cron.job where jobname = 'abandoned-checkout-daily';
   if v_id is not null then
-    perform cron.alter_job(v_id, schedule := '20 * * * *');
+    perform cron.alter_job(v_id, schedule := '20 7-19 * * *');
   end if;
 end $$;
