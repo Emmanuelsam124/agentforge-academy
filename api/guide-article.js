@@ -1,5 +1,6 @@
 import { escapeHtml, renderGuideBlocksToHtml, renderFaqsToHtml } from '../src/lib/guideBlocks.js';
 import { sectionOgImage, applyOgImage } from '../src/lib/ogCards.js';
+import { jsonLdBody } from '../src/lib/jsonLd.js';
 
 // Server-renders /guides/:slug (routed here via the vercel.json rewrite,
 // which passes the slug as ?slug=). Same reasoning and shape as
@@ -36,7 +37,7 @@ export default async function handler(req, res) {
 
   const pageTitle = `${guide.title} | Social Dev Technologies`;
   const description = guide.dek;
-  const canonicalUrl = `${siteUrl}/guides/${guide.slug}`;
+  const canonicalUrl = `${siteUrl}/guides/${encodeURIComponent(guide.slug)}`;
   // Same rule as api/news-article.js: never fall back to the 192x192 logo,
   // which is under LinkedIn's large-card threshold and Facebook's floor.
   const ogImage = guide.image_url
@@ -60,7 +61,7 @@ export default async function handler(req, res) {
   // server-rendered stub (see the data-ssr-stub note below), so a crawler
   // that doesn't execute JS — GPTBot, ClaudeBot, PerplexityBot, Bing's
   // first pass — sees only what's built here. Keep these two in sync by eye.
-  const articleJsonLd = JSON.stringify({
+  const articleJsonLd = jsonLdBody({
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: guide.title,
@@ -77,7 +78,7 @@ export default async function handler(req, res) {
     mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
   });
 
-  const breadcrumbJsonLd = JSON.stringify({
+  const breadcrumbJsonLd = jsonLdBody({
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
@@ -88,7 +89,7 @@ export default async function handler(req, res) {
   });
 
   const faqJsonLd = guide.faqs?.length
-    ? JSON.stringify({
+    ? jsonLdBody({
         '@context': 'https://schema.org',
         '@type': 'FAQPage',
         mainEntity: guide.faqs.map((f) => ({

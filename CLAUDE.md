@@ -67,6 +67,17 @@ A correctly-locked function's ACL reads `postgres=X, authenticated=X, service_ro
 
 `get_certificate_by_id` is deliberately left callable by `anon` — the public `/verify/:id` page depends on it.
 
+## Pentest follow-up (2026-10-04)
+
+A Pentest-Tools light scan reported only false positives/generic warnings, but the review behind it changed these:
+
+- **`profiles` is column-granted** (`supabase/profiles-column-grants.sql`): clients may update only `display_name` and `industry`, and can't insert (`handle_new_user()` creates rows). RLS limited users to their own row but not to columns, and `paystack-webhook` resolves pay-first and manual-charge buyers by `profiles.email` — so a user-writable email let anyone divert a BYU student's purchase to their own account (never exploited; audited first). A new `profiles` column is server-only unless it's added to that grant — keep it that way for anything server code trusts.
+- **Scanner probes get a real 404.** The SPA catch-all in `vercel.json` excludes dot-paths (`/.env`, `/.git/…`, unknown `/.well-known/*`), `/wp-*` and `*.php|asp|aspx|jsp|cgi`. Answering `/wp-login.php` with 200 + the homepage is what made scanners report WordPress/PHP/MySQL. No real route can match those patterns.
+- **Server-rendered `api/*` pages:** JSON-LD goes through `jsonLdBody()` (`src/lib/jsonLd.js`) — `JSON.stringify` alone lets a `</script>` in a title end the element — news `source_url`/`image_url` must parse as http(s), and `applyOgImage()` escapes the image URL.
+- **"Log in with a code" no longer reveals whether an account exists.** Supabase answers `otp_disabled` for an unknown email; `Welcome.jsx` now moves on to the code step either way. The Supabase API itself still answers differently when called directly — only Auth rate limits bound that.
+- **Headers:** `Permissions-Policy` denies camera/microphone/geolocation/payment/USB (the YouTube/Zoom embeds need none of them), and `Access-Control-Allow-Origin` is set to the site instead of Vercel's default `*` (no page is read cross-origin).
+- **`public/.well-known/security.txt`** expires 2027-10-01 — RFC 9116 wants `Expires` under a year out, so bump it before then. Its contact is `support@`, which needs a working MX record to receive mail.
+
 ## AI Agents Live — removed 2026-09-29
 
 The standalone 2-day workshop (`/ai-agents-live`, plan key `agentslive`, ₦10,000 for the first 100 seats then ₦15,000) was deleted at the founder's direction: page, route, sitemap/prerender entries, sidebar link, admin cohort/live-session/user controls, checkout + webhook plan handling, price constants, and its WhatsApp-bot facts. `/ai-agents-live` 301-redirects to `/ai-agent-mastery` (`vercel.json`). Deliberately kept: the `entitlements.agentslive_expires_at` column, the `live_sessions`/`has_community_membership` references to the `agentslive` tier, the `agentslive` community room row, and the one test payment (founder's own account) — harmless history, and dropping them would erase it. The database functions `agentslive_seats_taken()` (was anon-callable) and `admin_set_user_agentslive()` were dropped (`supabase/remove-agents-live.sql`). What was lost with it: a cheaper live entry point (₦10k/₦15k, 7-day access) and the only scarcity-priced offer.
