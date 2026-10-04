@@ -73,6 +73,14 @@ revoke execute on function public.recovery_user_owns_plan(uuid, text) from authe
 --      stage 1: attempt is >= 1h old, nothing sent for it yet
 --      stage 2: attempt is >= 24h old, exactly one email sent, >= 12h ago
 --    Anyone who already owns the product is skipped.
+--
+--    The recipient is auth.users.email (and only when it is confirmed), NOT
+--    profiles.email: profiles UPDATE RLS is row-level, so a signed-in user can
+--    rewrite their own profiles.email to anyone's address and start a checkout
+--    to have reminders sent to that stranger (found in the 2026-10-04 security
+--    review). The auth email can only be changed through a confirmation flow,
+--    so with this a reminder can only ever reach an address its owner has proven
+--    they control — the same address create-paystack-checkout hands to Paystack.
 create or replace function public.service_get_checkout_recovery_candidates()
 returns table (
   attempt_id uuid,
@@ -96,10 +104,11 @@ begin
         and ca.created_at > now() - interval '72 hours'
       order by ca.user_id, ca.created_at desc
     )
-    select l.id, l.user_id, p.email, p.display_name, l.plan, l.created_at,
+    select l.id, l.user_id, u.email::text, p.display_name, l.plan, l.created_at,
            case when s.n = 0 then 1 else 2 end
     from latest l
-    join profiles p on p.id = l.user_id
+    join auth.users u on u.id = l.user_id
+    left join profiles p on p.id = l.user_id
     cross join lateral (
       select count(*)::integer as n, max(el.sent_at) as last_sent
       from email_log el
@@ -108,7 +117,8 @@ begin
         and el.metadata ->> 'plan' = l.plan
         and el.sent_at > l.created_at
     ) s
-    where p.email is not null
+    where u.email is not null
+      and u.email_confirmed_at is not null
       and not recovery_user_owns_plan(l.user_id, l.plan)
       and (
         (s.n = 0 and l.created_at <= now() - interval '1 hour')

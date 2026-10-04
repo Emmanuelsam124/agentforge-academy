@@ -40,6 +40,10 @@ create table if not exists public.email_subscribers (
 create unique index if not exists email_subscribers_email_key on public.email_subscribers (email);
 create unique index if not exists email_subscribers_confirm_token_key on public.email_subscribers (confirm_token);
 create unique index if not exists email_subscribers_unsubscribe_token_key on public.email_subscribers (unsubscribe_token);
+-- Backs the "confirmation emails sent in the last hour" flood guard in email-leads.
+create index if not exists email_subscribers_confirm_sent_idx
+  on public.email_subscribers (confirm_sent_at)
+  where confirm_sent_at is not null;
 create index if not exists email_subscribers_due_idx
   on public.email_subscribers (confirmed_at)
   where status = 'confirmed' and drip_step < 3 and converted_at is null;
@@ -54,7 +58,8 @@ alter table public.email_settings
 -- Which confirmed subscribers are due their next email. Step 1 (the welcome) is
 -- normally sent by the confirm action itself; it is listed here too (drip_step
 -- = 0) so a send that failed at confirm time is retried by the next cron run.
--- is_customer: the address matches an account with a granted payment.
+-- is_customer: the address matches a confirmed account (auth.users, not the
+-- user-writable profiles.email) that has a granted payment.
 -- Service-role only — never grant to anon/authenticated.
 create or replace function public.service_get_due_lead_drips()
 returns table (
@@ -73,9 +78,10 @@ begin
     select s.id, s.email, s.unsubscribe_token, s.drip_step + 1,
            exists (
              select 1
-             from profiles p
-             join payments pay on pay.user_id = p.id and pay.status like 'granted%'
-             where lower(p.email) = s.email
+             from auth.users u
+             join payments pay on pay.user_id = u.id and pay.status like 'granted%'
+             where lower(u.email) = s.email
+               and u.email_confirmed_at is not null
            )
     from email_subscribers s
     where s.status = 'confirmed'

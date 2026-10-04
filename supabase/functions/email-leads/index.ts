@@ -56,8 +56,13 @@ const SOURCE_RE = /^[a-z0-9_\-/]{1,60}$/i;
 
 const CONFIRM_RESEND_COOLDOWN_MS = 60 * 60 * 1000;
 // Stops the open form being used to fire confirmation emails at strangers in
-// bulk: past this many new pending sign-ups in an hour, new ones are refused.
-const MAX_NEW_PENDING_PER_HOUR = 300;
+// bulk. Counts EVERY confirmation email sent in the last hour — new sign-ups and
+// re-sends alike — and refuses further ones past this. Well above organic
+// traffic; an attacker is capped at this many unsolicited emails an hour.
+const MAX_CONFIRMATION_EMAILS_PER_HOUR = 60;
+// Addresses that never confirmed are deleted after this long (we shouldn't keep
+// strangers' addresses we were typed into a form for).
+const PENDING_RETENTION_DAYS = 30;
 const MAX_DRIPS_PER_RUN = 100;
 
 function escapeHtml(value) {
@@ -167,7 +172,7 @@ function dripEmail(step, unsubscribeUrl) {
           the tools are your news sources and the AI model, and the output is the email you wake up to.`)}
         ${p(`If you haven't built it yet, that's the best place to feel all four click into place:`)}
         ${button(DAILY_NEWS_URL, 'Build it free →')}
-        ${p(`Reply to this email if you get stuck — it comes to us.`)}
+        ${p(`Stuck on a step? Message us on WhatsApp: ${link('https://wa.me/2349066006963', 'wa.me/2349066006963')} (we reply 10am–5pm WAT, Monday to Saturday).`)}
       `,
         footer,
       ),
@@ -188,7 +193,7 @@ function dripEmail(step, unsubscribeUrl) {
       ${p(`Prefer to learn live? <strong>AI Agent Mastery</strong> is a three-evening live cohort (Friday to Sunday) where you build a personal-assistant agent,
         and the <strong>Vibe Coding Bootcamp</strong> is four weeks of live classes taking you from an idea to a deployed product.`)}
       ${button(`${SITE}/pricing`, 'See every option →')}
-      ${p(`Questions before you decide? Reply to this email, or message us on WhatsApp: ${link('https://wa.me/2349066006963', 'wa.me/2349066006963')}.`)}
+      ${p(`Questions before you decide? Message us on WhatsApp: ${link('https://wa.me/2349066006963', 'wa.me/2349066006963')} (we reply 10am–5pm WAT, Monday to Saturday).`)}
     `,
       footer,
     ),
@@ -202,7 +207,8 @@ async function sendDrip(row, step) {
   const { subject, html } = dripEmail(step, unsubscribeUrl);
   const oneClick = `${SUPABASE_URL}/functions/v1/email-leads?unsubscribe=${row.unsubscribe_token}`;
   return { subject, ok: await sendResendEmail(row.email, subject, html, {
-    'List-Unsubscribe': `<${oneClick}>, <mailto:support@socialdevtechnologies.com?subject=unsubscribe>`,
+    // https only: there is no working mailbox to offer as a mailto fallback.
+    'List-Unsubscribe': `<${oneClick}>`,
     'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
   }) };
 }
@@ -290,6 +296,11 @@ serve(async (req) => {
         console.error('lead drip failed:', err);
       }
     }
+    // Housekeeping: drop addresses that never confirmed.
+    const cutoff = new Date(Date.now() - PENDING_RETENTION_DAYS * 24 * 60 * 60 * 1000).toISOString();
+    const { error: pruneError } = await sb.from('email_subscribers').delete().eq('status', 'pending').lt('created_at', cutoff);
+    if (pruneError) console.error('pruning unconfirmed subscribers failed:', pruneError.message);
+
     return json({ ok: true, due: (due || []).length, sent, converted });
   }
 
@@ -324,17 +335,17 @@ serve(async (req) => {
       return json({ ok: true });
     }
 
+    const since = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+    const { count: sentLastHour } = await sb
+      .from('email_subscribers')
+      .select('id', { count: 'exact', head: true })
+      .gte('confirm_sent_at', since);
+    if ((sentLastHour ?? 0) >= MAX_CONFIRMATION_EMAILS_PER_HOUR) {
+      return json({ error: 'Too many sign-ups right now. Please try again in a little while.' }, 429);
+    }
+
     let row = existing;
     if (!row) {
-      const since = new Date(Date.now() - 60 * 60 * 1000).toISOString();
-      const { count } = await sb
-        .from('email_subscribers')
-        .select('id', { count: 'exact', head: true })
-        .eq('status', 'pending')
-        .gte('created_at', since);
-      if ((count ?? 0) >= MAX_NEW_PENDING_PER_HOUR) {
-        return json({ error: 'Too many sign-ups right now. Please try again in a little while.' }, 429);
-      }
       const { data: inserted, error: insertError } = await sb
         .from('email_subscribers')
         .insert({ email, source, status: 'pending' })

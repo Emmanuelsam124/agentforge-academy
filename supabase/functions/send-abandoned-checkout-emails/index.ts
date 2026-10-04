@@ -44,7 +44,7 @@ function emailShell(innerHtml) {
       <div style="margin-top:32px;padding-top:16px;border-top:1px solid #EEE6FB;font-size:12px;color:#8A82AD;text-align:center;">
         Social Dev Technologies · You're receiving this because you started a checkout on socialdevtechnologies.com.
         It's one of two reminders we send for a checkout — never more.<br/>
-        Questions? Reply to this email or contact support@socialdevtechnologies.com.
+        Questions? Message us on WhatsApp: wa.me/2349066006963.
       </div>
     </div>
   `;
@@ -195,7 +195,7 @@ function stage2Html(name, product) {
     ${extra}
     ${ctaLink(product, 2)}
     <p style="font-size:14px;color:#3A3358;line-height:1.6;">
-      Not sure it fits? Reply to this email, or message us on WhatsApp:
+      Not sure it fits? Message us on WhatsApp:
       <a href="https://wa.me/2349066006963" style="color:#7C3AED;">wa.me/2349066006963</a>
       (we reply 10am–5pm WAT, Monday to Saturday).
     </p>
@@ -252,7 +252,9 @@ serve(async (req) => {
 
   // Who is due which email is decided in SQL (supabase/checkout-recovery.sql):
   // one row per person, stage 1 an hour after they started, stage 2 a day
-  // after, nobody who already owns the product, nobody past two emails.
+  // after, nobody who already owns the product, nobody past two emails. The
+  // address comes from auth.users (confirmed), never the user-writable
+  // profiles.email, so a reminder can't be aimed at a stranger.
   const { data: candidates, error: queryError } = await serviceClient.rpc('service_get_checkout_recovery_candidates');
   if (queryError) {
     console.error('service_get_checkout_recovery_candidates failed:', queryError.message);
