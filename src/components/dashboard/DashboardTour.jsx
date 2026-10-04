@@ -7,15 +7,41 @@ import { ArrowLeft, ArrowRight, X } from 'lucide-react';
 // (DashboardSidebar.jsx). The desktop sidebar and the phone bottom bar both
 // carry the same ids, so each step picks whichever match is actually visible;
 // items that only live inside the phone's "More" sheet fall back to the
-// "More" button. Steps with no visible target at all (e.g. "My Courses" for
-// someone who owns none) are skipped rather than shown pointing at nothing.
+// "More" button, with their own title and text so the heading matches what is
+// actually highlighted. Steps with no visible target at all (e.g. "My Courses"
+// for someone who owns none) are skipped rather than shown pointing at nothing.
 //
-// "Seen" is remembered per signed-in user in localStorage — a per-device
-// convenience, not shared state: worst case someone on a new device sees it
-// once more, and Help has a "Take the dashboard tour" button to replay it on
-// purpose (it fires the START_EVENT below).
+// Auto-start is desktop-only (the `lg` layout, where the sidebar is showing).
+// On phones the bottom bar is just Home / Live Sessions / Community / More, and
+// the labels already say what they are — a modal tour there was mostly
+// friction: it ran over the first screen a new buyer sees after paying (Paystack
+// returns them to /dashboard), and its controls were small tap targets. Phones
+// can still run it on purpose from Help ("Take the dashboard tour" fires the
+// START_EVENT below).
+//
+// "Seen" is remembered per signed-in user in localStorage and is written the
+// moment the tour is shown, not when it is finished: leaving part-way (back
+// gesture, switching apps, the OS discarding the tab) used to restart it from
+// step 1 on every visit until someone found Skip. It is a per-device
+// convenience, not shared state — worst case someone on a new device sees it
+// once more.
 export const TOUR_START_EVENT = 'sdt:start-dashboard-tour';
 const storageKey = (userId) => `sdt_dashboard_tour_v1_${userId}`;
+
+// The breakpoint DashboardSidebar / DashboardMobileNav swap on: Tailwind `lg`,
+// 64rem (src/index.css doesn't override it). Written in rem, like Tailwind's
+// own media query, so the two stay in step even when someone's browser default
+// font size isn't 16px. Without matchMedia, don't auto-start.
+const DESKTOP_QUERY = '(min-width: 64rem)';
+const isDesktop = () => Boolean(window.matchMedia?.(DESKTOP_QUERY).matches);
+
+function markSeen(userId) {
+  try {
+    localStorage.setItem(storageKey(userId), '1');
+  } catch {
+    // storage blocked — the tour may show again on the next visit
+  }
+}
 
 const STEPS = [
   {
@@ -41,9 +67,18 @@ const STEPS = [
   {
     title: 'Replays',
     body: 'Missed a class? Recordings show up here after each session.',
+    // On a phone none of the next three have their own button: they all fall
+    // back to "More", so the first of them shows as a single "More" step that
+    // covers all of it and the other two are dropped as duplicates (see
+    // resolveSteps). A fallback needs its own `title`, or the heading would say
+    // "Replays" while the highlight sits on "More".
     targets: [
       { id: 'replays' },
-      { id: 'more', body: "Replays, your account and Help are under “More”. Missed a class? Recordings appear under Replays." },
+      {
+        id: 'more',
+        title: 'More',
+        body: 'Replays, your courses, your account and Help are all under “More”. Missed a class? Recordings are under Replays.',
+      },
     ],
   },
   {
@@ -51,7 +86,7 @@ const STEPS = [
     body: 'Your classes and guides — open the course you enrolled in to see its sessions and materials.',
     targets: [
       { id: 'my-courses' },
-      { id: 'more', body: 'Your enrolled courses are under “More” — tap it to see them.' },
+      { id: 'more', title: 'More', body: 'Your enrolled courses are under “More” — tap it to see them.' },
     ],
   },
   {
@@ -59,7 +94,7 @@ const STEPS = [
     body: 'Your profile and certificates live under Account. Stuck on anything? Help has WhatsApp and email support.',
     targets: [
       { id: 'account' },
-      { id: 'more' },
+      { id: 'more', title: 'More' },
     ],
   },
   {
@@ -87,14 +122,14 @@ function resolveSteps() {
     for (const t of step.targets) {
       const el = findVisible(t.id);
       if (el) {
-        picked = { el, body: t.body || step.body };
+        picked = { el, title: t.title || step.title, body: t.body || step.body };
         break;
       }
     }
     // Skip steps with nothing to point at, and don't show the same "More"
     // button twice in a row on phones.
     if (!picked || picked.el === lastEl) continue;
-    out.push({ ...step, body: picked.body, el: picked.el });
+    out.push({ ...step, title: picked.title, body: picked.body, el: picked.el });
     lastEl = picked.el;
   }
   return out;
@@ -106,19 +141,14 @@ export default function DashboardTour({ userId, paused = false }) {
   const [rect, setRect] = useState(null);
   const cardRef = useRef(null);
 
+  // Marked seen as soon as it is shown (not on finish) so it can never nag.
   const start = useCallback(() => {
+    markSeen(userId);
     setIndex(0);
     setSteps(resolveSteps());
-  }, []);
-
-  const finish = useCallback(() => {
-    setSteps(null);
-    try {
-      localStorage.setItem(storageKey(userId), '1');
-    } catch {
-      // storage blocked — tour just may show again next visit
-    }
   }, [userId]);
+
+  const finish = useCallback(() => setSteps(null), []);
 
   // Auto-start once per user, a beat after the dashboard has painted so the
   // targets exist and the page isn't fighting the first render.
@@ -129,8 +159,10 @@ export default function DashboardTour({ userId, paused = false }) {
     } catch {
       seen = true; // can't remember it -> don't nag
     }
-    // Held back while another first-login popup (e.g. create-password) is up.
-    if (seen || paused) return undefined;
+    // Held back while another first-login popup (e.g. create-password) is up,
+    // and on phones/tablets, where it only starts when asked for (see the
+    // header comment).
+    if (seen || paused || !isDesktop()) return undefined;
     const id = setTimeout(start, 900);
     return () => clearTimeout(id);
   }, [userId, start, paused]);
@@ -216,11 +248,17 @@ export default function DashboardTour({ userId, paused = false }) {
         className="fixed bg-white dark:bg-[#181818] rounded-2xl p-5 shadow-[0_20px_50px_-12px_rgba(20,10,50,.55)] outline-none"
         style={cardStyle}
       >
+        {/* Tap targets: the close / Skip / Back controls have a 44px hit area (the
+            usual touch minimum) at every size without moving anything — padding
+            grows the button and an equal negative margin takes the growth back,
+            so the icon / label stays exactly where it was. The filled primary
+            button is taller below `lg` (py-3) and keeps its compact desktop
+            height (py-2). */}
         <button
           type="button"
           onClick={finish}
           aria-label="Skip tour"
-          className="absolute top-3.5 right-3.5 text-gray-400 hover:text-ink transition-colors"
+          className="absolute top-3.5 right-3.5 -m-[13px] p-[13px] text-gray-400 hover:text-ink transition-colors"
         >
           <X className="w-4.5 h-4.5" />
         </button>
@@ -231,14 +269,18 @@ export default function DashboardTour({ userId, paused = false }) {
         <p className="text-[13.5px] text-body leading-relaxed mt-1.5">{step.body}</p>
         <div className="flex items-center justify-between mt-4">
           {isFirst ? (
-            <button type="button" onClick={finish} className="text-xs font-semibold text-gray-500 hover:text-ink">
+            <button
+              type="button"
+              onClick={finish}
+              className="-ml-3 -my-3.5 px-3 py-3.5 text-xs font-semibold text-gray-500 hover:text-ink"
+            >
               Skip tour
             </button>
           ) : (
             <button
               type="button"
               onClick={() => setIndex((i) => i - 1)}
-              className="inline-flex items-center gap-1 text-xs font-semibold text-gray-500 hover:text-ink"
+              className="inline-flex items-center gap-1 -ml-3 -my-3.5 px-3 py-3.5 text-xs font-semibold text-gray-500 hover:text-ink"
             >
               <ArrowLeft className="w-3.5 h-3.5" /> Back
             </button>
@@ -246,7 +288,7 @@ export default function DashboardTour({ userId, paused = false }) {
           <button
             type="button"
             onClick={isLast ? finish : () => setIndex((i) => i + 1)}
-            className="inline-flex items-center gap-1.5 bg-brand hover:bg-brand-deep text-white text-sm font-bold px-4 py-2 rounded-xl transition-colors"
+            className="inline-flex items-center gap-1.5 bg-brand hover:bg-brand-deep text-white text-sm font-bold px-4 py-3 lg:py-2 rounded-xl transition-colors"
           >
             {isLast ? 'Got it' : isFirst ? 'Start tour' : 'Next'}
             {!isLast && <ArrowRight className="w-3.5 h-3.5" />}
