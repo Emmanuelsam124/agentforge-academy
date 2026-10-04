@@ -1,5 +1,6 @@
 import { escapeHtml } from '../src/lib/guideBlocks.js';
 import { sectionOgImage, applyOgImage } from '../src/lib/ogCards.js';
+import { jsonLdBody } from '../src/lib/jsonLd.js';
 
 // Server-renders the /guides listing — same pattern and reasoning as
 // api/news-index.js. Guides are admin-editable at any time, so a committed
@@ -38,7 +39,7 @@ export default async function handler(req, res) {
     .replace(/(<meta name="twitter:description" content=")[^"]*(")/, `$1${escapeHtml(description)}$2`);
   html = applyOgImage(html, sectionOgImage('guides'), 'AI build guides from Social Dev Technologies');
 
-  const jsonLd = JSON.stringify({
+  const jsonLd = jsonLdBody({
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
     name: pageTitle,

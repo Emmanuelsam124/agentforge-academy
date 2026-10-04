@@ -9,6 +9,8 @@
 // from here (see api/news-article.js pulling in newsBlocks.js) and this is
 // plain data with no runtime deps.
 
+import { escapeHtml } from './newsBlocks.js';
+
 export const SITE_URL = 'https://socialdevtechnologies.com';
 
 // Every id here must have a matching public/og/dept-<id>.jpg. Kept as an
@@ -57,9 +59,12 @@ export function sectionOgImage(section) {
  * up still pointing at /logo.jpeg after the news route was fixed.
  */
 export function applyOgImage(html, { url, isCard }, alt) {
+  // url can be an article's or guide's image_url straight from the
+  // database, so it's escaped here; alt arrives already escaped by callers.
+  const safeUrl = escapeHtml(url);
   let out = html
-    .replace(/(<meta property="og:image" content=")[^"]*(")/, `$1${url}$2`)
-    .replace(/(<meta name="twitter:image" content=")[^"]*(")/, `$1${url}$2`);
+    .replace(/(<meta property="og:image" content=")[^"]*(")/, `$1${safeUrl}$2`)
+    .replace(/(<meta name="twitter:image" content=")[^"]*(")/, `$1${safeUrl}$2`);
 
   if (isCard) {
     if (alt) {
