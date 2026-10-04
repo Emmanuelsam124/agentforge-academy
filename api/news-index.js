@@ -1,5 +1,6 @@
 import { escapeHtml } from '../src/lib/newsBlocks.js';
 import { sectionOgImage, applyOgImage } from '../src/lib/ogCards.js';
+import { jsonLdBody } from '../src/lib/jsonLd.js';
 
 // Server-renders /news (routed here via the vercel.json rewrite) — same
 // reasoning as api/news-article.js: this app is otherwise a client-rendered
@@ -40,7 +41,7 @@ export default async function handler(req, res) {
     .replace(/(<meta name="twitter:description" content=")[^"]*(")/, `$1${escapeHtml(description)}$2`);
   html = applyOgImage(html, sectionOgImage('news'), 'AI News from Social Dev Technologies');
 
-  const jsonLd = JSON.stringify({
+  const jsonLd = jsonLdBody({
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
     name: pageTitle,
@@ -66,7 +67,7 @@ export default async function handler(req, res) {
     .map(
       (a) => `
       <li>
-        <a href="${siteUrl}/news/${a.slug}">${escapeHtml(a.title)}</a>
+        <a href="${siteUrl}/news/${escapeHtml(a.slug)}">${escapeHtml(a.title)}</a>
         <p>${escapeHtml(a.dek)}</p>
       </li>`,
     )

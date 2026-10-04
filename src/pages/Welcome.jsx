@@ -105,7 +105,11 @@ export default function Welcome() {
     setLoading(true);
     try {
       const { error: err } = await sendLoginCode(email);
-      if (err) throw err;
+      // otp_disabled ("Signups not allowed for otp") is Supabase's answer for
+      // an email with no account. Showing it would let anyone check whether
+      // an address is registered, so that case moves on to the code step
+      // exactly like a real send — the copy there doesn't promise a code.
+      if (err && err.code !== 'otp_disabled') throw err;
       setCodeSent(true);
     } catch (err) {
       setError(err.message || 'Could not send a login code. Please try again.');
@@ -398,7 +402,7 @@ export default function Welcome() {
                           />
                         </div>
                         <p className="text-xs text-gray-400 mt-1.5">
-                          Sent to <span>{email}</span>. <button type="button" onClick={handleSendCode} className="text-brand font-semibold hover:underline">Resend code</button>
+                          If <span>{email}</span> has an account, a code is on its way. No email after a few minutes? Check the address, or <button type="button" onClick={handleSendCode} className="text-brand font-semibold hover:underline">resend the code</button>.
                         </p>
                       </div>
 

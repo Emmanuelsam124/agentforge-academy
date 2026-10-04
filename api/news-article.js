@@ -1,5 +1,17 @@
 import { escapeHtml, renderBlocksToHtml } from '../src/lib/newsBlocks.js';
 import { articleOgImage, applyOgImage } from '../src/lib/ogCards.js';
+import { jsonLdBody } from '../src/lib/jsonLd.js';
+
+// source_url and image_url reach the database from RSS feeds via the LLM
+// drafter, so their shape isn't trusted: only http(s) URLs go into href/src.
+function httpUrl(value) {
+  try {
+    const url = new URL(value);
+    return url.protocol === 'https:' || url.protocol === 'http:' ? url.href : null;
+  } catch {
+    return null;
+  }
+}
 
 // Server-renders a real HTML document for /news/:slug (routed here via the
 // vercel.json rewrite, which passes the slug as ?slug=) — this is the fix
@@ -51,7 +63,7 @@ export default async function handler(req, res) {
 
   const pageTitle = `${article.title} | Social Dev Technologies News`;
   const description = article.dek;
-  const canonicalUrl = `${siteUrl}/news/${article.slug}`;
+  const canonicalUrl = `${siteUrl}/news/${encodeURIComponent(article.slug)}`;
   // Falls back through the article's own illustration -> a card themed to
   // its department -> the generic news card. Never the logo: it's 192x192,
   // under LinkedIn's large-card threshold and Facebook's floor both.
@@ -68,7 +80,7 @@ export default async function handler(req, res) {
     .replace(/(<meta name="twitter:description" content=")[^"]*(")/, `$1${escapeHtml(description)}$2`);
   html = applyOgImage(html, ogImage, escapeHtml(article.title));
 
-  const jsonLd = JSON.stringify({
+  const jsonLd = jsonLdBody({
     '@context': 'https://schema.org',
     '@type': 'NewsArticle',
     headline: article.title,
@@ -91,14 +103,19 @@ export default async function handler(req, res) {
   html = html.replace('</head>', headExtra);
 
   const bodyHtml = renderBlocksToHtml(article.body_blocks);
-  const imageBlock = article.image_url ? `<img src="${article.image_url}" alt="" style="width:100%;max-width:720px;" />` : '';
+  const imageUrl = httpUrl(article.image_url);
+  const imageBlock = imageUrl ? `<img src="${escapeHtml(imageUrl)}" alt="" style="width:100%;max-width:720px;" />` : '';
+  const sourceUrl = httpUrl(article.source_url);
+  const sourceBlock = sourceUrl
+    ? `<p><a href="${escapeHtml(sourceUrl)}">Original source: ${escapeHtml(article.source_name)}</a></p>`
+    : '';
   const articleHtml = `
     <article>
       <h1>${escapeHtml(article.title)}</h1>
       <p>${escapeHtml(description)}</p>
       ${imageBlock}
       ${bodyHtml}
-      <p><a href="${article.source_url}">Original source: ${escapeHtml(article.source_name)}</a></p>
+      ${sourceBlock}
     </article>`;
   // data-ssr-stub tells src/main.jsx to skip hydration for this markup and
   // do a clean createRoot render instead — this HTML is a hand-written
