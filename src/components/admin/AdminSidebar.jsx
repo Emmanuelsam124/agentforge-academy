@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { AnimatePresence, m } from 'framer-motion';
-import { Users, CalendarDays, Video, MessageSquareText, Mail, Newspaper, BookOpen, LifeBuoy, Gift, ClipboardList, ChevronDown } from 'lucide-react';
+import { Users, CalendarDays, Video, MessageSquareText, Mail, Newspaper, BookOpen, LifeBuoy, Gift, ClipboardList, GraduationCap, ChevronDown } from 'lucide-react';
 
 const NAV_ITEMS = [
   { to: '/admin', end: true, icon: Users, label: 'Users' },
@@ -14,6 +14,7 @@ const NAV_ITEMS = [
   { to: '/admin/support', end: false, icon: LifeBuoy, label: 'WhatsApp Support' },
   { to: '/admin/referrals', end: false, icon: Gift, label: 'Referral Payouts' },
   { to: '/admin/webinar-survey', end: false, icon: ClipboardList, label: 'Webinar Survey' },
+  { to: '/admin/scholarships', end: false, icon: GraduationCap, label: 'Scholarships' },
 ];
 
 function NavItems({ onNavigate }) {

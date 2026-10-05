@@ -55,6 +55,42 @@ const UPGRADE_PRICES = {
 const AIMASTERY_STUDENT_PRICE = 10000;
 const STUDENT_EMAIL_DOMAIN = '@byupathway.edu';
 
+// aimastery scholarship price for people who are NOT BYU-Pathway students and
+// have an approved application (2026-10-05, supabase/scholarship-applications.sql;
+// the /scholarship form approves automatically by default). Two Supabase secrets
+// with these defaults — paystack-webhook reads SCHOLARSHIP_PRICE_NAIRA too, so
+// whatever is charged here is an amount it recognises:
+//   SCHOLARSHIP_PRICE_NAIRA   default 10000
+//   SCHOLARSHIP_EXPIRES_AT    default Fri 9 Oct 2026, 7:00 PM WAT (class start)
+function parseEnvNumber(value, fallback) {
+  const n = Number(String(value ?? '').trim());
+  return Number.isFinite(n) && n > 0 ? n : fallback;
+}
+function parseEnvTime(value, fallback) {
+  const t = Date.parse(String(value ?? '').trim());
+  return Number.isFinite(t) ? t : Date.parse(fallback);
+}
+const SCHOLARSHIP_PRICE_NAIRA = parseEnvNumber(Deno.env.get('SCHOLARSHIP_PRICE_NAIRA'), 10000);
+const SCHOLARSHIP_EXPIRES_AT = parseEnvTime(Deno.env.get('SCHOLARSHIP_EXPIRES_AT'), '2026-10-09T19:00:00+01:00');
+
+// The id of this email's approved, not-yet-redeemed scholarship application, or
+// null. Never throws: if the lookup fails (e.g. the table isn't there yet) the
+// caller simply pays the normal price rather than being blocked from checkout.
+async function findApprovedScholarshipId(sb, email) {
+  const { data, error } = await sb
+    .from('scholarship_applications')
+    .select('id')
+    .eq('email', String(email ?? '').trim().toLowerCase())
+    .eq('status', 'approved')
+    .is('redeemed_at', null)
+    .maybeSingle();
+  if (error) {
+    console.error('scholarship lookup failed:', error.code);
+    return null;
+  }
+  return data?.id ?? null;
+}
+
 // This function is called directly from the browser (Pricing.jsx via
 // supabase.functions.invoke), so it needs CORS headers and to answer the
 // browser's preflight OPTIONS request — without these, the browser blocks
@@ -141,6 +177,21 @@ serve(async (req) => {
     amountNaira = AIMASTERY_STUDENT_PRICE;
   }
 
+  // Scholarship price (non-BYU applicants): same JWT-verified, email-CONFIRMED
+  // user as above, never anything the client sends. BYU students never reach
+  // this branch, so their flow is exactly as before. The application must be
+  // approved and unredeemed and the offer unexpired; webhook redemption makes it
+  // single-use. Math.min keeps a misconfigured price from ever exceeding the
+  // normal one.
+  let scholarshipId;
+  if (
+    plan === 'aimastery' && !isVerifiedStudent && !!user.email_confirmed_at &&
+    Date.now() < SCHOLARSHIP_EXPIRES_AT
+  ) {
+    scholarshipId = (await findApprovedScholarshipId(serviceClient, user.email)) ?? undefined;
+    if (scholarshipId) amountNaira = Math.min(amountNaira, SCHOLARSHIP_PRICE_NAIRA);
+  }
+
   // The upgrade price is decided here from the caller's own permanent guide
   // purchases (the same rows usePro.js / the webhook read) — never from
   // anything the client sends. Exactly one tier owned = eligible; none or both
@@ -187,7 +238,13 @@ serve(async (req) => {
       amount: amountNaira * 100, // kobo
       currency: 'NGN',
       reference,
-      metadata: { user_id: user.id, plan, ...(upgradeFrom ? { upgrade_from: upgradeFrom } : {}) },
+      metadata: {
+        user_id: user.id,
+        plan,
+        ...(upgradeFrom ? { upgrade_from: upgradeFrom } : {}),
+        // paystack-webhook marks this application redeemed once the payment is verified.
+        ...(scholarshipId ? { scholarship_id: scholarshipId } : {}),
+      },
       callback_url: `${callbackOrigin}/dashboard`,
     }),
   });
