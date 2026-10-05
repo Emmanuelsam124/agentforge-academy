@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
-import { GraduationCap, Loader2, AlertCircle, CheckCircle2, XCircle, MessageCircle } from 'lucide-react';
+import { GraduationCap, Loader2, AlertCircle, CheckCircle2, XCircle, MessageCircle, Mail } from 'lucide-react';
 import { supabase } from '../../lib/supabaseClient';
+import { invokeWithRetry } from '../../lib/invokeFunction';
 import { scholarshipWhatsappUrl, statusTypeLabel } from '../../data/scholarship';
 
 const TABS = [
@@ -52,10 +53,11 @@ function Detail({ label, children }) {
   );
 }
 
-// Scholarship applications. New ones are approved automatically unless the
-// SCHOLARSHIP_AUTO_APPROVE secret is "false"; approving here (or rejecting, to
-// revoke before they pay) is what checkout looks at. An application that has been
-// redeemed — the person paid the scholarship price — is final.
+// Scholarship applications. New ones wait here as Pending until you approve them
+// (unless the SCHOLARSHIP_AUTO_APPROVE secret is "true"); approving here (or
+// rejecting, to revoke before they pay) is what checkout looks at. Approving also
+// emails the applicant (send-scholarship-approval-email). An application that has
+// been redeemed — the person paid the scholarship price — is final.
 export default function AdminScholarships() {
   const { showToast } = useOutletContext();
   const [status, setStatus] = useState('pending');
@@ -86,6 +88,36 @@ export default function AdminScholarships() {
     setStatus(id);
   };
 
+  // Emails the applicant (admin-only function). Returns an error message, or ''.
+  const sendApprovalEmail = async (application, resend = false) => {
+    const { data, error: err } = await invokeWithRetry('send-scholarship-approval-email', {
+      body: { id: application.id, resend },
+    });
+    if (!err && data?.ok) return { sentAt: data.sentAt ?? null, error: '' };
+    let message = err?.message || 'Could not send the email.';
+    try {
+      const parsed = await err?.context?.clone().json();
+      if (parsed?.error) message = parsed.error;
+    } catch {
+      // keep the generic message
+    }
+    return { sentAt: null, error: message };
+  };
+
+  const emailApplicant = async (application, resend) => {
+    setActionLoading(application.id);
+    setError('');
+    const { sentAt, error: emailError } = await sendApprovalEmail(application, resend);
+    if (emailError) setError(emailError);
+    else {
+      showToast('Approval email sent.');
+      if (sentAt) {
+        setApplications((prev) => prev.map((a) => (a.id === application.id ? { ...a, approval_email_sent_at: sentAt } : a)));
+      }
+    }
+    setActionLoading(null);
+  };
+
   const review = async (application, decision) => {
     setActionLoading(application.id);
     setError('');
@@ -101,7 +133,20 @@ export default function AdminScholarships() {
           .map((a) => (a.id === application.id ? { ...a, status: newStatus, reviewed_at: reviewedAt } : a))
           .filter((a) => status === 'all' || a.status === status),
       );
-      showToast(`Marked ${newStatus}.`);
+      if (decision === 'approve') {
+        // Approval stands even if the email fails; Resend email retries it.
+        const { sentAt, error: emailError } = await sendApprovalEmail(application);
+        if (emailError) {
+          setError(`Approved, but the email wasn't sent: ${emailError}`);
+        } else {
+          if (sentAt) {
+            setApplications((prev) => prev.map((a) => (a.id === application.id ? { ...a, approval_email_sent_at: sentAt } : a)));
+          }
+          showToast('Approved — email sent to the applicant.');
+        }
+      } else {
+        showToast(`Marked ${newStatus}.`);
+      }
     } catch (err) {
       setError(err.message || 'Could not update the application.');
     } finally {
@@ -183,6 +228,12 @@ export default function AdminScholarships() {
                   {a.payment_reference ? <> · payment <span className="font-mono">{a.payment_reference}</span></> : null}
                 </p>
               )}
+              {a.status === 'approved' && !a.redeemed_at && (
+                <p className="text-[12.5px] text-body mb-3 flex items-center gap-1.5">
+                  <Mail className="w-3.5 h-3.5 flex-shrink-0" />
+                  {a.approval_email_sent_at ? `Approval email sent ${fmtDate(a.approval_email_sent_at)}` : 'Approval email not sent yet'}
+                </p>
+              )}
 
               <div className="flex items-center gap-2 flex-wrap">
                 {!a.redeemed_at && a.status !== 'approved' && (
@@ -211,6 +262,15 @@ export default function AdminScholarships() {
                     className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-border text-body hover:border-brand/40 disabled:opacity-40 transition-colors"
                   >
                     Back to pending
+                  </button>
+                )}
+                {a.status === 'approved' && !a.redeemed_at && (
+                  <button
+                    onClick={() => emailApplicant(a, !!a.approval_email_sent_at)}
+                    disabled={actionLoading === a.id}
+                    className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border border-border text-body-strong hover:border-brand/40 disabled:opacity-40 transition-colors"
+                  >
+                    <Mail className="w-3.5 h-3.5" /> {a.approval_email_sent_at ? 'Resend email' : 'Send email'}
                   </button>
                 )}
                 <a
