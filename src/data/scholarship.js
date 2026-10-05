@@ -92,10 +92,18 @@ export function validateScholarshipForm(f) {
   return errors;
 }
 
-// wa.me link an admin opens to message an applicant.
+// wa.me link an admin opens to message an applicant. Approved applicants get the
+// "you're approved" message (register with the same email; the discount applies
+// automatically at checkout, until class starts); anyone else gets a plain hello.
 export function scholarshipWhatsappUrl(application) {
   const digits = String(application.whatsapp ?? '').replace(/\D/g, '');
   const firstName = collapse(application.full_name).split(' ')[0] || 'there';
-  const text = `Hi ${firstName}, this is Social Dev Technologies about your AI Agent Mastery scholarship application.`;
+  const text =
+    application.status === 'approved'
+      ? `Hi ${firstName}! 🎉 Great news — your scholarship for the AI Agent Mastery cohort has been approved.\n\n` +
+        `To claim it, register at https://socialdevtechnologies.com/ai-agent-mastery using the same email you applied with (${application.email}). ` +
+        `The discounted price will apply automatically at checkout.\n\n` +
+        `Please complete your registration before class starts — ${formatWatDateTime(SCHOLARSHIP_EXPIRES_AT)} — as the scholarship expires then.`
+      : `Hi ${firstName}, this is Social Dev Technologies about your AI Agent Mastery scholarship application.`;
   return `https://wa.me/${digits}?text=${encodeURIComponent(text)}`;
 }

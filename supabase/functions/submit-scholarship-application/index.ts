@@ -13,9 +13,9 @@ import { validateApplication } from './validate.ts';
 //                             (default Thu 8 Oct 2026, 8:00 PM WAT). Mirrored in
 //                             src/data/scholarship.js (VITE_ override) only to pick
 //                             which page to render; the check here is the real one.
-//   SCHOLARSHIP_AUTO_APPROVE  new applications are approved on submit unless this is
-//                             "false" / "0" / "no" / "off", in which case they stay
-//                             pending until an admin reviews them.
+//   SCHOLARSHIP_AUTO_APPROVE  new applications stay PENDING until an admin approves
+//                             them at /admin/scholarships, unless this is set to
+//                             "true" / "1" / "yes" / "on" (approve on submit).
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL') ?? '';
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
@@ -27,7 +27,7 @@ function parseTime(value, fallback) {
   return Number.isFinite(t) ? t : Date.parse(fallback);
 }
 const CLOSES_AT = parseTime(Deno.env.get('SCHOLARSHIP_CLOSES_AT'), DEFAULT_CLOSES_AT);
-const AUTO_APPROVE = !['false', '0', 'no', 'off'].includes(
+const AUTO_APPROVE = ['true', '1', 'yes', 'on'].includes(
   String(Deno.env.get('SCHOLARSHIP_AUTO_APPROVE') ?? '').trim().toLowerCase(),
 );
 
