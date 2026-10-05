@@ -69,6 +69,8 @@ const ResetPassword = lazy(() => import('./pages/ResetPassword'));
 const ConfirmEmail = lazy(() => import('./pages/ConfirmEmail'));
 // Landing pages for the links in the starter-series emails (confirm / unsubscribe).
 const SubscribeStatus = lazy(() => import('./pages/SubscribeStatus'));
+// Public scholarship application form for AI Agent Mastery (not prerendered).
+const Scholarship = lazy(() => import('./pages/Scholarship'));
 const VibeCodingPrompts = lazy(() => import('./pages/VibeCodingPrompts'));
 // Private, auth-gated course content (recording links, passcodes) — must
 // never be prerendered/eager-imported, same reasoning as StudentDashboard.
@@ -218,6 +220,7 @@ function AppShell() {
             <Route path="/vibe-coding/prompts" element={<Suspense fallback={null}><VibeCodingPrompts /></Suspense>} />
             <Route path="/vibe-coding/course" element={<Suspense fallback={null}><VibeCodingCourse /></Suspense>} />
             <Route path="/ai-agent-mastery" element={<AIAgentMastery />} />
+            <Route path="/scholarship" element={<Suspense fallback={null}><Scholarship /></Suspense>} />
             <Route path="/ai-agent-mastery/course" element={<Suspense fallback={null}><AIAgentMasteryCourse /></Suspense>} />
             <Route path="/builder-1-guide" element={<Builder1Guide />} />
             <Route path="/session/build-real-product" element={<PortfolioSessionGuide />} />

@@ -38,14 +38,23 @@ const AMOUNT_TOLERANCE = 1;
 // REFERRAL_COMMISSION_PERCENT in src/data/pricing.js (display copy).
 const REFERRAL_COMMISSION_RATE = 0.1;
 
+// Scholarship price for approved non-BYU applicants (2026-10-05). Same Supabase
+// secret create-paystack-checkout reads, so whatever it charges is an amount this
+// webhook recognises. Unset or not a positive number -> 10000.
+const SCHOLARSHIP_PRICE_NAIRA = (() => {
+  const n = Number(String(Deno.env.get('SCHOLARSHIP_PRICE_NAIRA') ?? '').trim());
+  return Number.isFinite(n) && n > 0 ? n : 10000;
+})();
+
 // Plans that have more than one valid price. resolvePlan() checks every price
 // in this list instead of the single PRICES[plan] value.
 const MULTI_TIER_PRICES = {
-  // Full price, or the ₦10,000 BYU-Pathway student price. Eligibility is
-  // enforced at checkout creation (create-paystack-checkout, verified
-  // @byupathway.edu email) — only that function can start a ₦10,000
-  // aimastery charge, so the webhook just needs to recognise it.
-  aimastery: [19999, 10000],
+  // Full price, the ₦10,000 BYU-Pathway student price, or the scholarship price
+  // (default ₦10,000 too). Eligibility is enforced at checkout creation
+  // (create-paystack-checkout: a verified @byupathway.edu email, or an approved
+  // scholarship application) — only that function can start a discounted
+  // aimastery charge, so the webhook just needs to recognise the amounts.
+  aimastery: [...new Set([19999, 10000, SCHOLARSHIP_PRICE_NAIRA])],
 };
 
 // Pro upgrade-by-difference (2026-10-04): a buyer who already owns ONE
@@ -520,6 +529,29 @@ serve(async (req) => {
     })
     .select('id')
     .single();
+
+  // Scholarship redemption — only now, after the signature-verified, amount-
+  // checked payment has been granted. scholarship_id is in the metadata
+  // create-paystack-checkout set (covered by the same signature). The
+  // conditional update makes it single-use: it matches only an approved,
+  // not-yet-redeemed application. Best-effort — a hiccup here must never cost a
+  // paying student their access.
+  const scholarshipId = String(payload.data?.metadata?.scholarship_id ?? '');
+  if (plan === 'aimastery' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(scholarshipId)) {
+    try {
+      const { error: redeemError } = await supabase
+        .from('scholarship_applications')
+        .update({ redeemed_at: new Date().toISOString(), payment_reference: txId })
+        .eq('id', scholarshipId)
+        .eq('status', 'approved')
+        .is('redeemed_at', null);
+      // supabase-js reports failures in the result rather than throwing. Worth a
+      // log line: if it fails the application stays redeemable and needs a manual fix.
+      if (redeemError) console.error('scholarship redeem failed:', txId, redeemError.code);
+    } catch (_err) {
+      // non-fatal — see comment above
+    }
+  }
 
   // Referral payout — best-effort and isolated from the grant above: a
   // referrals-table hiccup must never cost a real student their entitlement.

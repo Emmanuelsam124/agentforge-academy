@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { usePro } from '../hooks/usePro';
 import { usePaystackCheckout } from '../hooks/usePaystackCheckout';
+import { useScholarshipOffer } from '../hooks/useScholarshipOffer';
 import CheckoutAuthModal from '../components/CheckoutAuthModal';
 import StudentCheckoutModal from '../components/StudentCheckoutModal';
 import AgentsLiveFlowDiagram from '../components/AgentsLiveFlowDiagram';
@@ -17,6 +18,7 @@ import AgentBuildTestimonials from '../components/AgentBuildTestimonials';
 import { usePageSeo } from '../hooks/usePageSeo';
 import { nextAiMasteryCohortStart, formatCohortRange } from '../data/aiMasteryCohort';
 import { useAuth } from '../context/AuthContext';
+import { SCHOLARSHIP_PRICE_NAIRA, isScholarshipOpen } from '../data/scholarship';
 import {
   AI_AGENT_MASTERY_PRICE, AI_AGENT_MASTERY_STUDENT_PRICE, STUDENT_EMAIL_DOMAIN, isStudentEmail,
 } from '../data/pricing';
@@ -264,7 +266,14 @@ export default function AIAgentMastery() {
   // Mirrors the server rule (create-paystack-checkout): the signed-in
   // account must have a confirmed BYU-Pathway address. Display only.
   const isStudent = !!user?.email_confirmed_at && isStudentEmail(user.email);
-  const price = isStudent ? AI_AGENT_MASTERY_STUDENT_PRICE : AI_AGENT_MASTERY_PRICE;
+  // Approved scholarship applicant (non-BYU), signed in with the applied email.
+  // Display only — create-paystack-checkout decides what is actually charged.
+  const hasScholarship = useScholarshipOffer() && !isStudent;
+  const price = isStudent
+    ? AI_AGENT_MASTERY_STUDENT_PRICE
+    : hasScholarship
+      ? SCHOLARSHIP_PRICE_NAIRA
+      : AI_AGENT_MASTERY_PRICE;
 
   usePageSeo({
     title: 'AI Agent Mastery | Social Dev Technologies',
@@ -567,13 +576,16 @@ export default function AIAgentMastery() {
             LIVE COHORT
           </span>
           <div className="font-display font-extrabold text-[36px] text-ink mt-2 mb-1">
-            {isStudent && (
+            {(isStudent || hasScholarship) && (
               <span className="text-lg font-bold text-body line-through mr-2">₦{AI_AGENT_MASTERY_PRICE.toLocaleString()}</span>
             )}
             ₦{price.toLocaleString()} <span className="text-base font-bold text-body">one-time</span>
           </div>
           {isStudent && (
             <p className="text-[12.5px] font-bold text-green mb-3">BYU-Pathway student price applied</p>
+          )}
+          {hasScholarship && (
+            <p className="text-[12.5px] font-bold text-green mb-3">Scholarship price applied</p>
           )}
           <span className="inline-flex items-center gap-1 bg-white dark:bg-[#141319] text-brand font-bold text-[12px] px-2.5 py-1 rounded-full w-fit mb-4">
             <CalendarDays className="w-3.5 h-3.5" /> Next cohort: <CohortRange />
@@ -621,6 +633,13 @@ export default function AIAgentMastery() {
                 Pay with my student email →
               </button>
             </div>
+          )}
+
+          {!hasAiMastery && !isStudent && !hasScholarship && isScholarshipOpen() && (
+            <p className="text-[13px] text-body mt-3">
+              Not a BYU-Pathway student?{' '}
+              <Link to="/scholarship" className="font-bold text-brand hover:underline">Apply for a scholarship →</Link>
+            </p>
           )}
 
           <p className="flex items-start gap-1.5 text-[12px] text-body mt-4">
