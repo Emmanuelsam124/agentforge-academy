@@ -59,7 +59,7 @@ const PAGES = {
       },
       {
         heading: '4. Cookies',
-        body: 'We use essential cookies for authentication (keeping you logged in). We do not use advertising or tracking cookies.',
+        body: 'We use essential cookies for authentication (keeping you logged in). We also use Google Analytics and the Meta (Facebook) Pixel to measure visits and the performance of our advertising; these may set cookies and share page-visit data with Google and Meta. You can block them with your browser settings or an ad blocker. We do not sell your personal data.',
       },
       {
         heading: '5. Your Rights',
