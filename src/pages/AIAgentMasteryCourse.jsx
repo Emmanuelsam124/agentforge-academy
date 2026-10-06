@@ -48,7 +48,7 @@ function JoinRoomCards() {
       <div className="flex items-center gap-2 mb-3">
         <Video className="w-4 h-4 text-brand" />
         <h2 className="font-display font-bold text-lg text-ink">Join room</h2>
-        <span className="text-xs text-body">Fri, Sat &amp; Sun · 7:00 PM WAT</span>
+        <span className="text-xs text-body">Fri, Sat &amp; Mon · 7:00 PM WAT</span>
       </div>
       <div className="grid sm:grid-cols-3 gap-4">
         {CLASS_DAYS.map((c, i) => (

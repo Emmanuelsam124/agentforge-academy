@@ -1,5 +1,6 @@
 // AI Agent Mastery runs as a rolling weekly cohort: every Friday, Saturday and
-// Sunday at 7:00 PM WAT, with the first cohort starting Friday 2026-10-09
+// Monday at 7:00 PM WAT (changed from Sunday on 2026-10-06; flip CLASS_DAY_OFFSETS
+// back to [0, 1, 2] to undo), with the first cohort starting Friday 2026-10-09
 // (founder-confirmed 2026-09-29). A cohort "begins" at its Friday 7 PM WAT
 // start; anyone who registers after that joins the following week's, so the
 // next cohort is always the first Friday-7PM at or after now, never a stale
@@ -20,26 +21,33 @@ export function nextAiMasteryCohortStart(now = Date.now()) {
   return new Date(FIRST_START_UTC + weeks * WEEK_MS);
 }
 
-// The three class evenings (Fri, Sat, Sun) of the cohort starting at `start`.
+// Days after the Friday start that each class evening falls on: Fri, Sat, Mon.
+const CLASS_DAY_OFFSETS = [0, 1, 3];
+
+// The three class evenings (Fri, Sat, Mon) of the cohort starting at `start`.
 export function aiMasteryCohortDays(start) {
-  return [0, 1, 2].map((i) => new Date(start.getTime() + i * DAY_MS));
+  return CLASS_DAY_OFFSETS.map((i) => new Date(start.getTime() + i * DAY_MS));
 }
 
 const fmtDay = (d, opts) => d.toLocaleDateString('en-GB', { timeZone: 'Africa/Lagos', ...opts });
 
-// e.g. "Fri 9 – Sun 11 October" (handles a cohort that spans two months).
+// e.g. "Fri 9, Sat 10 & Mon 12 October". The days aren't consecutive any more, so
+// they're listed rather than shown as a range; when the cohort spans two months
+// every day carries its own month ("Fri 30 October, Sat 31 October & Mon 2 November").
 export function formatCohortRange(start) {
-  const [first, , last] = aiMasteryCohortDays(start);
-  const sameMonth = fmtDay(first, { month: 'long' }) === fmtDay(last, { month: 'long' });
-  const a = fmtDay(first, { weekday: 'short', day: 'numeric', ...(sameMonth ? {} : { month: 'long' }) });
-  const b = fmtDay(last, { weekday: 'short', day: 'numeric', month: 'long' });
-  return `${a} – ${b}`;
+  const days = aiMasteryCohortDays(start);
+  const months = days.map((d) => fmtDay(d, { month: 'long' }));
+  const sameMonth = months.every((m) => m === months[0]);
+  const parts = days.map((d, i) =>
+    fmtDay(d, { weekday: 'short', day: 'numeric', ...(sameMonth && i < days.length - 1 ? {} : { month: 'long' }) }),
+  );
+  return `${parts.slice(0, -1).join(', ')} & ${parts[parts.length - 1]}`;
 }
 
 // The cohort a signed-in student should see on their dashboard: the one
-// currently running (from its Friday 7 PM WAT start until the Sunday
-// evening's class is over, ~3 days), otherwise the next one.
-const RUNNING_MS = 2 * DAY_MS + 5 * 60 * 60 * 1000; // through Sunday midnight WAT
+// currently running (from its Friday 7 PM WAT start until the Monday
+// evening's class is over, ~4 days), otherwise the next one.
+const RUNNING_MS = 3 * DAY_MS + 5 * 60 * 60 * 1000; // through Monday midnight WAT
 export function dashboardCohortStart(now = Date.now()) {
   if (now >= FIRST_START_UTC) {
     const weeks = Math.floor((now - FIRST_START_UTC) / WEEK_MS);

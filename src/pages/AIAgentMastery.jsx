@@ -131,7 +131,7 @@ const FAQS = [
   { q: 'How long will I have access?', a: "The cohort runs over 3 live days — the third dedicated to monetizing your new skill — and you'll have access for 6 months to the classes, recordings, resources, and your project." },
 ];
 
-// Cohorts roll weekly (Fri/Sat/Sun 7 PM WAT, first one 9 Oct 2026) — see
+// Cohorts roll weekly (Fri/Sat/Mon 7 PM WAT, first one 9 Oct 2026) — see
 // src/data/aiMasteryCohort.js. These leaf components tick on their own so the
 // rest of the page doesn't re-render every second, and return null on the
 // server/prerender snapshot so a frozen date is never baked into the HTML
@@ -592,7 +592,7 @@ export default function AIAgentMastery() {
           </span>
           <ul className="flex flex-col gap-2.5 mb-6">
             {[
-              '3 live evenings (Fri, Sat, Sun at 7 PM WAT) — day 3 on monetizing your new skill',
+              '3 live evenings (Fri, Sat, Mon at 7 PM WAT) — day 3 on monetizing your new skill',
               '6 months access to classes, replays, and resources',
               'One integrated personal-assistant agent, built end to end',
               'Guardrails and safety checks built in from the start',
