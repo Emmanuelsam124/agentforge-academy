@@ -53,6 +53,8 @@ function ChannelRoom({ channel, currentUserId, isAdmin }) {
   const [replyTo, setReplyTo] = useState(null);
   const [sending, setSending] = useState(false);
   const [mentionSuggestions, setMentionSuggestions] = useState([]);
+  const [deletingId, setDeletingId] = useState(null);
+  const [deleteFailedId, setDeleteFailedId] = useState(null);
   const listEndRef = useRef(null);
   const textareaRef = useRef(null);
 
@@ -86,6 +88,15 @@ function ChannelRoom({ channel, currentUserId, isAdmin }) {
     setBody(next);
     setMentionSuggestions([]);
     textareaRef.current?.focus();
+  };
+
+  const handleDelete = async (id) => {
+    if (deletingId) return;
+    setDeletingId(id);
+    setDeleteFailedId(null);
+    const { error: deleteErr } = await deleteMessage(id);
+    setDeletingId(null);
+    if (deleteErr) setDeleteFailedId(id);
   };
 
   const handleSend = async (e) => {
@@ -165,10 +176,15 @@ function ChannelRoom({ channel, currentUserId, isAdmin }) {
                     {canDelete && (
                       <button
                         type="button"
-                        onClick={() => deleteMessage(m.id)}
-                        className="flex items-center gap-1 text-[11px] font-semibold text-gray-400 hover:text-rose-600"
+                        onClick={() => handleDelete(m.id)}
+                        disabled={deletingId === m.id}
+                        className={`flex items-center gap-1 text-[11px] font-semibold hover:text-rose-600 disabled:opacity-60 ${deleteFailedId === m.id ? 'text-rose-600' : 'text-gray-400'}`}
                       >
-                        <Trash2 className="w-3 h-3" /> Delete
+                        {deletingId === m.id ? (
+                          <><Loader2 className="w-3 h-3 animate-spin" /> Deleting…</>
+                        ) : (
+                          <><Trash2 className="w-3 h-3" /> {deleteFailedId === m.id ? "Couldn't delete — retry" : 'Delete'}</>
+                        )}
                       </button>
                     )}
                   </div>
