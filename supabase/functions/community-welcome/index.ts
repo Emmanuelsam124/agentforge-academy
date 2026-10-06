@@ -309,15 +309,16 @@ async function ensureBotUser(existingId: string | null): Promise<string | null> 
 async function handleTrigger(record: MessageRecord) {
   const { data: s } = await sb
     .from('community_bot_settings')
-    .select('enabled, support_enabled, bot_user_id, extra_instructions')
+    .select('enabled, support_enabled, test_mode, bot_user_id, extra_instructions')
     .eq('id', 1)
     .maybeSingle();
   if (!s || !(s.enabled || s.support_enabled)) return;
   if (s.bot_user_id && record.user_id === s.bot_user_id) return;
 
-  // Staff posting in a room doesn't need a welcome or a ticket.
+  // Staff posting in a room doesn't need a welcome or a ticket — unless test mode is
+  // on, which lets an admin try the assistant from their own account.
   const { data: ent } = await sb.from('entitlements').select('is_admin').eq('user_id', record.user_id).maybeSingle();
-  if (ent?.is_admin) return;
+  if (ent?.is_admin && !s.test_mode) return;
 
   const [{ data: profile }, { data: channel }] = await Promise.all([
     sb.from('profiles').select('display_name, email').eq('id', record.user_id).maybeSingle(),

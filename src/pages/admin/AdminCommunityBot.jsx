@@ -52,6 +52,7 @@ export default function AdminCommunityBot() {
   const [saving, setSaving] = useState(false);
   const [enabled, setEnabled] = useState(false);
   const [supportEnabled, setSupportEnabled] = useState(false);
+  const [testMode, setTestMode] = useState(false);
   const [instructions, setInstructions] = useState('');
   const [stats, setStats] = useState({ total: 0, recent: [], openTickets: 0 });
 
@@ -72,6 +73,7 @@ export default function AdminCommunityBot() {
       else if (data) {
         setEnabled(!!data.enabled);
         setSupportEnabled(!!data.support_enabled);
+        setTestMode(!!data.test_mode);
         setInstructions(data.extra_instructions || '');
         setStats({ total: data.total_welcomes ?? 0, recent: data.recent || [], openTickets: data.open_tickets ?? 0 });
       }
@@ -104,17 +106,20 @@ export default function AdminCommunityBot() {
   const save = async (next = {}) => {
     const nextEnabled = next.enabled ?? enabled;
     const nextSupport = next.supportEnabled ?? supportEnabled;
+    const nextTest = next.testMode ?? testMode;
     setSaving(true);
     setError('');
     const { error: err } = await supabase.rpc('admin_set_community_bot', {
       p_enabled: nextEnabled,
       p_support_enabled: nextSupport,
+      p_test_mode: nextTest,
       p_instructions: instructions,
     });
     if (err) setError(err.message || 'Could not save.');
     else {
       setEnabled(nextEnabled);
       setSupportEnabled(nextSupport);
+      setTestMode(nextTest);
       showToast('Saved.');
     }
     setSaving(false);
@@ -190,6 +195,14 @@ export default function AdminCommunityBot() {
           on={enabled}
           busy={saving}
           onToggle={() => save({ enabled: !enabled })}
+        />
+        <div className="border-t border-border-soft" />
+        <Switch
+          label="Test mode"
+          hint={testMode ? 'On — your own (staff) messages are treated like a student’s, so you can try it. Turn off when done.' : 'Off — staff messages are ignored.'}
+          on={testMode}
+          busy={saving}
+          onToggle={() => save({ testMode: !testMode })}
         />
       </div>
 
