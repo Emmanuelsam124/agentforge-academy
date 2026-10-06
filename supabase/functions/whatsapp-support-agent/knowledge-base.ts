@@ -58,7 +58,7 @@ Auto-issued, no request needed
 Come with a public verification link
 
 LIVE COHORTS (instructor-led, real classes, a fixed group of students)
-AI Agent Mastery | ₦19,999, one-time | 3 live evenings (Friday, Saturday, Sunday) at 7:00pm WAT, third day on monetizing the skill | a new cohort starts every week, first one Friday 9 October 2026; someone who pays after a cohort has begun joins the following week's | build one integrated personal-assistant agent: inbox, calendar, research, messaging | doing Builder 2 first helps, not required | page: https://socialdevtechnologies.com/ai-agent-mastery
+AI Agent Mastery | ₦19,999, one-time | 3 live evenings (Friday, Saturday, Monday) at 7:00pm WAT, third day on monetizing the skill | a new cohort starts every week, first one Friday 9 October 2026; someone who pays after a cohort has begun joins the following week's | build one integrated personal-assistant agent: inbox, calendar, research, messaging | doing Builder 2 first helps, not required | page: https://socialdevtechnologies.com/ai-agent-mastery
 Vibe Coding Bootcamp | ₦50,000, one-time | 4 weeks, 8 live classes | from an idea to a deployed website, web app, and AI-powered product | no coding experience required | builds include a portfolio site, to-do app, Supabase CRUD app | page: https://socialdevtechnologies.com/vibe-coding
 
 TRUE OF BOTH LIVE COHORTS (AI Agent Mastery, Vibe Coding Bootcamp)
