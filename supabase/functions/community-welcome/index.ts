@@ -281,9 +281,12 @@ async function handleSupport(
 // The assistant is an ordinary account flagged is_admin, which is what makes
 // has_community_membership() true for every room (so its name resolves in
 // community_channel_members). Random password, never shown, never used to sign in.
+// The project's password policy wants a lowercase, an uppercase, a digit and a symbol,
+// so two plain UUIDs (lowercase hex only) are rejected and the account never gets
+// created; the fixed tail guarantees every class. 36 + 32 + 4 = 72, bcrypt's limit.
 async function ensureBotUser(existingId: string | null): Promise<string | null> {
   if (existingId) return existingId;
-  const password = crypto.randomUUID() + crypto.randomUUID();
+  const password = `${crypto.randomUUID()}${crypto.randomUUID().replaceAll('-', '').toUpperCase()}aA1!`;
   const { data, error } = await sb.auth.admin.createUser({
     email: BOT_EMAIL,
     password,
