@@ -31,7 +31,6 @@ serve(async (req) => {
 
     const email = escapeHtml(record.email ?? 'unknown');
     const name = escapeHtml(record.display_name ?? record.email ?? 'unknown');
-    const isBYU = record.is_byu_student ? ' 🎓 BYU Pathway student' : '';
     const joined = new Date(record.created_at).toLocaleString('en-GB', {
       dateStyle: 'medium', timeStyle: 'short',
     });
@@ -41,7 +40,7 @@ serve(async (req) => {
         <h2 style="color:#0067B8;margin-bottom:8px;">🎉 New user joined Social Dev Technologies</h2>
         <table style="width:100%;border-collapse:collapse;">
           <tr><td style="padding:8px 0;color:#666;width:120px;">Name</td><td style="padding:8px 0;font-weight:600;">${name}</td></tr>
-          <tr><td style="padding:8px 0;color:#666;">Email</td><td style="padding:8px 0;font-weight:600;">${email}${isBYU}</td></tr>
+          <tr><td style="padding:8px 0;color:#666;">Email</td><td style="padding:8px 0;font-weight:600;">${email}</td></tr>
           <tr><td style="padding:8px 0;color:#666;">Joined</td><td style="padding:8px 0;">${joined}</td></tr>
         </table>
         <a href="https://socialdevtechnologies.com/admin" style="display:inline-block;margin-top:16px;background:#7C3AED;color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:600;">

@@ -1,11 +1,11 @@
-// AI Agent Mastery scholarship application (non-BYU-Pathway applicants) —
+// AI Agent Mastery scholarship application —
 // display-side settings and form rules. The SERVER decides everything that
 // matters: the deadline is enforced by submit-scholarship-application
 // (SCHOLARSHIP_CLOSES_AT secret) and the price/expiry by create-paystack-checkout
 // and paystack-webhook (SCHOLARSHIP_PRICE_NAIRA / SCHOLARSHIP_EXPIRES_AT secrets).
 // These constants only pick which page/copy to render, so if you change a secret,
 // change the matching VITE_ value (or the default below) too — the same "keep in
-// step" arrangement as AI_AGENT_MASTERY_STUDENT_PRICE.
+// step" arrangement as the server's price constants.
 
 const toNumber = (value, fallback) => {
   const n = Number(String(value ?? '').trim());

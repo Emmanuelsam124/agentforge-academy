@@ -50,13 +50,7 @@ const UPGRADE_PRICES = {
   builder2: PRICES.pro - PRICES.builder2, // owns Builder 2 -> unlocks Builder 1
 };
 
-// aimastery discount for verified BYU-Pathway students (2026-09-29).
-// paystack-webhook's MULTI_TIER_PRICES.aimastery must accept this amount.
-const AIMASTERY_STUDENT_PRICE = 10000;
-const STUDENT_EMAIL_DOMAIN = '@byupathway.edu';
-
-// aimastery scholarship price for people who are NOT BYU-Pathway students and
-// have an approved application (2026-10-05, supabase/scholarship-applications.sql;
+// aimastery scholarship price for people who have an approved application (2026-10-05, supabase/scholarship-applications.sql;
 // the /scholarship form approves automatically by default). Two Supabase secrets
 // with these defaults — paystack-webhook reads SCHOLARSHIP_PRICE_NAIRA too, so
 // whatever is charged here is an amount it recognises:
@@ -148,44 +142,23 @@ serve(async (req) => {
     return jsonResponse({ error: 'Invalid JSON body' }, 400);
   }
 
-  const { plan, redirectOrigin, studentDiscount } = body;
+  const { plan, redirectOrigin } = body;
   if (typeof plan !== 'string' || (plan !== 'proupgrade' && !Object.hasOwn(PRICES, plan))) {
     return jsonResponse({ error: 'Unknown plan' }, 400);
-  }
-
-  // BYU-Pathway discount: only ever from the JWT-verified user record, never
-  // from anything the client sends. email_confirmed_at is set once the
-  // emailed code (or Google) has proven they control the address, which is
-  // the same verification every other purchase relies on. Applies whenever
-  // an eligible account buys aimastery; the client's studentDiscount flag
-  // only decides whether an ineligible account gets a clear error (it
-  // asked for the discount) or just the normal price.
-  const isVerifiedStudent =
-    !!user.email_confirmed_at &&
-    (user.email ?? '').trim().toLowerCase().endsWith(STUDENT_EMAIL_DOMAIN);
-  if (plan === 'aimastery' && studentDiscount === true && !isVerifiedStudent) {
-    return jsonResponse(
-      { error: `The student price needs a verified ${STUDENT_EMAIL_DOMAIN} email. Sign in with that address and confirm the emailed code.` },
-      403,
-    );
   }
 
   const serviceClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
   let amountNaira = PRICES[plan];
-  if (plan === 'aimastery' && isVerifiedStudent) {
-    amountNaira = AIMASTERY_STUDENT_PRICE;
-  }
 
-  // Scholarship price (non-BYU applicants): same JWT-verified, email-CONFIRMED
-  // user as above, never anything the client sends. BYU students never reach
-  // this branch, so their flow is exactly as before. The application must be
+  // Scholarship price: the JWT-verified, email-CONFIRMED user, never anything
+  // the client sends. The application must be
   // approved and unredeemed and the offer unexpired; webhook redemption makes it
   // single-use. Math.min keeps a misconfigured price from ever exceeding the
   // normal one.
   let scholarshipId;
   if (
-    plan === 'aimastery' && !isVerifiedStudent && !!user.email_confirmed_at &&
+    plan === 'aimastery' && !!user.email_confirmed_at &&
     Date.now() < SCHOLARSHIP_EXPIRES_AT
   ) {
     scholarshipId = (await findApprovedScholarshipId(serviceClient, user.email)) ?? undefined;

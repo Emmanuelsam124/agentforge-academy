@@ -38,7 +38,7 @@ const AMOUNT_TOLERANCE = 1;
 // REFERRAL_COMMISSION_PERCENT in src/data/pricing.js (display copy).
 const REFERRAL_COMMISSION_RATE = 0.1;
 
-// Scholarship price for approved non-BYU applicants (2026-10-05). Same Supabase
+// Scholarship price for approved applicants (2026-10-05). Same Supabase
 // secret create-paystack-checkout reads, so whatever it charges is an amount this
 // webhook recognises. Unset or not a positive number -> 10000.
 const SCHOLARSHIP_PRICE_NAIRA = (() => {
@@ -49,12 +49,11 @@ const SCHOLARSHIP_PRICE_NAIRA = (() => {
 // Plans that have more than one valid price. resolvePlan() checks every price
 // in this list instead of the single PRICES[plan] value.
 const MULTI_TIER_PRICES = {
-  // Full price, the ₦10,000 BYU-Pathway student price, or the scholarship price
-  // (default ₦10,000 too). Eligibility is enforced at checkout creation
-  // (create-paystack-checkout: a verified @byupathway.edu email, or an approved
+  // Full price or the scholarship price (default ₦10,000). Eligibility is
+  // enforced at checkout creation (create-paystack-checkout: an approved
   // scholarship application) — only that function can start a discounted
   // aimastery charge, so the webhook just needs to recognise the amounts.
-  aimastery: [...new Set([19999, 10000, SCHOLARSHIP_PRICE_NAIRA])],
+  aimastery: [...new Set([19999, SCHOLARSHIP_PRICE_NAIRA])],
 };
 
 // Pro upgrade-by-difference (2026-10-04): a buyer who already owns ONE
@@ -174,7 +173,7 @@ function upgradeUpsell(plan) {
 //   a self-paced build queue), plus its prompt library.
 // - aimastery: live-taught like vibecoding, but no prompt-library bullet —
 //   this program has no equivalent reference-library table.
-function welcomeHtml(name, planLabel, cohortLines, plan, loginBlock = '') {
+function welcomeHtml(name, planLabel, cohortLines, plan) {
   const isPermanentGuides = plan === 'builder1' || plan === 'builder2' || plan === 'pro';
   let bullets;
   if (plan === 'vibecoding') {
@@ -203,7 +202,6 @@ function welcomeHtml(name, planLabel, cohortLines, plan, loginBlock = '') {
     <p style="font-size:15px;color:#3A3358;line-height:1.6;">
       ${accessLine}
     </p>
-    ${loginBlock}
     ${cohortLines}
     ${upgradeUpsell(plan)}
     <p style="font-size:15px;color:#3A3358;line-height:1.6;">A few things before you start:</p>
@@ -267,69 +265,6 @@ function resolvePlan(metadataPlan, amountNaira, currency) {
   }
   if (withinRange(PRICES.pro)) return 'pro';
   return null;
-}
-
-// BYU-Pathway "pay first" students (see create-student-checkout): they paid
-// without signing in, so there may be no account yet. Runs only after a
-// signature-verified, amount-checked successful payment. Finds the account by
-// email, or creates an UNCONFIRMED one (handle_new_user then adds the profile
-// + entitlements rows) — no session is ever issued to the payer, so the
-// mailbox owner is the only person who can get in.
-async function findOrCreateStudentUser(supabase, email) {
-  const lookup = async () => {
-    const { data } = await supabase.from('profiles').select('id').eq('email', email).limit(1);
-    return data?.[0]?.id ?? null;
-  };
-  const existing = await lookup();
-  if (existing) return existing;
-  const { data, error } = await supabase.auth.admin.createUser({
-    email,
-    email_confirm: false,
-    // needs_password: the dashboard shows a one-time "create your password"
-    // popup on their first login and clears this flag (SetPasswordModal).
-    user_metadata: { display_name: email.split('@')[0], is_byu_student: true, needs_password: true },
-  });
-  if (data?.user?.id) return data.user.id;
-  console.error('student createUser failed:', error?.message);
-  return await lookup(); // lost a race with a concurrent signup
-}
-
-// One-click login link for pay-first students. Points at /auth/confirm, which
-// only verifies when a person presses its button — mail scanners that pre-open
-// links would otherwise burn the one-time token. The emailed 6/8-digit code is
-// deliberately NOT shown: it shares that token, and typing it anywhere would
-// need a step the login page doesn't have (requesting a code there sends a new
-// one and invalidates this one), so it only confused people.
-async function studentLoginBlock(supabase, email) {
-  const safeEmail = escapeHtml(email);
-  const fallbackSteps = `
-    <p style="font-size:14px;color:#3A3358;line-height:1.6;">
-      To log in, go to <a href="https://socialdevtechnologies.com/welcome" style="color:#7C3AED;">socialdevtechnologies.com/welcome</a>,
-      choose <strong>“Log in with an emailed code instead”</strong>, enter <strong>${safeEmail}</strong>, and type the code we send you.
-    </p>`;
-  try {
-    const { data, error } = await supabase.auth.admin.generateLink({ type: 'magiclink', email });
-    const props = data?.properties;
-    if (error || !props?.hashed_token) {
-      return `<p style="font-size:15px;color:#3A3358;line-height:1.6;">Your account is under <strong>${safeEmail}</strong>. You'll create a password after your first login.</p>${fallbackSteps}`;
-    }
-    const link = `https://socialdevtechnologies.com/auth/confirm?token_hash=${encodeURIComponent(props.hashed_token)}&type=${encodeURIComponent(props.verification_type || 'magiclink')}`;
-    return `
-      <p style="font-size:15px;color:#3A3358;line-height:1.6;">
-        Your account is under <strong>${safeEmail}</strong>. Press the button to log in — you'll be asked to create a password right away,
-        so next time you can log in with your email and password:
-      </p>
-      <div style="text-align:center;margin:18px 0;">
-        <a href="${link}" style="display:inline-block;background:#7C3AED;color:#ffffff;padding:14px 32px;border-radius:10px;text-decoration:none;font-weight:800;font-size:16px;">Log in to my account</a>
-      </div>
-      <p style="font-size:13px;color:#8A82AD;line-height:1.6;">
-        The button works for about an hour. Later on (or if it has expired), you can always log in again with a fresh code:
-        go to socialdevtechnologies.com/welcome and choose “Log in with an emailed code instead” with ${safeEmail}.
-      </p>`;
-  } catch (err) {
-    console.error('studentLoginBlock failed:', err);
-    return `<p style="font-size:15px;color:#3A3358;line-height:1.6;">Your account is under <strong>${safeEmail}</strong>. You'll create a password after your first login.</p>${fallbackSteps}`;
-  }
 }
 
 // course_ids for each tier, used to expand a builder1/builder2/pro
@@ -421,17 +356,6 @@ serve(async (req) => {
       .eq('email', email)
       .limit(1);
     userId = users?.[0]?.id || null;
-  }
-
-  // BYU-Pathway pay-first path: no user id in metadata, just the address they
-  // typed. Re-validate it here (never trust the metadata shape alone) and
-  // only for aimastery, then find/create the account.
-  const studentEmail = String(payload.data?.metadata?.student_email ?? '').trim().toLowerCase();
-  const isStudentPayFirst =
-    !metadataUserId && plan === 'aimastery' && studentEmail.length <= 254 &&
-    /^[^\s@]+@byupathway\.edu$/.test(studentEmail);
-  if (!userId && isStudentPayFirst) {
-    userId = await findOrCreateStudentUser(supabase, studentEmail);
   }
 
   if (!userId) {
@@ -610,9 +534,7 @@ serve(async (req) => {
         const planLabel = PLAN_LABELS[effectivePlan] || effectivePlan;
         const cohortLines = await buildCohortLines(supabase, effectivePlan);
         const subject = `Welcome to ${planLabel} — you're in!`;
-        // Pay-first students have never logged in: give them the way in.
-        const loginBlock = isStudentPayFirst ? await studentLoginBlock(supabase, studentEmail) : '';
-        const ok = await sendResendEmail(recipientEmail, subject, emailShell(welcomeHtml(name, planLabel, cohortLines, effectivePlan, loginBlock)));
+        const ok = await sendResendEmail(recipientEmail, subject, emailShell(welcomeHtml(name, planLabel, cohortLines, effectivePlan)));
         if (ok) {
           await supabase.from('email_log').insert({
             user_id: userId,

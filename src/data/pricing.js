@@ -42,15 +42,6 @@ export const VIBECODING_PRICE = 50000;
 // (changed from 25000 to 19999, 2026-09-22).
 export const AI_AGENT_MASTERY_PRICE = 19999;
 
-// BYU-Pathway student discount on AI Agent Mastery (2026-09-29). Applied
-// server-side by create-paystack-checkout only when the signed-in account's
-// email is confirmed AND ends in this domain; this constant is for display,
-// and must move with that function's AIMASTERY_STUDENT_PRICE and the
-// webhook's MULTI_TIER_PRICES.aimastery.
-export const AI_AGENT_MASTERY_STUDENT_PRICE = 10000;
-export const STUDENT_EMAIL_DOMAIN = '@byupathway.edu';
-export const isStudentEmail = (email) => !!email && email.trim().toLowerCase().endsWith(STUDENT_EMAIL_DOMAIN);
-
 // Referral commission: a referrer earns this share of every qualifying payment
 // by someone they referred, for any product the referrer is enrolled in
 // (2026-09-30, replaced the flat ₦5,000). Display-only here — the payout itself

@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Routes, Route, Outlet, Navigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -9,7 +8,6 @@ import DashboardTopBar from '../components/dashboard/DashboardTopBar';
 import JumpBackInCard from '../components/dashboard/JumpBackInCard';
 import InstallBanner from '../components/dashboard/InstallBanner';
 import DashboardTour from '../components/dashboard/DashboardTour';
-import SetPasswordModal from '../components/dashboard/SetPasswordModal';
 import Home from './dashboard/Home';
 import LiveSessions from './dashboard/LiveSessions';
 import Replays from './dashboard/Replays';
@@ -31,18 +29,6 @@ export default function StudentDashboard({ progress, onSelectAgent }) {
   const { user, loading } = useAuth();
   const liveSessions = useLiveSessions(user);
   const hasUnreadCommunity = useCommunityUnread();
-  // Pay-first BYU students arrive without a password (paystack-webhook flags
-  // them with user_metadata.needs_password). "Maybe later" hides the popup for
-  // this browser session only, so it comes back next visit until they set one.
-  const [passwordDeferred, setPasswordDeferred] = useState(() => {
-    try {
-      return sessionStorage.getItem('sdt_password_prompt_deferred') === '1';
-    } catch {
-      return false;
-    }
-  });
-  const needsPassword = user?.user_metadata?.needs_password === true && !passwordDeferred;
-
   // Nothing here previously checked whether anyone was actually signed in —
   // /dashboard silently rendered this whole authenticated shell with blank/
   // empty data for a signed-out visitor, with no login form or link
@@ -93,19 +79,7 @@ export default function StudentDashboard({ progress, onSelectAgent }) {
         </div>
       </div>
       <DashboardMobileNav hasUnreadCommunity={hasUnreadCommunity} />
-      <SetPasswordModal
-        open={needsPassword}
-        email={user.email}
-        onLater={() => {
-          try {
-            sessionStorage.setItem('sdt_password_prompt_deferred', '1');
-          } catch {
-            // storage blocked — it just re-shows on the next visit
-          }
-          setPasswordDeferred(true);
-        }}
-      />
-      <DashboardTour userId={user.id} paused={needsPassword} />
+      <DashboardTour userId={user.id} />
     </div>
   );
 }
