@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { m } from 'framer-motion';
 import {
-  Users, Shield, Zap, GraduationCap, Search, RefreshCw, Download,
+  Users, Shield, Zap, Search, RefreshCw, Download,
   CheckCircle2, XCircle, Crown, AlertCircle, Loader2, Mail, ChevronDown, Sparkles,
   Filter, ArrowUpDown, Hammer, Rocket, Code2, Bot,
 } from 'lucide-react';
@@ -87,7 +87,7 @@ function toCsvValue(value) {
 
 function downloadUsersCsv(rows) {
   const headers = [
-    'Name', 'Email', 'Admin', 'Plan', 'BYU Student', 'XP',
+    'Name', 'Email', 'Admin', 'Plan', 'XP',
     'Completed Sessions', 'Builder 1 Expires', 'Builder 2 Expires', 'Joined',
   ];
   const lines = [headers.join(',')];
@@ -97,7 +97,6 @@ function downloadUsersCsv(rows) {
       toCsvValue(u.email || ''),
       toCsvValue(u.is_admin ? 'Yes' : 'No'),
       toCsvValue(u.is_admin ? '—' : planLabel(u)),
-      toCsvValue(u.is_byu_student ? 'Yes' : 'No'),
       toCsvValue(u.xp ?? 0),
       toCsvValue((u.completed || []).length),
       toCsvValue(u.builder1_expires_at ? new Date(u.builder1_expires_at).toISOString() : ''),
@@ -213,17 +212,6 @@ function UserRow({
             {(u.xp ?? 0).toLocaleString()} XP · {(u.completed || []).length} done
             <ChevronDown className={`w-3.5 h-3.5 transition-transform ${expanded ? 'rotate-180' : ''}`} />
           </button>
-        </td>
-
-        {/* BYU */}
-        <td className="px-5 py-4 hidden sm:table-cell">
-          {u.is_byu_student ? (
-            <span className="inline-flex items-center gap-1 text-xs font-bold bg-[#EAFAF1] dark:bg-green/10 text-green border border-green/20 px-2 py-0.5 rounded-full">
-              <GraduationCap className="w-3 h-3" /> BYU
-            </span>
-          ) : (
-            <span className="text-gray-300 text-xs">—</span>
-          )}
         </td>
 
         {/* Joined */}
@@ -362,7 +350,7 @@ function UserRow({
       </m.tr>
       {expanded && (
         <tr className="bg-[#FAF8FF] dark:bg-white/5">
-          <td colSpan={6} className="px-5 py-4">
+          <td colSpan={5} className="px-5 py-4">
             {(u.completed || []).length === 0 ? (
               <p className="text-xs text-gray-400">No completed sessions yet.</p>
             ) : (
@@ -665,7 +653,6 @@ export default function AdminUsers() {
                 <th className="text-left px-5 py-3.5 text-xs font-bold text-body uppercase tracking-wider">User</th>
                 <th className="text-left px-5 py-3.5 text-xs font-bold text-body uppercase tracking-wider">Plan</th>
                 <th className="text-left px-5 py-3.5 text-xs font-bold text-body uppercase tracking-wider">Progress</th>
-                <th className="text-left px-5 py-3.5 text-xs font-bold text-body uppercase tracking-wider hidden sm:table-cell">BYU</th>
                 <th className="text-left px-5 py-3.5 text-xs font-bold text-body uppercase tracking-wider hidden md:table-cell">Joined</th>
                 <th className="text-left px-5 py-3.5 text-xs font-bold text-body uppercase tracking-wider">Actions</th>
               </tr>
@@ -673,13 +660,13 @@ export default function AdminUsers() {
             <tbody className="divide-y divide-border-soft">
               {loading ? (
                 <tr>
-                  <td colSpan={6} className="px-5 py-12 text-center">
+                  <td colSpan={5} className="px-5 py-12 text-center">
                     <Loader2 className="w-6 h-6 animate-spin text-brand mx-auto" />
                   </td>
                 </tr>
               ) : filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-5 py-12 text-center text-gray-400">
+                  <td colSpan={5} className="px-5 py-12 text-center text-gray-400">
                     No users found.
                   </td>
                 </tr>

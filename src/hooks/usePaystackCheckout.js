@@ -2,7 +2,6 @@ import { useRef, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../lib/supabaseClient';
 import { invokeWithRetry } from '../lib/invokeFunction';
-import { isStudentEmail, STUDENT_EMAIL_DOMAIN } from '../data/pricing';
 
 /**
  * Starts a Paystack checkout via create-paystack-checkout and redirects to
@@ -19,13 +18,10 @@ import { isStudentEmail, STUDENT_EMAIL_DOMAIN } from '../data/pricing';
  * alongside its checkout button(s).
  */
 export function usePaystackCheckout() {
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
   const [loadingKey, setLoadingKey] = useState(null);
   const [error, setError] = useState('');
   const [authModalOpen, setAuthModalOpen] = useState(false);
-  // Passed to CheckoutAuthModal while a student-discount checkout waits on
-  // sign-in; undefined for normal checkouts.
-  const [requiredEmailDomain, setRequiredEmailDomain] = useState(undefined);
   // The plan/extra a checkout() call was made with, replayed once the auth
   // modal reports success — a ref rather than state since it's write-then-
   // read-once, never rendered.
@@ -44,7 +40,6 @@ export function usePaystackCheckout() {
       if (!session) {
         pendingRef.current = { plan, extra };
         setLoadingKey(null);
-        setRequiredEmailDomain(extra?.studentDiscount ? STUDENT_EMAIL_DOMAIN : undefined);
         setAuthModalOpen(true);
         return;
       }
@@ -75,22 +70,8 @@ export function usePaystackCheckout() {
   };
 
   const checkout = async (plan, extra = {}) => {
-    // Student-discount checkout: a signed-in account without a BYU-Pathway
-    // address can't get the price (the server would refuse it), so swap to
-    // the verify-your-student-email flow instead of a dead-end error. The
-    // server still makes the real eligibility call either way.
-    // Already signed in with a confirmed BYU address -> falls through and
-    // pays directly, no second verification.
-    if (extra.studentDiscount && user && !(isStudentEmail(user.email) && user.email_confirmed_at)) {
-      await signOut();
-      pendingRef.current = { plan, extra };
-      setRequiredEmailDomain(extra?.studentDiscount ? STUDENT_EMAIL_DOMAIN : undefined);
-      setAuthModalOpen(true);
-      return;
-    }
     if (!user) {
       pendingRef.current = { plan, extra };
-      setRequiredEmailDomain(extra?.studentDiscount ? STUDENT_EMAIL_DOMAIN : undefined);
       setAuthModalOpen(true);
       return;
     }
@@ -114,5 +95,5 @@ export function usePaystackCheckout() {
     setAuthModalOpen(false);
   };
 
-  return { checkout, loadingKey, error, setError, authModalOpen, requiredEmailDomain, closeAuthModal, handleAuthenticated };
+  return { checkout, loadingKey, error, setError, authModalOpen, closeAuthModal, handleAuthenticated };
 }

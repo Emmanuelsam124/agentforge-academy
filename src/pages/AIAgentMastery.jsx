@@ -1,5 +1,5 @@
-import { useEffect, useState, useSyncExternalStore } from 'react';
-import { Link, useLocation, useSearchParams } from 'react-router-dom';
+import { useEffect, useSyncExternalStore } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { m } from 'framer-motion';
 import {
   CheckCircle2, ArrowRight, CalendarDays, Info, CircleHelp, Loader2, AlertCircle,
@@ -9,7 +9,6 @@ import { usePro } from '../hooks/usePro';
 import { usePaystackCheckout } from '../hooks/usePaystackCheckout';
 import { useScholarshipOffer } from '../hooks/useScholarshipOffer';
 import CheckoutAuthModal from '../components/CheckoutAuthModal';
-import StudentCheckoutModal from '../components/StudentCheckoutModal';
 import AgentsLiveFlowDiagram from '../components/AgentsLiveFlowDiagram';
 import { DemoVideo, DemoLoop } from '../components/DemoMedia';
 import { DEMO_VIDEO, DEMO_LOOP } from '../data/demoMedia';
@@ -17,11 +16,8 @@ import InstructorSection from '../components/InstructorSection';
 import AgentBuildTestimonials from '../components/AgentBuildTestimonials';
 import { usePageSeo } from '../hooks/usePageSeo';
 import { nextAiMasteryCohortStart, formatCohortRange } from '../data/aiMasteryCohort';
-import { useAuth } from '../context/AuthContext';
 import { SCHOLARSHIP_PRICE_NAIRA, isScholarshipOpen } from '../data/scholarship';
-import {
-  AI_AGENT_MASTERY_PRICE, AI_AGENT_MASTERY_STUDENT_PRICE, STUDENT_EMAIL_DOMAIN, isStudentEmail,
-} from '../data/pricing';
+import { AI_AGENT_MASTERY_PRICE } from '../data/pricing';
 
 // This page sells ONE product: AI Agent Mastery. Same pattern as
 // VibeCoding.jsx — checkout is hardcoded to plan: 'aimastery', this page
@@ -246,34 +242,17 @@ export default function AIAgentMastery() {
   const { hasAiMastery } = usePro();
   const {
     checkout, loadingKey: checkoutLoading, error: checkoutError,
-    authModalOpen, requiredEmailDomain, closeAuthModal, handleAuthenticated,
+    authModalOpen, closeAuthModal, handleAuthenticated,
   } = usePaystackCheckout();
-  const { user } = useAuth();
-  const [studentModalOpen, setStudentModalOpen] = useState(false);
   const { hash } = useLocation();
   useEffect(() => {
     if (!hash) return undefined;
     return scrollToSection(hash.slice(1));
   }, [hash]);
-  // Paystack sends pay-first BYU students back here (create-student-checkout's
-  // callback_url), since they have no session to land on the dashboard with.
-  const [searchParams] = useSearchParams();
-  const justPaidStudent = searchParams.get('paid') === 'student';
-  // Paystack appends the transaction reference to callback_url; shown so a
-  // student who mistyped their email (or never got the login) can quote it
-  // and we can find their payment straight away.
-  const paymentReference = (searchParams.get('reference') || searchParams.get('trxref') || '').slice(0, 80);
-  // Mirrors the server rule (create-paystack-checkout): the signed-in
-  // account must have a confirmed BYU-Pathway address. Display only.
-  const isStudent = !!user?.email_confirmed_at && isStudentEmail(user.email);
-  // Approved scholarship applicant (non-BYU), signed in with the applied email.
+  // Approved scholarship applicant, signed in with the applied email.
   // Display only — create-paystack-checkout decides what is actually charged.
-  const hasScholarship = useScholarshipOffer() && !isStudent;
-  const price = isStudent
-    ? AI_AGENT_MASTERY_STUDENT_PRICE
-    : hasScholarship
-      ? SCHOLARSHIP_PRICE_NAIRA
-      : AI_AGENT_MASTERY_PRICE;
+  const hasScholarship = useScholarshipOffer();
+  const price = hasScholarship ? SCHOLARSHIP_PRICE_NAIRA : AI_AGENT_MASTERY_PRICE;
 
   usePageSeo({
     title: 'AI Agent Mastery | Social Dev Technologies',
@@ -283,18 +262,6 @@ export default function AIAgentMastery() {
 
   return (
     <div>
-      {justPaidStudent && (
-        <div className="bg-green/10 border-b border-green/30 text-center px-4 py-3 text-[13.5px] font-semibold text-body-strong">
-          Payment received — check your BYU-Pathway inbox for your login code. It can take a few minutes to arrive (check Junk too).
-          You can also log in any time at <Link to="/welcome" className="text-brand underline">socialdevtechnologies.com/welcome</Link> with “Log in with an emailed code”.
-          <span className="block mt-1.5 font-normal">
-            Wrong email, or nothing arrived after a while? Message us on{' '}
-            <a href="https://wa.me/2349066006963" target="_blank" rel="noreferrer" className="text-brand underline">WhatsApp</a>
-            {paymentReference ? <> with your payment reference: <span className="font-mono font-semibold">{paymentReference}</span></> : ' with the email you paid with'}.
-          </span>
-        </div>
-      )}
-
       {/* Hero */}
       <div
         className="relative overflow-hidden pt-16 pb-14 px-4 sm:px-6 lg:px-[5vw] text-center"
@@ -576,14 +543,11 @@ export default function AIAgentMastery() {
             LIVE COHORT
           </span>
           <div className="font-display font-extrabold text-[36px] text-ink mt-2 mb-1">
-            {(isStudent || hasScholarship) && (
+            {hasScholarship && (
               <span className="text-lg font-bold text-body line-through mr-2">₦{AI_AGENT_MASTERY_PRICE.toLocaleString()}</span>
             )}
             ₦{price.toLocaleString()} <span className="text-base font-bold text-body">one-time</span>
           </div>
-          {isStudent && (
-            <p className="text-[12.5px] font-bold text-green mb-3">BYU-Pathway student price applied</p>
-          )}
           {hasScholarship && (
             <p className="text-[12.5px] font-bold text-green mb-3">Scholarship price applied</p>
           )}
@@ -621,23 +585,8 @@ export default function AIAgentMastery() {
             </button>
           )}
 
-          {!hasAiMastery && !isStudent && (
-            <div className="mt-4 rounded-xl border border-brand/25 bg-white dark:bg-[#141319] px-4 py-3 text-[13px] text-body-strong">
-              <strong className="text-ink">BYU-Pathway student?</strong> Pay ₦{AI_AGENT_MASTERY_STUDENT_PRICE.toLocaleString()} instead — just enter your
-              {' '}{STUDENT_EMAIL_DOMAIN} email, pay, and we email your login after.{' '}
-              <button
-                type="button"
-                onClick={() => setStudentModalOpen(true)}
-                className="font-bold text-brand hover:underline"
-              >
-                Pay with my student email →
-              </button>
-            </div>
-          )}
-
-          {!hasAiMastery && !isStudent && !hasScholarship && isScholarshipOpen() && (
+          {!hasAiMastery && !hasScholarship && isScholarshipOpen() && (
             <p className="text-[13px] text-body mt-3">
-              Not a BYU-Pathway student?{' '}
               <Link to="/scholarship" className="font-bold text-brand hover:underline">Apply for a scholarship →</Link>
             </p>
           )}
@@ -671,8 +620,7 @@ export default function AIAgentMastery() {
         </div>
       </div>
 
-      <StudentCheckoutModal open={studentModalOpen} onClose={() => setStudentModalOpen(false)} />
-      <CheckoutAuthModal open={authModalOpen} onClose={closeAuthModal} onAuthenticated={handleAuthenticated} requiredEmailDomain={requiredEmailDomain} />
+      <CheckoutAuthModal open={authModalOpen} onClose={closeAuthModal} onAuthenticated={handleAuthenticated} />
     </div>
   );
 }

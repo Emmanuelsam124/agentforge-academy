@@ -21,7 +21,7 @@ const PAGES = {
       },
       {
         heading: '4. Payments & Subscriptions',
-        body: 'Pro subscriptions are billed monthly and can be cancelled at any time. Live class enrollments are one-time payments and are non-refundable after the cohort begins. BYU Pathway student discounts require a valid @byupathway.edu email address.',
+        body: 'Pro subscriptions are billed monthly and can be cancelled at any time. Live class enrollments are one-time payments and are non-refundable after the cohort begins.',
       },
       {
         heading: '5. Intellectual Property',
@@ -36,7 +36,7 @@ const PAGES = {
         body: 'The Platform is provided "as is" without warranties of any kind. We do not guarantee specific career outcomes, income increases, or employment from completing our courses.',
       },
       {
-        heading: '8. Contact',
+        heading: '7. Contact',
         body: 'For questions about these terms, contact us at support@socialdevtechnologies.com.',
       },
     ],
@@ -54,27 +54,23 @@ const PAGES = {
         body: 'We use your information to provide and improve the Platform, process payments, send account notifications, and inform admins of new registrations. If you start a checkout and do not complete it, we may send up to two reminder emails about that checkout. Starter-series emails are sent only after you confirm your address, and every one contains an unsubscribe link. We do not sell your personal data to third parties.',
       },
       {
-        heading: '3. BYU Pathway Email Addresses',
-        body: 'If you sign up with a @byupathway.edu email, we automatically flag your account for the student discount program. This flag is visible to Platform administrators only.',
-      },
-      {
-        heading: '4. Data Storage',
+        heading: '3. Data Storage',
         body: 'Your data is stored securely using Supabase, which uses industry-standard encryption. Payment processing is handled by Paystack — we do not store card details.',
       },
       {
-        heading: '5. Cookies',
+        heading: '4. Cookies',
         body: 'We use essential cookies for authentication (keeping you logged in). We do not use advertising or tracking cookies.',
       },
       {
-        heading: '6. Your Rights',
+        heading: '5. Your Rights',
         body: 'You may request deletion of your account and data at any time by emailing support@socialdevtechnologies.com. We will process requests within 30 days.',
       },
       {
-        heading: '7. Third-Party Services',
+        heading: '6. Third-Party Services',
         body: 'The Platform uses Supabase (authentication & database), Paystack (payment processing), and Resend (transactional email). Each has its own privacy policy.',
       },
       {
-        heading: '8. Contact',
+        heading: '7. Contact',
         body: 'For privacy concerns, contact us at support@socialdevtechnologies.com.',
       },
     ],

@@ -59,7 +59,6 @@ Come with a public verification link
 
 LIVE COHORTS (instructor-led, real classes, a fixed group of students)
 AI Agent Mastery | ₦19,999, one-time | 3 live evenings (Friday, Saturday, Sunday) at 7:00pm WAT, third day on monetizing the skill | a new cohort starts every week, first one Friday 9 October 2026; someone who pays after a cohort has begun joins the following week's | build one integrated personal-assistant agent: inbox, calendar, research, messaging | doing Builder 2 first helps, not required | page: https://socialdevtechnologies.com/ai-agent-mastery
-AI Agent Mastery student price | ₦10,000 instead of ₦19,999 | for BYU-Pathway students, using their @byupathway.edu email | on the AI Agent Mastery page they choose the student option, enter that address, pay, and the login is emailed to it afterwards | this is a fixed, published price, not a negotiated discount, so quoting it is fine | a person who mistyped their email or never received the login = a support issue, escalate
 Vibe Coding Bootcamp | ₦50,000, one-time | 4 weeks, 8 live classes | from an idea to a deployed website, web app, and AI-powered product | no coding experience required | builds include a portfolio site, to-do app, Supabase CRUD app | page: https://socialdevtechnologies.com/vibe-coding
 
 TRUE OF BOTH LIVE COHORTS (AI Agent Mastery, Vibe Coding Bootcamp)
@@ -103,9 +102,7 @@ export const ALWAYS_ESCALATE = `
   access") — the agent cannot see accounts or payments and must never guess.
 - Refund requests, chargebacks, or payment disputes.
 - Discounts, coupons, custom pricing, group/corporate rates, sponsorships,
-  scholarships, or any negotiation on price. (The published BYU-Pathway
-  student price above is a fixed fact you can state, not a discount to
-  negotiate.)
+  scholarships, or any negotiation on price.
 - Partnership, affiliate, referral-payout, press, or hiring enquiries.
 - Complaints, or anyone who sounds upset.
 - Legal, tax, invoicing, or compliance questions.

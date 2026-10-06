@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Loader2, AlertCircle, CheckCircle2, GraduationCap, Info, Lock } from 'lucide-react';
+import { Loader2, AlertCircle, CheckCircle2, GraduationCap, Lock } from 'lucide-react';
 import { usePageSeo } from '../hooks/usePageSeo';
 import { submitScholarshipApplication } from '../lib/scholarship';
 import {
@@ -14,7 +14,7 @@ import {
   isScholarshipOpen,
   validateScholarshipForm,
 } from '../data/scholarship';
-import { AI_AGENT_MASTERY_PRICE, STUDENT_EMAIL_DOMAIN } from '../data/pricing';
+import { AI_AGENT_MASTERY_PRICE } from '../data/pricing';
 
 const WHATSAPP_URL = 'https://wa.me/2349066006963';
 
@@ -168,14 +168,6 @@ export default function Scholarship() {
           Approved applicants join the live cohort for ₦{SCHOLARSHIP_PRICE_NAIRA.toLocaleString()} instead of ₦
           {AI_AGENT_MASTERY_PRICE.toLocaleString()}. Applications close {formatWatDateTime(SCHOLARSHIP_CLOSES_AT)}.
         </p>
-      </div>
-
-      <div className="rounded-xl border border-brand/25 bg-white dark:bg-[#141319] px-4 py-3 text-[13.5px] text-body-strong mb-5 flex items-start gap-2.5">
-        <Info className="w-4 h-4 text-brand mt-0.5 flex-shrink-0" />
-        <span>
-          <strong className="text-ink">BYU-Pathway student?</strong> You don't need this form. Use your{' '}
-          {STUDENT_EMAIL_DOMAIN} email at checkout.
-        </span>
       </div>
 
       <form onSubmit={submit} noValidate className={`${cardClass} p-6 sm:p-8 space-y-5`}>

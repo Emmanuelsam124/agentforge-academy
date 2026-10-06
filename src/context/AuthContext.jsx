@@ -34,7 +34,6 @@ export function AuthProvider({ children }) {
   // with an email they don't own.
   const signUp = useCallback(async (email, password, displayName) => {
     if (!isSupabaseConfigured) return { error: { message: 'Supabase is not configured.' } };
-    const isBYU = email.trim().toLowerCase().endsWith('@byupathway.edu');
     // referral_code rides along in metadata purely for handle_new_user()
     // (referrals-setup.sql) to read at insert time — it's never written to
     // profiles directly, and a missing/invalid/expired code here just means
@@ -45,7 +44,6 @@ export function AuthProvider({ children }) {
       options: {
         data: {
           display_name: displayName || email.split('@')[0],
-          is_byu_student: isBYU,
           referral_code: getStoredReferralCode() || undefined,
         },
       },
@@ -89,14 +87,6 @@ export function AuthProvider({ children }) {
     return supabase.auth.updateUser({ password: newPassword });
   }, []);
 
-  // First password for a pay-first BYU student (paystack-webhook creates the
-  // account with user_metadata.needs_password = true). Clearing that flag in
-  // the same call is what stops SetPasswordModal from showing again.
-  const setInitialPassword = useCallback(async (newPassword) => {
-    if (!isSupabaseConfigured) return { error: { message: 'Supabase is not configured.' } };
-    return supabase.auth.updateUser({ password: newPassword, data: { needs_password: false } });
-  }, []);
-
   const signInWithGoogle = useCallback(async () => {
     if (!isSupabaseConfigured) return { error: { message: 'Supabase is not configured.' } };
     return supabase.auth.signInWithOAuth({
@@ -129,14 +119,12 @@ export function AuthProvider({ children }) {
   // restored to prevent.
   const sendCheckoutCode = useCallback(async (email) => {
     if (!isSupabaseConfigured) return { error: { message: 'Supabase is not configured.' } };
-    const isBYU = email.trim().toLowerCase().endsWith('@byupathway.edu');
     return supabase.auth.signInWithOtp({
       email,
       options: {
         shouldCreateUser: true,
         data: {
           display_name: email.split('@')[0],
-          is_byu_student: isBYU,
           referral_code: getStoredReferralCode() || undefined,
         },
       },
@@ -155,7 +143,6 @@ export function AuthProvider({ children }) {
     verifyLoginCode,
     resetPassword,
     updatePassword,
-    setInitialPassword,
     signInWithGoogle,
     signOut,
   };
