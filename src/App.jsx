@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { LazyMotion, domAnimation } from 'framer-motion';
 import Navbar from './components/Navbar';
@@ -88,6 +88,17 @@ function AppShell() {
   const [selectedAgent, setSelectedAgent] = useState(null);
   const location = useLocation();
   const isWebinar = location.pathname === '/webinar';
+
+  // Meta Pixel (public/meta-pixel-init.js) reports the first page load itself.
+  // This is a single-page app, so every later route change needs its own PageView.
+  const pixelFirstRoute = useRef(true);
+  useEffect(() => {
+    if (pixelFirstRoute.current) {
+      pixelFirstRoute.current = false;
+      return;
+    }
+    if (typeof window.fbq === 'function') window.fbq('track', 'PageView');
+  }, [location.pathname]);
 
   // A referral link can land on any page, not just /welcome — capture it
   // here so browsing around before signing up doesn't lose attribution.
