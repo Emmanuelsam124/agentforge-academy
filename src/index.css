@@ -268,6 +268,8 @@ body {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+  /* The flow diagrams' travelling dots are SMIL, which the rule above does not stop. */
+  .flow-dot { display: none; }
 }
 
 /* Decorative photo-placeholder style used where real photography belongs */

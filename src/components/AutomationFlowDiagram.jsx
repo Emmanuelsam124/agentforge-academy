@@ -1,9 +1,14 @@
+import { useRef } from 'react';
 import { Mail, Bot, GitBranch, MessageSquare, FileText, Sparkles, Brain, Zap, Check } from 'lucide-react';
+import FlowDot from './FlowDot';
+import { useFlowPause } from '../hooks/useFlowPause';
 
-// One agent, one email: a drawing of the flow, not a live run. It is static on
-// purpose: solid arrows at rest, nothing pulsing or moving, and no made-up run
-// log or uptime claim (the old version had "Active", "Last run succeeded" and a
-// 24/7 line). The caption on the page says it is an illustration.
+// One agent, one email: a drawing of the flow, not a live run. The only motion
+// is a small dot that travels each connection in turn (email, agent, route,
+// then the two results), once every 6 seconds; nothing pulses, floats or glows,
+// and there is no made-up run log or uptime claim (the old version had "Active",
+// "Last run succeeded" and a 24/7 line). The caption on the page says it is an
+// illustration.
 //
 // Laid out on a 1000×440 grid shared by the SVG edges and the HTML nodes; node
 // sizes use cqw so both layers scale together with the container.
@@ -65,8 +70,11 @@ function Result({ x, y, text }) {
 }
 
 export default function AutomationFlowDiagram() {
+  const rootRef = useRef(null);
+  useFlowPause(rootRef);
   return (
     <div
+      ref={rootRef}
       role="img"
       aria-label="Diagram of one agent: a new Gmail email triggers an AI agent, which uses Gemini and memory to decide, then routes the task to send a Slack reply and log a task in Notion."
       className="relative rounded-2xl border border-border bg-surface overflow-x-auto"
@@ -86,6 +94,10 @@ export default function AutomationFlowDiagram() {
             <polygon points={arrow(728, 110)} />
             <polygon points={arrow(728, 330)} />
           </g>
+          <FlowDot d="M132 220H245" from={0.02} to={0.2} />
+          <FlowDot d="M415 220H513" from={0.26} to={0.44} />
+          <FlowDot d="M577 220H650V110H728" from={0.5} to={0.74} />
+          <FlowDot d="M577 220H650V330H728" from={0.5} to={0.74} />
         </svg>
 
         <Node x={100} y={220} icon={Mail} title="New email" sub="Gmail trigger" shape="rounded-[3.2cqw_1.3cqw_1.3cqw_3.2cqw]" badge />

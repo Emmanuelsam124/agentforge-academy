@@ -1,13 +1,18 @@
+import { useRef } from 'react';
 import { Send, MessageCircle, Bot, Sparkles, Brain, Zap, Check, Search, PenLine, ListChecks } from 'lucide-react';
+import FlowDot from './FlowDot';
+import { useFlowPause } from '../hooks/useFlowPause';
 
 // The AI Agent Mastery page's system diagram, drawn the same way as the
-// homepage's AutomationFlowDiagram: static, theme colours, solid arrows. Two
+// homepage's AutomationFlowDiagram: theme colours, solid arrows, and one small
+// dot that travels each connection in turn (the two channels into the agent,
+// then the agent out to the three board agents), once every 6 seconds. Two
 // message channels reach one agent (Day 1), which hands work to three agents
-// sharing a dashboard (Day 2). It used to loop (pulsing nodes, travelling
-// dots, floating chips) and carried a made-up run log ("Runs automatically,
-// 24/7", "Last run succeeded · 6 steps · 2.1s"); neither is a real agent, so
-// both are gone and the page captions it as an illustration. The component
-// keeps its old AgentsLive name; renaming it is churn with no user impact.
+// sharing a dashboard (Day 2). It used to pulse, float and glow, and carried a
+// made-up run log ("Runs automatically, 24/7", "Last run succeeded · 6 steps ·
+// 2.1s"); the pulsing and the log are gone, and the page captions it as an
+// illustration. The component keeps its old AgentsLive name; renaming it is
+// churn with no user impact.
 //
 // Laid out on a 1000×440 grid shared by the SVG edges and the HTML nodes; node
 // sizes use cqw so both layers scale together with the container.
@@ -89,9 +94,12 @@ function Result({ x, y, text }) {
 }
 
 export default function AgentsLiveFlowDiagram() {
+  const rootRef = useRef(null);
+  useFlowPause(rootRef);
   return (
     <>
       <div
+        ref={rootRef}
         role="img"
         aria-label="Diagram of the system you build: a message on Telegram or WhatsApp reaches your AI agent, which uses a model and memory and hands work to three agents on one shared dashboard. One researches, one drafts the reply, and one logs the task."
         className="relative rounded-2xl border border-border bg-surface overflow-x-auto"
@@ -122,6 +130,11 @@ export default function AgentsLiveFlowDiagram() {
               <polygon points={arrow(618, 220)} />
               <polygon points={arrow(618, 340)} />
             </g>
+            <FlowDot d="M127 130 C 185 130 185 196 237 196 H245" from={0.02} to={0.2} />
+            <FlowDot d="M127 310 C 185 310 185 244 237 244 H245" from={0.08} to={0.26} />
+            <FlowDot d="M415 196 C 500 196 530 100 610 100 H618" from={0.4} to={0.62} />
+            <FlowDot d="M415 220 H618" from={0.4} to={0.62} />
+            <FlowDot d="M415 244 C 500 244 530 340 610 340 H618" from={0.4} to={0.62} />
           </svg>
 
           <span
