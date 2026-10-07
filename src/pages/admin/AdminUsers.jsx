@@ -12,6 +12,7 @@ import { supabase } from '../../lib/supabaseClient';
 import { getAgentById } from '../../data/agents';
 import { getDifficulty } from '../../data/departments';
 
+import EmojiIcon from '../../components/EmojiIcon';
 function StatCard({ icon: Icon, label, value, color, tint }) {
   const { theme } = useTheme();
   return (
@@ -368,7 +369,7 @@ function UserRow({
                         className="w-2 h-2 rounded-full flex-shrink-0"
                         style={{ background: diff.color }}
                       />
-                      {completedAgent.emoji} {completedAgent.title}
+                      <EmojiIcon emoji={completedAgent.emoji} className="inline-block w-3.5 h-3.5 align-[-2px]" /> {completedAgent.title}
                     </span>
                   );
                 })}

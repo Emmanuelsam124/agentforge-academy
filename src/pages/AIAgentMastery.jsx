@@ -1,6 +1,5 @@
 import { useEffect, useSyncExternalStore } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { m } from 'framer-motion';
 import {
   CheckCircle2, ArrowRight, CalendarDays, Info, CircleHelp, Loader2, AlertCircle,
   Bot, Mail, Calendar, Search, MessageSquare, ShieldCheck, X, Zap, Timer,
@@ -19,6 +18,7 @@ import { nextAiMasteryCohortStart, formatCohortRange } from '../data/aiMasteryCo
 import { SCHOLARSHIP_PRICE_NAIRA, isScholarshipOpen } from '../data/scholarship';
 import { AI_AGENT_MASTERY_PRICE } from '../data/pricing';
 
+import { EmojiText } from '../components/EmojiIcon';
 // This page sells ONE product: AI Agent Mastery. Same pattern as
 // VibeCoding.jsx — checkout is hardcoded to plan: 'aimastery', this page
 // never offers the guides ladder or Vibe Coding.
@@ -268,49 +268,35 @@ export default function AIAgentMastery() {
         style={{ background: '#F6F8FB' }}
       >
         <div className="relative max-w-3xl mx-auto">
-          <m.span
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
+          <span
             className="inline-flex items-center gap-2 bg-white dark:bg-[#131E2F] border-[1.5px] border-border text-link font-bold text-[12.5px] px-4 py-2 rounded-full shadow-[0_3px_10px_rgba(15,26,42,.1)]"
           >
-            🤖 Live cohort — enrollment open
-          </m.span>
+            <EmojiText>🤖 Live cohort — enrollment open</EmojiText>
+          </span>
 
-          <m.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.05 }}
+          <p
             className="italic text-[14px] sm:text-[15px] text-body-strong max-w-lg mx-auto mt-5 leading-relaxed"
           >
             "In January of this year, I built my first AI agent to handle customer messages. Since then, it's done
             the work of a 3-person team and I haven't paid a single staff salary for those roles."
-          </m.p>
+          </p>
 
-          <m.h1
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
+          <h1
             className="font-display font-extrabold text-[32px] sm:text-[50px] leading-[1.08] text-ink tracking-[-1.5px] mt-5"
           >
             Build the Exact Multi-Agent System That Replaced My Business Overhead
             {' '}<span className="text-link">— Live, in 3 Days.</span>
-          </m.h1>
+          </h1>
 
-          <m.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
+          <p
             className="text-[17px] leading-relaxed text-body mt-5 max-w-lg mx-auto"
           >
             Stop copying tutorials that break. Join us <strong className="text-body-strong"><CohortRange /></strong> to
             connect your own AI agents to Telegram and WhatsApp, build a multi-agent dashboard, and cut repetitive
             manual work for good — even if you've never coded before.
-          </m.p>
+          </p>
 
-          <m.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
+          <div
             className="flex flex-col sm:flex-row gap-3.5 items-center justify-center mt-8"
           >
             <a
@@ -323,7 +309,7 @@ export default function AIAgentMastery() {
             <a href="#demo" className="text-body-strong font-bold text-[14.5px] hover:text-link transition-colors">
               Watch it in action ↓
             </a>
-          </m.div>
+          </div>
 
           <CohortCountdown />
         </div>

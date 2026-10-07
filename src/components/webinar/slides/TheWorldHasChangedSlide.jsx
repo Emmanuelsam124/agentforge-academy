@@ -1,6 +1,7 @@
 import { m } from 'framer-motion';
 import SlideShell from '../SlideShell';
 
+import EmojiIcon from '../../EmojiIcon';
 const WANTS = ['More money', 'More time', 'A better job', 'A growing business', 'To stay ahead'];
 
 // Tiny illustrative scenes, not claimed-as-real case studies (those live in
@@ -74,7 +75,7 @@ export default function TheWorldHasChangedSlide() {
                 : 'bg-white/[0.06] border border-white/10 px-5 py-3.5'
             }`}
           >
-            <span className={i === 0 ? 'text-2xl flex-shrink-0' : 'text-xl flex-shrink-0'}>{scene.icon}</span>
+            <EmojiIcon emoji={scene.icon} className={i === 0 ? 'w-6 h-6 text-link flex-shrink-0' : 'w-5 h-5 text-link flex-shrink-0'} />
             <span className={`text-[#E2EAF3] leading-relaxed ${i === 0 ? 'text-[14.5px] font-medium' : 'text-[13px]'}`}>{scene.text}</span>
           </m.div>
         ))}

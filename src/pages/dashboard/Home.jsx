@@ -86,7 +86,7 @@ export default function Home() {
   return (
     <div>
       <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-ink mb-6">
-        Hey {displayName} 👋
+        Hey {displayName}
       </h1>
 
       {nextSession && (

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronRight, Copy, Check, ChevronDown, ExternalLink } from 'lucide-react';
 
+import EmojiIcon, { EmojiText } from '../components/EmojiIcon';
 const STEPS = [
   { eyebrow: 'Intro', label: 'Session Intro', time: '11 min' },
   { eyebrow: 'Build 1', label: 'Vibe-Code Portfolio', time: '15 min' },
@@ -40,7 +41,7 @@ function Callout({ type = 'info', icon, children }) {
   };
   return (
     <div className={`flex gap-3 rounded-xl p-4 mb-4 ${styles[type]}`}>
-      <span className="text-xl leading-snug flex-shrink-0">{icon}</span>
+      <EmojiIcon emoji={icon} className="w-5 h-5 mt-0.5 flex-shrink-0" />
       <div className="text-sm text-ink leading-relaxed">{children}</div>
     </div>
   );
@@ -129,7 +130,7 @@ function GoFurther({ label, children }) {
         <div>
           <span className="text-[10px] font-bold uppercase tracking-widest text-link mr-2">Go further</span>
           <span className="text-sm font-semibold text-ink">{label}</span>
-          <span className="ml-2 text-body text-xs">🛠️🛠️🛠️</span>
+          <span className="ml-2 text-body text-xs"><EmojiText>🛠️🛠️🛠️</EmojiText></span>
         </div>
         <ChevronDown className={`w-4 h-4 text-link flex-shrink-0 transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>

@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import { m } from 'framer-motion';
 import {
   CheckCircle2, X, Briefcase, Repeat, Building2, ChevronRight, Info,
   MessageCircle, Hammer, CircleHelp, ArrowRight, Zap, Infinity as InfinityIcon,
@@ -12,6 +11,7 @@ import { levels } from '../data/departments';
 import { BUILDER1_PRICE, BUILDER2_PRICE, PRO_PRICE } from '../data/pricing';
 import { usePageSeo } from '../hooks/usePageSeo';
 
+import EmojiIcon, { EmojiText } from '../components/EmojiIcon';
 // Content below is adapted from the /webinar deck's narrative (same offer,
 // same honest framing, same real proof points) rebuilt as a scrollable
 // sales landing page for cold ad traffic rather than a live presentation —
@@ -153,46 +153,27 @@ export default function AIBuilder() {
         className="relative overflow-hidden pt-16 pb-14 px-4 sm:px-6 lg:px-[5vw] text-center"
         style={{ background: '#F6F8FB' }}
       >
-        <div
-          className="absolute top-10 right-[12%] w-[130px] h-[130px] bg-yellow opacity-40 animate-floaty pointer-events-none hidden sm:block"
-          style={{ borderRadius: '38% 62% 63% 37% / 41% 44% 56% 59%' }}
-        />
-        <div
-          className="absolute bottom-8 left-[10%] w-[80px] h-[80px] bg-emerald-400 opacity-30 animate-floaty pointer-events-none hidden sm:block"
-          style={{ borderRadius: '50%', animationDelay: '.5s' }}
-        />
         <div className="relative max-w-3xl mx-auto">
-          <m.span
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
+          <span
             className="inline-flex items-center gap-2 bg-white dark:bg-[#131E2F] border-[1.5px] border-border text-link font-bold text-[12.5px] px-4 py-2 rounded-full shadow-[0_3px_10px_rgba(15,26,42,.1)]"
           >
             🚀 Enrollment open now
-          </m.span>
+          </span>
 
-          <m.h1
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
+          <h1
             className="font-display font-extrabold text-[36px] sm:text-[54px] leading-[1.05] text-ink tracking-[-1.5px] mt-5"
           >
             Become an <span className="text-link">AI Builder.</span>
-          </m.h1>
+          </h1>
 
-          <m.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
+          <p
             className="text-[17px] leading-relaxed text-body mt-5 max-w-lg mx-auto"
           >
             AI Agent Guides — <span>{builder1Count + builder2Count}</span> real AI agent sessions, permanent access.
             Everything you need to stop using AI and start building with it — no coding experience required.
-          </m.p>
+          </p>
 
-          <m.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
+          <div
             className="flex flex-col sm:flex-row gap-3.5 items-center justify-center mt-8"
           >
             <Link
@@ -204,23 +185,20 @@ export default function AIBuilder() {
             <a href="#what-you-build" className="text-body-strong font-bold text-[14.5px] hover:text-link transition-colors">
               See what you'll build ↓
             </a>
-          </m.div>
+          </div>
 
-          <m.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.45 }} className="flex flex-wrap justify-center gap-x-5 gap-y-1.5 mt-6 text-[13px] text-body font-semibold">
+          <div className="flex flex-wrap justify-center gap-x-5 gap-y-1.5 mt-6 text-[13px] text-body font-semibold">
             <span><span>{builder1Count + builder2Count}</span> sessions</span>
             <span>·</span>
             <span>Permanent access</span>
             <span>·</span>
             <span>One-time payment, no subscription</span>
-          </m.div>
+          </div>
 
           {/* Demo video. YouTubeFacade, not a raw iframe — the embed pulls
               ~1.5MB of third-party JS on sight, and this page is an ad
               landing page where load time is the conversion. */}
-          <m.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.55 }}
+          <div
             className="mt-9 max-w-2xl mx-auto"
           >
             <div className="relative h-[200px] sm:h-[280px] lg:h-[340px] rounded-[22px] overflow-hidden shadow-[0_24px_50px_-18px_rgba(15,26,42,.4)] bg-[#0F1A2A]">
@@ -233,7 +211,7 @@ export default function AIBuilder() {
               />
             </div>
             <p className="text-[12.5px] text-body mt-3">Watch what you'll actually be building — 2 minutes.</p>
-          </m.div>
+          </div>
         </div>
       </div>
 
@@ -258,7 +236,7 @@ export default function AIBuilder() {
           <div className="flex flex-col gap-2.5 text-left">
             {SCENES.map((scene) => (
               <div key={scene.text} className="flex items-center gap-3.5 bg-white/[0.06] border border-white/10 rounded-2xl px-5 py-4">
-                <span className="text-xl flex-shrink-0">{scene.icon}</span>
+                <EmojiIcon emoji={scene.icon} className="w-5 h-5 text-link flex-shrink-0" />
                 <span className="text-[#E2EAF3] text-[13.5px] leading-relaxed">{scene.text}</span>
               </div>
             ))}
@@ -354,7 +332,7 @@ export default function AIBuilder() {
               {agent.slug === 'whatsapp-auto-reply-bot' && (
                 <span className="absolute -top-1.5 -right-1.5 text-[8px] font-extrabold uppercase tracking-wide text-white bg-rose rounded-full px-1.5 py-0.5">Free guide</span>
               )}
-              <span className="text-xl">{agent.emoji}</span>
+              <EmojiIcon emoji={agent.emoji} className="w-5 h-5 text-link" />
               <span className="text-[10.5px] font-bold text-body-strong leading-tight">{agent.title}</span>
             </div>
           ))}
@@ -372,7 +350,7 @@ export default function AIBuilder() {
           {TRACKS.map((track, i) => (
             <div key={track.title} className="flex items-center gap-3 flex-1">
               <div className={`bg-white dark:bg-[#131E2F] border ${track.border} rounded-2xl p-5 w-full text-left`}>
-                <span className={`inline-flex items-center gap-1.5 font-bold text-[11px] px-2.5 py-1 rounded-full mb-3 ${track.tagClass}`}>{track.tag}</span>
+                <span className={`inline-flex items-center gap-1.5 font-bold text-[11px] px-2.5 py-1 rounded-full mb-3 ${track.tagClass}`}><EmojiText>{track.tag}</EmojiText></span>
                 <h3 className="font-display font-extrabold text-base text-ink mb-1.5">{track.title}</h3>
                 <p className="text-[12.5px] text-body leading-relaxed">{track.text}</p>
               </div>
@@ -500,7 +478,7 @@ export default function AIBuilder() {
               className={`flex flex-col items-center gap-2 rounded-2xl px-5 py-5 ${i === 1 ? 'bg-brand text-white shadow-[0_16px_36px_-12px_rgba(15,26,42,.5)]' : 'bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft'}`}
               style={{ minWidth: 110 }}
             >
-              <span className="text-3xl">{level.icon}</span>
+              <EmojiIcon emoji={level.icon} className="w-8 h-8 text-link" />
               <span className={`font-display font-extrabold text-sm ${i === 1 ? 'text-white' : 'text-ink'}`}>{level.name}</span>
               {i === 1 && <span className="text-[10px] font-bold uppercase tracking-wide bg-white/20 rounded-full px-2 py-0.5">You start here</span>}
             </div>

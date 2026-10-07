@@ -8,6 +8,7 @@ import { departments } from '../../data/departments';
 import SharePanel from '../../components/admin/SharePanel';
 import ImageUploadField from '../../components/admin/ImageUploadField';
 
+import EmojiIcon from '../../components/EmojiIcon';
 // body_blocks <-> plain text, same spirit as AdminEmails.jsx's
 // plainTextToHtml — admins edit plain text, not a raw block-JSON editor.
 // "## " starts a heading, "> " a quote, a run of "- " lines a list,
@@ -88,7 +89,7 @@ function EditForm({ draft, onSave, onCancel, saving }) {
             }`}
             style={departmentIds.includes(d.id) ? { background: `${d.color}1A`, color: d.color } : {}}
           >
-            {d.icon} {d.name}
+            <EmojiIcon emoji={d.icon} className="inline-block w-3.5 h-3.5 align-[-2px]" /> {d.name}
           </button>
         ))}
       </div>
@@ -166,7 +167,7 @@ function DraftRow({ draft, actionLoading, editingId, onEdit, onCancelEdit, onSav
             )}
             {depts.map((d) => (
               <span key={d.id} className="inline-flex items-center gap-1 font-bold text-[11px] px-2 py-0.5 rounded-full" style={{ background: `${d.color}1A`, color: d.color }}>
-                {d.icon} {d.name}
+                <EmojiIcon emoji={d.icon} className="inline-block w-3.5 h-3.5 align-[-2px]" /> {d.name}
               </span>
             ))}
           </div>

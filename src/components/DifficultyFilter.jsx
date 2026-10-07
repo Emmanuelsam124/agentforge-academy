@@ -1,6 +1,7 @@
 import { ChevronDown } from 'lucide-react';
 import { difficultyLevels, publicDifficultyLevels } from '../data/departments';
 
+import EmojiIcon from './EmojiIcon';
 export default function DifficultyFilter({ difficulty, onDifficultyChange, sort, onSortChange, sortOptions, isAdmin = false }) {
   const levels = isAdmin ? difficultyLevels : publicDifficultyLevels;
 
@@ -26,7 +27,7 @@ export default function DifficultyFilter({ difficulty, onDifficultyChange, sort,
               }`}
               style={active ? { background: level.color, borderColor: level.color } : undefined}
             >
-              <span>{level.icon}</span>
+              <EmojiIcon emoji={level.icon} className="w-4 h-4" />
               {level.label}
               {level.adminOnly && <span className="text-[10px] opacity-70">(Admin)</span>}
             </button>

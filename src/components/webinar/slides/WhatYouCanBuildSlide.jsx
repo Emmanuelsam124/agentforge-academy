@@ -2,6 +2,7 @@ import { m } from 'framer-motion';
 import SlideShell from '../SlideShell';
 import { agentsBeginner } from '../../../data/agentsBeginner';
 
+import EmojiIcon from '../../EmojiIcon';
 // The full "wall of builders" — every real Builder 1 session, not a curated
 // subset. Breadth is the sell here: one glance should read as "12 real
 // things," not a syllabus, so each card carries only an emoji and a title —
@@ -63,7 +64,7 @@ export default function WhatYouCanBuildSlide() {
                   Live
                 </span>
               )}
-              <span className="text-xl">{agent.emoji}</span>
+              <EmojiIcon emoji={agent.emoji} className="w-5 h-5 text-link" />
               <span className="text-[10.5px] font-bold text-body-strong leading-tight">{agent.title}</span>
             </m.div>
           );

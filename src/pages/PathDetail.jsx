@@ -6,6 +6,7 @@ import ProgressBar from '../components/ProgressBar';
 import { usePro } from '../hooks/usePro';
 import { usePageSeo } from '../hooks/usePageSeo';
 
+import EmojiIcon from '../components/EmojiIcon';
 const tierDescriptions = {
   'Builder 1': 'Start here. Learn core agent concepts — prompting, simple automations, and your first working tools.',
   'Builder 2': 'Combine APIs, memory, and multi-step reasoning to build agents that handle real workflows.',
@@ -56,7 +57,7 @@ export default function PathDetail({ progress }) {
                     className="inline-flex items-center gap-1.5 text-sm font-bold px-3 py-1 rounded-md"
                     style={{ backgroundColor: level.tint, color: level.color }}
                   >
-                    <span>{level.icon}</span> <span>{level.label}</span>
+                    <EmojiIcon emoji={level.icon} className="w-4 h-4" /> <span>{level.label}</span>
                   </span>
                   <span className="text-sm text-body"><span>{tierAgents.length}</span> agents</span>
                 </div>
@@ -87,7 +88,7 @@ export default function PathDetail({ progress }) {
               >
                 <div className="flex items-center justify-between">
                   <span className="flex items-center gap-2 font-bold text-ink">
-                    <span className="text-2xl">{dept.icon}</span>
+                    <EmojiIcon emoji={dept.icon} className="w-6 h-6 text-link" />
                     {dept.name}
                   </span>
                   <span className="text-sm text-body"><span>{deptAgents.length}</span> agents</span>

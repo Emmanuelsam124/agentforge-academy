@@ -3,6 +3,7 @@ import SlideShell from '../SlideShell';
 import SignatureLine from '../SignatureLine';
 import { levels } from '../../../data/departments';
 
+import EmojiIcon from '../../EmojiIcon';
 export default function IdentityLadderSlide() {
   return (
     <SlideShell decorations contentClassName="text-center">
@@ -25,7 +26,7 @@ export default function IdentityLadderSlide() {
             }`}
             style={{ minWidth: 110 }}
           >
-            <span className="text-3xl">{level.icon}</span>
+            <EmojiIcon emoji={level.icon} className="w-8 h-8 text-link" />
             <span className={`font-display font-extrabold text-sm ${i === 1 ? 'text-white' : 'text-ink'}`}>{level.name}</span>
             {i === 1 && <span className="text-[10px] font-bold uppercase tracking-wide bg-white/20 rounded-full px-2 py-0.5">You start here</span>}
           </m.div>

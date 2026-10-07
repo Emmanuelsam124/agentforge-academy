@@ -6,6 +6,7 @@ import { useTheme } from '../../../context/ThemeContext';
 import SlideShell from '../SlideShell';
 import SignatureLine from '../SignatureLine';
 
+import { EmojiText } from '../../EmojiIcon';
 // Deliberately quiet — the pitch is already made by this point, so this is
 // just a calm, low-distraction backdrop for live discussion, not another
 // selling moment. Still carries a real QR/button (not just a URL to
@@ -32,7 +33,7 @@ export default function QASlide() {
         transition={{ duration: 0.5 }}
         className="inline-flex items-center gap-2 bg-white dark:bg-[#131E2F] border-[1.5px] border-border text-link font-bold text-[12.5px] px-4 py-2 rounded-full shadow-[0_3px_10px_rgba(15,26,42,.1)] mb-7"
       >
-        🙋 Open floor
+        <EmojiText>🙋 Open floor</EmojiText>
       </m.span>
 
       <m.h1

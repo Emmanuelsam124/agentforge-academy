@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { m } from 'framer-motion';
 import {
   Folder, MessageSquareText, Save, Settings, Terminal, Smartphone, PartyPopper,
   AlertTriangle, Lightbulb, CheckCircle2, Zap, UserCircle2, GraduationCap, Lock,
@@ -8,6 +7,7 @@ import {
 import PromptBox from '../components/PromptBox';
 import { useAuth } from '../context/AuthContext';
 
+import EmojiIcon, { EmojiText } from '../components/EmojiIcon';
 const CLAUDE_PROMPT = `I want to build a free AI WhatsApp auto-reply bot using Node.js, whatsapp-web.js, and Groq's free API (no credit card needed). Please create exactly 3 files for me — do not tell me how to install anything yet, just give me the files:
 
 1. package.json — with these dependencies: groq-sdk, whatsapp-web.js, qrcode-terminal, dotenv
@@ -195,49 +195,34 @@ export default function WhatsAppBotGuide() {
         className="relative overflow-hidden pt-14 pb-10 px-4 sm:px-6 lg:px-[5vw]"
         style={{ background: '#F6F8FB' }}
       >
-        <div
-          className="absolute top-10 right-[12%] w-[110px] h-[110px] bg-yellow opacity-40 animate-floaty pointer-events-none hidden sm:block"
-          style={{ borderRadius: '38% 62% 63% 37% / 41% 44% 56% 59%' }}
-        />
         <div className="relative max-w-3xl mx-auto">
-          <m.span
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
+          <span
             className="inline-flex items-center gap-2 bg-white dark:bg-[#131E2F] border-[1.5px] border-border text-link font-bold text-[12.5px] px-4 py-2 rounded-full shadow-[0_3px_10px_rgba(15,26,42,.1)]"
           >
-            📁 Free guide · Mostly file explorer, minimal typing
-          </m.span>
+            <EmojiText>{'📁 Free guide · Mostly file explorer, minimal typing'}</EmojiText>
+          </span>
 
-          <m.h1
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
+          <h1
             className="font-display font-extrabold text-[34px] sm:text-[46px] leading-[1.08] text-ink tracking-[-1px] mt-5"
           >
             Build your own <span className="text-link">AI WhatsApp<br className="hidden sm:block" /> auto-reply bot.</span>
-          </m.h1>
+          </h1>
 
-          <m.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
+          <p
             className="text-[16px] leading-relaxed text-body mt-5 max-w-xl"
           >
             Almost everything here happens in folders you can see and click — Claude, File Explorer, Notepad. The
             black command window is only opened <strong className="text-ink">once</strong>, for about 2 minutes, to
             install and start the bot.
-          </m.p>
+          </p>
 
-          <m.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
+          <div
             className="flex flex-wrap gap-4 mt-6 text-[13px] text-body font-semibold"
           >
             <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-brand" /> ~40 min total</span>
             <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-brand" /> 1 terminal visit</span>
             <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-brand" /> 100% free</span>
-          </m.div>
+          </div>
         </div>
       </div>
 
@@ -259,7 +244,7 @@ export default function WhatsAppBotGuide() {
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Intro banner */}
         <div className="flex items-start gap-3.5 bg-white dark:bg-[#131E2F] border-[1.5px] border-brand/30 rounded-2xl p-5 my-8">
-          <span className="text-2xl flex-shrink-0">📁</span>
+          <EmojiIcon emoji="📁" className="w-6 h-6 text-link flex-shrink-0" />
           <div>
             <h3 className="font-display font-bold text-[15px] text-ink mb-1">The whole idea of this guide</h3>
             <p className="text-[13.5px] text-body leading-relaxed m-0">
@@ -392,7 +377,7 @@ export default function WhatsAppBotGuide() {
           desc="This is the one and only time you need the black window. Here's the easy way in, with no path-typing."
         >
           <span className="inline-flex items-center gap-1.5 text-[12px] font-bold text-link bg-[#E8EDF3] dark:bg-brand/15 rounded-full px-3 py-1 mb-4">
-            🖥️ You'll type 3 things, total, in this whole guide
+            <EmojiText>{"🖥️ You'll type 3 things, total, in this whole guide"}</EmojiText>
           </span>
           <div className="flex flex-col gap-4">
             <div className="flex gap-3">

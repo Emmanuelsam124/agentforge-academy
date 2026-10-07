@@ -3,6 +3,7 @@ import { ChevronRight, CheckCircle2 } from 'lucide-react';
 import SlideShell from '../SlideShell';
 import { agents } from '../../../data/agents';
 
+import { EmojiText } from '../../EmojiIcon';
 const builder1Count = agents.filter((a) => a.difficulty === 'Builder 1').length;
 const builder2Count = agents.filter((a) => a.difficulty === 'Builder 2').length;
 
@@ -58,7 +59,7 @@ export default function LearningTrackSlide() {
               className={`bg-white dark:bg-[#131E2F] border ${track.borderClass} rounded-2xl p-5 w-full text-left`}
             >
               <span className={`inline-flex items-center gap-1.5 font-bold text-[11px] px-2.5 py-1 rounded-full mb-3 ${track.tagClass}`}>
-                {track.tag}
+                <EmojiText>{track.tag}</EmojiText>
               </span>
               <h3 className="font-display font-extrabold text-base text-ink mb-1.5">{track.title}</h3>
               <p className="text-[12.5px] text-body leading-relaxed">{track.text}</p>

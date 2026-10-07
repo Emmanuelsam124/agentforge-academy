@@ -80,12 +80,83 @@
   --color-surface: #131E2F;
 }
 
+
+/* Type scale. Display/H2 clamp down on small screens; sizes under 12px are not
+   used. Applied to the homepage first (see Home.jsx). */
+@utility t-display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(40px, 5.2vw, 56px);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+@utility t-h2 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(28px, 3.4vw, 36px);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+@utility t-h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+@utility t-lead {
+  font-size: 18px;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+@utility t-body {
+  font-size: 16px;
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+@utility t-card {
+  font-size: 15px;
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+@utility t-num {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
 * {
   box-sizing: border-box;
 }
 
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* One stroke weight for every Lucide icon. */
+.lucide {
+  stroke-width: 1.75;
+}
+
+/* Keyboard focus: visible on light and on the blue sections. In the base
+   layer so a component's own focus:outline-none / focus:ring still wins. */
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--color-link);
+    outline-offset: 3px;
+  }
+  .on-dark :focus-visible {
+    outline-color: var(--color-yellow);
+  }
 }
 
 body {
@@ -94,6 +165,7 @@ body {
   color: var(--color-ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  font-optical-sizing: auto;
   transition: background-color 0.25s ease, color 0.25s ease;
 }
 
@@ -134,8 +206,13 @@ body {
 [data-flow-paused="true"] * { animation-play-state: paused; }
 .animate-dash-flow { animation: dashFlow 1s linear infinite; }
 
+/* One rule for the whole site, so a future animation can't forget to opt out. */
 @media (prefers-reduced-motion: reduce) {
-  .animate-node-breathe, .animate-node-ping, .animate-dash-flow { animation: none; }
+  *, *::before, *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
   .flow-packet { display: none; }
 }
 
