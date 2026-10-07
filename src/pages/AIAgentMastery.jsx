@@ -264,8 +264,7 @@ export default function AIAgentMastery() {
     <div>
       {/* Hero */}
       <div
-        className="relative overflow-hidden pt-16 pb-14 px-4 sm:px-6 lg:px-[5vw] text-center"
-        style={{ background: '#F6F8FB' }}
+        className="relative overflow-hidden pt-16 pb-14 px-4 sm:px-6 lg:px-[5vw] text-center bg-bg"
       >
         <div className="relative max-w-3xl mx-auto">
           <span

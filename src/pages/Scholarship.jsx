@@ -56,8 +56,7 @@ function Field({ id, label, hint, error, children }) {
 function Shell({ children }) {
   return (
     <div
-      className="min-h-[70vh] px-4 sm:px-6 py-14"
-      style={{ background: '#F6F8FB' }}
+      className="min-h-[70vh] px-4 sm:px-6 py-14 bg-bg"
     >
       <div className="max-w-xl mx-auto">{children}</div>
     </div>

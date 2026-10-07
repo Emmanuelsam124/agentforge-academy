@@ -1,20 +1,20 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link, NavLink, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
+import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { m, AnimatePresence } from 'framer-motion';
 import { Menu, X, Shield, Zap, Award, Sun, Moon, ChevronDown, LayoutDashboard, LogOut } from 'lucide-react';
-import SearchBar from './SearchBar';
 import { useAuth } from '../context/AuthContext';
 import { usePro } from '../hooks/usePro';
 import { useTheme } from '../context/ThemeContext';
 
+// No "Home" link (the logo goes home) and no search box: the Catalog page has
+// its own search.
 const links = [
-  { to: '/', label: 'Home' },
   { to: '/catalog', label: 'Catalog' },
   // The three sellable programs — this dropdown replaces the old standalone
   // "Programs" nav item entirely (founder-confirmed 2026-09-22); "Learning
   // Paths" no longer links directly to /paths (the difficulty/department
-  // catalog browser), which still exists but is reached from elsewhere
-  // (Home.jsx, Catalog) rather than the top-level nav.
+  // catalog browser), which still exists but is reached from the footer
+  // rather than the top-level nav.
   { label: 'Learning Paths', children: [
       // AI Agent Mastery listed first — it's the priority/flagship program
       // (founder-confirmed 2026-09-23).
@@ -35,22 +35,9 @@ export default function Navbar() {
   const menuRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
-  const [searchParams] = useSearchParams();
   const { user, signOut } = useAuth();
   const { isPro, isAdmin } = usePro();
   const { theme, toggleTheme } = useTheme();
-
-  // Keep the search box in sync with ?q= while on /catalog: seeded from the
-  // URL on mount, then re-synced during render whenever the query changes.
-  // Doing it during render rather than in an effect avoids a second render
-  // pass per change — see react.dev "You Might Not Need an Effect".
-  const catalogQuery = location.pathname === '/catalog' ? searchParams.get('q') || '' : null;
-  const [value, setValue] = useState(catalogQuery || '');
-  const [syncedQuery, setSyncedQuery] = useState(catalogQuery);
-  if (catalogQuery !== null && catalogQuery !== syncedQuery) {
-    setSyncedQuery(catalogQuery);
-    setValue(catalogQuery);
-  }
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -66,16 +53,11 @@ export default function Navbar() {
     navigate('/');
   };
 
-  const handleChange = (v) => {
-    setValue(v);
-    navigate(`/catalog${v ? `?q=${encodeURIComponent(v)}` : ''}`);
-  };
-
   const displayName = user?.user_metadata?.display_name || user?.email || '';
   const initial = displayName.charAt(0).toUpperCase();
 
   return (
-    <header className="sticky top-0 z-40 bg-[#FFFFFF] dark:bg-[#0C1420] border-b border-[#E7ECF2] dark:border-[#26364B]">
+    <header className="sticky top-0 z-40 bg-surface border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[70px] flex items-center gap-4">
         <Link to="/" className="flex items-center gap-2.5 flex-shrink-0">
           <img src="/logo-icon.webp" alt="" className="w-9 h-9 sm:w-10 sm:h-10 object-contain rounded-lg" />
@@ -84,7 +66,7 @@ export default function Navbar() {
           </span>
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-6 ml-6 font-semibold text-[14.5px] text-[#4A5B6C] dark:text-[#A2B1C3] flex-shrink-0">
+        <nav className="hidden lg:flex items-center gap-6 ml-6 font-semibold text-[15px] text-body flex-shrink-0">
           {links.map((link) =>
             link.children ? (
               <div key={link.label} className="relative group flex-shrink-0">
@@ -131,17 +113,13 @@ export default function Navbar() {
           )}
         </nav>
 
-        <div className="flex-1 hidden md:block max-w-xs ml-4">
-          <SearchBar value={value} onChange={handleChange} />
-        </div>
-
         <div className="hidden lg:flex items-center gap-4 ml-auto flex-shrink-0">
           <button
             onClick={toggleTheme}
             aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
-            className="w-9 h-9 flex items-center justify-center rounded-lg bg-[#E8EDF3] dark:bg-white/10 text-link flex-shrink-0 transition-colors"
+            className="w-9 h-9 flex items-center justify-center rounded-lg bg-link/10 text-link flex-shrink-0 transition-colors hover:bg-link/15"
           >
-            {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
           </button>
           {user ? (
             <div className="relative flex-shrink-0" ref={menuRef}>
@@ -216,12 +194,12 @@ export default function Navbar() {
             </div>
           ) : (
             <>
-              <Link to="/welcome" className="font-bold text-link text-[14.5px] whitespace-nowrap flex-shrink-0">
+              <Link to="/welcome" className="font-bold text-link text-[15px] whitespace-nowrap flex-shrink-0 hover:text-ink transition-colors">
                 Log in
               </Link>
               <Link
                 to="/welcome"
-                className="bg-brand text-white font-bold px-5 py-2.5 rounded-full text-[14.5px] whitespace-nowrap flex-shrink-0 shadow-[0_6px_16px_rgba(15,26,42,.35)] hover:bg-brand-deep transition-colors"
+                className="bg-brand text-white font-bold px-5 py-[11px] rounded-full text-[15px] leading-none whitespace-nowrap flex-shrink-0 hover:bg-brand-deep transition-colors"
               >
                 Start building
               </Link>
@@ -255,7 +233,6 @@ export default function Navbar() {
                 {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
                 {theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
               </button>
-              <SearchBar value={value} onChange={handleChange} className="mb-2" />
               {/* Flattened on mobile — a nested dropdown inside an already
                   collapsible menu is worse than just listing the children. */}
               {links.flatMap((link) =>
