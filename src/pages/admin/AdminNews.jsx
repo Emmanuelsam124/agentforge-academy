@@ -53,20 +53,20 @@ function EditForm({ draft, onSave, onCancel, saving }) {
   };
 
   return (
-    <div className="px-5 py-4 bg-[#FAF8FF] dark:bg-white/5 space-y-3">
+    <div className="px-5 py-4 bg-[#F6F8FB] dark:bg-white/5 space-y-3">
       <input
         type="text"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         placeholder="Title"
-        className="w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0A090F] focus:outline-none focus:ring-2 focus:ring-brand/40"
+        className="w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0C1420] focus:outline-none focus:ring-2 focus:ring-brand/40"
       />
       <input
         type="text"
         value={dek}
         onChange={(e) => setDek(e.target.value)}
         placeholder="One-sentence dek (meta description + digest blurb)"
-        className="w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0A090F] focus:outline-none focus:ring-2 focus:ring-brand/40"
+        className="w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0C1420] focus:outline-none focus:ring-2 focus:ring-brand/40"
       />
       {draft.is_full_article && (
         <textarea
@@ -74,7 +74,7 @@ function EditForm({ draft, onSave, onCancel, saving }) {
           onChange={(e) => setBodyText(e.target.value)}
           rows={8}
           placeholder="Body — blank line between blocks. '## ' for a heading, '> ' for a quote, lines starting '- ' for a list, anything else is a paragraph."
-          className="w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0A090F] focus:outline-none focus:ring-2 focus:ring-brand/40 font-mono resize-y"
+          className="w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0C1420] focus:outline-none focus:ring-2 focus:ring-brand/40 font-mono resize-y"
         />
       )}
       <div className="flex flex-wrap gap-1.5">
@@ -104,13 +104,13 @@ function EditForm({ draft, onSave, onCancel, saving }) {
           value={relatedAgentSlug}
           onChange={(e) => setRelatedAgentSlug(e.target.value)}
           placeholder="Related agent slug (optional — leave blank for none)"
-          className="flex-1 min-w-[220px] px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0A090F] focus:outline-none focus:ring-2 focus:ring-brand/40"
+          className="flex-1 min-w-[220px] px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0C1420] focus:outline-none focus:ring-2 focus:ring-brand/40"
         />
         <select
           value={relatedAgentTier}
           onChange={(e) => setRelatedAgentTier(e.target.value)}
           disabled={!relatedAgentSlug}
-          className="px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0A090F] focus:outline-none focus:ring-2 focus:ring-brand/40 disabled:opacity-40"
+          className="px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0C1420] focus:outline-none focus:ring-2 focus:ring-brand/40 disabled:opacity-40"
         >
           <option value="builder1">Builder 1</option>
           <option value="builder2">Builder 2</option>
@@ -155,12 +155,12 @@ function DraftRow({ draft, actionLoading, editingId, onEdit, onCancelEdit, onSav
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap mb-1">
             {draft.is_full_article ? (
-              <span className="text-[11px] font-bold text-brand bg-[#F3EBFF] dark:bg-brand/15 px-2 py-0.5 rounded-full">Full article</span>
+              <span className="text-[11px] font-bold text-link bg-[#E8EDF3] dark:bg-brand/15 px-2 py-0.5 rounded-full">Full article</span>
             ) : (
               <span className="text-[11px] font-bold text-gray-500 bg-gray-100 dark:bg-white/5 px-2 py-0.5 rounded-full">Digest blurb</span>
             )}
             {draft.status !== 'pending_review' && (
-              <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${draft.status === 'approved' ? 'text-green bg-[#EAFAF1] dark:bg-green/10' : 'text-rose bg-[#FDEEF4] dark:bg-rose/10'}`}>
+              <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${draft.status === 'approved' ? 'text-green bg-[#EAFAF1] dark:bg-green/10' : 'text-rose bg-[#FBEAE9] dark:bg-rose/10'}`}>
                 {draft.status === 'approved' ? 'Approved' : 'Rejected'}
               </span>
             )}
@@ -172,7 +172,7 @@ function DraftRow({ draft, actionLoading, editingId, onEdit, onCancelEdit, onSav
           </div>
           <p className="font-semibold text-ink text-sm">{draft.title}</p>
           <p className="text-sm text-body leading-relaxed mt-0.5">{draft.dek}</p>
-          <a href={draft.source_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-[11px] text-gray-400 hover:text-brand mt-1.5">
+          <a href={draft.source_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-[11px] text-gray-400 hover:text-link mt-1.5">
             <ExternalLink className="w-3 h-3" /> {draft.source_name}
           </a>
         </div>
@@ -180,14 +180,14 @@ function DraftRow({ draft, actionLoading, editingId, onEdit, onCancelEdit, onSav
           <button
             onClick={() => onEdit(draft.id)}
             disabled={!!actionLoading}
-            className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-[#FAF8FF] dark:bg-white/5 text-body-strong hover:bg-[#F3EBFF] dark:hover:bg-brand/15 hover:text-brand transition-colors disabled:opacity-40"
+            className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-[#F6F8FB] dark:bg-white/5 text-body-strong hover:bg-[#E8EDF3] dark:hover:bg-brand/15 hover:text-link transition-colors disabled:opacity-40"
           >
             <Pencil className="w-3 h-3" /> Edit
           </button>
           {draft.status === 'approved' && draft.is_full_article && (
             <button
               onClick={() => setShowShare((v) => !v)}
-              className={`flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg transition-colors ${showShare ? 'bg-brand text-white' : 'bg-[#FAF8FF] dark:bg-white/5 text-body-strong hover:bg-[#F3EBFF] dark:hover:bg-brand/15 hover:text-brand'}`}
+              className={`flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg transition-colors ${showShare ? 'bg-brand text-white' : 'bg-[#F6F8FB] dark:bg-white/5 text-body-strong hover:bg-[#E8EDF3] dark:hover:bg-brand/15 hover:text-link'}`}
             >
               <Share2 className="w-3 h-3" /> Post
             </button>
@@ -205,7 +205,7 @@ function DraftRow({ draft, actionLoading, editingId, onEdit, onCancelEdit, onSav
             <button
               onClick={() => onReject(draft.id)}
               disabled={!!actionLoading}
-              className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-[#FDEEF4] dark:bg-rose/10 text-rose hover:bg-rose/10 transition-colors disabled:opacity-40"
+              className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-[#FBEAE9] dark:bg-rose/10 text-rose hover:bg-rose/10 transition-colors disabled:opacity-40"
             >
               {actionLoading === draft.id + '_reject' ? <Loader2 className="w-3 h-3 animate-spin" /> : <XCircle className="w-3 h-3" />} Reject
             </button>
@@ -213,7 +213,7 @@ function DraftRow({ draft, actionLoading, editingId, onEdit, onCancelEdit, onSav
           <button
             onClick={() => onDelete(draft.id)}
             disabled={!!actionLoading}
-            className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-[#FAF8FF] dark:bg-white/5 text-body-strong hover:bg-[#FDEEF4] dark:hover:bg-rose/10 hover:text-rose transition-colors disabled:opacity-40"
+            className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-[#F6F8FB] dark:bg-white/5 text-body-strong hover:bg-[#FBEAE9] dark:hover:bg-rose/10 hover:text-rose transition-colors disabled:opacity-40"
           >
             <Trash2 className="w-3 h-3" />
           </button>
@@ -332,7 +332,7 @@ export default function AdminNews() {
     <div>
       <div className="flex items-center justify-between mb-5 flex-wrap gap-3">
         <h1 className="font-display text-3xl font-extrabold text-ink flex items-center gap-3">
-          <Newspaper className="w-7 h-7 text-brand" />
+          <Newspaper className="w-7 h-7 text-link" />
           News Review
         </h1>
         <div className="flex items-center gap-2">
@@ -340,7 +340,7 @@ export default function AdminNews() {
             type="date"
             value={digestDate}
             onChange={(e) => setDigestDate(e.target.value)}
-            className="px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0A090F] focus:outline-none focus:ring-2 focus:ring-brand/40"
+            className="px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0C1420] focus:outline-none focus:ring-2 focus:ring-brand/40"
           />
           <button
             onClick={sendDigest}
@@ -354,7 +354,7 @@ export default function AdminNews() {
       </div>
 
       {error && (
-        <div className="flex items-start gap-2 text-sm text-rose bg-[#FDEEF4] dark:bg-rose/10 border border-rose/20 rounded-lg px-4 py-3 mb-6">
+        <div className="flex items-start gap-2 text-sm text-rose bg-[#FBEAE9] dark:bg-rose/10 border border-rose/20 rounded-lg px-4 py-3 mb-6">
           <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
           {error}
         </div>
@@ -366,7 +366,7 @@ export default function AdminNews() {
             key={s}
             onClick={() => setStatus(s)}
             className={`text-xs font-semibold px-3 py-1.5 rounded-full transition-colors ${
-              status === s ? 'bg-brand text-white' : 'bg-[#FAF8FF] dark:bg-white/5 text-body-strong hover:bg-[#F3EBFF] dark:hover:bg-brand/15'
+              status === s ? 'bg-brand text-white' : 'bg-[#F6F8FB] dark:bg-white/5 text-body-strong hover:bg-[#E8EDF3] dark:hover:bg-brand/15'
             }`}
           >
             {s === 'pending_review' ? 'Pending' : s === 'approved' ? 'Approved' : 'Rejected'}
@@ -374,10 +374,10 @@ export default function AdminNews() {
         ))}
       </div>
 
-      <div className="rounded-2xl border border-border-soft overflow-hidden bg-white dark:bg-[#181818]">
+      <div className="rounded-2xl border border-border-soft overflow-hidden bg-white dark:bg-[#131E2F]">
         {draftsLoading ? (
           <div className="px-5 py-12 text-center">
-            <Loader2 className="w-6 h-6 animate-spin text-brand mx-auto" />
+            <Loader2 className="w-6 h-6 animate-spin text-link mx-auto" />
           </div>
         ) : drafts.length === 0 ? (
           <div className="px-5 py-12 text-center text-gray-400 text-sm">Nothing here.</div>

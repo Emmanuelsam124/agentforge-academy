@@ -63,7 +63,7 @@ function Thread({ phone, onSent }) {
   };
 
   if (error && !messages) return <p className="text-xs text-rose px-1 py-2">{error}</p>;
-  if (!messages) return <Loader2 className="w-4 h-4 animate-spin text-brand my-3" />;
+  if (!messages) return <Loader2 className="w-4 h-4 animate-spin text-link my-3" />;
 
   const { open, hoursLeft } = replyWindow(messages);
 
@@ -78,7 +78,7 @@ function Thread({ phone, onSent }) {
               key={i}
               className={`max-w-[80%] rounded-xl px-3 py-2 text-sm ${
                 m.direction === 'inbound'
-                  ? 'self-start bg-[#FAF8FF] dark:bg-white/5 text-ink'
+                  ? 'self-start bg-[#F6F8FB] dark:bg-white/5 text-ink'
                   : 'self-end bg-[#EAFAF1] dark:bg-green/10 text-ink'
               }`}
             >
@@ -100,7 +100,7 @@ function Thread({ phone, onSent }) {
             rows={3}
             placeholder="Reply as Social Dev Technologies…"
             disabled={sending}
-            className="w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#181818] focus:outline-none focus:ring-2 focus:ring-brand/40 resize-none disabled:opacity-50"
+            className="w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#131E2F] focus:outline-none focus:ring-2 focus:ring-brand/40 resize-none disabled:opacity-50"
           />
           <div className="flex items-center justify-between gap-3 mt-2 flex-wrap">
             <span className="text-[11px] text-gray-400">
@@ -155,7 +155,7 @@ function EscalationRow({ e, actionLoading, expanded, onToggle, onResolve }) {
 
           <button
             onClick={() => onToggle(e.id)}
-            className="flex items-center gap-1 text-xs font-semibold text-brand mt-2 hover:underline"
+            className="flex items-center gap-1 text-xs font-semibold text-link mt-2 hover:underline"
           >
             <ChevronDown className={`w-3 h-3 transition-transform ${expanded ? 'rotate-180' : ''}`} />
             {expanded ? 'Hide conversation' : 'Open conversation & reply'}
@@ -168,7 +168,7 @@ function EscalationRow({ e, actionLoading, expanded, onToggle, onResolve }) {
             <button
               onClick={() => onResolve(e.id)}
               disabled={!!actionLoading}
-              className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-[#FAF8FF] dark:bg-white/5 text-body-strong hover:bg-[#F3EBFF] dark:hover:bg-brand/15 hover:text-brand transition-colors disabled:opacity-40"
+              className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-[#F6F8FB] dark:bg-white/5 text-body-strong hover:bg-[#E8EDF3] dark:hover:bg-brand/15 hover:text-link transition-colors disabled:opacity-40"
             >
               {actionLoading === e.id ? (
                 <Loader2 className="w-3 h-3 animate-spin" />
@@ -234,16 +234,16 @@ export default function AdminSupport() {
     <div>
       <div className="flex items-center justify-between mb-5 flex-wrap gap-3">
         <h1 className="font-display text-3xl font-extrabold text-ink flex items-center gap-3">
-          <LifeBuoy className="w-7 h-7 text-brand" />
+          <LifeBuoy className="w-7 h-7 text-link" />
           WhatsApp Support
         </h1>
-        <div className="flex items-center gap-1 rounded-lg bg-[#FAF8FF] dark:bg-white/5 p-1">
+        <div className="flex items-center gap-1 rounded-lg bg-[#F6F8FB] dark:bg-white/5 p-1">
           {['open', 'resolved'].map((f) => (
             <button
               key={f}
               onClick={() => setFilter(f)}
               className={`text-xs font-semibold px-3 py-1.5 rounded-md capitalize transition-colors ${
-                filter === f ? 'bg-white dark:bg-white/10 text-brand shadow-sm' : 'text-body hover:text-ink'
+                filter === f ? 'bg-white dark:bg-white/10 text-link shadow-sm' : 'text-body hover:text-ink'
               }`}
             >
               {f}
@@ -253,16 +253,16 @@ export default function AdminSupport() {
       </div>
 
       {error && (
-        <div className="flex items-start gap-2 text-sm text-rose bg-[#FDEEF4] dark:bg-rose/10 border border-rose/20 rounded-lg px-4 py-3 mb-6">
+        <div className="flex items-start gap-2 text-sm text-rose bg-[#FBEAE9] dark:bg-rose/10 border border-rose/20 rounded-lg px-4 py-3 mb-6">
           <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
           {error}
         </div>
       )}
 
-      <div className="rounded-2xl border border-border-soft overflow-hidden bg-white dark:bg-[#181818]">
+      <div className="rounded-2xl border border-border-soft overflow-hidden bg-white dark:bg-[#131E2F]">
         {loading ? (
           <div className="px-5 py-12 text-center">
-            <Loader2 className="w-6 h-6 animate-spin text-brand mx-auto" />
+            <Loader2 className="w-6 h-6 animate-spin text-link mx-auto" />
           </div>
         ) : escalations.length === 0 ? (
           <div className="px-5 py-12 text-center text-gray-400 text-sm">

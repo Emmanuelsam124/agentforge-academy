@@ -11,11 +11,11 @@ export default function PresenterNotes({ open, onClose, notes, slideLabel, index
           initial={{ height: 0, opacity: 0 }}
           animate={{ height: 'auto', opacity: 1 }}
           exit={{ height: 0, opacity: 0 }}
-          className="overflow-hidden border-t border-border-soft bg-[#FAF8FF] dark:bg-[#141319] flex-shrink-0"
+          className="overflow-hidden border-t border-border-soft bg-[#F6F8FB] dark:bg-[#131E2F] flex-shrink-0"
         >
           <div className="max-w-3xl mx-auto px-5 py-4 max-h-[42vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-[11px] font-bold uppercase tracking-wide text-brand">
+              <span className="text-[11px] font-bold uppercase tracking-wide text-link">
                 Presenter notes · Slide {index + 1}/{total} · {slideLabel}
               </span>
               <button onClick={onClose} aria-label="Close presenter notes" className="text-gray-400 hover:text-ink transition-colors">
@@ -43,13 +43,13 @@ function NoteBlock({ icon: Icon, title, text, list }) {
   return (
     <div>
       <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-body mb-1">
-        <Icon className="w-3.5 h-3.5 text-brand" /> {title}
+        <Icon className="w-3.5 h-3.5 text-link" /> {title}
       </div>
       {list ? (
         <ul className="space-y-1 text-body-strong">
           {list.map((item) => (
             <li key={item} className="flex gap-1.5">
-              <span className="text-brand flex-shrink-0">·</span>
+              <span className="text-link flex-shrink-0">·</span>
               {item}
             </li>
           ))}

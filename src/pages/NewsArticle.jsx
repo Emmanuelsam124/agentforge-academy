@@ -81,7 +81,7 @@ export default function NewsArticle() {
   if (loading) {
     return (
       <div className="py-24 text-center">
-        <Loader2 className="w-6 h-6 animate-spin text-brand mx-auto" />
+        <Loader2 className="w-6 h-6 animate-spin text-link mx-auto" />
       </div>
     );
   }
@@ -138,14 +138,14 @@ export default function NewsArticle() {
       {relatedAgentPath && (
         <Link
           to={relatedAgentPath}
-          className="flex items-center justify-between gap-3 mt-8 p-4 rounded-2xl border-[1.5px] border-brand/30 bg-[#F7F4FF] dark:bg-brand/10 hover:border-brand/60 transition-colors"
+          className="flex items-center justify-between gap-3 mt-8 p-4 rounded-2xl border-[1.5px] border-brand/30 bg-[#F1F4F8] dark:bg-brand/10 hover:border-brand/60 transition-colors"
         >
           <div>
-            <p className="text-[11px] font-bold uppercase tracking-wide text-brand mb-0.5">Build it yourself</p>
+            <p className="text-[11px] font-bold uppercase tracking-wide text-link mb-0.5">Build it yourself</p>
             <p className="font-display font-bold text-ink">{relatedAgent.title}</p>
             <p className="text-[13px] text-body">{TIER_LABEL[article.related_agent_tier]} session</p>
           </div>
-          <ArrowRight className="w-5 h-5 text-brand flex-shrink-0" />
+          <ArrowRight className="w-5 h-5 text-link flex-shrink-0" />
         </Link>
       )}
 
@@ -157,13 +157,13 @@ export default function NewsArticle() {
         href={article.source_url}
         target="_blank"
         rel="noreferrer"
-        className="flex items-center gap-1.5 text-sm font-semibold text-body-strong hover:text-brand transition-colors mt-6"
+        className="flex items-center gap-1.5 text-sm font-semibold text-body-strong hover:text-link transition-colors mt-6"
       >
         <ExternalLink className="w-4 h-4" />
         Original source: {article.source_name}
       </a>
 
-      <Link to="/news" className="inline-block text-sm font-semibold text-brand hover:text-brand-deep transition-colors mt-6">
+      <Link to="/news" className="inline-block text-sm font-semibold text-link hover:text-brand-deep transition-colors mt-6">
         ← Back to all news
       </Link>
     </article>

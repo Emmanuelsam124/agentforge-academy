@@ -83,7 +83,7 @@ function Snippet({ children }) {
     setTimeout(() => setCopied(false), 1800);
   };
   return (
-    <div className="relative bg-ink dark:bg-[#0A090F] rounded-xl p-4 my-4 font-mono text-[13px] text-[#E7E5E4] leading-relaxed whitespace-pre-wrap overflow-x-auto">
+    <div className="relative bg-ink dark:bg-[#0C1420] rounded-xl p-4 my-4 font-mono text-[13px] text-[#E7E5E4] leading-relaxed whitespace-pre-wrap overflow-x-auto">
       <button
         onClick={copy}
         className="absolute top-3 right-3 flex items-center gap-1 bg-white/10 hover:bg-white/20 text-white/80 text-xs font-semibold px-2.5 py-1 rounded-lg transition-colors"
@@ -133,7 +133,7 @@ function ReqRow({ icon, title, cost, desc, link, linkLabel }) {
           {title}{cost && <span className="ml-1.5 text-amber font-semibold">{cost}</span>}
         </div>
         <div className="text-xs text-body leading-relaxed mb-1">{desc}</div>
-        {link && <a href={link} target="_blank" rel="noreferrer" className="text-xs font-bold text-brand hover:underline">{linkLabel}</a>}
+        {link && <a href={link} target="_blank" rel="noreferrer" className="text-xs font-bold text-link hover:underline">{linkLabel}</a>}
       </div>
     </div>
   );
@@ -147,7 +147,7 @@ function SchedRow({ n, title, desc, badge }) {
         <div className="font-bold text-sm text-ink mb-0.5">{title}</div>
         <div className="text-xs text-body leading-relaxed">{desc}</div>
       </div>
-      <span className="text-[10px] font-bold tracking-wider uppercase px-2 py-1 rounded-md flex-shrink-0 self-start bg-brand/10 text-brand">{badge}</span>
+      <span className="text-[10px] font-bold tracking-wider uppercase px-2 py-1 rounded-md flex-shrink-0 self-start bg-brand/10 text-link">{badge}</span>
     </div>
   );
 }
@@ -160,7 +160,7 @@ function SchedRow({ n, title, desc, badge }) {
 function Section({ id, eyebrow, title, subtitle, children, as: HeadingTag = 'h2' }) {
   return (
     <section id={id} className="py-10 border-b border-border-soft last:border-none scroll-mt-24">
-      <div className="text-[10px] font-bold uppercase tracking-widest text-brand mb-2">{eyebrow}</div>
+      <div className="text-[10px] font-bold uppercase tracking-widest text-link mb-2">{eyebrow}</div>
       <HeadingTag className="font-display text-2xl sm:text-3xl font-extrabold text-ink mb-2" style={{ textWrap: 'balance' }}>{title}</HeadingTag>
       {subtitle && <p className="text-body text-sm mb-6 leading-relaxed max-w-xl">{subtitle}</p>}
       {children}
@@ -214,7 +214,7 @@ export default function Builder1Guide() {
         <div className="min-w-0">
           <Link
             to="/dashboard"
-            className="inline-flex items-center gap-1.5 text-sm font-semibold text-body hover:text-brand transition-colors mb-6"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-body hover:text-link transition-colors mb-6"
           >
             <ArrowLeft className="w-4 h-4" /> Back to dashboard
           </Link>
@@ -235,7 +235,7 @@ export default function Builder1Guide() {
           <div className="sticky top-20 z-20 -mx-1 px-1 bg-bg/95 backdrop-blur border-b border-border-soft mb-2">
             <div className="flex gap-4 overflow-x-auto py-2.5">
               {NAV_SECTIONS.map((s) => (
-                <a key={s.id} href={`#${s.id}`} className="text-[12.5px] font-semibold text-body hover:text-brand whitespace-nowrap transition-colors">
+                <a key={s.id} href={`#${s.id}`} className="text-[12.5px] font-semibold text-body hover:text-link whitespace-nowrap transition-colors">
                   {s.label}
                 </a>
               ))}
@@ -250,7 +250,7 @@ export default function Builder1Guide() {
               <div className="grid grid-cols-2 gap-2.5">
                 {[[String(tierAgents.length), 'Sessions'], ['Self-paced', 'Learn anytime'], ['Real', 'Agent projects'], ['0', 'Prerequisites']].map(([n, l]) => (
                   <div key={l} className="border border-border rounded-xl p-3.5">
-                    <div className="text-xl font-extrabold text-brand font-display">{n}</div>
+                    <div className="text-xl font-extrabold text-link font-display">{n}</div>
                     <div className="text-[10px] font-bold uppercase tracking-widest text-body mt-0.5">{l}</div>
                   </div>
                 ))}
@@ -283,7 +283,7 @@ export default function Builder1Guide() {
           <Section id="setup" eyebrow="Setup" title="Get your free Gemini API key" subtitle="Do this once and you're ready for every session — it costs nothing.">
             <Card title="Get a free Gemini API key">
               <StepList items={[
-                <>Go to <a href="https://aistudio.google.com/apikey" target="_blank" rel="noreferrer" className="text-brand font-semibold">aistudio.google.com/apikey</a> in your browser</>,
+                <>Go to <a href="https://aistudio.google.com/apikey" target="_blank" rel="noreferrer" className="text-link font-semibold">aistudio.google.com/apikey</a> in your browser</>,
                 <>Sign in with a Google account, or create one — it's free</>,
                 <>Click <strong>"Create API key"</strong></>,
                 <>Copy the key — each session tells you exactly where to paste it</>,
@@ -356,7 +356,7 @@ export default function Builder1Guide() {
                     target="_blank"
                     rel="noreferrer"
                     onClick={(e) => e.stopPropagation()}
-                    className="text-brand font-bold hover:underline"
+                    className="text-link font-bold hover:underline"
                   >
                     WhatsApp community group
                   </a>
@@ -367,15 +367,15 @@ export default function Builder1Guide() {
               🎉 You're all set — go build your first agent whenever you're ready!
             </div>
 
-            <div className="mt-5 bg-[#F8F6FF] dark:bg-[#181818] border border-brand/25 rounded-2xl p-5">
-              <div className="text-[10px] font-bold uppercase tracking-widest text-brand mb-2">Session 1 Guide</div>
+            <div className="mt-5 bg-[#F8FAFD] dark:bg-[#131E2F] border border-brand/25 rounded-2xl p-5">
+              <div className="text-[10px] font-bold uppercase tracking-widest text-link mb-2">Session 1 Guide</div>
               <div className="font-display font-bold text-base text-ink mb-1.5">Ready to start building?</div>
               <p className="text-sm text-body leading-relaxed mb-4">
                 Work through Session 1 at your own pace — build your portfolio, extract design DNA, create a reusable design skill, and publish live.
               </p>
               <Link
                 to="/session/build-real-product"
-                className="inline-flex items-center gap-2 bg-brand hover:bg-brand-deep text-white font-bold text-sm px-5 py-3 rounded-xl transition-colors shadow-[0_6px_16px_rgba(124,58,237,.35)]"
+                className="inline-flex items-center gap-2 bg-brand hover:bg-brand-deep text-white font-bold text-sm px-5 py-3 rounded-xl transition-colors shadow-[0_6px_16px_rgba(15,26,42,.35)]"
               >
                 Build a real product, extract design DNA, build a reusable design skill and publish live →
               </Link>

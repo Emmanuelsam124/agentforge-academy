@@ -9,8 +9,8 @@ const AUDIENCE = ['Student', 'Graduate', 'Business owner', 'Professional', 'Teac
 export default function WelcomeSlide() {
   const { theme } = useTheme();
   const bg = theme === 'dark'
-    ? 'radial-gradient(120% 100% at 50% 0%, #181022 0%, #0A090F 60%)'
-    : 'radial-gradient(120% 100% at 50% 0%, #F3EBFF 0%, #FBFAFF 60%)';
+    ? '#0C1420'
+    : '#F6F8FB';
 
   return (
     <SlideShell background={bg} decorations contentClassName="text-center flex flex-col items-center">
@@ -18,7 +18,7 @@ export default function WelcomeSlide() {
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="inline-flex items-center gap-2 bg-white dark:bg-[#181818] border-[1.5px] border-border text-brand font-bold text-[12.5px] px-4 py-2 rounded-full shadow-[0_3px_10px_rgba(124,58,237,.1)] mb-7"
+        className="inline-flex items-center gap-2 bg-white dark:bg-[#131E2F] border-[1.5px] border-border text-link font-bold text-[12.5px] px-4 py-2 rounded-full shadow-[0_3px_10px_rgba(15,26,42,.1)] mb-7"
       >
         🎥 Live session
       </m.span>
@@ -29,7 +29,7 @@ export default function WelcomeSlide() {
         transition={{ duration: 0.6, delay: 0.15 }}
         className="font-display font-extrabold text-[32px] sm:text-[46px] leading-[1.12] text-ink tracking-[-1px] sm:tracking-[-1.5px] max-w-2xl"
       >
-        Welcome to <span className="text-brand">The AI Builder Workshop.</span>
+        Welcome to <span className="text-link">The AI Builder Workshop.</span>
       </m.h1>
 
       <m.p
@@ -59,7 +59,7 @@ export default function WelcomeSlide() {
         {AUDIENCE.map((a) => (
           <span
             key={a}
-            className="text-[13.5px] font-bold text-body-strong bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-full px-4 py-2"
+            className="text-[13.5px] font-bold text-body-strong bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-full px-4 py-2"
           >
             {a}
           </span>

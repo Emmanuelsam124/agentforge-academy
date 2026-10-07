@@ -28,7 +28,7 @@ export default function WhatYouCanBuildSlide() {
   return (
     <SlideShell>
       <div className="text-center mb-6">
-        <span className="inline-flex items-center gap-2 text-[13px] font-bold px-4 py-1.5 rounded-full bg-[#F3EBFF] dark:bg-brand/15 text-brand mb-3">
+        <span className="inline-flex items-center gap-2 text-[13px] font-bold px-4 py-1.5 rounded-full bg-[#E8EDF3] dark:bg-brand/15 text-link mb-3">
           The wall of builders
         </span>
         <h2 className="font-display font-extrabold text-[26px] sm:text-[38px] text-ink tracking-[-.8px]">Your first 12 AI agents</h2>
@@ -56,7 +56,7 @@ export default function WhatYouCanBuildSlide() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.3 + row * 0.4 + (i % 4) * 0.06 }}
-              className="relative flex flex-col items-center gap-1.5 bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-xl p-3 text-center"
+              className="relative flex flex-col items-center gap-1.5 bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-xl p-3 text-center"
             >
               {agent.slug === 'whatsapp-auto-reply-bot' && (
                 <span className="absolute -top-1.5 -right-1.5 text-[8px] font-extrabold uppercase tracking-wide text-white bg-rose rounded-full px-1.5 py-0.5">
@@ -76,7 +76,7 @@ export default function WhatYouCanBuildSlide() {
         transition={{ delay: 1.9 }}
         className="text-center font-display font-bold text-[15px] sm:text-lg text-ink mt-7 max-w-lg mx-auto"
       >
-        By the end of Builder 1, you won't just understand AI — <span className="text-brand">you'll have built 12 real AI agents solving real business problems.</span>
+        By the end of Builder 1, you won't just understand AI — <span className="text-link">you'll have built 12 real AI agents solving real business problems.</span>
       </m.p>
     </SlideShell>
   );

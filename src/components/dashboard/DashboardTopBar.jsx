@@ -19,7 +19,7 @@ export default function DashboardTopBar({ hasUnreadCommunity }) {
   const initial = displayName.charAt(0).toUpperCase();
 
   return (
-    <header className="sticky top-0 z-30 bg-[#FFFDFF]/95 dark:bg-[#0A090F]/95 backdrop-blur border-b border-[#EFE9FB] dark:border-[#232228] px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-3 sm:gap-4">
+    <header className="sticky top-0 z-30 bg-[#FFFFFF]/95 dark:bg-[#0C1420]/95 backdrop-blur border-b border-[#E7ECF2] dark:border-[#26364B] px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-3 sm:gap-4">
       {/* The sidebar (and its logo) is desktop-only, so phones get the mark here. */}
       <Link to="/" aria-label="Social Dev Technologies home" className="lg:hidden flex-shrink-0">
         <img src="/logo-icon.webp" alt="" className="w-9 h-9 object-contain rounded-lg" />
@@ -31,7 +31,7 @@ export default function DashboardTopBar({ hasUnreadCommunity }) {
         <button
           onClick={() => navigate('/dashboard/community')}
           aria-label={hasUnreadCommunity ? 'New community messages' : 'Community'}
-          className="relative w-9 h-9 flex items-center justify-center rounded-lg bg-[#F3EBFF] dark:bg-white/10 text-brand transition-colors"
+          className="relative w-9 h-9 flex items-center justify-center rounded-lg bg-[#E8EDF3] dark:bg-white/10 text-link transition-colors"
         >
           <Bell className="w-4 h-4" />
           {hasUnreadCommunity && (
@@ -41,7 +41,7 @@ export default function DashboardTopBar({ hasUnreadCommunity }) {
         <button
           onClick={toggleTheme}
           aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
-          className="w-9 h-9 flex items-center justify-center rounded-lg bg-[#F3EBFF] dark:bg-white/10 text-brand transition-colors"
+          className="w-9 h-9 flex items-center justify-center rounded-lg bg-[#E8EDF3] dark:bg-white/10 text-link transition-colors"
         >
           {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
         </button>

@@ -230,11 +230,11 @@ export default function DashboardTour({ userId, paused = false }) {
             top: rect.top - 4,
             width: rect.width + 8,
             height: rect.height + 8,
-            boxShadow: '0 0 0 9999px rgba(15, 10, 30, 0.6), 0 0 0 3px #7C3AED',
+            boxShadow: '0 0 0 9999px rgba(15,26,42,0.6), 0 0 0 3px #264D73',
           }}
         />
       ) : (
-        <div className="absolute inset-0 bg-[rgba(15,10,30,0.6)]" />
+        <div className="absolute inset-0 bg-[rgba(15,26,42,0.6)]" />
       )}
       {/* Click-catcher so the page underneath can't be used mid-tour. */}
       <div className="absolute inset-0" onClick={(e) => e.stopPropagation()} />
@@ -245,7 +245,7 @@ export default function DashboardTour({ userId, paused = false }) {
         role="dialog"
         aria-modal="true"
         aria-labelledby="dashboard-tour-title"
-        className="fixed bg-white dark:bg-[#181818] rounded-2xl p-5 shadow-[0_20px_50px_-12px_rgba(20,10,50,.55)] outline-none"
+        className="fixed bg-white dark:bg-[#131E2F] rounded-2xl p-5 shadow-[0_20px_50px_-12px_rgba(15,26,42,.55)] outline-none"
         style={cardStyle}
       >
         {/* Tap targets: the close / Skip / Back controls have a 44px hit area (the
@@ -262,7 +262,7 @@ export default function DashboardTour({ userId, paused = false }) {
         >
           <X className="w-4.5 h-4.5" />
         </button>
-        <p className="text-[11px] font-bold uppercase tracking-wide text-brand mb-1">
+        <p className="text-[11px] font-bold uppercase tracking-wide text-link mb-1">
           {index + 1} of {steps.length}
         </p>
         <h2 id="dashboard-tour-title" className="font-display font-extrabold text-[17px] text-ink pr-6">{step.title}</h2>

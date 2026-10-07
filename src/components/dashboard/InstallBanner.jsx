@@ -34,8 +34,8 @@ export default function InstallBanner() {
   };
 
   return (
-    <div className="flex items-center gap-3 bg-[#F3EBFF] dark:bg-brand/10 border border-brand/20 rounded-xl px-4 py-3 mb-5">
-      <Download className="w-4 h-4 text-brand flex-shrink-0" />
+    <div className="flex items-center gap-3 bg-[#E8EDF3] dark:bg-brand/10 border border-brand/20 rounded-xl px-4 py-3 mb-5">
+      <Download className="w-4 h-4 text-link flex-shrink-0" />
       <p className="flex-1 min-w-0 text-[13px] font-semibold text-body-strong">
         {canPrompt
           ? 'Install this dashboard as an app — one tap from your home screen, no browser tabs.'

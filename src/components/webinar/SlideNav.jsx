@@ -7,7 +7,7 @@ export default function SlideNav({ index, total, slides, onNext, onPrev, onJump 
         onClick={onPrev}
         disabled={index === 0}
         aria-label="Previous slide"
-        className="w-9 h-9 flex items-center justify-center rounded-full bg-[#F3EBFF] dark:bg-white/10 text-brand disabled:opacity-30 disabled:cursor-not-allowed transition-opacity flex-shrink-0"
+        className="w-9 h-9 flex items-center justify-center rounded-full bg-[#E8EDF3] dark:bg-white/10 text-link disabled:opacity-30 disabled:cursor-not-allowed transition-opacity flex-shrink-0"
       >
         <ChevronLeft className="w-4 h-4" />
       </button>

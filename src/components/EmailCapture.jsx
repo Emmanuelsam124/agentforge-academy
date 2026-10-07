@@ -37,12 +37,12 @@ export default function EmailCapture({ source = 'site', className = '' }) {
 
   return (
     <aside
-      className={`rounded-2xl border-[1.5px] border-brand/25 bg-[#F8F4FF] dark:bg-brand/10 p-5 sm:p-6 ${className}`}
+      className={`rounded-2xl border-[1.5px] border-brand/25 bg-[#F7F9FC] dark:bg-brand/10 p-5 sm:p-6 ${className}`}
       aria-label="Free AI agent starter series"
     >
       {status === 'sent' ? (
         <div className="flex items-start gap-3">
-          <MailCheck className="w-6 h-6 text-brand flex-shrink-0 mt-0.5" />
+          <MailCheck className="w-6 h-6 text-link flex-shrink-0 mt-0.5" />
           <div>
             <p className="font-display font-extrabold text-ink text-[16px] mb-1">Check your inbox</p>
             <p className="text-[14px] text-body leading-relaxed">
@@ -54,7 +54,7 @@ export default function EmailCapture({ source = 'site', className = '' }) {
       ) : (
         <>
           <div className="flex items-center gap-2 mb-1">
-            <Sparkles className="w-4 h-4 text-brand" />
+            <Sparkles className="w-4 h-4 text-link" />
             <p className="font-display font-extrabold text-ink text-[16px]">Build your first AI agent — free</p>
           </div>
           <p className="text-[14px] text-body leading-relaxed mb-4">
@@ -72,7 +72,7 @@ export default function EmailCapture({ source = 'site', className = '' }) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
-              className="flex-1 min-w-0 rounded-xl border-[1.5px] border-border-soft bg-white dark:bg-[#181818] text-ink px-4 py-3 text-[15px] focus:outline-none focus:border-brand"
+              className="flex-1 min-w-0 rounded-xl border-[1.5px] border-border-soft bg-white dark:bg-[#131E2F] text-ink px-4 py-3 text-[15px] focus:outline-none focus:border-brand"
             />
             {/* Honeypot — hidden from people and from assistive tech. */}
             <input
@@ -95,14 +95,14 @@ export default function EmailCapture({ source = 'site', className = '' }) {
             </button>
           </form>
           {error && (
-            <div className="mt-3 flex items-start gap-2 text-sm text-rose bg-[#FDEEF4] dark:bg-rose/10 border border-rose/20 rounded-lg px-3 py-2.5">
+            <div className="mt-3 flex items-start gap-2 text-sm text-rose bg-[#FBEAE9] dark:bg-rose/10 border border-rose/20 rounded-lg px-3 py-2.5">
               <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
               {error}
             </div>
           )}
           <p className="text-[12px] text-body mt-3">
             We'll email you a link to confirm. Unsubscribe any time with one click. See our{' '}
-            <Link to="/legal/privacy" className="underline hover:text-brand">privacy policy</Link>.
+            <Link to="/legal/privacy" className="underline hover:text-link">privacy policy</Link>.
           </p>
         </>
       )}

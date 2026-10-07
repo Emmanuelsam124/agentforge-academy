@@ -27,26 +27,26 @@ const TRIGGERS = [
 // each with its own job, feeding off the same hub.
 const BOARD_AGENTS = [
   { id: 'research', x: 650, y: 100, icon: Search, accent: '#60A5FA', title: 'Research agent', sub: 'Gathering context', delay: 0.5 },
-  { id: 'reply', x: 650, y: 220, icon: PenLine, accent: '#F5D90A', title: 'Reply agent', sub: 'Drafting response', delay: 0.5 },
+  { id: 'reply', x: 650, y: 220, icon: PenLine, accent: '#F2A93B', title: 'Reply agent', sub: 'Drafting response', delay: 0.5 },
   { id: 'ops', x: 650, y: 340, icon: ListChecks, accent: '#34D399', title: 'Ops agent', sub: 'Logging task', delay: 0.5 },
 ];
 
 const SUB_NODES = [
   { id: 'model', x: 290, y: 375, icon: Sparkles, accent: '#60A5FA', title: 'Model', delay: 0.3 },
-  { id: 'memory', x: 370, y: 375, icon: Brain, accent: '#C084FC', title: 'Memory', delay: 0.3 },
+  { id: 'memory', x: 370, y: 375, icon: Brain, accent: '#A4BDDC', title: 'Memory', delay: 0.3 },
 ];
 
 const EDGES = [
   { d: 'M127 130 C 175 130 205 165 248 192', from: 0, to: 0.16, color: '#29B6F6' },
   { d: 'M127 310 C 175 310 205 275 248 248', from: 0.02, to: 0.18, color: '#25D366' },
   { d: 'M412 196 C 480 160 555 122 626 100', from: 0.42, to: 0.62, color: '#60A5FA' },
-  { d: 'M415 220 C 480 220 555 220 626 220', from: 0.42, to: 0.62, color: '#F5D90A' },
+  { d: 'M415 220 C 480 220 555 220 626 220', from: 0.42, to: 0.62, color: '#F2A93B' },
   { d: 'M412 244 C 480 280 555 318 626 340', from: 0.42, to: 0.62, color: '#34D399' },
 ];
 
 const SUB_EDGES = [
   { d: 'M300 252 C 300 300 290 305 290 351', from: 0.2, to: 0.4, color: '#60A5FA' },
-  { d: 'M360 252 C 360 300 370 305 370 351', from: 0.2, to: 0.4, color: '#C084FC' },
+  { d: 'M360 252 C 360 300 370 305 370 351', from: 0.2, to: 0.4, color: '#A4BDDC' },
 ];
 
 const HANDLES = [
@@ -55,7 +55,7 @@ const HANDLES = [
 
 const RESULTS = [
   { x: 800, y: 100, text: 'Lead researched', color: '#60A5FA' },
-  { x: 800, y: 220, text: 'Reply sent', color: '#F5D90A' },
+  { x: 800, y: 220, text: 'Reply sent', color: '#F2A93B' },
   { x: 800, y: 340, text: 'Task logged', color: '#34D399' },
 ];
 
@@ -91,7 +91,7 @@ function NodeLabel({ title, sub }) {
   return (
     <div className="absolute left-1/2 top-full -translate-x-1/2 mt-[1.1cqw] text-center whitespace-nowrap">
       <div className="font-display font-bold text-white leading-tight" style={{ fontSize: 'clamp(10px, 1.3cqw, 13.5px)' }}>{title}</div>
-      {sub && <div className="text-[#A99BD6] leading-tight mt-0.5" style={{ fontSize: 'clamp(9px, 1.1cqw, 11.5px)' }}>{sub}</div>}
+      {sub && <div className="text-[#A2B1C3] leading-tight mt-0.5" style={{ fontSize: 'clamp(9px, 1.1cqw, 11.5px)' }}>{sub}</div>}
     </div>
   );
 }
@@ -109,15 +109,15 @@ function FlowNode({ x, y, icon: Icon, accent, title, sub, delay, trigger }) {
           style={{
             borderRadius: 'inherit',
             borderColor: `${accent}B3`,
-            background: 'linear-gradient(145deg, #2C2350 0%, #1B1433 100%)',
+            background: '#1B2A3E',
             boxShadow: `0 10px 24px -10px ${accent}80, inset 0 1px 0 rgba(255,255,255,.06)`,
           }}
         >
           <Icon style={{ width: '2.7cqw', height: '2.7cqw', color: accent }} strokeWidth={2.2} />
         </div>
         {trigger && (
-          <span className="absolute -top-[0.9cqw] -left-[0.9cqw] w-[2.4cqw] h-[2.4cqw] rounded-full bg-[#F5D90A] flex items-center justify-center shadow-[0_4px_10px_rgba(245,217,10,.45)]">
-            <Zap style={{ width: '1.4cqw', height: '1.4cqw' }} className="text-[#1A1333]" fill="currentColor" />
+          <span className="absolute -top-[0.9cqw] -left-[0.9cqw] w-[2.4cqw] h-[2.4cqw] rounded-full bg-[#F2A93B] flex items-center justify-center shadow-[0_4px_10px_rgba(245,217,10,.45)]">
+            <Zap style={{ width: '1.4cqw', height: '1.4cqw' }} className="text-[#0F1A2A]" fill="currentColor" />
           </span>
         )}
       </div>
@@ -133,7 +133,7 @@ function SubNode({ x, y, icon: Icon, accent, title, delay }) {
         <Ping color={`${accent}99`} delay={delay} scale={1.5} />
         <div
           className="absolute inset-0 rounded-full flex items-center justify-center border-[1.5px] border-dashed"
-          style={{ borderColor: `${accent}B3`, background: 'linear-gradient(145deg, #2C2350 0%, #1B1433 100%)' }}
+          style={{ borderColor: `${accent}B3`, background: '#1B2A3E' }}
         >
           <Icon style={{ width: '2cqw', height: '2cqw', color: accent }} strokeWidth={2.2} />
         </div>
@@ -147,20 +147,20 @@ function HubNode() {
   return (
     <div className="absolute -translate-x-1/2 -translate-y-1/2" style={pct(330, 220)}>
       <div className="relative w-[17cqw] h-[6.4cqw] rounded-[1.3cqw]">
-        <Ping color="#A78BFA99" delay={0.18} scale={1.15} />
+        <Ping color="#A7C0DE99" delay={0.18} scale={1.15} />
         <div
-          className="absolute inset-0 rounded-[1.3cqw] border-[1.5px] border-[#A78BFA] flex items-center gap-[1.1cqw] px-[1.2cqw]"
+          className="absolute inset-0 rounded-[1.3cqw] border-[1.5px] border-[#A7C0DE] flex items-center gap-[1.1cqw] px-[1.2cqw]"
           style={{
-            background: 'linear-gradient(135deg, #3B2A6E 0%, #221941 60%, #1B1433 100%)',
-            boxShadow: '0 14px 32px -10px rgba(124,58,237,.7), inset 0 1px 0 rgba(255,255,255,.08)',
+            background: '#1B2A3E',
+            boxShadow: '0 14px 32px -10px rgba(15,26,42,.7), inset 0 1px 0 rgba(255,255,255,.08)',
           }}
         >
-          <div className="w-[4cqw] h-[4cqw] rounded-[1cqw] flex-shrink-0 flex items-center justify-center bg-gradient-to-br from-[#9D5CFF] to-[#7C3AED] animate-node-breathe">
+          <div className="w-[4cqw] h-[4cqw] rounded-[1cqw] flex-shrink-0 flex items-center justify-center bg-brand animate-node-breathe">
             <Bot style={{ width: '2.3cqw', height: '2.3cqw' }} className="text-white" strokeWidth={2.2} />
           </div>
           <div className="min-w-0 whitespace-nowrap">
             <div className="font-display font-extrabold text-white leading-tight" style={{ fontSize: 'clamp(11px, 1.45cqw, 15px)' }}>Your agent</div>
-            <div className="flex items-center gap-1 text-[#C9BFE8] leading-tight mt-0.5" style={{ fontSize: 'clamp(9px, 1.1cqw, 11.5px)' }}>
+            <div className="flex items-center gap-1 text-[#D5DEE9] leading-tight mt-0.5" style={{ fontSize: 'clamp(9px, 1.1cqw, 11.5px)' }}>
               <span className="w-1.5 h-1.5 rounded-full bg-[#34D399] animate-pulse" /> Coordinating…
             </div>
           </div>
@@ -193,13 +193,13 @@ export default function AgentsLiveFlowDiagram() {
       ref={rootRef}
       role="img"
       aria-label="Animated diagram: a message on Telegram or WhatsApp reaches your AI agent, which coordinates a team of agents sharing one dashboard — one researches, one drafts the reply, one logs the task — each confirming when it's done."
-      className="relative rounded-[24px] overflow-hidden border border-white/10 bg-[#130E24] shadow-[0_30px_60px_-24px_rgba(80,40,160,.6)]"
+      className="relative rounded-[24px] overflow-hidden border border-white/10 bg-[#0F1A2A] shadow-[0_30px_60px_-24px_rgba(15,26,42,.6)]"
     >
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            'radial-gradient(60% 70% at 30% 45%, rgba(124,58,237,.28) 0%, transparent 70%), radial-gradient(45% 55% at 88% 75%, rgba(52,211,153,.12) 0%, transparent 70%)',
+            'transparent',
         }}
       />
 
@@ -210,10 +210,10 @@ export default function AgentsLiveFlowDiagram() {
             <span className="w-2.5 h-2.5 rounded-full bg-[#FEBC2E]" />
             <span className="w-2.5 h-2.5 rounded-full bg-[#28C840]" />
           </div>
-          <span className="text-[12.5px] font-semibold text-[#C9BFE8] truncate">agent-team.dashboard</span>
+          <span className="text-[12.5px] font-semibold text-[#D5DEE9] truncate">agent-team.dashboard</span>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
-          <span className="hidden sm:inline text-[11.5px] text-[#8E82B8]">Runs automatically, 24/7</span>
+          <span className="hidden sm:inline text-[11.5px] text-[#7A8CA0]">Runs automatically, 24/7</span>
           <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#34D399] bg-[#34D399]/10 border border-[#34D399]/25 px-2.5 py-1 rounded-full">
             <span className="w-1.5 h-1.5 rounded-full bg-[#34D399] animate-pulse" /> Active
           </span>
@@ -242,13 +242,6 @@ export default function AgentsLiveFlowDiagram() {
               <filter id="ald-glow" x="-100%" y="-100%" width="300%" height="300%">
                 <feGaussianBlur stdDeviation="4" />
               </filter>
-              <linearGradient id="ald-flow" gradientUnits="userSpaceOnUse" x1="95" y1="0" x2="800" y2="0">
-                <stop offset="0%" stopColor="#29B6F6" />
-                <stop offset="18%" stopColor="#25D366" />
-                <stop offset="48%" stopColor="#A78BFA" />
-                <stop offset="74%" stopColor="#F5D90A" />
-                <stop offset="100%" stopColor="#34D399" />
-              </linearGradient>
             </defs>
 
             <rect width={W} height={H} fill="url(#ald-grid)" />
@@ -256,12 +249,12 @@ export default function AgentsLiveFlowDiagram() {
             {/* Dashboard panel — groups the 3 board agents visually so the
                 "multi-agent dashboard" reads as one shared surface, not
                 three unrelated branches. */}
-            <rect x="565" y="40" width="390" height="360" rx="18" fill="rgba(167,139,250,.05)" stroke="#A78BFA" strokeOpacity="0.35" strokeWidth="1.5" strokeDasharray="6 6" />
+            <rect x="565" y="40" width="390" height="360" rx="18" fill="rgba(15,26,42,.05)" stroke="#A7C0DE" strokeOpacity="0.35" strokeWidth="1.5" strokeDasharray="6 6" />
 
             {EDGES.map((e) => (
               <g key={e.d}>
-                <path d={e.d} fill="none" stroke="url(#ald-flow)" strokeWidth="6" strokeOpacity="0.14" strokeLinecap="round" />
-                <path d={e.d} fill="none" stroke="url(#ald-flow)" strokeWidth="2.2" strokeLinecap="round" strokeDasharray="7 5" className="animate-dash-flow" />
+                <path d={e.d} fill="none" stroke="#86B4E6" strokeWidth="6" strokeOpacity="0.14" strokeLinecap="round" />
+                <path d={e.d} fill="none" stroke="#86B4E6" strokeWidth="2.2" strokeLinecap="round" strokeDasharray="7 5" className="animate-dash-flow" />
               </g>
             ))}
             {SUB_EDGES.map((e) => (
@@ -269,7 +262,7 @@ export default function AgentsLiveFlowDiagram() {
             ))}
 
             {HANDLES.map(([cx, cy]) => (
-              <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r="4.5" fill="#130E24" stroke="#8E82B8" strokeWidth="1.5" />
+              <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r="4.5" fill="#0F1A2A" stroke="#7A8CA0" strokeWidth="1.5" />
             ))}
 
             {EDGES.map((e) => <Packet key={e.d} {...e} />)}
@@ -277,7 +270,7 @@ export default function AgentsLiveFlowDiagram() {
           </svg>
 
           <span
-            className="absolute font-bold uppercase tracking-wide text-[#A78BFA] bg-[#130E24] px-[0.8cqw]"
+            className="absolute font-bold uppercase tracking-wide text-[#A7C0DE] bg-[#0F1A2A] px-[0.8cqw]"
             style={{ ...pct(575, 40), fontSize: 'clamp(8.5px, 1cqw, 10.5px)' }}
           >
             Multi-agent dashboard
@@ -291,11 +284,11 @@ export default function AgentsLiveFlowDiagram() {
           {RESULTS.map((r, i) => (
             <div key={r.text} className="absolute -translate-y-1/2" style={pct(r.x, r.y)}>
               <div
-                className="flex items-center gap-[0.6cqw] rounded-full border px-[1cqw] py-[0.5cqw] bg-[#1B1433]/90 backdrop-blur animate-floaty whitespace-nowrap"
+                className="flex items-center gap-[0.6cqw] rounded-full border px-[1cqw] py-[0.5cqw] bg-[#131E2F]/90 backdrop-blur animate-floaty whitespace-nowrap"
                 style={{ borderColor: `${r.color}55`, animationDelay: `${i * 0.8}s` }}
               >
                 <span className="w-[1.7cqw] h-[1.7cqw] rounded-full flex items-center justify-center" style={{ background: r.color }}>
-                  <Check style={{ width: '1.1cqw', height: '1.1cqw' }} className="text-[#130E24]" strokeWidth={3} />
+                  <Check style={{ width: '1.1cqw', height: '1.1cqw' }} className="text-[#0F1A2A]" strokeWidth={3} />
                 </span>
                 <span className="font-bold text-white" style={{ fontSize: 'clamp(9.5px, 1.15cqw, 12px)' }}>{r.text}</span>
               </div>
@@ -304,7 +297,7 @@ export default function AgentsLiveFlowDiagram() {
         </div>
       </div>
 
-      <div className="relative flex items-center justify-between gap-3 flex-wrap px-4 sm:px-5 py-3 border-t border-white/10 text-[11.5px] text-[#8E82B8]">
+      <div className="relative flex items-center justify-between gap-3 flex-wrap px-4 sm:px-5 py-3 border-t border-white/10 text-[11.5px] text-[#7A8CA0]">
         <span className="inline-flex items-center gap-1.5">
           <Check className="w-3.5 h-3.5 text-[#34D399]" strokeWidth={3} /> Last run succeeded · 6 steps · 2.1s
         </span>

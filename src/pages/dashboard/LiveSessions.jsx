@@ -12,10 +12,10 @@ function formatTime(dateStr) {
 
 function SessionCard({ session }) {
   return (
-    <div className="rounded-2xl border-[1.5px] border-border-soft bg-white dark:bg-[#181818] p-5 flex items-center justify-between flex-wrap gap-4">
+    <div className="rounded-2xl border-[1.5px] border-border-soft bg-white dark:bg-[#131E2F] p-5 flex items-center justify-between flex-wrap gap-4">
       <div className="flex items-center gap-4 min-w-0">
-        <div className="w-11 h-11 rounded-xl bg-[#F3EBFF] dark:bg-brand/15 flex items-center justify-center flex-shrink-0">
-          <Video className="w-5 h-5 text-brand" />
+        <div className="w-11 h-11 rounded-xl bg-[#E8EDF3] dark:bg-brand/15 flex items-center justify-center flex-shrink-0">
+          <Video className="w-5 h-5 text-link" />
         </div>
         <div className="min-w-0">
           <p className="font-bold text-ink truncate">{session.title}</p>
@@ -33,7 +33,7 @@ function SessionCard({ session }) {
           Join session
         </a>
       ) : (
-        <span className="flex-shrink-0 text-xs font-semibold text-gray-400 bg-[#FAF8FF] dark:bg-white/5 px-3 py-2 rounded-lg">
+        <span className="flex-shrink-0 text-xs font-semibold text-gray-400 bg-[#F6F8FB] dark:bg-white/5 px-3 py-2 rounded-lg">
           Link coming soon
         </span>
       )}
@@ -60,12 +60,12 @@ export default function LiveSessions() {
   return (
     <div>
       <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-ink mb-6 flex items-center gap-3">
-        <Video className="w-7 h-7 text-brand" /> Live Sessions
+        <Video className="w-7 h-7 text-link" /> Live Sessions
       </h1>
 
       {loading ? (
         <div className="flex justify-center py-16">
-          <Loader2 className="w-6 h-6 animate-spin text-brand" />
+          <Loader2 className="w-6 h-6 animate-spin text-link" />
         </div>
       ) : groups.length === 0 ? (
         <div className="rounded-2xl border-2 border-dashed border-border p-10 text-center">

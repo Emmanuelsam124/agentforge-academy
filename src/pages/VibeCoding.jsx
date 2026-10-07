@@ -109,11 +109,11 @@ function CohortCountdown({ dateStr }) {
   return (
     <div data-client-only className="flex flex-col items-center gap-2.5">
       <span className="inline-flex items-center gap-1.5 text-[12.5px] font-bold uppercase tracking-wide text-body">
-        <Timer className="w-3.5 h-3.5 text-brand" /> Next launch cohort starts in
+        <Timer className="w-3.5 h-3.5 text-link" /> Next launch cohort starts in
       </span>
       <div className="flex items-center gap-2 sm:gap-2.5">
         {units.map((unit) => (
-          <div key={unit.label} className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-xl px-3 sm:px-3.5 py-2 min-w-[58px] sm:min-w-[64px] text-center">
+          <div key={unit.label} className="bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-xl px-3 sm:px-3.5 py-2 min-w-[58px] sm:min-w-[64px] text-center">
             <div className="font-display font-extrabold text-xl sm:text-2xl text-ink tabular-nums leading-none">{String(unit.value).padStart(2, '0')}</div>
             <div className="text-[10.5px] font-bold uppercase tracking-wide text-gray-400 mt-1">{unit.label}</div>
           </div>
@@ -127,7 +127,7 @@ function SectionHeading({ eyebrow, children }) {
   return (
     <div className="text-center mb-9">
       {eyebrow && (
-        <span className="inline-flex items-center gap-2 text-[13px] font-bold px-4 py-1.5 rounded-full bg-[#F3EBFF] dark:bg-brand/15 text-brand mb-3">
+        <span className="inline-flex items-center gap-2 text-[13px] font-bold px-4 py-1.5 rounded-full bg-[#E8EDF3] dark:bg-brand/15 text-link mb-3">
           {eyebrow}
         </span>
       )}
@@ -159,13 +159,13 @@ export default function VibeCoding() {
       {/* Hero */}
       <div
         className="relative overflow-hidden pt-16 pb-14 px-4 sm:px-6 lg:px-[5vw] text-center"
-        style={{ background: 'radial-gradient(120% 100% at 50% 0%, #F3EBFF 0%, #FBFAFF 55%)' }}
+        style={{ background: '#F6F8FB' }}
       >
         <div className="relative max-w-3xl mx-auto">
           <m.span
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 bg-white dark:bg-[#181818] border-[1.5px] border-border text-brand font-bold text-[12.5px] px-4 py-2 rounded-full shadow-[0_3px_10px_rgba(124,58,237,.1)]"
+            className="inline-flex items-center gap-2 bg-white dark:bg-[#131E2F] border-[1.5px] border-border text-link font-bold text-[12.5px] px-4 py-2 rounded-full shadow-[0_3px_10px_rgba(15,26,42,.1)]"
           >
             🚀 Launch cohort — enrollment open
           </m.span>
@@ -176,7 +176,7 @@ export default function VibeCoding() {
             transition={{ delay: 0.1 }}
             className="font-display font-extrabold text-[36px] sm:text-[54px] leading-[1.05] text-ink tracking-[-1.5px] mt-5"
           >
-            Stop just using AI. <span className="text-brand">Start building with it.</span>
+            Stop just using AI. <span className="text-link">Start building with it.</span>
           </m.h1>
 
           <m.p
@@ -197,11 +197,11 @@ export default function VibeCoding() {
           >
             <a
               href="#pricing"
-              className="bg-brand text-white font-extrabold text-base px-8 py-4 rounded-2xl shadow-[0_10px_22px_rgba(124,58,237,.4)] hover:bg-brand-deep transition-colors"
+              className="bg-brand text-white font-extrabold text-base px-8 py-4 rounded-2xl shadow-[0_10px_22px_rgba(15,26,42,.4)] hover:bg-brand-deep transition-colors"
             >
               Join the launch cohort — ₦{VIBECODING_PRICE.toLocaleString()} →
             </a>
-            <a href="#what-youll-build" className="text-body-strong font-bold text-[14.5px] hover:text-brand transition-colors">
+            <a href="#what-youll-build" className="text-body-strong font-bold text-[14.5px] hover:text-link transition-colors">
               See what you'll build ↓
             </a>
           </m.div>
@@ -213,21 +213,21 @@ export default function VibeCoding() {
       </div>
 
       {/* You have ideas */}
-      <div className="bg-[#1A1333] py-16 px-4 sm:px-6 lg:px-[5vw]">
+      <div className="bg-[#0F1A2A] py-16 px-4 sm:px-6 lg:px-[5vw]">
         <div className="max-w-3xl mx-auto text-center">
-          <span className="text-[13px] font-bold uppercase tracking-[3px] mb-5 inline-block" style={{ color: '#B39DFF' }}>
+          <span className="text-[13px] font-bold uppercase tracking-[3px] mb-5 inline-block" style={{ color: '#B8CCE4' }}>
             You have ideas
           </span>
           <h2 className="font-display font-extrabold text-[26px] sm:text-[38px] leading-[1.15] tracking-[-1px] text-white">
             Now learn how to build them.
           </h2>
-          <p className="text-[#E5DEF7] text-[15px] leading-relaxed mt-4 max-w-lg mx-auto">
+          <p className="text-[#E2EAF3] text-[15px] leading-relaxed mt-4 max-w-lg mx-auto">
             You may think you need to become a professional programmer before you can build a website, a business
             tool, an online platform, or an AI assistant. <span className="text-yellow font-bold">You don't.</span> With the right
             workflow, you can describe an idea, work with AI to plan it, generate and understand code, test what you
             build, fix problems, and turn your idea into a working product.
           </p>
-          <p className="text-[#C9BFE8] text-[14px] mt-7">
+          <p className="text-[#D5DEE9] text-[14px] mt-7">
             Africa shouldn't just use AI. <span className="text-yellow font-bold">Africa should build with AI.</span>
           </p>
         </div>
@@ -238,7 +238,7 @@ export default function VibeCoding() {
         <SectionHeading eyebrow="The Social Dev VIBE Method">The framework behind every project</SectionHeading>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3.5 max-w-4xl mx-auto">
           {VIBE_STEPS.map((step) => (
-            <div key={step.letter} className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl p-5 text-center">
+            <div key={step.letter} className="bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-2xl p-5 text-center">
               <div className="w-11 h-11 mx-auto rounded-full bg-brand text-white font-display font-extrabold text-lg flex items-center justify-center mb-3">
                 {step.letter}
               </div>
@@ -254,10 +254,10 @@ export default function VibeCoding() {
         <SectionHeading eyebrow="Six real projects">What you'll build</SectionHeading>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3.5 max-w-4xl mx-auto">
           {PROJECTS.map((p, i) => (
-            <div key={p.name} className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl p-5">
+            <div key={p.name} className="bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-2xl p-5">
               <div className="flex items-center gap-2 mb-2.5">
                 <span className="text-xl">{p.icon}</span>
-                <span className="text-[10.5px] font-bold uppercase tracking-wide text-brand">Project {i + 1}</span>
+                <span className="text-[10.5px] font-bold uppercase tracking-wide text-link">Project {i + 1}</span>
               </div>
               <h3 className="font-display font-bold text-[14px] text-ink mb-1.5">{p.name}</h3>
               <p className="text-[12.5px] text-body leading-relaxed">{p.text}</p>
@@ -267,7 +267,7 @@ export default function VibeCoding() {
       </div>
 
       {/* 4-week timeline */}
-      <div id="curriculum" className="bg-[#FBFAFF] dark:bg-[#141416] border-y border-border-soft px-4 sm:px-6 lg:px-[5vw] py-16">
+      <div id="curriculum" className="bg-[#F6F8FB] dark:bg-[#141416] border-y border-border-soft px-4 sm:px-6 lg:px-[5vw] py-16">
         <div className="max-w-4xl mx-auto">
           <SectionHeading eyebrow="4 weeks, 8 live classes">Your bootcamp, week by week</SectionHeading>
           <div className="flex flex-col gap-3">
@@ -279,10 +279,10 @@ export default function VibeCoding() {
                   </div>
                   {i < WEEKS.length - 1 && <div className="w-0.5 flex-1 bg-brand/25 my-1" />}
                 </div>
-                <div className={`bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl p-4.5 flex-1 ${i < WEEKS.length - 1 ? 'mb-1' : ''}`}>
+                <div className={`bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-2xl p-4.5 flex-1 ${i < WEEKS.length - 1 ? 'mb-1' : ''}`}>
                   <p className="font-display font-bold text-[14.5px] text-ink leading-tight">Week {w.week} — {w.title}</p>
                   <p className="text-[12.5px] text-body mt-1.5 leading-relaxed">{w.text}</p>
-                  <p className="text-[11.5px] text-brand font-bold mt-2">Project: {w.project}</p>
+                  <p className="text-[11.5px] text-link font-bold mt-2">Project: {w.project}</p>
                 </div>
               </div>
             ))}
@@ -307,7 +307,7 @@ export default function VibeCoding() {
         <SectionHeading eyebrow="Who is this for">You don't need to be a programmer</SectionHeading>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 max-w-4xl mx-auto">
           {WHO_FOR.map((w) => (
-            <div key={w.title} className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl p-4.5">
+            <div key={w.title} className="bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-2xl p-4.5">
               <h3 className="font-display font-bold text-[13.5px] text-ink mb-1.5">{w.title}</h3>
               <p className="text-[12px] text-body leading-relaxed">{w.text}</p>
             </div>
@@ -320,8 +320,8 @@ export default function VibeCoding() {
         <SectionHeading eyebrow="Your AI development toolkit">The tools you'll use</SectionHeading>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 max-w-4xl mx-auto">
           {TOOLKIT.map((t) => (
-            <div key={t.name} className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl p-4 text-center">
-              <div className="w-9 h-9 mx-auto rounded-lg bg-[#F3EBFF] dark:bg-brand/15 text-brand flex items-center justify-center mb-2.5"><t.icon className="w-4.5 h-4.5" /></div>
+            <div key={t.name} className="bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-2xl p-4 text-center">
+              <div className="w-9 h-9 mx-auto rounded-lg bg-[#E8EDF3] dark:bg-brand/15 text-link flex items-center justify-center mb-2.5"><t.icon className="w-4.5 h-4.5" /></div>
               <h3 className="font-display font-bold text-[12.5px] text-ink mb-1">{t.name}</h3>
               <p className="text-[11px] text-body leading-relaxed">{t.text}</p>
             </div>
@@ -334,9 +334,9 @@ export default function VibeCoding() {
         <SectionHeading>Your questions, answered</SectionHeading>
         <div className="grid sm:grid-cols-2 gap-3.5 max-w-3xl mx-auto">
           {FAQS.map((item) => (
-            <div key={item.q} className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl p-4.5">
+            <div key={item.q} className="bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-2xl p-4.5">
               <div className="flex items-start gap-2.5 mb-1.5">
-                <CircleHelp className="w-4 h-4 text-brand mt-0.5 flex-shrink-0" />
+                <CircleHelp className="w-4 h-4 text-link mt-0.5 flex-shrink-0" />
                 <span className="font-display font-bold text-[14px] text-ink">{item.q}</span>
               </div>
               <p className="text-[13px] text-body leading-relaxed m-0 pl-6.5">{item.a}</p>
@@ -356,13 +356,13 @@ export default function VibeCoding() {
         )}
 
         {checkoutError && (
-          <div className="max-w-md mx-auto mb-6 flex items-start gap-2 text-sm text-rose bg-[#FDEEF4] dark:bg-rose/10 border border-rose/20 rounded-lg px-3 py-2.5 text-left">
+          <div className="max-w-md mx-auto mb-6 flex items-start gap-2 text-sm text-rose bg-[#FBEAE9] dark:bg-rose/10 border border-rose/20 rounded-lg px-3 py-2.5 text-left">
             <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
             {checkoutError}
           </div>
         )}
 
-        <div className="rounded-[24px] border-[2.5px] border-brand bg-[#FAF7FF] dark:bg-[#181022] p-7 sm:p-8 relative">
+        <div className="rounded-[24px] border-[2.5px] border-brand bg-[#F6F8FB] dark:bg-[#131E2F] p-7 sm:p-8 relative">
           <span className="absolute -top-3.5 left-7 bg-brand text-white text-[11px] font-extrabold px-3.5 py-1.5 rounded-full">
             LAUNCH COHORT
           </span>
@@ -370,7 +370,7 @@ export default function VibeCoding() {
             ₦{VIBECODING_PRICE.toLocaleString()} <span className="text-base font-bold text-body">one-time</span>
           </div>
           {cohortDate && (
-            <span className="inline-flex items-center gap-1 bg-white dark:bg-[#141319] text-brand font-bold text-[12px] px-2.5 py-1 rounded-full w-fit mb-4">
+            <span className="inline-flex items-center gap-1 bg-white dark:bg-[#131E2F] text-link font-bold text-[12px] px-2.5 py-1 rounded-full w-fit mb-4">
               <CalendarDays className="w-3.5 h-3.5" /> Cohort starts {cohortDate}
             </span>
           )}
@@ -402,7 +402,7 @@ export default function VibeCoding() {
             <button
               onClick={handleCheckout}
               disabled={checkoutLoading === 'vibecoding'}
-              className="flex items-center justify-center gap-2 w-full bg-brand hover:bg-brand-deep disabled:opacity-60 text-white font-extrabold px-5 py-3.5 rounded-xl shadow-[0_10px_22px_rgba(124,58,237,.35)] transition-colors"
+              className="flex items-center justify-center gap-2 w-full bg-brand hover:bg-brand-deep disabled:opacity-60 text-white font-extrabold px-5 py-3.5 rounded-xl shadow-[0_10px_22px_rgba(15,26,42,.35)] transition-colors"
             >
               {checkoutLoading === 'vibecoding' ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
               {checkoutLoading === 'vibecoding' ? 'Starting checkout…' : `Join the launch cohort — ₦${VIBECODING_PRICE.toLocaleString()} →`}
@@ -419,12 +419,12 @@ export default function VibeCoding() {
       {/* Final CTA */}
       <div className="px-4 sm:px-6 lg:px-[5vw] pb-16 max-w-6xl mx-auto">
         <div
-          className="rounded-[24px] px-8 sm:px-10 py-9 flex items-center justify-between flex-wrap gap-5 shadow-[0_20px_44px_-16px_rgba(124,58,237,.6)]"
-          style={{ background: 'linear-gradient(120deg, #7C3AED, #9D5CFF)' }}
+          className="rounded-[24px] px-8 sm:px-10 py-9 flex items-center justify-between flex-wrap gap-5 shadow-[0_20px_44px_-16px_rgba(15,26,42,.6)]"
+          style={{ background: '#264D73' }}
         >
           <div>
             <h2 className="font-display font-extrabold text-2xl sm:text-[26px] text-white m-0">Ready to build with AI?</h2>
-            <p className="text-[#EDE4FF] mt-2 mb-0 text-[15px]">4 weeks. 8 live classes. Your own product, shipped.</p>
+            <p className="text-[#D5DEE9] mt-2 mb-0 text-[15px]">4 weeks. 8 live classes. Your own product, shipped.</p>
           </div>
           <a
             href="#pricing"

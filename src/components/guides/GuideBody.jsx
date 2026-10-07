@@ -44,13 +44,13 @@ function Callout({ block }) {
       className={`flex items-start gap-3 rounded-xl px-4 py-3.5 my-5 ${
         isWarning
           ? 'bg-[#FEF9E7] dark:bg-amber-500/10 border border-amber/30'
-          : 'bg-[#F3EBFF] dark:bg-brand/10 border border-brand/20'
+          : 'bg-[#E8EDF3] dark:bg-brand/10 border border-brand/20'
       }`}
     >
       {isWarning ? (
         <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
       ) : (
-        <Lightbulb className="w-4 h-4 text-brand mt-0.5 flex-shrink-0" />
+        <Lightbulb className="w-4 h-4 text-link mt-0.5 flex-shrink-0" />
       )}
       <p className="text-[14px] text-body-strong leading-relaxed m-0">
         {block.title && <strong className="text-ink">{block.title} </strong>}
@@ -58,7 +58,7 @@ function Callout({ block }) {
         {block.linkTo && (
           <>
             {' '}
-            <GuideLink to={block.linkTo} className="text-brand font-bold hover:underline">
+            <GuideLink to={block.linkTo} className="text-link font-bold hover:underline">
               {block.linkLabel || 'Read more'}
             </GuideLink>
           </>
@@ -70,14 +70,14 @@ function Callout({ block }) {
 
 function Cta({ block }) {
   return (
-    <div className="mt-8 rounded-2xl border-[1.5px] border-brand/30 bg-[#F8F6FF] dark:bg-brand/10 p-6">
-      <div className="text-[10px] font-bold uppercase tracking-widest text-brand mb-2">
+    <div className="mt-8 rounded-2xl border-[1.5px] border-brand/30 bg-[#F8FAFD] dark:bg-brand/10 p-6">
+      <div className="text-[10px] font-bold uppercase tracking-widest text-link mb-2">
         {block.eyebrow || 'Build this one'}
       </div>
       <p className="text-[15px] text-body leading-relaxed mb-5"><Rich text={block.text} /></p>
       <GuideLink
         to={block.to}
-        className="inline-flex items-center gap-2 bg-brand hover:bg-brand-deep text-white font-bold text-sm px-5 py-3 rounded-xl transition-colors shadow-[0_6px_16px_rgba(124,58,237,.3)]"
+        className="inline-flex items-center gap-2 bg-brand hover:bg-brand-deep text-white font-bold text-sm px-5 py-3 rounded-xl transition-colors shadow-[0_6px_16px_rgba(15,26,42,.3)]"
       >
         <span>{block.tier ? `${block.label} — ${block.tier} session` : block.label}</span>
         <ArrowRight className="w-4 h-4 flex-shrink-0" />
@@ -102,7 +102,7 @@ export default function GuideBody({ blocks }) {
             return (
               <div key={i} className="pt-9 mt-1 border-t border-border-soft first:border-none first:pt-2">
                 {block.eyebrow && (
-                  <div className="text-[10px] font-bold uppercase tracking-widest text-brand mb-2">{block.eyebrow}</div>
+                  <div className="text-[10px] font-bold uppercase tracking-widest text-link mb-2">{block.eyebrow}</div>
                 )}
                 <h2 className="font-display text-2xl sm:text-[28px] font-extrabold text-ink mb-4" style={{ textWrap: 'balance' }}>
                   {block.title}
@@ -178,7 +178,7 @@ export default function GuideBody({ blocks }) {
           case 'practice':
             return (
               <div key={i} className="flex gap-3.5 py-4 border-b border-border-soft last:border-none">
-                <div className="flex-shrink-0 w-7 h-7 rounded-full bg-[#F3EBFF] dark:bg-brand/15 text-brand flex items-center justify-center font-display font-extrabold text-[13px] mt-0.5">
+                <div className="flex-shrink-0 w-7 h-7 rounded-full bg-[#E8EDF3] dark:bg-brand/15 text-link flex items-center justify-center font-display font-extrabold text-[13px] mt-0.5">
                   {block.n}
                 </div>
                 <div>

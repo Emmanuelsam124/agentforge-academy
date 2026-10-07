@@ -31,7 +31,7 @@ export default function WhoThisIsForSlide() {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-white dark:bg-[#181818] border-[2px] border-green rounded-2xl p-6"
+          className="bg-white dark:bg-[#131E2F] border-[2px] border-green rounded-2xl p-6"
         >
           <h3 className="font-display font-bold text-base text-ink mb-4">This is for you if…</h3>
           <ul className="flex flex-col gap-2.5">
@@ -47,7 +47,7 @@ export default function WhoThisIsForSlide() {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl p-6"
+          className="bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-2xl p-6"
         >
           <h3 className="font-display font-bold text-base text-ink mb-4">This might not be for you if…</h3>
           <ul className="flex flex-col gap-2.5">

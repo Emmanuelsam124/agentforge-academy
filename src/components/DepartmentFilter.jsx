@@ -10,7 +10,7 @@ export default function DepartmentFilter({ value, onChange }) {
             key={dept.id}
             onClick={() => onChange(dept.id)}
             className={`flex-shrink-0 whitespace-nowrap flex items-center gap-1.5 font-bold text-[13px] px-3.5 py-2 rounded-full border-[1.5px] transition-colors ${
-              active ? 'bg-brand border-brand text-white' : 'bg-[#FAF8FF] dark:bg-[#181818] border-border text-body-strong hover:border-brand/50'
+              active ? 'bg-brand border-brand text-white' : 'bg-[#F6F8FB] dark:bg-[#131E2F] border-border text-body-strong hover:border-brand/50'
             }`}
           >
             <span>{dept.icon}</span>

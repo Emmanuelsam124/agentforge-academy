@@ -69,7 +69,7 @@ export default function ImageUploadField({ value, onChange, slug, placeholder, d
   };
 
   const inputCls =
-    'w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0A090F] focus:outline-none focus:ring-2 focus:ring-brand/40';
+    'w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0C1420] focus:outline-none focus:ring-2 focus:ring-brand/40';
 
   return (
     <div className="space-y-2">

@@ -28,7 +28,7 @@ export default function PathDetail({ progress }) {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
       <div>
         <h1 className="font-display text-3xl sm:text-4xl font-extrabold text-ink flex items-center gap-3">
-          <Compass className="w-7 h-7 text-brand" />
+          <Compass className="w-7 h-7 text-link" />
           Learning Paths
         </h1>
         <p className="text-body mt-2 max-w-2xl">
@@ -48,7 +48,7 @@ export default function PathDetail({ progress }) {
               <Link
                 key={level.id}
                 to={`/catalog?difficulty=${encodeURIComponent(level.id)}`}
-                className="rounded-2xl border-[1.5px] bg-white dark:bg-[#181818] hover:bg-[#FAF8FF] dark:hover:bg-white/5 transition-colors p-5 flex flex-col gap-4"
+                className="rounded-2xl border-[1.5px] bg-white dark:bg-[#131E2F] hover:bg-[#F6F8FB] dark:hover:bg-white/5 transition-colors p-5 flex flex-col gap-4"
                 style={{ borderColor: `${level.color}40` }}
               >
                 <div className="flex items-center justify-between">
@@ -83,7 +83,7 @@ export default function PathDetail({ progress }) {
               <Link
                 key={dept.id}
                 to={`/catalog?department=${dept.id}`}
-                className="rounded-2xl border-[1.5px] border-border-soft bg-white dark:bg-[#181818] hover:bg-[#FAF8FF] dark:hover:bg-white/5 transition-colors p-5 flex flex-col gap-3"
+                className="rounded-2xl border-[1.5px] border-border-soft bg-white dark:bg-[#131E2F] hover:bg-[#F6F8FB] dark:hover:bg-white/5 transition-colors p-5 flex flex-col gap-3"
               >
                 <div className="flex items-center justify-between">
                   <span className="flex items-center gap-2 font-bold text-ink">

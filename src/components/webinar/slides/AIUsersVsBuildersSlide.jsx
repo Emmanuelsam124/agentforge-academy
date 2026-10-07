@@ -31,7 +31,7 @@ export default function AIUsersVsBuildersSlide() {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-[18px] p-5"
+          className="bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-[18px] p-5"
         >
           <div className="flex items-center gap-2.5 mb-3">
             <div className="w-9 h-9 rounded-lg bg-gray-100 dark:bg-white/10 text-gray-400 flex items-center justify-center flex-shrink-0">
@@ -52,10 +52,10 @@ export default function AIUsersVsBuildersSlide() {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-white dark:bg-[#181818] border-[2px] border-brand rounded-[18px] p-5 shadow-[0_16px_36px_-18px_rgba(124,58,237,.4)]"
+          className="bg-white dark:bg-[#131E2F] border-[2px] border-brand rounded-[18px] p-5 shadow-[0_16px_36px_-18px_rgba(15,26,42,.4)]"
         >
           <div className="flex items-center gap-2.5 mb-3">
-            <div className="w-9 h-9 rounded-lg bg-[#F3EBFF] dark:bg-brand/15 text-brand flex items-center justify-center flex-shrink-0">
+            <div className="w-9 h-9 rounded-lg bg-[#E8EDF3] dark:bg-brand/15 text-link flex items-center justify-center flex-shrink-0">
               <Hammer className="w-4.5 h-4.5" />
             </div>
             <h3 className="font-display font-bold text-[15px] text-ink">Building with AI</h3>
@@ -81,9 +81,9 @@ export default function AIUsersVsBuildersSlide() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.45 + i * 0.05 }}
-            className="inline-flex items-center gap-2 text-[13px] font-bold text-body-strong bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-full pl-2.5 pr-4 py-2"
+            className="inline-flex items-center gap-2 text-[13px] font-bold text-body-strong bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-full pl-2.5 pr-4 py-2"
           >
-            <span className="w-6 h-6 rounded-full bg-[#F3EBFF] dark:bg-brand/15 text-brand flex items-center justify-center flex-shrink-0">
+            <span className="w-6 h-6 rounded-full bg-[#E8EDF3] dark:bg-brand/15 text-link flex items-center justify-center flex-shrink-0">
               <r.icon className="w-3.5 h-3.5" />
             </span>
             {r.label}
@@ -97,7 +97,7 @@ export default function AIUsersVsBuildersSlide() {
         transition={{ delay: 0.9 }}
         className="text-center font-display font-bold text-base sm:text-lg text-ink mt-8"
       >
-        People who build with AI become <span className="text-brand">AI Builders.</span>
+        People who build with AI become <span className="text-link">AI Builders.</span>
       </m.p>
     </SlideShell>
   );

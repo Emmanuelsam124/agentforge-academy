@@ -61,23 +61,23 @@ export default function Account() {
   return (
     <div>
       <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-ink mb-6 flex items-center gap-3">
-        <UserCircle2 className="w-7 h-7 text-brand" /> Account
+        <UserCircle2 className="w-7 h-7 text-link" /> Account
       </h1>
 
       {loading ? (
         <div className="flex justify-center py-16">
-          <Loader2 className="w-6 h-6 animate-spin text-brand" />
+          <Loader2 className="w-6 h-6 animate-spin text-link" />
         </div>
       ) : (
         <div className="flex flex-col gap-5 max-w-lg">
-          <form onSubmit={handleSave} className="rounded-2xl border-[1.5px] border-border-soft bg-white dark:bg-[#181818] p-5 space-y-4">
+          <form onSubmit={handleSave} className="rounded-2xl border-[1.5px] border-border-soft bg-white dark:bg-[#131E2F] p-5 space-y-4">
             <div>
               <label className="block text-sm font-medium text-body-strong mb-1.5">Name</label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0A090F] focus:outline-none focus:ring-2 focus:ring-brand/40"
+                className="w-full px-3.5 py-2.5 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0C1420] focus:outline-none focus:ring-2 focus:ring-brand/40"
               />
             </div>
 
@@ -86,7 +86,7 @@ export default function Account() {
               <select
                 value={industry}
                 onChange={(e) => setIndustry(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0A090F] focus:outline-none focus:ring-2 focus:ring-brand/40"
+                className="w-full px-3.5 py-2.5 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0C1420] focus:outline-none focus:ring-2 focus:ring-brand/40"
               >
                 <option value="">Select an industry</option>
                 {industries.map((i) => <option key={i} value={i}>{i}</option>)}
@@ -98,7 +98,7 @@ export default function Account() {
                   value={customIndustry}
                   onChange={(e) => setCustomIndustry(e.target.value)}
                   placeholder="Your industry"
-                  className="w-full mt-2 px-3.5 py-2.5 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0A090F] focus:outline-none focus:ring-2 focus:ring-brand/40"
+                  className="w-full mt-2 px-3.5 py-2.5 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0C1420] focus:outline-none focus:ring-2 focus:ring-brand/40"
                 />
               )}
             </div>
@@ -115,7 +115,7 @@ export default function Account() {
             </button>
           </form>
 
-          <div className="rounded-2xl border-[1.5px] border-border-soft bg-white dark:bg-[#181818] p-5 space-y-3">
+          <div className="rounded-2xl border-[1.5px] border-border-soft bg-white dark:bg-[#131E2F] p-5 space-y-3">
             <div className="flex items-center gap-3">
               <Mail className="w-4 h-4 text-gray-400 flex-shrink-0" />
               <div>
@@ -127,7 +127,7 @@ export default function Account() {
               <KeyRound className="w-4 h-4 text-gray-400 flex-shrink-0" />
               <div>
                 <p className="text-xs text-gray-400">Password</p>
-                <Link to="/welcome" className="text-sm font-semibold text-brand hover:underline">
+                <Link to="/welcome" className="text-sm font-semibold text-link hover:underline">
                   Change your password
                 </Link>
               </div>
@@ -135,7 +135,7 @@ export default function Account() {
           </div>
 
           {!installed && (
-            <div className="rounded-2xl border-[1.5px] border-border-soft bg-white dark:bg-[#181818] p-5 space-y-3">
+            <div className="rounded-2xl border-[1.5px] border-border-soft bg-white dark:bg-[#131E2F] p-5 space-y-3">
               <div className="flex items-start gap-3">
                 <Smartphone className="w-4 h-4 text-gray-400 flex-shrink-0 mt-0.5" />
                 <div>

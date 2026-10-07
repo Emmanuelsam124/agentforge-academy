@@ -18,18 +18,18 @@ function PromptCard({ prompt }) {
   };
 
   return (
-    <div className="rounded-2xl border-[1.5px] border-border-soft bg-white dark:bg-[#181818] p-5 mb-4">
+    <div className="rounded-2xl border-[1.5px] border-border-soft bg-white dark:bg-[#131E2F] p-5 mb-4">
       <div className="flex items-center justify-between gap-3 mb-3">
         <h2 className="font-display font-bold text-[15px] text-ink">{prompt.title}</h2>
         <button
           onClick={handleCopy}
-          className="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg bg-[#FAF8FF] dark:bg-white/5 text-body-strong hover:bg-[#F3EBFF] dark:hover:bg-brand/15 hover:text-brand transition-colors flex-shrink-0"
+          className="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg bg-[#F6F8FB] dark:bg-white/5 text-body-strong hover:bg-[#E8EDF3] dark:hover:bg-brand/15 hover:text-link transition-colors flex-shrink-0"
         >
           {copied ? <Check className="w-3.5 h-3.5 text-green" /> : <Copy className="w-3.5 h-3.5" />}
           {copied ? 'Copied' : 'Copy'}
         </button>
       </div>
-      <pre className="whitespace-pre-wrap text-[12.5px] text-body-strong leading-relaxed bg-[#FAF8FF] dark:bg-white/5 rounded-xl p-4 font-sans">
+      <pre className="whitespace-pre-wrap text-[12.5px] text-body-strong leading-relaxed bg-[#F6F8FB] dark:bg-white/5 rounded-xl p-4 font-sans">
         {prompt.prompt_text}
       </pre>
     </div>
@@ -42,7 +42,7 @@ export default function VibeCodingPrompts() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
-      <Link to="/vibe-coding" className="inline-flex items-center gap-1.5 text-sm font-semibold text-body hover:text-brand transition-colors mb-6">
+      <Link to="/vibe-coding" className="inline-flex items-center gap-1.5 text-sm font-semibold text-body hover:text-link transition-colors mb-6">
         <ArrowLeft className="w-4 h-4" /> Vibe Coding Bootcamp
       </Link>
 
@@ -55,7 +55,7 @@ export default function VibeCodingPrompts() {
         </div>
       ) : !proLoading && (!hasVibeCoding || locked) ? (
         <div className="flex flex-col items-center text-center gap-3 py-16 border-2 border-dashed border-border rounded-2xl">
-          <Lock className="w-8 h-8 text-brand" />
+          <Lock className="w-8 h-8 text-link" />
           <p className="font-bold text-ink">Join the launch cohort to unlock the prompt library</p>
           <Link to="/vibe-coding#pricing" className="mt-2 inline-flex items-center gap-2 bg-brand hover:bg-brand-deep text-white font-bold px-5 py-2.5 rounded-xl transition-colors">
             See the offer

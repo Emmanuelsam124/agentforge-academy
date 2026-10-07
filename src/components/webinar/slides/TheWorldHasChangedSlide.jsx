@@ -16,13 +16,13 @@ const SCENES = [
 
 export default function TheWorldHasChangedSlide() {
   return (
-    <SlideShell background="#1A1333" contentClassName="text-center flex flex-col items-center">
+    <SlideShell background="#0F1A2A" contentClassName="text-center flex flex-col items-center">
       <m.span
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
         className="text-[13px] font-bold uppercase tracking-[3px] mb-5"
-        style={{ color: '#B39DFF' }}
+        style={{ color: '#B8CCE4' }}
       >
         Why this matters now
       </m.span>
@@ -40,7 +40,7 @@ export default function TheWorldHasChangedSlide() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.22 }}
-        className="text-[#E5DEF7] text-[15px] leading-relaxed max-w-lg mt-3"
+        className="text-[#E2EAF3] text-[15px] leading-relaxed max-w-lg mt-3"
       >
         The people getting ahead aren't necessarily the smartest. They're the ones learning how to work differently.
       </m.p>
@@ -52,7 +52,7 @@ export default function TheWorldHasChangedSlide() {
         className="flex flex-wrap justify-center gap-2 mt-6 mb-8 max-w-xl"
       >
         {WANTS.map((w) => (
-          <span key={w} className="text-[12px] font-bold text-[#E5DEF7] bg-white/[0.08] border border-white/10 rounded-full px-3 py-1.5">
+          <span key={w} className="text-[12px] font-bold text-[#E2EAF3] bg-white/[0.08] border border-white/10 rounded-full px-3 py-1.5">
             {w}
           </span>
         ))}
@@ -75,7 +75,7 @@ export default function TheWorldHasChangedSlide() {
             }`}
           >
             <span className={i === 0 ? 'text-2xl flex-shrink-0' : 'text-xl flex-shrink-0'}>{scene.icon}</span>
-            <span className={`text-[#E5DEF7] leading-relaxed ${i === 0 ? 'text-[14.5px] font-medium' : 'text-[13px]'}`}>{scene.text}</span>
+            <span className={`text-[#E2EAF3] leading-relaxed ${i === 0 ? 'text-[14.5px] font-medium' : 'text-[13px]'}`}>{scene.text}</span>
           </m.div>
         ))}
       </div>
@@ -84,7 +84,7 @@ export default function TheWorldHasChangedSlide() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.05 }}
-        className="text-[#C9BFE8] text-[14px] mt-7 max-w-md"
+        className="text-[#D5DEE9] text-[14px] mt-7 max-w-md"
       >
         The vehicle behind all of it? <span className="text-yellow font-bold">AI</span> — now cheap and simple enough that anyone can pick it up.
       </m.p>

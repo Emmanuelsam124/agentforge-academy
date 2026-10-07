@@ -179,14 +179,14 @@ export default function WebinarDeck() {
         <Link to="/" className="flex items-center gap-2 flex-shrink-0">
           <img src="/logo-icon.webp" alt="" className="w-7 h-7 object-contain rounded-md" />
           <span className="hidden sm:inline font-display font-extrabold text-sm text-ink tracking-tight">
-            Social Dev<span className="text-brand"> Technologies</span>
+            Social Dev<span className="text-link"> Technologies</span>
           </span>
         </Link>
 
         <div className="flex items-center gap-2 flex-shrink-0">
           <Link
             to="/pricing"
-            className="hidden sm:inline-flex items-center gap-1.5 bg-brand text-white font-bold text-[12.5px] px-4 py-2 rounded-full shadow-[0_6px_16px_rgba(124,58,237,.35)] hover:bg-brand-deep transition-colors"
+            className="hidden sm:inline-flex items-center gap-1.5 bg-brand text-white font-bold text-[12.5px] px-4 py-2 rounded-full shadow-[0_6px_16px_rgba(15,26,42,.35)] hover:bg-brand-deep transition-colors"
           >
             Get Builder 1 →
           </Link>
@@ -195,7 +195,7 @@ export default function WebinarDeck() {
             aria-pressed={presenterMode}
             aria-label="Toggle presenter notes"
             className={`w-9 h-9 flex items-center justify-center rounded-lg transition-colors ${
-              presenterMode ? 'bg-brand text-white' : 'bg-[#F3EBFF] dark:bg-white/10 text-brand'
+              presenterMode ? 'bg-brand text-white' : 'bg-[#E8EDF3] dark:bg-white/10 text-link'
             }`}
           >
             <NotebookText className="w-4 h-4" />
@@ -203,7 +203,7 @@ export default function WebinarDeck() {
           <button
             onClick={toggleFullscreen}
             aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
-            className="w-9 h-9 flex items-center justify-center rounded-lg bg-[#F3EBFF] dark:bg-white/10 text-brand transition-colors"
+            className="w-9 h-9 flex items-center justify-center rounded-lg bg-[#E8EDF3] dark:bg-white/10 text-link transition-colors"
           >
             {isFullscreen ? <Minimize className="w-4 h-4" /> : <Maximize className="w-4 h-4" />}
           </button>

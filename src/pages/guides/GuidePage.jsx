@@ -117,7 +117,7 @@ export default function GuidePage() {
   if (loading) {
     return (
       <div className="py-24 text-center">
-        <Loader2 className="w-6 h-6 animate-spin text-brand mx-auto" />
+        <Loader2 className="w-6 h-6 animate-spin text-link mx-auto" />
       </div>
     );
   }
@@ -136,13 +136,13 @@ export default function GuidePage() {
 
       <Link
         to="/guides"
-        className="inline-flex items-center gap-1.5 text-sm font-semibold text-body hover:text-brand transition-colors mb-7"
+        className="inline-flex items-center gap-1.5 text-sm font-semibold text-body hover:text-link transition-colors mb-7"
       >
         <ArrowLeft className="w-4 h-4" /> All guides
       </Link>
 
       <div className="flex items-center gap-2 mb-4">
-        <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-brand bg-[#F3EBFF] dark:bg-brand/15 rounded-full px-3 py-1">
+        <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-link bg-[#E8EDF3] dark:bg-brand/15 rounded-full px-3 py-1">
           <span>{guide.emoji}</span> {CATEGORY_LABEL[guide.category] || 'Guide'}
         </span>
         {guide.reading_time && (
@@ -166,7 +166,7 @@ export default function GuidePage() {
 
       {faqs.length > 0 && (
         <div className="pt-9 mt-1 border-t border-border-soft">
-          <div className="text-[10px] font-bold uppercase tracking-widest text-brand mb-2">Common questions</div>
+          <div className="text-[10px] font-bold uppercase tracking-widest text-link mb-2">Common questions</div>
           <h2 className="font-display text-2xl sm:text-[28px] font-extrabold text-ink mb-2">
             Frequently asked questions
           </h2>
@@ -197,9 +197,9 @@ export default function GuidePage() {
               <Link
                 key={g.slug}
                 to={`/guides/${g.slug}`}
-                className="flex items-start gap-3 rounded-xl border border-border-soft bg-white dark:bg-[#181818] p-4 hover:border-brand/40 transition-colors"
+                className="flex items-start gap-3 rounded-xl border border-border-soft bg-white dark:bg-[#131E2F] p-4 hover:border-brand/40 transition-colors"
               >
-                <span className="text-xl flex-shrink-0">{g.emoji || <BookOpen className="w-5 h-5 text-brand" />}</span>
+                <span className="text-xl flex-shrink-0">{g.emoji || <BookOpen className="w-5 h-5 text-link" />}</span>
                 <span className="min-w-0">
                   <span className="block font-display font-bold text-[14px] text-ink leading-snug mb-0.5">{g.title}</span>
                   {g.reading_time && <span className="block text-[12.5px] text-body leading-relaxed">{g.reading_time}</span>}

@@ -66,7 +66,7 @@ const COMPARISON = {
 
 function StepNumber({ n }) {
   return (
-    <div className="w-8 h-8 rounded-full bg-[#F3EBFF] dark:bg-brand/15 border border-border-soft flex items-center justify-center font-display font-extrabold text-[13px] text-brand flex-shrink-0">
+    <div className="w-8 h-8 rounded-full bg-[#E8EDF3] dark:bg-brand/15 border border-border-soft flex items-center justify-center font-display font-extrabold text-[13px] text-link flex-shrink-0">
       {n}
     </div>
   );
@@ -77,13 +77,13 @@ function Callout({ variant = 'tip', title, children }) {
   return (
     <div
       className={`flex items-start gap-3 rounded-xl px-4 py-3.5 my-3 ${
-        isWarning ? 'bg-[#FEF9E7] dark:bg-amber-500/10 border border-amber/30' : 'bg-[#F3EBFF] dark:bg-brand/10 border border-brand/20'
+        isWarning ? 'bg-[#FEF9E7] dark:bg-amber-500/10 border border-amber/30' : 'bg-[#E8EDF3] dark:bg-brand/10 border border-brand/20'
       }`}
     >
       {isWarning ? (
         <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
       ) : (
-        <Lightbulb className="w-4 h-4 text-brand mt-0.5 flex-shrink-0" />
+        <Lightbulb className="w-4 h-4 text-link mt-0.5 flex-shrink-0" />
       )}
       <p className="text-[13.5px] text-body-strong leading-relaxed m-0">
         <strong className="text-ink">{title}</strong> <span>{children}</span>
@@ -94,8 +94,8 @@ function Callout({ variant = 'tip', title, children }) {
 
 function CodeBlock({ label, children }) {
   return (
-    <div className="bg-[#1A1333] rounded-lg overflow-hidden my-2.5">
-      {label && <div className="text-[10.5px] font-bold uppercase tracking-wide text-[#B39DFF] px-3.5 pt-3 pb-1">{label}</div>}
+    <div className="bg-[#0F1A2A] rounded-lg overflow-hidden my-2.5">
+      {label && <div className="text-[10.5px] font-bold uppercase tracking-wide text-[#B8CCE4] px-3.5 pt-3 pb-1">{label}</div>}
       <pre className="text-[13px] text-[#EAFAF1] font-mono px-3.5 pb-3.5 pt-1 overflow-x-auto whitespace-pre-wrap m-0">{children}</pre>
     </div>
   );
@@ -105,7 +105,7 @@ function Section({ id, icon: Icon, badge, time, title, desc, children }) {
   return (
     <div id={id} className="py-10 border-b border-border-soft scroll-mt-[130px]">
       <div className="flex items-center gap-3 mb-3 flex-wrap">
-        <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-brand bg-[#F3EBFF] dark:bg-brand/15 rounded-full px-2.5 py-1">
+        <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-link bg-[#E8EDF3] dark:bg-brand/15 rounded-full px-2.5 py-1">
           <Icon className="w-3.5 h-3.5" /> <span>{badge}</span>
         </span>
         {time && <span className="text-[12.5px] text-body font-semibold ml-auto">{time}</span>}
@@ -129,7 +129,7 @@ function SignUpToUnlock() {
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
       <div className="flex flex-col items-center text-center gap-3 py-16 px-6 border-2 border-dashed border-border rounded-2xl">
-        <Lock className="w-8 h-8 text-brand" />
+        <Lock className="w-8 h-8 text-link" />
         <p className="font-display font-bold text-xl text-ink">Create a free account to unlock this guide</p>
         <p className="text-sm text-body max-w-sm">
           The full step-by-step instructions and the copy-paste Claude prompt are free once you're signed in —
@@ -193,7 +193,7 @@ export default function WhatsAppBotGuide() {
       {/* Hero */}
       <div
         className="relative overflow-hidden pt-14 pb-10 px-4 sm:px-6 lg:px-[5vw]"
-        style={{ background: 'radial-gradient(120% 100% at 85% 0%, #F3EBFF 0%, #FBFAFF 55%)' }}
+        style={{ background: '#F6F8FB' }}
       >
         <div
           className="absolute top-10 right-[12%] w-[110px] h-[110px] bg-yellow opacity-40 animate-floaty pointer-events-none hidden sm:block"
@@ -203,7 +203,7 @@ export default function WhatsAppBotGuide() {
           <m.span
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 bg-white dark:bg-[#181818] border-[1.5px] border-border text-brand font-bold text-[12.5px] px-4 py-2 rounded-full shadow-[0_3px_10px_rgba(124,58,237,.1)]"
+            className="inline-flex items-center gap-2 bg-white dark:bg-[#131E2F] border-[1.5px] border-border text-link font-bold text-[12.5px] px-4 py-2 rounded-full shadow-[0_3px_10px_rgba(15,26,42,.1)]"
           >
             📁 Free guide · Mostly file explorer, minimal typing
           </m.span>
@@ -214,7 +214,7 @@ export default function WhatsAppBotGuide() {
             transition={{ delay: 0.1 }}
             className="font-display font-extrabold text-[34px] sm:text-[46px] leading-[1.08] text-ink tracking-[-1px] mt-5"
           >
-            Build your own <span className="text-brand">AI WhatsApp<br className="hidden sm:block" /> auto-reply bot.</span>
+            Build your own <span className="text-link">AI WhatsApp<br className="hidden sm:block" /> auto-reply bot.</span>
           </m.h1>
 
           <m.p
@@ -246,10 +246,10 @@ export default function WhatsAppBotGuide() {
       ) : (
         <>
           {/* Sticky in-page nav */}
-          <div className="sticky top-[70px] z-30 bg-[#FFFDFF]/95 dark:bg-[#0A090F]/95 backdrop-blur border-b border-[#EFE9FB] dark:border-[#232228]">
+          <div className="sticky top-[70px] z-30 bg-[#FFFFFF]/95 dark:bg-[#0C1420]/95 backdrop-blur border-b border-[#E7ECF2] dark:border-[#26364B]">
             <div className="max-w-3xl mx-auto px-4 sm:px-6 py-2.5 flex gap-4 overflow-x-auto">
               {NAV_SECTIONS.map((s) => (
-                <a key={s.id} href={`#${s.id}`} className="text-[12.5px] font-semibold text-body hover:text-brand whitespace-nowrap transition-colors">
+                <a key={s.id} href={`#${s.id}`} className="text-[12.5px] font-semibold text-body hover:text-link whitespace-nowrap transition-colors">
                   {s.label}
                 </a>
               ))}
@@ -258,7 +258,7 @@ export default function WhatsAppBotGuide() {
 
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Intro banner */}
-        <div className="flex items-start gap-3.5 bg-white dark:bg-[#181818] border-[1.5px] border-brand/30 rounded-2xl p-5 my-8">
+        <div className="flex items-start gap-3.5 bg-white dark:bg-[#131E2F] border-[1.5px] border-brand/30 rounded-2xl p-5 my-8">
           <span className="text-2xl flex-shrink-0">📁</span>
           <div>
             <h3 className="font-display font-bold text-[15px] text-ink mb-1">The whole idea of this guide</h3>
@@ -324,14 +324,14 @@ export default function WhatsAppBotGuide() {
                 For <strong className="text-ink">index.js</strong>: copy everything Claude wrote for it, open Notepad, paste it in. Click<span> </span>
                 <strong className="text-ink">File → Save As</strong>. Navigate to your <strong className="text-ink">whatsapp-bot</strong> folder.
                 In the "Save as type" dropdown, choose <strong className="text-ink">All Files</strong>. Type the filename exactly:<span> </span>
-                <code className="text-brand font-semibold">index.js</code>. Click Save.
+                <code className="text-link font-semibold">index.js</code>. Click Save.
               </p>
             </div>
             <div className="flex gap-3">
               <StepNumber n={2} />
               <p className="text-[14px] text-body-strong leading-relaxed m-0 pt-0.5">
                 Do the same for <strong className="text-ink">package.json</strong> — new Notepad window, paste, Save As, "All Files" type,
-                filename exactly <code className="text-brand font-semibold">package.json</code>, save into the same folder.
+                filename exactly <code className="text-link font-semibold">package.json</code>, save into the same folder.
               </p>
             </div>
             <div className="flex gap-3">
@@ -339,7 +339,7 @@ export default function WhatsAppBotGuide() {
               <p className="text-[14px] text-body-strong leading-relaxed m-0 pt-0.5">
                 For the settings file — this one's a little different. Copy what Claude gave you for<span> </span>
                 <strong className="text-ink">.env.example</strong>, paste into a new Notepad window, but this time Save As with the filename
-                exactly <code className="text-brand font-semibold">.env</code> (not .env.example — save it directly as your real settings
+                exactly <code className="text-link font-semibold">.env</code> (not .env.example — save it directly as your real settings
                 file, one step, done).
               </p>
             </div>
@@ -357,7 +357,7 @@ export default function WhatsAppBotGuide() {
               <p className="text-[14px] text-body-strong leading-relaxed m-0 pt-0.5">
                 Go to <strong className="text-ink">console.groq.com</strong>, sign up, click<span> </span>
                 <strong className="text-ink">API Keys → Create API Key</strong>. Copy it — it starts with<span> </span>
-                <code className="text-brand font-semibold">gsk_</code>.
+                <code className="text-link font-semibold">gsk_</code>.
               </p>
             </div>
             <div className="flex gap-3">
@@ -391,7 +391,7 @@ export default function WhatsAppBotGuide() {
           title="Install & start — the only command window step"
           desc="This is the one and only time you need the black window. Here's the easy way in, with no path-typing."
         >
-          <span className="inline-flex items-center gap-1.5 text-[12px] font-bold text-brand bg-[#F3EBFF] dark:bg-brand/15 rounded-full px-3 py-1 mb-4">
+          <span className="inline-flex items-center gap-1.5 text-[12px] font-bold text-link bg-[#E8EDF3] dark:bg-brand/15 rounded-full px-3 py-1 mb-4">
             🖥️ You'll type 3 things, total, in this whole guide
           </span>
           <div className="flex flex-col gap-4">
@@ -404,7 +404,7 @@ export default function WhatsAppBotGuide() {
             <div className="flex gap-3">
               <StepNumber n={2} />
               <p className="text-[14px] text-body-strong leading-relaxed m-0 pt-0.5">
-                Type <code className="text-brand font-semibold">cd</code> followed by one space — don't press Enter yet. Now open File
+                Type <code className="text-link font-semibold">cd</code> followed by one space — don't press Enter yet. Now open File
                 Explorer, find your <strong className="text-ink">whatsapp-bot</strong> folder, and<span> </span>
                 <strong className="text-ink">drag the folder icon</strong> directly into the Command Prompt window. The full path types
                 itself in. Now press Enter.
@@ -471,8 +471,8 @@ export default function WhatsAppBotGuide() {
               <StepNumber n={5} />
               <p className="text-[14px] text-body-strong leading-relaxed m-0 pt-0.5">
                 <strong className="text-ink">To start it again later:</strong> open Command Prompt, drag your folder in after typing<span> </span>
-                <code className="text-brand font-semibold">cd </code> again, then just type<span> </span>
-                <code className="text-brand font-semibold">npm start</code> — no need to reinstall.
+                <code className="text-link font-semibold">cd </code> again, then just type<span> </span>
+                <code className="text-link font-semibold">npm start</code> — no need to reinstall.
               </p>
             </div>
           </div>
@@ -481,13 +481,13 @@ export default function WhatsAppBotGuide() {
         {/* Wrap up */}
         <div className="py-10">
           <div className="flex items-center gap-2 mb-1.5">
-            <PartyPopper className="w-5 h-5 text-brand" />
+            <PartyPopper className="w-5 h-5 text-link" />
             <h2 className="font-display font-extrabold text-xl sm:text-2xl text-ink">What you built</h2>
           </div>
           <div className="grid grid-cols-2 gap-3.5 mt-5">
             {WRAP_UP.map((w) => (
-              <div key={w.title} className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl p-4.5">
-                <w.icon className="w-5 h-5 text-brand mb-2.5" />
+              <div key={w.title} className="bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-2xl p-4.5">
+                <w.icon className="w-5 h-5 text-link mb-2.5" />
                 <h4 className="font-display font-bold text-[14px] text-ink mb-1">{w.title}</h4>
                 <p className="text-[12.5px] text-body leading-relaxed m-0">{w.text}</p>
               </div>
@@ -501,7 +501,7 @@ export default function WhatsAppBotGuide() {
       {/* Advanced upsell */}
       <div className="px-4 sm:px-6 lg:px-[5vw] py-14 max-w-6xl mx-auto">
         <div className="max-w-3xl mx-auto text-center mb-8">
-          <span className="inline-flex items-center gap-2 text-[13px] font-bold px-4 py-1.5 rounded-full bg-[#F3EBFF] dark:bg-brand/15 text-brand mb-3">
+          <span className="inline-flex items-center gap-2 text-[13px] font-bold px-4 py-1.5 rounded-full bg-[#E8EDF3] dark:bg-brand/15 text-link mb-3">
             This is the free, DIY version
           </span>
           <h2 className="font-display font-extrabold text-2xl sm:text-[32px] text-ink tracking-[-.8px]">
@@ -510,7 +510,7 @@ export default function WhatsAppBotGuide() {
         </div>
 
         <div className="grid sm:grid-cols-2 gap-4 max-w-2xl mx-auto mb-9">
-          <div className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl p-5">
+          <div className="bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-2xl p-5">
             <div className="flex items-center gap-2 mb-3">
               <UserCircle2 className="w-4.5 h-4.5 text-gray-400" />
               <h3 className="font-display font-bold text-[14px] text-ink">This free guide</h3>
@@ -521,9 +521,9 @@ export default function WhatsAppBotGuide() {
               ))}
             </ul>
           </div>
-          <div className="bg-white dark:bg-[#181818] border-[2px] border-brand rounded-2xl p-5 shadow-[0_16px_36px_-16px_rgba(124,58,237,.4)]">
+          <div className="bg-white dark:bg-[#131E2F] border-[2px] border-brand rounded-2xl p-5 shadow-[0_16px_36px_-16px_rgba(15,26,42,.4)]">
             <div className="flex items-center gap-2 mb-3">
-              <GraduationCap className="w-4.5 h-4.5 text-brand" />
+              <GraduationCap className="w-4.5 h-4.5 text-link" />
               <h3 className="font-display font-bold text-[14px] text-ink">Builder 1's version</h3>
             </div>
             <ul className="flex flex-col gap-2">
@@ -535,12 +535,12 @@ export default function WhatsAppBotGuide() {
         </div>
 
         <div
-          className="rounded-[24px] px-8 sm:px-10 py-9 flex items-center justify-between flex-wrap gap-5 shadow-[0_20px_44px_-16px_rgba(124,58,237,.6)] max-w-4xl mx-auto"
-          style={{ background: 'linear-gradient(120deg, #7C3AED, #9D5CFF)' }}
+          className="rounded-[24px] px-8 sm:px-10 py-9 flex items-center justify-between flex-wrap gap-5 shadow-[0_20px_44px_-16px_rgba(15,26,42,.6)] max-w-4xl mx-auto"
+          style={{ background: '#264D73' }}
         >
           <div>
             <h2 className="font-display font-extrabold text-2xl sm:text-[26px] text-white m-0">Ready for the real thing?</h2>
-            <p className="text-[#EDE4FF] mt-2 mb-0 text-[15px]">
+            <p className="text-[#D5DEE9] mt-2 mb-0 text-[15px]">
               The Advanced WhatsApp Auto-Reply Bot is one of 12 real sessions inside Builder 1 — guided, with support.
             </p>
           </div>

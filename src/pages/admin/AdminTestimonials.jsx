@@ -42,7 +42,7 @@ function TestimonialEditForm({ t, saving, onSave, onCancel }) {
         <button
           onClick={onCancel}
           disabled={saving}
-          className="text-xs font-semibold px-2.5 py-1.5 rounded-lg text-body-strong hover:bg-[#FAF8FF] dark:hover:bg-white/5 transition-colors disabled:opacity-40"
+          className="text-xs font-semibold px-2.5 py-1.5 rounded-lg text-body-strong hover:bg-[#F6F8FB] dark:hover:bg-white/5 transition-colors disabled:opacity-40"
         >
           Cancel
         </button>
@@ -73,7 +73,7 @@ function TestimonialRow({ t, actionLoading, editing, onApprove, onReject, onFeat
             {t.source === 'google_business' ? (
               <span className="text-[11px] font-semibold text-gray-500">Google review</span>
             ) : (
-              <span className="text-[11px] font-semibold text-brand">Student submission</span>
+              <span className="text-[11px] font-semibold text-link">Student submission</span>
             )}
             {t.approved ? (
               <span className="text-[11px] font-bold text-green bg-[#EAFAF1] dark:bg-green/10 px-2 py-0.5 rounded-full">Live</span>
@@ -81,7 +81,7 @@ function TestimonialRow({ t, actionLoading, editing, onApprove, onReject, onFeat
               <span className="text-[11px] font-bold text-amber-700 dark:text-amber-400 bg-[#FEF9E7] dark:bg-amber-500/10 px-2 py-0.5 rounded-full">Pending</span>
             )}
             {t.featured && (
-              <span className="text-[11px] font-bold text-brand bg-[#F3EBFF] dark:bg-brand/15 px-2 py-0.5 rounded-full">Featured</span>
+              <span className="text-[11px] font-bold text-link bg-[#E8EDF3] dark:bg-brand/15 px-2 py-0.5 rounded-full">Featured</span>
             )}
           </div>
           <p className="text-sm text-body leading-relaxed">{t.body}</p>
@@ -93,7 +93,7 @@ function TestimonialRow({ t, actionLoading, editing, onApprove, onReject, onFeat
             onClick={() => onEditStart(t.id)}
             disabled={!!actionLoading}
             title="Edit"
-            className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-[#FAF8FF] dark:bg-white/5 text-body-strong hover:bg-[#F3EBFF] dark:hover:bg-brand/15 hover:text-brand transition-colors disabled:opacity-40"
+            className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-[#F6F8FB] dark:bg-white/5 text-body-strong hover:bg-[#E8EDF3] dark:hover:bg-brand/15 hover:text-link transition-colors disabled:opacity-40"
           >
             <Pencil className="w-3 h-3" />
           </button>
@@ -103,7 +103,7 @@ function TestimonialRow({ t, actionLoading, editing, onApprove, onReject, onFeat
           disabled={!!actionLoading}
           className={`flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg transition-colors disabled:opacity-40 ${
             t.approved
-              ? 'bg-[#FDEEF4] dark:bg-rose/10 text-rose hover:bg-rose/10'
+              ? 'bg-[#FBEAE9] dark:bg-rose/10 text-rose hover:bg-rose/10'
               : 'bg-green text-white hover:brightness-95'
           }`}
         >
@@ -123,14 +123,14 @@ function TestimonialRow({ t, actionLoading, editing, onApprove, onReject, onFeat
           onClick={() => onFeatureToggle(t.id, t.featured)}
           disabled={!!actionLoading || !t.approved}
           title={t.approved ? 'Toggle featured' : 'Approve first'}
-          className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-[#FAF8FF] dark:bg-white/5 text-body-strong hover:bg-[#F3EBFF] dark:hover:bg-brand/15 hover:text-brand transition-colors disabled:opacity-40"
+          className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-[#F6F8FB] dark:bg-white/5 text-body-strong hover:bg-[#E8EDF3] dark:hover:bg-brand/15 hover:text-link transition-colors disabled:opacity-40"
         >
           {t.featured ? 'Unfeature' : 'Feature'}
         </button>
         <button
           onClick={() => onDelete(t.id)}
           disabled={!!actionLoading}
-          className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-[#FAF8FF] dark:bg-white/5 text-body-strong hover:bg-[#FDEEF4] dark:hover:bg-rose/10 hover:text-rose transition-colors disabled:opacity-40"
+          className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-[#F6F8FB] dark:bg-white/5 text-body-strong hover:bg-[#FBEAE9] dark:hover:bg-rose/10 hover:text-rose transition-colors disabled:opacity-40"
         >
           <Trash2 className="w-3 h-3" />
         </button>
@@ -238,7 +238,7 @@ export default function AdminTestimonials() {
     <div>
       <div className="flex items-center justify-between mb-5">
         <h1 className="font-display text-3xl font-extrabold text-ink flex items-center gap-3">
-          <MessageSquareText className="w-7 h-7 text-brand" />
+          <MessageSquareText className="w-7 h-7 text-link" />
           Testimonials
         </h1>
         {testimonials.some((t) => !t.approved) && (
@@ -249,16 +249,16 @@ export default function AdminTestimonials() {
       </div>
 
       {error && (
-        <div className="flex items-start gap-2 text-sm text-rose bg-[#FDEEF4] dark:bg-rose/10 border border-rose/20 rounded-lg px-4 py-3 mb-6">
+        <div className="flex items-start gap-2 text-sm text-rose bg-[#FBEAE9] dark:bg-rose/10 border border-rose/20 rounded-lg px-4 py-3 mb-6">
           <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
           {error}
         </div>
       )}
 
-      <div className="rounded-2xl border border-border-soft overflow-hidden bg-white dark:bg-[#181818]">
+      <div className="rounded-2xl border border-border-soft overflow-hidden bg-white dark:bg-[#131E2F]">
         {testimonialsLoading ? (
           <div className="px-5 py-12 text-center">
-            <Loader2 className="w-6 h-6 animate-spin text-brand mx-auto" />
+            <Loader2 className="w-6 h-6 animate-spin text-link mx-auto" />
           </div>
         ) : testimonials.length === 0 ? (
           <div className="px-5 py-12 text-center text-gray-400 text-sm">No testimonials yet.</div>

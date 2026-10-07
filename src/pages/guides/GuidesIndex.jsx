@@ -71,7 +71,7 @@ export default function GuidesIndex() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <h1 className="font-display text-3xl sm:text-4xl font-extrabold text-ink flex items-center gap-3">
-        <BookOpen className="w-7 h-7 text-brand" />
+        <BookOpen className="w-7 h-7 text-link" />
         AI Agent Guides
       </h1>
       <p className="text-body mt-2.5 max-w-2xl leading-relaxed">{DESCRIPTION}</p>
@@ -88,7 +88,7 @@ export default function GuidesIndex() {
                 className={`text-[13px] font-semibold px-4 py-2 rounded-full border transition-colors ${
                   filter === f.id
                     ? 'bg-brand text-white border-brand'
-                    : 'bg-white dark:bg-[#181818] text-body-strong border-border hover:border-brand/40'
+                    : 'bg-white dark:bg-[#131E2F] text-body-strong border-border hover:border-brand/40'
                 }`}
               >
                 {f.label} <span className="opacity-60">({count})</span>
@@ -100,7 +100,7 @@ export default function GuidesIndex() {
 
       {loading ? (
         <div className="py-16 text-center">
-          <Loader2 className="w-6 h-6 animate-spin text-brand mx-auto" />
+          <Loader2 className="w-6 h-6 animate-spin text-link mx-auto" />
         </div>
       ) : visible.length === 0 ? (
         <div className="py-16 text-center text-body">No guides yet — check back soon.</div>
@@ -110,12 +110,12 @@ export default function GuidesIndex() {
             <Link
               key={g.slug}
               to={`/guides/${g.slug}`}
-              className="group flex flex-col bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl overflow-hidden transition-all hover:border-brand/40 hover:shadow-[0_10px_28px_-8px_rgba(124,58,237,.18)]"
+              className="group flex flex-col bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-2xl overflow-hidden transition-all hover:border-brand/40 hover:shadow-[0_10px_28px_-8px_rgba(15,26,42,.18)]"
             >
               {g.image_url ? (
                 <img src={g.image_url} alt="" className="w-full aspect-[16/9] object-cover" loading="lazy" />
               ) : (
-                <div className="w-full aspect-[16/9] bg-[#F3EBFF] dark:bg-white/5 flex items-center justify-center text-4xl">
+                <div className="w-full aspect-[16/9] bg-[#E8EDF3] dark:bg-white/5 flex items-center justify-center text-4xl">
                   {g.emoji}
                 </div>
               )}
@@ -124,7 +124,7 @@ export default function GuidesIndex() {
                 <p className="text-[13.5px] text-body leading-relaxed flex-1">{g.dek}</p>
                 <div className="flex items-center justify-between mt-4">
                   <span className="text-[11.5px] text-gray-400 font-semibold">{g.reading_time}</span>
-                  <ArrowRight className="w-4 h-4 text-brand opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <ArrowRight className="w-4 h-4 text-link opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
               </div>
             </Link>

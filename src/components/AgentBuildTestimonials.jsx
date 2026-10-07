@@ -36,7 +36,7 @@ export default function AgentBuildTestimonials() {
     <>
       <div className="px-4 sm:px-6 lg:px-[5vw] pb-16 max-w-5xl mx-auto">
         <div className="text-center mb-9">
-          <span className="inline-flex items-center gap-2 text-[13px] font-bold px-4 py-1.5 rounded-full bg-[#F3EBFF] dark:bg-brand/15 text-brand mb-3">
+          <span className="inline-flex items-center gap-2 text-[13px] font-bold px-4 py-1.5 rounded-full bg-[#E8EDF3] dark:bg-brand/15 text-link mb-3">
             Real feedback, real results
           </span>
           <h2 className="font-display font-extrabold text-[26px] sm:text-[38px] text-ink tracking-[-.8px] max-w-2xl mx-auto">
@@ -49,7 +49,7 @@ export default function AgentBuildTestimonials() {
             <button
               key={t.name}
               onClick={() => setLightbox(t)}
-              className="text-left bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl overflow-hidden hover:border-brand transition-colors"
+              className="text-left bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-2xl overflow-hidden hover:border-brand transition-colors"
             >
               <img src={t.src} alt={t.alt} className="w-full h-auto block" loading="lazy" />
               <p className="text-[12px] font-bold text-ink px-4 py-3">{t.name} <span className="font-normal text-gray-400">· {t.role}</span></p>

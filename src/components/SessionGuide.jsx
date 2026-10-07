@@ -26,11 +26,11 @@ function MultiGuide({ guides, fallbackTroubleshooting }) {
             onClick={() => setActive(i)}
             className={`text-left px-4 py-3.5 transition-colors ${
               i === active
-                ? 'bg-[#F3EBFF] dark:bg-brand/15'
-                : 'bg-[#FAF8FF] dark:bg-white/5 hover:bg-[#F3EBFF]/50 dark:hover:bg-brand/10'
+                ? 'bg-[#E8EDF3] dark:bg-brand/15'
+                : 'bg-[#F6F8FB] dark:bg-white/5 hover:bg-[#E8EDF3]/50 dark:hover:bg-brand/10'
             } ${i > 0 ? 'border-l border-border-soft' : ''}`}
           >
-            <span className={`text-[9px] font-bold uppercase tracking-widest block mb-0.5 ${i === active ? 'text-brand' : 'text-gray-400'}`}>
+            <span className={`text-[9px] font-bold uppercase tracking-widest block mb-0.5 ${i === active ? 'text-link' : 'text-gray-400'}`}>
               {g.guideName}
             </span>
             <span className={`text-sm font-extrabold block leading-tight ${i === active ? 'text-ink' : 'text-body'}`}>
@@ -55,7 +55,7 @@ function GuideContent({ session, troubleshooting }) {
   return (
     <div className="space-y-8">
       {/* Session header */}
-      <div className="rounded-xl border border-brand/25 bg-[#F3EBFF] dark:bg-brand/10 p-4 flex flex-wrap gap-3">
+      <div className="rounded-xl border border-brand/25 bg-[#E8EDF3] dark:bg-brand/10 p-4 flex flex-wrap gap-3">
         <Badge icon={Clock} label={`${session.totalTime} total`} />
         <Badge icon={Layers} label={`${session.buildCount} builds`} />
         <Badge icon={Bot} label={session.model} />
@@ -155,14 +155,14 @@ function BuildCard({ build }) {
       {build.phaseLabel && (
         <div className="flex items-center gap-3 pt-2">
           <div className="flex-1 h-px bg-border-soft" />
-          <span className="text-[11px] font-bold text-brand bg-[#F3EBFF] dark:bg-brand/15 px-3 py-1 rounded-full whitespace-nowrap">
+          <span className="text-[11px] font-bold text-link bg-[#E8EDF3] dark:bg-brand/15 px-3 py-1 rounded-full whitespace-nowrap">
             {build.phaseLabel}
           </span>
           <div className="flex-1 h-px bg-border-soft" />
         </div>
       )}
-      <div id={`build-${build.number}`} className="rounded-xl border border-border-soft bg-white dark:bg-[#181818] overflow-hidden scroll-mt-24">
-        <div className="flex items-center justify-between gap-3 px-4 sm:px-5 py-3 border-b border-border-soft bg-[#FAF8FF] dark:bg-white/5">
+      <div id={`build-${build.number}`} className="rounded-xl border border-border-soft bg-white dark:bg-[#131E2F] overflow-hidden scroll-mt-24">
+        <div className="flex items-center justify-between gap-3 px-4 sm:px-5 py-3 border-b border-border-soft bg-[#F6F8FB] dark:bg-white/5">
           <h4 className="font-bold text-ink text-sm sm:text-base">
             Build <span>{build.number}</span> · <span>{build.title}</span>
           </h4>
@@ -179,7 +179,7 @@ function BuildCard({ build }) {
           {build.steps.map((step, i) => (
             <div key={i} className="space-y-2">
               <p className="text-sm text-body-strong leading-relaxed">
-                <span className="font-bold text-brand"><span>{i + 1}</span>.</span> <span>{step.instruction}</span>
+                <span className="font-bold text-link"><span>{i + 1}</span>.</span> <span>{step.instruction}</span>
               </p>
               {step.prompt && <PromptBox text={step.prompt} />}
               {step.verify && (
@@ -192,7 +192,7 @@ function BuildCard({ build }) {
           ))}
 
           {build.goFurther && (
-            <div className="flex gap-2 items-start text-sm text-brand bg-[#F3EBFF] dark:bg-brand/10 border border-brand/20 rounded-lg px-3 py-2">
+            <div className="flex gap-2 items-start text-sm text-link bg-[#E8EDF3] dark:bg-brand/10 border border-brand/20 rounded-lg px-3 py-2">
               <Compass className="w-4 h-4 mt-0.5 flex-shrink-0" />
               <span><span className="font-bold">Go further: </span>{build.goFurther}</span>
             </div>
@@ -205,7 +205,7 @@ function BuildCard({ build }) {
 
 function Badge({ icon: Icon, label }) {
   return (
-    <span className="flex items-center gap-1.5 text-xs font-bold text-brand bg-white dark:bg-[#181818] border border-brand/25 rounded-full px-3 py-1.5">
+    <span className="flex items-center gap-1.5 text-xs font-bold text-link bg-white dark:bg-[#131E2F] border border-brand/25 rounded-full px-3 py-1.5">
       <Icon className="w-3.5 h-3.5" />
       {label}
     </span>
@@ -215,7 +215,7 @@ function Badge({ icon: Icon, label }) {
 function SectionTitle({ icon: Icon, title }) {
   return (
     <div className="flex items-center gap-2 mb-3">
-      <Icon className="w-4 h-4 text-brand" />
+      <Icon className="w-4 h-4 text-link" />
       <h3 className="font-bold text-ink text-sm uppercase tracking-wide">{title}</h3>
     </div>
   );

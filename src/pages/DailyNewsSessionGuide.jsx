@@ -3,43 +3,43 @@ import { Link } from 'react-router-dom';
 
 const CUSTOM_CSS = `
   :root{
-    --bg-page:#FBFAFF;
+    --bg-page:#F6F8FB;
     --bg:#FFFFFF;
     --surface:#FFFFFF;
-    --surface-sunken:#F5F2FE;
-    --surface-code:#1A1730;
-    --text-code:#EDEBFA;
-    --border:#E7E3F6;
-    --border-strong:#D5CDF0;
-    --text:#161231;
-    --text-body:#48435F;
-    --text-muted:#847FA1;
-    --accent:#6D3FE0;
-    --accent-hover:#5A31C4;
-    --accent-soft:#EFE9FE;
+    --surface-sunken:#F5F8FB;
+    --surface-code:#1B232C;
+    --text-code:#EEF2F7;
+    --border:#E6ECF3;
+    --border-strong:#D3DDEA;
+    --text:#17202C;
+    --text-body:#48505A;
+    --text-muted:#858F9B;
+    --accent:#5D8AC2;
+    --accent-hover:#4B76AA;
+    --accent-soft:#EEF3F9;
     --on-accent:#FFFFFF;
     --success-bg:#E9F8EF;
     --success-text:#1B7A45;
     --success-border:#BFEACD;
-    --shadow:rgba(30,16,74,0.08);
+    --shadow:rgba(15,26,42,0.08);
     --radius-lg:16px;
     --radius-md:10px;
     --radius-sm:7px;
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
-      --bg-page:#0C0A18;--bg:#161228;--surface:#171329;--surface-sunken:#201A3C;
-      --surface-code:#0B0A16;--text-code:#E9E6F8;--border:#2C2650;--border-strong:#3B3468;
-      --text:#F2F0FB;--text-body:#C6C1E0;--text-muted:#8E88B7;--accent:#A98BFF;
-      --accent-hover:#BCA3FF;--accent-soft:#241D48;--on-accent:#150B33;
+      --bg-page:#0C1116;--bg:#161C24;--surface:#171D25;--surface-sunken:#202A36;
+      --surface-code:#0C1014;--text-code:#E9EEF5;--border:#2D3A49;--border-strong:#3D4C5F;
+      --text:#F2F5F9;--text-body:#C6CFDB;--text-muted:#909EAF;--accent:#ABC2DF;
+      --accent-hover:#BCCFE6;--accent-soft:#253140;--on-accent:#121E2C;
       --success-bg:#123625;--success-text:#6EDC9B;--success-border:#1E5B3C;--shadow:rgba(0,0,0,0.45);
     }
   }
   :root[data-theme="dark"]{
-    --bg-page:#0C0A18;--bg:#161228;--surface:#171329;--surface-sunken:#201A3C;
-    --surface-code:#0B0A16;--text-code:#E9E6F8;--border:#2C2650;--border-strong:#3B3468;
-    --text:#F2F0FB;--text-body:#C6C1E0;--text-muted:#8E88B7;--accent:#A98BFF;
-    --accent-hover:#BCA3FF;--accent-soft:#241D48;--on-accent:#150B33;
+    --bg-page:#0C1116;--bg:#161C24;--surface:#171D25;--surface-sunken:#202A36;
+    --surface-code:#0C1014;--text-code:#E9EEF5;--border:#2D3A49;--border-strong:#3D4C5F;
+    --text:#F2F5F9;--text-body:#C6CFDB;--text-muted:#909EAF;--accent:#ABC2DF;
+    --accent-hover:#BCCFE6;--accent-soft:#253140;--on-accent:#121E2C;
     --success-bg:#123625;--success-text:#6EDC9B;--success-border:#1E5B3C;--shadow:rgba(0,0,0,0.45);
   }
   #dns-guide *{box-sizing:border-box;}
@@ -54,7 +54,7 @@ const CUSTOM_CSS = `
   #dns-guide .topbar-inner{max-width:1180px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;gap:20px;}
   #dns-guide .eyebrow-link{font-size:13px;color:var(--text-muted);white-space:nowrap;font-weight:600;letter-spacing:.02em;}
   #dns-guide .progress-track{flex:1;height:6px;border-radius:99px;background:var(--surface-sunken);overflow:hidden;}
-  #dns-guide .progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-hover));border-radius:99px;transition:width .35s ease;}
+  #dns-guide .progress-fill{height:100%;background:var(--accent);border-radius:99px;transition:width .35s ease;}
   #dns-guide .topbar-right{display:flex;align-items:center;gap:14px;white-space:nowrap;}
   #dns-guide .step-counter{font-size:13px;color:var(--text-muted);font-variant-numeric:tabular-nums;}
   #dns-guide .btn-next,#dns-guide .btn-prev{border-radius:99px;font-weight:600;font-size:14px;padding:9px 18px;border:1px solid transparent;}
@@ -131,14 +131,14 @@ const CUSTOM_CSS = `
   #dns-guide .step-body ul{margin-top:8px;padding-left:20px;list-style:disc;}
   #dns-guide .step-body li{margin-top:4px;}
   #dns-guide .prompt-block{margin-top:14px;border-radius:var(--radius-md);overflow:hidden;border:1px solid var(--border-strong);}
-  #dns-guide .prompt-head{display:flex;align-items:center;justify-content:space-between;background:#120F22;padding:9px 14px;}
-  #dns-guide .prompt-head span{font-size:11px;font-weight:700;letter-spacing:.09em;color:#9C93C9;}
-  #dns-guide .copy-btn{background:transparent;border:1px solid #3A3564;color:#D9D4F2;font-size:12px;font-weight:600;padding:4px 11px;border-radius:99px;}
-  #dns-guide .copy-btn:hover{background:#211C40;}
+  #dns-guide .prompt-head{display:flex;align-items:center;justify-content:space-between;background:#12181F;padding:9px 14px;}
+  #dns-guide .prompt-head span{font-size:11px;font-weight:700;letter-spacing:.09em;color:#9CACC0;}
+  #dns-guide .copy-btn{background:transparent;border:1px solid #3D4B5C;color:#D9E2ED;font-size:12px;font-weight:600;padding:4px 11px;border-radius:99px;}
+  #dns-guide .copy-btn:hover{background:#222D3A;}
   #dns-guide .copy-btn.copied{background:var(--success-text);border-color:var(--success-text);color:#08210F;}
   #dns-guide .prompt-block pre{margin:0;background:var(--surface-code);padding:16px 18px;overflow-x:auto;}
   #dns-guide .prompt-block code{display:block;background:transparent;color:var(--text-code);font-size:13.2px;line-height:1.7;white-space:pre;}
-  #dns-guide .ph{color:#C9B8FF;font-style:italic;}
+  #dns-guide .ph{color:#CCDAEB;font-style:italic;}
   #dns-guide .note{font-size:14.5px;color:var(--text-muted);margin-top:10px;line-height:1.6;}
   #dns-guide .note strong{color:var(--text-body);}
   #dns-guide .prompt-explain{margin-top:14px;font-size:14.5px;color:var(--text-body);background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:13px 16px;line-height:1.65;}
@@ -165,7 +165,7 @@ const CUSTOM_CSS = `
   #dns-guide .completion-sub{font-size:13.5px;color:var(--text-muted);margin-top:2px;}
   #dns-guide .step-footer{display:flex;justify-content:space-between;margin-top:40px;padding-top:22px;border-top:1px solid var(--border);}
   #dns-guide .mock-frame{margin-top:16px;border:1px solid var(--border-strong);border-radius:var(--radius-lg);overflow:hidden;background:#fff;}
-  #dns-guide .mock-titlebar{background:#EFECEF;padding:8px 14px;font-size:12px;color:#6B677A;border-bottom:1px solid #E2DEE6;font-family:'IBM Plex Mono',monospace;}
+  #dns-guide .mock-titlebar{background:#EFECEF;padding:8px 14px;font-size:12px;color:#6B677A;border-bottom:1px solid #DFE2E5;font-family:'IBM Plex Mono',monospace;}
   #dns-guide .mock-body{padding:22px;}
   #dns-guide .beat-h{font-family:'Lexend',sans-serif;font-weight:700;margin:0 0 14px;font-size:15.5px;}
   #dns-guide a{color:var(--accent);}

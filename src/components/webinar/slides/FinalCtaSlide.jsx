@@ -9,19 +9,19 @@ export default function FinalCtaSlide() {
 
   useEffect(() => {
     const url = `${window.location.origin}/pricing`;
-    QRCode.toDataURL(url, { width: 180, margin: 1, color: { dark: '#1A1333', light: '#FFFFFFFF' } })
+    QRCode.toDataURL(url, { width: 180, margin: 1, color: { dark: '#0F1A2A', light: '#FFFFFFFF' } })
       .then(setQrDataUrl)
       .catch(() => setQrDataUrl(null));
   }, []);
 
   return (
-    <SlideShell background="linear-gradient(135deg, #7C3AED, #5B21B6)" contentClassName="text-center flex flex-col items-center">
+    <SlideShell background="#264D73" contentClassName="text-center flex flex-col items-center">
       <div className="max-w-xl">
         <m.p
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="text-[#EDE4FF] text-base sm:text-lg font-semibold"
+          className="text-[#D5DEE9] text-base sm:text-lg font-semibold"
         >
           Six months from now —
         </m.p>
@@ -38,7 +38,7 @@ export default function FinalCtaSlide() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 1.2 }}
-          className="text-[#EDE4FF] text-base sm:text-lg font-semibold mt-6"
+          className="text-[#D5DEE9] text-base sm:text-lg font-semibold mt-6"
         >
           Instead of saying "I don't know..." —
         </m.p>
@@ -65,7 +65,7 @@ export default function FinalCtaSlide() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2.6 }}
-        className="text-[#C9BFE8] text-[13px] mt-3"
+        className="text-[#D5DEE9] text-[13px] mt-3"
       >
         Builder 1 is simply where that journey begins.
       </m.p>
@@ -95,7 +95,7 @@ export default function FinalCtaSlide() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 3.35 }}
-        className="flex items-center gap-2.5 text-[#EDE4FF] text-[13px] font-semibold mt-8"
+        className="flex items-center gap-2.5 text-[#D5DEE9] text-[13px] font-semibold mt-8"
       >
         <span>1. Scan or click</span>
         <span className="opacity-50">→</span>
@@ -104,7 +104,7 @@ export default function FinalCtaSlide() {
         <span>3. Start Session 1</span>
       </m.div>
 
-      <m.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 3.5 }} className="text-[#C9BFE8] text-xs mt-3">
+      <m.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 3.5 }} className="text-[#D5DEE9] text-xs mt-3">
         One-time payment · 6 months of access · No subscription
       </m.p>
     </SlideShell>

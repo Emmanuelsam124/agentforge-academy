@@ -26,7 +26,7 @@ function CopyBlock({ label, text, hint }) {
     <div className="rounded-xl border border-border-soft bg-bg p-3.5">
       <div className="flex items-center justify-between gap-3 mb-1.5">
         <span className="text-[11px] font-bold uppercase tracking-widest text-body">{label}</span>
-        <button onClick={copy} className="flex items-center gap-1 text-xs font-semibold text-brand hover:underline flex-shrink-0">
+        <button onClick={copy} className="flex items-center gap-1 text-xs font-semibold text-link hover:underline flex-shrink-0">
           {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
           {copied ? 'Copied' : 'Copy'}
         </button>
@@ -44,7 +44,7 @@ export default function SharePanel({ section, record }) {
     : generateArticleShareText({ article: record, relatedAgent });
 
   return (
-    <div className="px-5 py-4 bg-[#FAF8FF] dark:bg-white/5 space-y-3">
+    <div className="px-5 py-4 bg-[#F6F8FB] dark:bg-white/5 space-y-3">
       {/* Not a hard block: the drafting prompt deliberately tells the bot to
           leave this null more often than not, because a forced link is worse
           than none. But an article with no build to point at converts

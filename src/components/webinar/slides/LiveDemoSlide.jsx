@@ -15,7 +15,7 @@ export default function LiveDemoSlide() {
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="inline-flex items-center gap-2 text-[13px] font-bold px-4 py-1.5 rounded-full bg-[#FDEEF4] dark:bg-rose/15 text-rose mb-5"
+        className="inline-flex items-center gap-2 text-[13px] font-bold px-4 py-1.5 rounded-full bg-[#FBEAE9] dark:bg-rose/15 text-rose mb-5"
       >
         🎬 Live now
       </m.span>
@@ -51,7 +51,7 @@ export default function LiveDemoSlide() {
         initial={{ opacity: 0, y: 16, scale: 0.96 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.5, delay: 0.5 }}
-        className="font-display font-extrabold text-xl sm:text-2xl text-brand mt-2 max-w-md"
+        className="font-display font-extrabold text-xl sm:text-2xl text-link mt-2 max-w-md"
       >
         Answer one question: "Could I learn to build this?"
       </m.p>

@@ -1,15 +1,15 @@
 export const departments = [
   { id: 'all', name: 'All Departments', icon: '🌐', color: '#64748B' },
-  { id: 'sales', name: 'Sales', icon: '💼', color: '#0EA5E9' },
-  { id: 'marketing', name: 'Marketing', icon: '📢', color: '#EC4899' },
-  { id: 'operations', name: 'Operations', icon: '⚙️', color: '#14B8A6' },
-  { id: 'finance', name: 'Finance', icon: '💰', color: '#22C55E' },
-  { id: 'hr', name: 'HR & People', icon: '👥', color: '#A855F7' },
-  { id: 'legal', name: 'Legal', icon: '⚖️', color: '#6366F1' },
-  { id: 'support', name: 'Customer Support', icon: '🎧', color: '#F97316' },
-  { id: 'engineering', name: 'Engineering', icon: '💻', color: '#06B6D4' },
-  { id: 'data', name: 'Data & Analytics', icon: '📊', color: '#8B5CF6' },
-  { id: 'strategy', name: 'Executive / Strategy', icon: '🧭', color: '#F43F5E' },
+  { id: 'sales', name: 'Sales', icon: '💼', color: '#264D73' },
+  { id: 'marketing', name: 'Marketing', icon: '📢', color: '#264D73' },
+  { id: 'operations', name: 'Operations', icon: '⚙️', color: '#264D73' },
+  { id: 'finance', name: 'Finance', icon: '💰', color: '#264D73' },
+  { id: 'hr', name: 'HR & People', icon: '👥', color: '#264D73' },
+  { id: 'legal', name: 'Legal', icon: '⚖️', color: '#264D73' },
+  { id: 'support', name: 'Customer Support', icon: '🎧', color: '#264D73' },
+  { id: 'engineering', name: 'Engineering', icon: '💻', color: '#264D73' },
+  { id: 'data', name: 'Data & Analytics', icon: '📊', color: '#264D73' },
+  { id: 'strategy', name: 'Executive / Strategy', icon: '🧭', color: '#264D73' },
 ];
 
 export const getDepartment = (name) => {
@@ -27,9 +27,9 @@ export const getDepartment = (name) => {
 // longer purchasable by anyone — they're admin-only content now.
 export const difficultyLevels = [
   { id: 'Builder 1', label: 'Builder 1', icon: '🌱', color: '#16A34A', tint: '#EAFAF1', tier: 'builder1' },
-  { id: 'Builder 2', label: 'Builder 2', icon: '⚡', color: '#7C3AED', tint: '#F3EBFF', tier: 'builder2' },
+  { id: 'Builder 2', label: 'Builder 2', icon: '⚡', color: '#264D73', tint: '#E8EDF3', tier: 'builder2' },
   { id: 'Advanced', label: 'Advanced', icon: '🚀', color: '#F59E0B', tint: '#FEF9E7', tier: 'admin_only', adminOnly: true },
-  { id: 'World Class', label: 'World Class', icon: '🏆', color: '#E11D48', tint: '#FDEEF4', tier: 'admin_only', adminOnly: true },
+  { id: 'World Class', label: 'World Class', icon: '🏆', color: '#B3261E', tint: '#FBEAE9', tier: 'admin_only', adminOnly: true },
 ];
 
 // The two tiers every regular visitor can browse/buy. Advanced/World Class

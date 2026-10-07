@@ -37,7 +37,7 @@ function PasscodeChip({ passcode }) {
   return (
     <button
       onClick={copy}
-      className="flex items-center gap-1.5 text-xs font-semibold text-body-strong bg-[#FAF8FF] dark:bg-white/5 hover:bg-[#F3EBFF] dark:hover:bg-brand/15 px-3 py-2 rounded-lg transition-colors"
+      className="flex items-center gap-1.5 text-xs font-semibold text-body-strong bg-[#F6F8FB] dark:bg-white/5 hover:bg-[#E8EDF3] dark:hover:bg-brand/15 px-3 py-2 rounded-lg transition-colors"
       title="Copy Zoom passcode"
     >
       {copied ? <Check className="w-3.5 h-3.5 text-green" /> : <Copy className="w-3.5 h-3.5" />}
@@ -53,7 +53,7 @@ function OutlineItem({ session, index, isSelected, onSelect }) {
     <button
       onClick={onSelect}
       className={`w-full flex items-start gap-3 text-left px-3.5 py-3 rounded-xl transition-colors ${
-        isSelected ? 'bg-[#F3EBFF] dark:bg-brand/15' : 'hover:bg-[#FAF8FF] dark:hover:bg-white/5'
+        isSelected ? 'bg-[#E8EDF3] dark:bg-brand/15' : 'hover:bg-[#F6F8FB] dark:hover:bg-white/5'
       }`}
     >
       {hasReplay ? (
@@ -61,10 +61,10 @@ function OutlineItem({ session, index, isSelected, onSelect }) {
       ) : isPast ? (
         <Circle className="w-4 h-4 text-gray-300 mt-0.5 flex-shrink-0" />
       ) : (
-        <Calendar className="w-4 h-4 text-brand mt-0.5 flex-shrink-0" />
+        <Calendar className="w-4 h-4 text-link mt-0.5 flex-shrink-0" />
       )}
       <div className="min-w-0">
-        <p className={`text-[13px] font-semibold leading-snug ${isSelected ? 'text-brand' : 'text-ink'}`}>
+        <p className={`text-[13px] font-semibold leading-snug ${isSelected ? 'text-link' : 'text-ink'}`}>
           Class {index + 1}: {session.title}
         </p>
         <p className="text-[11px] text-gray-400 mt-0.5">
@@ -87,7 +87,7 @@ function EmbedArea({ session }) {
 
   return (
     <div>
-      <div className="rounded-2xl overflow-hidden bg-[#0A090F] aspect-video flex items-center justify-center relative">
+      <div className="rounded-2xl overflow-hidden bg-[#0C1420] aspect-video flex items-center justify-center relative">
         {hasReplay ? (
           <iframe
             key={session.id}
@@ -104,7 +104,7 @@ function EmbedArea({ session }) {
           </div>
         ) : (
           <div className="text-center px-6">
-            <Calendar className="w-9 h-9 text-brand mx-auto mb-2" />
+            <Calendar className="w-9 h-9 text-link mx-auto mb-2" />
             <p className="text-white text-sm font-semibold">This class hasn't happened yet</p>
             <p className="text-gray-400 text-xs mt-1">{formatDate(session.session_date)}</p>
           </div>
@@ -117,7 +117,7 @@ function EmbedArea({ session }) {
             href={session.recording_url}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-body-strong bg-[#FAF8FF] dark:bg-white/5 hover:bg-[#F3EBFF] dark:hover:bg-brand/15 px-3 py-2 rounded-lg transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-body-strong bg-[#F6F8FB] dark:bg-white/5 hover:bg-[#E8EDF3] dark:hover:bg-brand/15 px-3 py-2 rounded-lg transition-colors"
           >
             <ExternalLink className="w-3.5 h-3.5" /> Open on Zoom
           </a>
@@ -140,7 +140,7 @@ function EmbedArea({ session }) {
 
       {session.topics?.length > 0 && (
         <div className="mt-5">
-          <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-brand mb-2">
+          <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-link mb-2">
             <ListChecks className="w-3.5 h-3.5" /> Topics
           </p>
           <ul className="flex flex-col gap-1.5">
@@ -156,7 +156,7 @@ function EmbedArea({ session }) {
 
       {session.resources?.length > 0 && (
         <div className="mt-5">
-          <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-brand mb-2">
+          <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-link mb-2">
             <BookOpen className="w-3.5 h-3.5" /> Resources
           </p>
           <div className="flex flex-col gap-2">
@@ -166,7 +166,7 @@ function EmbedArea({ session }) {
                 href={r.url}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center justify-between text-sm text-body-strong hover:text-ink bg-[#FAF8FF] dark:bg-white/5 hover:bg-[#F3EBFF] dark:hover:bg-brand/10 border border-border-soft rounded-lg px-3.5 py-2.5 transition-colors"
+                className="flex items-center justify-between text-sm text-body-strong hover:text-ink bg-[#F6F8FB] dark:bg-white/5 hover:bg-[#E8EDF3] dark:hover:bg-brand/10 border border-border-soft rounded-lg px-3.5 py-2.5 transition-colors"
               >
                 {r.title}
                 <ExternalLink className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
@@ -203,16 +203,16 @@ export default function VibeCodingCourse() {
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
       <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-ink mb-6 flex items-center gap-3">
-        <Sparkles className="w-7 h-7 text-brand" /> Vibe Coding Bootcamp
+        <Sparkles className="w-7 h-7 text-link" /> Vibe Coding Bootcamp
       </h1>
 
       {loading ? (
         <div className="flex justify-center py-16">
-          <Loader2 className="w-6 h-6 animate-spin text-brand" />
+          <Loader2 className="w-6 h-6 animate-spin text-link" />
         </div>
       ) : !hasVibeCoding && !isAdmin ? (
         <div className="rounded-2xl border-2 border-dashed border-border p-10 text-center">
-          <Lock className="w-8 h-8 text-brand mx-auto mb-3" />
+          <Lock className="w-8 h-8 text-link mx-auto mb-3" />
           <p className="text-ink font-bold">This is Vibe Coding Bootcamp content</p>
           <p className="text-sm text-body mt-1 mb-4">Join the launch cohort to unlock your classes.</p>
           <Link to="/vibe-coding#pricing" className="inline-flex items-center gap-2 bg-brand hover:bg-brand-deep text-white font-bold px-5 py-2.5 rounded-xl transition-colors">
@@ -259,7 +259,7 @@ function VibeCodingCourseBody({ liveSessions, selectedId, setSelectedId }) {
         <EmbedArea session={selected} />
       </div>
 
-      <div className="order-2 lg:order-1 lg:col-start-1 rounded-2xl border-[1.5px] border-border-soft bg-white dark:bg-[#181818] overflow-hidden lg:sticky lg:top-24">
+      <div className="order-2 lg:order-1 lg:col-start-1 rounded-2xl border-[1.5px] border-border-soft bg-white dark:bg-[#131E2F] overflow-hidden lg:sticky lg:top-24">
         {weeks.map((w) => (
           <div key={w.week} className="border-b border-border-soft last:border-b-0">
             <p className="text-[11px] font-bold uppercase tracking-wide text-gray-400 px-3.5 pt-3.5 pb-1.5">Week {w.week}</p>

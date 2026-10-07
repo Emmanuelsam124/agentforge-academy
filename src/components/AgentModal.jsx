@@ -47,14 +47,14 @@ export default function AgentModal({ agent, completed, onToggleComplete, onClose
   return (
     <AnimatePresence>
       <m.div
-        className="fixed inset-0 z-50 flex items-start sm:items-center justify-center bg-[#1A1333]/55 backdrop-blur-sm p-0 sm:p-4"
+        className="fixed inset-0 z-50 flex items-start sm:items-center justify-center bg-[#0F1A2A]/55 backdrop-blur-sm p-0 sm:p-4"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={onClose}
       >
         <m.div
-          className="relative w-full sm:max-w-4xl h-full sm:h-[90vh] sm:rounded-2xl overflow-hidden bg-white dark:bg-[#181818] border border-border-soft flex flex-col"
+          className="relative w-full sm:max-w-4xl h-full sm:h-[90vh] sm:rounded-2xl overflow-hidden bg-white dark:bg-[#131E2F] border border-border-soft flex flex-col"
           initial={{ opacity: 0, y: 40, scale: 0.97 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 40, scale: 0.97 }}
@@ -64,11 +64,11 @@ export default function AgentModal({ agent, completed, onToggleComplete, onClose
           {/* Header */}
           <div
             className="relative px-6 sm:px-8 pt-8 pb-6 border-b border-border-soft"
-            style={{ background: `linear-gradient(135deg, ${difficulty.color}22, #FAF8FF)` }}
+            style={{ background: `${difficulty.color}14` }}
           >
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-lg bg-white dark:bg-[#0A090F] hover:bg-[#F3EBFF] dark:hover:bg-brand/15 text-brand transition-colors"
+              className="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-lg bg-white dark:bg-[#0C1420] hover:bg-[#E8EDF3] dark:hover:bg-brand/15 text-link transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -96,7 +96,7 @@ export default function AgentModal({ agent, completed, onToggleComplete, onClose
 
           {/* Tab bar — only shown when a video exists */}
           {agent.videoId && (
-            <div className="flex border-b border-border-soft px-6 sm:px-8 bg-[#FAF8FF] dark:bg-white/5">
+            <div className="flex border-b border-border-soft px-6 sm:px-8 bg-[#F6F8FB] dark:bg-white/5">
               <button
                 onClick={() => setActiveTab('guide')}
                 className={`flex items-center gap-2 px-4 py-3 text-sm font-semibold border-b-2 transition-colors ${
@@ -153,7 +153,7 @@ export default function AgentModal({ agent, completed, onToggleComplete, onClose
 
                 {!loading && locked && (
                   <div className="flex flex-col items-center text-center gap-3 py-16 border-2 border-dashed border-border rounded-2xl">
-                    <Lock className="w-8 h-8 text-brand" />
+                    <Lock className="w-8 h-8 text-link" />
                     <p className="font-bold text-ink">This session's guide is Pro content</p>
                     <p className="text-sm text-body max-w-sm">
                       Upgrade to Pro or Live Class to unlock the full step-by-step build, prompts, and resources.
@@ -221,7 +221,7 @@ export default function AgentModal({ agent, completed, onToggleComplete, onClose
                       href={r.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-between text-sm text-body-strong hover:text-ink bg-[#FAF8FF] dark:bg-white/5 hover:bg-[#F3EBFF] dark:hover:bg-brand/10 border border-border-soft rounded-lg px-3.5 py-2.5 transition-colors"
+                      className="flex items-center justify-between text-sm text-body-strong hover:text-ink bg-[#F6F8FB] dark:bg-white/5 hover:bg-[#E8EDF3] dark:hover:bg-brand/10 border border-border-soft rounded-lg px-3.5 py-2.5 transition-colors"
                     >
                       {r.title}
                       <ExternalLink className="w-3.5 h-3.5 text-gray-400" />
@@ -238,7 +238,7 @@ export default function AgentModal({ agent, completed, onToggleComplete, onClose
                 {getBuilderPagePath(next) ? (
                   <Link
                     to={getBuilderPagePath(next)}
-                    className="w-full flex items-center gap-4 text-left bg-[#FAF8FF] dark:bg-white/5 hover:bg-[#F3EBFF] dark:hover:bg-brand/10 border border-border-soft rounded-xl p-4 transition-colors"
+                    className="w-full flex items-center gap-4 text-left bg-[#F6F8FB] dark:bg-white/5 hover:bg-[#E8EDF3] dark:hover:bg-brand/10 border border-border-soft rounded-xl p-4 transition-colors"
                   >
                     <div className="text-3xl">{next.emoji}</div>
                     <div className="flex-1 min-w-0">
@@ -251,7 +251,7 @@ export default function AgentModal({ agent, completed, onToggleComplete, onClose
                 ) : (
                   <button
                     onClick={() => onSelectAgent(next)}
-                    className="w-full flex items-center gap-4 text-left bg-[#FAF8FF] dark:bg-white/5 hover:bg-[#F3EBFF] dark:hover:bg-brand/10 border border-border-soft rounded-xl p-4 transition-colors"
+                    className="w-full flex items-center gap-4 text-left bg-[#F6F8FB] dark:bg-white/5 hover:bg-[#E8EDF3] dark:hover:bg-brand/10 border border-border-soft rounded-xl p-4 transition-colors"
                   >
                     <div className="text-3xl">{next.emoji}</div>
                     <div className="flex-1 min-w-0">
@@ -267,7 +267,7 @@ export default function AgentModal({ agent, completed, onToggleComplete, onClose
           </div>
 
           {/* Footer / mark complete */}
-          <div className="relative border-t border-border-soft px-6 sm:px-8 py-4 bg-[#FAF8FF] dark:bg-white/5 flex items-center justify-between gap-4">
+          <div className="relative border-t border-border-soft px-6 sm:px-8 py-4 bg-[#F6F8FB] dark:bg-white/5 flex items-center justify-between gap-4">
             <AnimatePresence>
               {showXpPop && (
                 <m.div
@@ -306,7 +306,7 @@ export default function AgentModal({ agent, completed, onToggleComplete, onClose
 function SectionTitle({ icon: Icon, title }) {
   return (
     <div className="flex items-center gap-2 mb-3">
-      <Icon className="w-4 h-4 text-brand" />
+      <Icon className="w-4 h-4 text-link" />
       <h3 className="font-bold text-ink text-sm uppercase tracking-wide">{title}</h3>
     </div>
   );

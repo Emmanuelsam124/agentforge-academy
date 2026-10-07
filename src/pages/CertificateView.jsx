@@ -58,7 +58,7 @@ function EditableName({ cert, onUpdated }) {
           onClick={startEdit}
           aria-label="Edit the name on your certificates"
           title="Edit name"
-          className="text-gray-400 hover:text-brand transition-colors"
+          className="text-gray-400 hover:text-link transition-colors"
         >
           <Pencil className="w-4 h-4" />
         </button>
@@ -79,7 +79,7 @@ function EditableName({ cert, onUpdated }) {
             if (e.key === 'Escape') setEditing(false);
           }}
           maxLength={100}
-          className="text-center font-display font-extrabold text-2xl sm:text-3xl text-brand bg-white dark:bg-[#0A090F] border-2 border-brand/40 rounded-lg px-3 py-1 focus:outline-none focus:border-brand"
+          className="text-center font-display font-extrabold text-2xl sm:text-3xl text-link bg-white dark:bg-[#0C1420] border-2 border-brand/40 rounded-lg px-3 py-1 focus:outline-none focus:border-brand"
         />
         <button
           onClick={save}
@@ -93,7 +93,7 @@ function EditableName({ cert, onUpdated }) {
           onClick={() => setEditing(false)}
           disabled={saving}
           aria-label="Cancel"
-          className="w-8 h-8 flex items-center justify-center rounded-lg bg-[#FAF8FF] dark:bg-white/5 hover:bg-[#F3EBFF] dark:hover:bg-white/10 text-body-strong flex-shrink-0"
+          className="w-8 h-8 flex items-center justify-center rounded-lg bg-[#F6F8FB] dark:bg-white/5 hover:bg-[#E8EDF3] dark:hover:bg-white/10 text-body-strong flex-shrink-0"
         >
           <X className="w-4 h-4" />
         </button>
@@ -133,7 +133,7 @@ export default function CertificateView() {
   useEffect(() => {
     if (!cert) return;
     const verifyUrl = `${window.location.origin}/verify/${cert.id}`;
-    QRCode.toDataURL(verifyUrl, { width: 160, margin: 1, color: { dark: '#1A1333', light: '#00000000' } })
+    QRCode.toDataURL(verifyUrl, { width: 160, margin: 1, color: { dark: '#0F1A2A', light: '#00000000' } })
       .then(setQrDataUrl)
       .catch(() => setQrDataUrl(null));
   }, [cert]);
@@ -155,7 +155,7 @@ export default function CertificateView() {
   return (
     <div id="certificate-page" className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <div className="no-print flex items-center justify-between mb-6">
-        <Link to="/certificates" className="inline-flex items-center gap-1.5 text-sm font-semibold text-body hover:text-brand transition-colors">
+        <Link to="/certificates" className="inline-flex items-center gap-1.5 text-sm font-semibold text-body hover:text-link transition-colors">
           <ArrowLeft className="w-4 h-4" /> Back to my certificates
         </Link>
         <button
@@ -170,28 +170,28 @@ export default function CertificateView() {
       <div
         id="certificate"
         className={`relative rounded-[24px] border-[6px] bg-white dark:bg-white px-10 sm:px-16 py-14 text-center overflow-hidden ${isProficiency ? 'border-amber-400' : 'border-brand'}`}
-        style={{ background: isProficiency ? 'linear-gradient(160deg, #FFFCF3, #FFFFFF 40%)' : 'linear-gradient(160deg, #FBFAFF, #FFFFFF 40%)' }}
+        style={{ background: isProficiency ? '#FFFCF3' : '#FFFFFF' }}
       >
         <div
           className="absolute top-6 right-8 w-24 h-24 opacity-[0.08] pointer-events-none"
-          style={{ background: isProficiency ? '#D9A406' : '#7C3AED', borderRadius: '38% 62% 63% 37% / 41% 44% 56% 59%' }}
+          style={{ background: isProficiency ? '#D9A406' : '#264D73', borderRadius: '38% 62% 63% 37% / 41% 44% 56% 59%' }}
         />
-        <p className={`text-xs font-bold uppercase tracking-[0.2em] ${isProficiency ? 'text-amber-600' : 'text-brand'}`}>Social Dev Technologies</p>
-        <h1 className="font-display font-extrabold text-3xl sm:text-4xl text-ink dark:text-[#1A1333] mt-4">
+        <p className={`text-xs font-bold uppercase tracking-[0.2em] ${isProficiency ? 'text-amber-600' : 'text-link'}`}>Social Dev Technologies</p>
+        <h1 className="font-display font-extrabold text-3xl sm:text-4xl text-ink dark:text-[#0F1A2A] mt-4">
           {isProficiency ? 'Certificate of Proficiency' : 'Certificate of Completion'}
         </h1>
-        <p className="text-body dark:text-[#5A5473] mt-6 text-sm">This certifies that</p>
-        <p className={`font-display font-extrabold text-2xl sm:text-3xl mt-2 ${isProficiency ? 'text-amber-600' : 'text-brand'}`}>
+        <p className="text-body dark:text-[#4A5B6C] mt-6 text-sm">This certifies that</p>
+        <p className={`font-display font-extrabold text-2xl sm:text-3xl mt-2 ${isProficiency ? 'text-amber-600' : 'text-link'}`}>
           {/* print-only fallback: EditableName's own visible span is no-print,
               so this bare text is what actually appears on a printed/PDF
               certificate — the edit control never should. */}
           <span className="hidden print:inline">{cert.student_name}</span>
           <EditableName cert={cert} onUpdated={(name) => setCert((c) => ({ ...c, student_name: name }))} />
         </p>
-        <p className="text-body dark:text-[#5A5473] mt-4 max-w-lg mx-auto leading-relaxed">
+        <p className="text-body dark:text-[#4A5B6C] mt-4 max-w-lg mx-auto leading-relaxed">
           {tier?.body || `has successfully completed the ${cert.tier} track.`}
         </p>
-        <p className="text-sm text-body dark:text-[#5A5473] mt-8">
+        <p className="text-sm text-body dark:text-[#4A5B6C] mt-8">
           Issued {new Date(cert.issued_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
         </p>
 
@@ -199,10 +199,10 @@ export default function CertificateView() {
           <p className="mt-4 text-sm font-bold text-rose">This certificate has been revoked.</p>
         )}
 
-        <div className="flex items-center justify-between mt-10 pt-6 border-t border-border-soft dark:border-[#EEE6FB]">
+        <div className="flex items-center justify-between mt-10 pt-6 border-t border-border-soft dark:border-[#E7ECF2]">
           <div className="text-left">
             <p className="text-[11px] text-gray-400">Verify this certificate at</p>
-            <p className="text-xs font-semibold text-body-strong dark:text-[#3A3358] break-all">{verifyUrl}</p>
+            <p className="text-xs font-semibold text-body-strong dark:text-[#1F2C3D] break-all">{verifyUrl}</p>
           </div>
           {qrDataUrl && <img src={qrDataUrl} alt="Verification QR code" className="w-20 h-20 flex-shrink-0" />}
         </div>

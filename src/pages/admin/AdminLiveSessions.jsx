@@ -144,17 +144,17 @@ export default function AdminLiveSessions() {
   return (
     <div>
       <h1 className="font-display text-3xl font-extrabold text-ink flex items-center gap-3 mb-5">
-        <Video className="w-7 h-7 text-brand" /> Live Sessions
+        <Video className="w-7 h-7 text-link" /> Live Sessions
       </h1>
 
       {error && (
-        <div className="flex items-start gap-2 text-sm text-rose bg-[#FDEEF4] dark:bg-rose/10 border border-rose/20 rounded-lg px-4 py-3 mb-6">
+        <div className="flex items-start gap-2 text-sm text-rose bg-[#FBEAE9] dark:bg-rose/10 border border-rose/20 rounded-lg px-4 py-3 mb-6">
           <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
           {error}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="rounded-2xl border border-border-soft bg-white dark:bg-[#181818] p-5 mb-6 space-y-3">
+      <form onSubmit={handleSubmit} className="rounded-2xl border border-border-soft bg-white dark:bg-[#131E2F] p-5 mb-6 space-y-3">
         <div className="flex items-center justify-between">
           <h3 className="font-bold text-ink text-sm">{form.id ? 'Edit session' : 'Add a session'}</h3>
           {form.id && (
@@ -168,7 +168,7 @@ export default function AdminLiveSessions() {
           <select
             value={form.tier}
             onChange={(e) => setForm((f) => ({ ...f, tier: e.target.value }))}
-            className="px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0A090F] focus:outline-none focus:ring-2 focus:ring-brand/40"
+            className="px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0C1420] focus:outline-none focus:ring-2 focus:ring-brand/40"
           >
             <option value="builder1">Builder 1</option>
             <option value="builder2">Builder 2</option>
@@ -179,7 +179,7 @@ export default function AdminLiveSessions() {
             type="datetime-local"
             value={form.session_date}
             onChange={(e) => setForm((f) => ({ ...f, session_date: e.target.value }))}
-            className="px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0A090F] focus:outline-none focus:ring-2 focus:ring-brand/40"
+            className="px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0C1420] focus:outline-none focus:ring-2 focus:ring-brand/40"
           />
         </div>
 
@@ -188,49 +188,49 @@ export default function AdminLiveSessions() {
           value={form.title}
           onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
           placeholder="Session title"
-          className="w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0A090F] focus:outline-none focus:ring-2 focus:ring-brand/40"
+          className="w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0C1420] focus:outline-none focus:ring-2 focus:ring-brand/40"
         />
         <textarea
           value={form.description}
           onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
           placeholder="Description (optional)"
           rows={2}
-          className="w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0A090F] focus:outline-none focus:ring-2 focus:ring-brand/40 resize-none"
+          className="w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0C1420] focus:outline-none focus:ring-2 focus:ring-brand/40 resize-none"
         />
         <input
           type="url"
           value={form.join_link}
           onChange={(e) => setForm((f) => ({ ...f, join_link: e.target.value }))}
           placeholder="Join link (Zoom/Meet URL)"
-          className="w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0A090F] focus:outline-none focus:ring-2 focus:ring-brand/40"
+          className="w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0C1420] focus:outline-none focus:ring-2 focus:ring-brand/40"
         />
         <input
           type="url"
           value={form.recording_url}
           onChange={(e) => setForm((f) => ({ ...f, recording_url: e.target.value }))}
           placeholder="Recording URL — paste in once the session has happened, to publish it as a replay"
-          className="w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0A090F] focus:outline-none focus:ring-2 focus:ring-brand/40"
+          className="w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0C1420] focus:outline-none focus:ring-2 focus:ring-brand/40"
         />
         <input
           type="text"
           value={form.recording_passcode}
           onChange={(e) => setForm((f) => ({ ...f, recording_passcode: e.target.value }))}
           placeholder="Recording passcode (optional) — from Zoom's Share dialog, not the sharing-info text block"
-          className="w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0A090F] focus:outline-none focus:ring-2 focus:ring-brand/40"
+          className="w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0C1420] focus:outline-none focus:ring-2 focus:ring-brand/40"
         />
         <textarea
           value={form.topicsText}
           onChange={(e) => setForm((f) => ({ ...f, topicsText: e.target.value }))}
           placeholder={'Topics (optional) — one per line'}
           rows={3}
-          className="w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0A090F] focus:outline-none focus:ring-2 focus:ring-brand/40 resize-none"
+          className="w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0C1420] focus:outline-none focus:ring-2 focus:ring-brand/40 resize-none"
         />
         <textarea
           value={form.resourcesText}
           onChange={(e) => setForm((f) => ({ ...f, resourcesText: e.target.value }))}
           placeholder={'Resources (optional) — one per line, "Title | https://url"\ne.g. Slide deck | https://docs.google.com/...'}
           rows={3}
-          className="w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0A090F] focus:outline-none focus:ring-2 focus:ring-brand/40 resize-none font-mono"
+          className="w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0C1420] focus:outline-none focus:ring-2 focus:ring-brand/40 resize-none font-mono"
         />
 
         <button
@@ -243,10 +243,10 @@ export default function AdminLiveSessions() {
         </button>
       </form>
 
-      <div className="rounded-2xl border border-border-soft overflow-hidden bg-white dark:bg-[#181818]">
+      <div className="rounded-2xl border border-border-soft overflow-hidden bg-white dark:bg-[#131E2F]">
         {loading ? (
           <div className="px-5 py-12 text-center">
-            <Loader2 className="w-6 h-6 animate-spin text-brand mx-auto" />
+            <Loader2 className="w-6 h-6 animate-spin text-link mx-auto" />
           </div>
         ) : sessions.length === 0 ? (
           <div className="px-5 py-12 text-center text-gray-400 text-sm">No sessions yet.</div>
@@ -269,14 +269,14 @@ export default function AdminLiveSessions() {
               <div className="flex items-center gap-2 flex-shrink-0">
                 <button
                   onClick={() => handleEdit(s)}
-                  className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-[#FAF8FF] dark:bg-white/5 text-body-strong hover:bg-[#F3EBFF] dark:hover:bg-brand/15 hover:text-brand transition-colors"
+                  className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-[#F6F8FB] dark:bg-white/5 text-body-strong hover:bg-[#E8EDF3] dark:hover:bg-brand/15 hover:text-link transition-colors"
                 >
                   <Pencil className="w-3 h-3" /> Edit
                 </button>
                 <button
                   onClick={() => handleDelete(s.id)}
                   disabled={deletingId === s.id}
-                  className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-[#FAF8FF] dark:bg-white/5 text-body-strong hover:bg-[#FDEEF4] dark:hover:bg-rose/10 hover:text-rose transition-colors disabled:opacity-40"
+                  className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-[#F6F8FB] dark:bg-white/5 text-body-strong hover:bg-[#FBEAE9] dark:hover:bg-rose/10 hover:text-rose transition-colors disabled:opacity-40"
                 >
                   {deletingId === s.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Trash2 className="w-3 h-3" />}
                 </button>

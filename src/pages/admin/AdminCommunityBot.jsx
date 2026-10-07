@@ -15,7 +15,7 @@ const TICKET_TABS = [
 const fmtDate = (iso) =>
   new Date(iso).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' });
 
-const cardClass = 'rounded-2xl border border-border-soft bg-white dark:bg-[#181818] p-5 sm:p-6';
+const cardClass = 'rounded-2xl border border-border-soft bg-white dark:bg-[#131E2F] p-5 sm:p-6';
 const inputClass =
   'w-full px-4 py-3 rounded-xl border border-border text-sm text-ink bg-transparent focus:outline-none focus:ring-2 focus:ring-brand/40';
 
@@ -31,7 +31,7 @@ function Switch({ label, hint, on, busy, onToggle }) {
         disabled={busy}
         onClick={onToggle}
         className={`px-5 py-2.5 rounded-xl text-sm font-extrabold transition-colors disabled:opacity-60 ${
-          on ? 'bg-[#FDEEF4] text-rose hover:bg-rose/20' : 'bg-brand text-white hover:bg-brand-deep'
+          on ? 'bg-[#FBEAE9] text-rose hover:bg-rose/20' : 'bg-brand text-white hover:bg-brand-deep'
         }`}
       >
         {busy ? 'Saving…' : on ? 'Turn off' : 'Turn on'}
@@ -156,7 +156,7 @@ export default function AdminCommunityBot() {
   if (loading) {
     return (
       <div className="flex justify-center py-16">
-        <Loader2 className="w-6 h-6 animate-spin text-brand" />
+        <Loader2 className="w-6 h-6 animate-spin text-link" />
       </div>
     );
   }
@@ -165,7 +165,7 @@ export default function AdminCommunityBot() {
     <div className="space-y-6">
       <div>
         <h1 className="font-display font-extrabold text-2xl text-ink flex items-center gap-2.5">
-          <Bot className="w-6 h-6 text-brand" /> Community assistant
+          <Bot className="w-6 h-6 text-link" /> Community assistant
         </h1>
         <p className="text-sm text-body mt-1.5 max-w-2xl">
           “Social Dev Assistant” can welcome students on their first message and acknowledge anyone asking for help — it
@@ -175,7 +175,7 @@ export default function AdminCommunityBot() {
       </div>
 
       {error && (
-        <div className="flex items-start gap-2 text-sm text-rose bg-[#FDEEF4] dark:bg-rose/10 border border-rose/20 rounded-lg px-3 py-2.5">
+        <div className="flex items-start gap-2 text-sm text-rose bg-[#FBEAE9] dark:bg-rose/10 border border-rose/20 rounded-lg px-3 py-2.5">
           <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" /> {error}
         </div>
       )}
@@ -209,7 +209,7 @@ export default function AdminCommunityBot() {
       <div className={cardClass}>
         <div className="flex items-center justify-between gap-3 flex-wrap mb-4">
           <p className="font-bold text-ink flex items-center gap-2">
-            <LifeBuoy className="w-4 h-4 text-brand" /> Support tickets
+            <LifeBuoy className="w-4 h-4 text-link" /> Support tickets
             <span className="text-[11px] font-bold text-amber-700 dark:text-amber-400 bg-[#FEF9E7] dark:bg-amber-500/10 px-2 py-0.5 rounded-full">
               {stats.openTickets} open
             </span>
@@ -221,7 +221,7 @@ export default function AdminCommunityBot() {
                 type="button"
                 onClick={() => pickTicketTab(t.id)}
                 className={`px-3 py-1.5 rounded-lg text-[12.5px] font-bold transition-colors ${
-                  ticketTab === t.id ? 'bg-[#F3EBFF] dark:bg-brand/15 text-brand' : 'text-body hover:text-ink'
+                  ticketTab === t.id ? 'bg-[#E8EDF3] dark:bg-brand/15 text-link' : 'text-body hover:text-ink'
                 }`}
               >
                 {t.label}
@@ -232,7 +232,7 @@ export default function AdminCommunityBot() {
 
         {ticketsLoading ? (
           <div className="flex justify-center py-8">
-            <Loader2 className="w-5 h-5 animate-spin text-brand" />
+            <Loader2 className="w-5 h-5 animate-spin text-link" />
           </div>
         ) : tickets.length === 0 ? (
           <p className="text-[13px] text-body">No tickets here.</p>
@@ -249,7 +249,7 @@ export default function AdminCommunityBot() {
                     {t.student_email && <p className="text-[12px] text-gray-400 break-all">{t.student_email}</p>}
                   </div>
                   <div className="flex items-center gap-2 flex-shrink-0">
-                    <span className="text-[11px] font-bold text-brand bg-[#F3EBFF] dark:bg-brand/15 px-2.5 py-1 rounded-full capitalize">
+                    <span className="text-[11px] font-bold text-link bg-[#E8EDF3] dark:bg-brand/15 px-2.5 py-1 rounded-full capitalize">
                       {t.category}
                     </span>
                     <span className="text-[12px] text-gray-400">{fmtDate(t.created_at)}</span>
@@ -260,7 +260,7 @@ export default function AdminCommunityBot() {
                 <div className="flex items-center gap-3 mt-3 flex-wrap">
                   <Link
                     to="/dashboard/community"
-                    className="inline-flex items-center gap-1.5 text-[12.5px] font-bold text-brand hover:underline"
+                    className="inline-flex items-center gap-1.5 text-[12.5px] font-bold text-link hover:underline"
                   >
                     <ExternalLink className="w-3.5 h-3.5" /> Reply in {t.channel_name || 'community'}
                   </Link>
@@ -319,7 +319,7 @@ export default function AdminCommunityBot() {
       </div>
 
       <div className={`${cardClass} space-y-3`}>
-        <p className="font-bold text-ink flex items-center gap-2"><Sparkles className="w-4 h-4 text-brand" /> Try it</p>
+        <p className="font-bold text-ink flex items-center gap-2"><Sparkles className="w-4 h-4 text-link" /> Try it</p>
         <p className="text-[13px] text-body">See what it would do with a sample message. Nothing is posted and no ticket is created.</p>
         <textarea
           rows={2}
@@ -332,18 +332,18 @@ export default function AdminCommunityBot() {
           type="button"
           disabled={previewing || !previewMessage.trim()}
           onClick={runPreview}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-extrabold border border-brand text-brand hover:bg-[#F3EBFF] dark:hover:bg-brand/15 disabled:opacity-60"
+          className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-extrabold border border-brand text-link hover:bg-[#E8EDF3] dark:hover:bg-brand/15 disabled:opacity-60"
         >
           {previewing ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
           {previewing ? 'Working…' : 'Preview'}
         </button>
         {preview && (
           <div className="space-y-2 text-[13.5px]">
-            <div className="rounded-xl bg-[#FAF8FF] dark:bg-white/5 border border-border-soft px-4 py-3 text-body-strong">
+            <div className="rounded-xl bg-[#F6F8FB] dark:bg-white/5 border border-border-soft px-4 py-3 text-body-strong">
               <span className="block text-[11px] font-bold uppercase tracking-wide text-gray-400 mb-1">If it's their first message and not a help request</span>
               <span className="font-bold text-ink">Social Dev Assistant: </span>{preview.text}
             </div>
-            <div className="rounded-xl bg-[#FAF8FF] dark:bg-white/5 border border-border-soft px-4 py-3 text-body-strong">
+            <div className="rounded-xl bg-[#F6F8FB] dark:bg-white/5 border border-border-soft px-4 py-3 text-body-strong">
               <span className="block text-[11px] font-bold uppercase tracking-wide text-gray-400 mb-1">Support check</span>
               {!preview.support ? (
                 'Gemini was unavailable — a real message like this would be logged as a ticket for you to review, with no reply posted.'

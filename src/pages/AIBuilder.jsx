@@ -53,7 +53,7 @@ const builder2Count = agents.filter((a) => a.difficulty === 'Builder 2').length;
 
 const TRACKS = [
   { tag: '🌱 Builder 1 · Start here', tagClass: 'bg-[#EAFAF1] dark:bg-green/10 text-green', border: 'border-green border-[2.5px]', title: 'The foundation', text: `${builder1Count} single-tool builds designed for zero-to-one confidence. No prerequisite except curiosity.` },
-  { tag: "⚡ Builder 2 · What's next", tagClass: 'bg-[#F3EBFF] dark:bg-brand/15 text-brand', border: 'border-border-soft border-[1.5px]', title: 'The next level', text: `${builder2Count} multi-step, API-integrated builds — waiting once you've shipped your first few agents.` },
+  { tag: "⚡ Builder 2 · What's next", tagClass: 'bg-[#E8EDF3] dark:bg-brand/15 text-link', border: 'border-border-soft border-[1.5px]', title: 'The next level', text: `${builder2Count} multi-step, API-integrated builds — waiting once you've shipped your first few agents.` },
   { tag: '⚡🌱 Pro · Both, no wait', tagClass: 'bg-[#FEF9E7] dark:bg-amber-500/15 text-amber-700 dark:text-amber-400', border: 'border-border-soft border-[1.5px]', title: 'Everything, now', text: 'One payment, no prerequisite — both tracks unlock immediately if you already know you want it all.' },
 ];
 
@@ -128,7 +128,7 @@ function SectionHeading({ eyebrow, children }) {
   return (
     <div className="text-center mb-9">
       {eyebrow && (
-        <span className="inline-flex items-center gap-2 text-[13px] font-bold px-4 py-1.5 rounded-full bg-[#F3EBFF] dark:bg-brand/15 text-brand mb-3">
+        <span className="inline-flex items-center gap-2 text-[13px] font-bold px-4 py-1.5 rounded-full bg-[#E8EDF3] dark:bg-brand/15 text-link mb-3">
           {eyebrow}
         </span>
       )}
@@ -151,7 +151,7 @@ export default function AIBuilder() {
       {/* Hero */}
       <div
         className="relative overflow-hidden pt-16 pb-14 px-4 sm:px-6 lg:px-[5vw] text-center"
-        style={{ background: 'radial-gradient(120% 100% at 50% 0%, #F3EBFF 0%, #FBFAFF 55%)' }}
+        style={{ background: '#F6F8FB' }}
       >
         <div
           className="absolute top-10 right-[12%] w-[130px] h-[130px] bg-yellow opacity-40 animate-floaty pointer-events-none hidden sm:block"
@@ -165,7 +165,7 @@ export default function AIBuilder() {
           <m.span
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 bg-white dark:bg-[#181818] border-[1.5px] border-border text-brand font-bold text-[12.5px] px-4 py-2 rounded-full shadow-[0_3px_10px_rgba(124,58,237,.1)]"
+            className="inline-flex items-center gap-2 bg-white dark:bg-[#131E2F] border-[1.5px] border-border text-link font-bold text-[12.5px] px-4 py-2 rounded-full shadow-[0_3px_10px_rgba(15,26,42,.1)]"
           >
             🚀 Enrollment open now
           </m.span>
@@ -176,7 +176,7 @@ export default function AIBuilder() {
             transition={{ delay: 0.1 }}
             className="font-display font-extrabold text-[36px] sm:text-[54px] leading-[1.05] text-ink tracking-[-1.5px] mt-5"
           >
-            Become an <span className="text-brand">AI Builder.</span>
+            Become an <span className="text-link">AI Builder.</span>
           </m.h1>
 
           <m.p
@@ -197,11 +197,11 @@ export default function AIBuilder() {
           >
             <Link
               to="/pricing"
-              className="bg-brand text-white font-extrabold text-base px-8 py-4 rounded-2xl shadow-[0_10px_22px_rgba(124,58,237,.4)] hover:bg-brand-deep transition-colors"
+              className="bg-brand text-white font-extrabold text-base px-8 py-4 rounded-2xl shadow-[0_10px_22px_rgba(15,26,42,.4)] hover:bg-brand-deep transition-colors"
             >
               Get AI Agent Guides — from ₦<span>{BUILDER1_PRICE.toLocaleString()}</span> →
             </Link>
-            <a href="#what-you-build" className="text-body-strong font-bold text-[14.5px] hover:text-brand transition-colors">
+            <a href="#what-you-build" className="text-body-strong font-bold text-[14.5px] hover:text-link transition-colors">
               See what you'll build ↓
             </a>
           </m.div>
@@ -223,7 +223,7 @@ export default function AIBuilder() {
             transition={{ delay: 0.55 }}
             className="mt-9 max-w-2xl mx-auto"
           >
-            <div className="relative h-[200px] sm:h-[280px] lg:h-[340px] rounded-[22px] overflow-hidden shadow-[0_24px_50px_-18px_rgba(80,40,160,.4)] bg-[#1A1333]">
+            <div className="relative h-[200px] sm:h-[280px] lg:h-[340px] rounded-[22px] overflow-hidden shadow-[0_24px_50px_-18px_rgba(15,26,42,.4)] bg-[#0F1A2A]">
               <YouTubeFacade
                 className="w-full h-full"
                 videoId={DEMO_VIDEO_ID}
@@ -238,32 +238,32 @@ export default function AIBuilder() {
       </div>
 
       {/* The opportunity */}
-      <div className="bg-[#1A1333] py-16 px-4 sm:px-6 lg:px-[5vw]">
+      <div className="bg-[#0F1A2A] py-16 px-4 sm:px-6 lg:px-[5vw]">
         <div className="max-w-3xl mx-auto text-center">
-          <span className="text-[13px] font-bold uppercase tracking-[3px] mb-5 inline-block" style={{ color: '#B39DFF' }}>
+          <span className="text-[13px] font-bold uppercase tracking-[3px] mb-5 inline-block" style={{ color: '#B8CCE4' }}>
             Why this matters now
           </span>
           <h2 className="font-display font-extrabold text-[26px] sm:text-[38px] leading-[1.15] tracking-[-1px] text-white">
             The opportunity has changed.
           </h2>
-          <p className="text-[#E5DEF7] text-[15px] leading-relaxed mt-3 max-w-lg mx-auto">
+          <p className="text-[#E2EAF3] text-[15px] leading-relaxed mt-3 max-w-lg mx-auto">
             The people getting ahead aren't necessarily the smartest. They're the ones learning how to work
             differently.
           </p>
           <div className="flex flex-wrap justify-center gap-2 mt-6 mb-8">
             {WANTS.map((w) => (
-              <span key={w} className="text-[12px] font-bold text-[#E5DEF7] bg-white/[0.08] border border-white/10 rounded-full px-3 py-1.5">{w}</span>
+              <span key={w} className="text-[12px] font-bold text-[#E2EAF3] bg-white/[0.08] border border-white/10 rounded-full px-3 py-1.5">{w}</span>
             ))}
           </div>
           <div className="flex flex-col gap-2.5 text-left">
             {SCENES.map((scene) => (
               <div key={scene.text} className="flex items-center gap-3.5 bg-white/[0.06] border border-white/10 rounded-2xl px-5 py-4">
                 <span className="text-xl flex-shrink-0">{scene.icon}</span>
-                <span className="text-[#E5DEF7] text-[13.5px] leading-relaxed">{scene.text}</span>
+                <span className="text-[#E2EAF3] text-[13.5px] leading-relaxed">{scene.text}</span>
               </div>
             ))}
           </div>
-          <p className="text-[#C9BFE8] text-[14px] mt-7">
+          <p className="text-[#D5DEE9] text-[14px] mt-7">
             The vehicle behind all of it? <span className="text-yellow font-bold">AI</span> — now cheap and simple enough that anyone can pick it up.
           </p>
         </div>
@@ -274,7 +274,7 @@ export default function AIBuilder() {
         <SectionHeading eyebrow="A quick gut check">How many of these sound like you?</SectionHeading>
         <div className="grid sm:grid-cols-2 gap-3.5 max-w-3xl mx-auto mb-6">
           {HONEST_CHECK.map((group) => (
-            <div key={group.title} className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl p-4.5">
+            <div key={group.title} className="bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-2xl p-4.5">
               <span className="font-display font-bold text-[14px] text-ink block mb-2.5">{group.title}</span>
               <ul className="flex flex-col gap-1.5">
                 {group.items.map((item) => (
@@ -285,7 +285,7 @@ export default function AIBuilder() {
           ))}
         </div>
         <p className="text-center font-display font-bold text-[15px] sm:text-lg text-ink max-w-xl mx-auto">
-          If two or more sound like your week, you don't need more hours. <span className="text-brand">You need a system that runs without you.</span>
+          If two or more sound like your week, you don't need more hours. <span className="text-link">You need a system that runs without you.</span>
         </p>
       </div>
 
@@ -293,7 +293,7 @@ export default function AIBuilder() {
       <div className="px-4 sm:px-6 lg:px-[5vw] py-16 max-w-5xl mx-auto">
         <SectionHeading>Using AI vs. Building with AI</SectionHeading>
         <div className="grid sm:grid-cols-2 gap-4 max-w-3xl mx-auto mb-7">
-          <div className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl p-5">
+          <div className="bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-2xl p-5">
             <div className="flex items-center gap-2.5 mb-3">
               <div className="w-9 h-9 rounded-lg bg-gray-100 dark:bg-white/10 text-gray-400 flex items-center justify-center"><MessageCircle className="w-4.5 h-4.5" /></div>
               <h3 className="font-display font-bold text-[15px] text-ink">Using AI</h3>
@@ -304,9 +304,9 @@ export default function AIBuilder() {
               ))}
             </ul>
           </div>
-          <div className="bg-white dark:bg-[#181818] border-[2px] border-brand rounded-2xl p-5 shadow-[0_16px_36px_-18px_rgba(124,58,237,.4)]">
+          <div className="bg-white dark:bg-[#131E2F] border-[2px] border-brand rounded-2xl p-5 shadow-[0_16px_36px_-18px_rgba(15,26,42,.4)]">
             <div className="flex items-center gap-2.5 mb-3">
-              <div className="w-9 h-9 rounded-lg bg-[#F3EBFF] dark:bg-brand/15 text-brand flex items-center justify-center"><Hammer className="w-4.5 h-4.5" /></div>
+              <div className="w-9 h-9 rounded-lg bg-[#E8EDF3] dark:bg-brand/15 text-link flex items-center justify-center"><Hammer className="w-4.5 h-4.5" /></div>
               <h3 className="font-display font-bold text-[15px] text-ink">Building with AI</h3>
             </div>
             <ul className="space-y-2">
@@ -317,7 +317,7 @@ export default function AIBuilder() {
           </div>
         </div>
         <p className="text-center text-[14.5px] text-body">
-          ChatGPT users consume AI. <span className="text-brand font-bold">AI Builders solve problems with it.</span>
+          ChatGPT users consume AI. <span className="text-link font-bold">AI Builders solve problems with it.</span>
         </p>
       </div>
 
@@ -335,7 +335,7 @@ export default function AIBuilder() {
         </p>
         <Link
           to="/whatsapp-bot-guide"
-          className="inline-flex items-center gap-2 bg-white dark:bg-[#181818] border-[1.5px] border-brand text-brand font-extrabold text-base px-7 py-[15px] rounded-2xl hover:bg-[#F3EBFF] dark:hover:bg-brand/10 transition-colors"
+          className="inline-flex items-center gap-2 bg-white dark:bg-[#131E2F] border-[1.5px] border-brand text-link font-extrabold text-base px-7 py-[15px] rounded-2xl hover:bg-[#E8EDF3] dark:hover:bg-brand/10 transition-colors"
         >
           Get the free guide <ArrowRight className="w-4 h-4" />
         </Link>
@@ -350,7 +350,7 @@ export default function AIBuilder() {
         <SectionHeading eyebrow="The wall of builders">Your first 12 AI agents</SectionHeading>
         <div className="grid grid-cols-3 sm:grid-cols-4 gap-2.5 max-w-3xl mx-auto">
           {wall.map((agent) => (
-            <div key={agent.slug} className="relative flex flex-col items-center gap-1.5 bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-xl p-3 text-center">
+            <div key={agent.slug} className="relative flex flex-col items-center gap-1.5 bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-xl p-3 text-center">
               {agent.slug === 'whatsapp-auto-reply-bot' && (
                 <span className="absolute -top-1.5 -right-1.5 text-[8px] font-extrabold uppercase tracking-wide text-white bg-rose rounded-full px-1.5 py-0.5">Free guide</span>
               )}
@@ -360,7 +360,7 @@ export default function AIBuilder() {
           ))}
         </div>
         <p className="text-center font-display font-bold text-[15px] sm:text-lg text-ink mt-7 max-w-lg mx-auto">
-          By the end of Builder 1, you won't just understand AI — <span className="text-brand">you'll have built 12 real AI agents solving real business problems.</span>
+          By the end of Builder 1, you won't just understand AI — <span className="text-link">you'll have built 12 real AI agents solving real business problems.</span>
         </p>
         {remaining > 0 && <p className="text-center text-[13px] text-body font-semibold mt-2">+ <span>{remaining}</span> more sessions across sales, data, and operations.</p>}
       </div>
@@ -371,7 +371,7 @@ export default function AIBuilder() {
         <div className="flex flex-col lg:flex-row items-stretch justify-center gap-3 mb-9 max-w-3xl mx-auto">
           {TRACKS.map((track, i) => (
             <div key={track.title} className="flex items-center gap-3 flex-1">
-              <div className={`bg-white dark:bg-[#181818] border ${track.border} rounded-2xl p-5 w-full text-left`}>
+              <div className={`bg-white dark:bg-[#131E2F] border ${track.border} rounded-2xl p-5 w-full text-left`}>
                 <span className={`inline-flex items-center gap-1.5 font-bold text-[11px] px-2.5 py-1 rounded-full mb-3 ${track.tagClass}`}>{track.tag}</span>
                 <h3 className="font-display font-extrabold text-base text-ink mb-1.5">{track.title}</h3>
                 <p className="text-[12.5px] text-body leading-relaxed">{track.text}</p>
@@ -393,7 +393,7 @@ export default function AIBuilder() {
       {/* Curriculum timeline — every count here is derived from src/data/
           agents.js, never hardcoded, so the page can't drift out of sync
           with the catalog the way a written-out "25 sessions" would. */}
-      <div id="curriculum" className="bg-[#FBFAFF] dark:bg-[#141416] border-y border-border-soft px-4 sm:px-6 lg:px-[5vw] py-16">
+      <div id="curriculum" className="bg-[#F6F8FB] dark:bg-[#141416] border-y border-border-soft px-4 sm:px-6 lg:px-[5vw] py-16">
         <div className="max-w-5xl mx-auto">
           <SectionHeading eyebrow="The full path">
             <span>{builder1Count + builder2Count}</span> sessions, start to finish.
@@ -401,7 +401,7 @@ export default function AIBuilder() {
 
           <div className="grid lg:grid-cols-[1.15fr_auto_1fr] gap-6 lg:gap-5 items-stretch">
             {/* Builder 1 — week by week */}
-            <div className="bg-white dark:bg-[#181818] border-[2.5px] border-green rounded-[22px] p-6 flex flex-col">
+            <div className="bg-white dark:bg-[#131E2F] border-[2.5px] border-green rounded-[22px] p-6 flex flex-col">
               <div className="flex items-baseline justify-between gap-3 mb-1">
                 <span className="inline-flex items-center gap-1.5 bg-[#EAFAF1] dark:bg-green/10 text-green font-bold text-[11px] px-2.5 py-1 rounded-full">
                   🌱 Builder 1 · Start here
@@ -447,12 +447,12 @@ export default function AIBuilder() {
             </div>
 
             {/* Builder 2 */}
-            <div className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-[22px] p-6 flex flex-col">
+            <div className="bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-[22px] p-6 flex flex-col">
               <div className="flex items-baseline justify-between gap-3 mb-1">
-                <span className="inline-flex items-center gap-1.5 bg-[#F3EBFF] dark:bg-brand/15 text-brand font-bold text-[11px] px-2.5 py-1 rounded-full">
+                <span className="inline-flex items-center gap-1.5 bg-[#E8EDF3] dark:bg-brand/15 text-link font-bold text-[11px] px-2.5 py-1 rounded-full">
                   ⚡ Builder 2 · What's next
                 </span>
-                <span className="font-display font-extrabold text-2xl text-brand leading-none">
+                <span className="font-display font-extrabold text-2xl text-link leading-none">
                   <span>{builder2Count}</span>
                 </span>
               </div>
@@ -462,7 +462,7 @@ export default function AIBuilder() {
               <ul className="flex flex-col gap-2.5">
                 {BUILDER2_FEATURES.slice(0, 3).map((f) => (
                   <li key={f} className="flex items-start gap-2.5 text-[12.5px] text-body-strong">
-                    <CheckCircle2 className="w-4 h-4 text-brand mt-px flex-shrink-0" /> <span>{f}</span>
+                    <CheckCircle2 className="w-4 h-4 text-link mt-px flex-shrink-0" /> <span>{f}</span>
                   </li>
                 ))}
               </ul>
@@ -474,14 +474,14 @@ export default function AIBuilder() {
           </div>
 
           <p className="text-center font-display font-bold text-[15px] sm:text-lg text-ink mt-9 max-w-xl mx-auto">
-            Every session ends with a write-up prompt — <span className="text-brand">LinkedIn post, resume bullets, project blurb.</span> You
+            Every session ends with a write-up prompt — <span className="text-link">LinkedIn post, resume bullets, project blurb.</span> You
             finish with a portfolio, not a certificate nobody asked for.
           </p>
 
           <div className="flex justify-center mt-6">
             <Link
               to="/catalog"
-              className="inline-flex items-center gap-2 bg-white dark:bg-[#181818] border-[1.5px] border-border text-body-strong font-bold text-[14.5px] px-6 py-3 rounded-xl hover:border-brand hover:text-brand transition-colors"
+              className="inline-flex items-center gap-2 bg-white dark:bg-[#131E2F] border-[1.5px] border-border text-body-strong font-bold text-[14.5px] px-6 py-3 rounded-xl hover:border-brand hover:text-link transition-colors"
             >
               See the full curriculum <ArrowRight className="w-4 h-4" />
             </Link>
@@ -497,7 +497,7 @@ export default function AIBuilder() {
           {levels.map((level, i) => (
             <div
               key={level.name}
-              className={`flex flex-col items-center gap-2 rounded-2xl px-5 py-5 ${i === 1 ? 'bg-brand text-white shadow-[0_16px_36px_-12px_rgba(124,58,237,.5)]' : 'bg-white dark:bg-[#181818] border-[1.5px] border-border-soft'}`}
+              className={`flex flex-col items-center gap-2 rounded-2xl px-5 py-5 ${i === 1 ? 'bg-brand text-white shadow-[0_16px_36px_-12px_rgba(15,26,42,.5)]' : 'bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft'}`}
               style={{ minWidth: 110 }}
             >
               <span className="text-3xl">{level.icon}</span>
@@ -507,7 +507,7 @@ export default function AIBuilder() {
           ))}
         </div>
         <p className="font-display font-extrabold text-xl sm:text-3xl text-ink max-w-2xl mx-auto leading-tight">
-          You don't need permission to call yourself a builder.<br className="hidden sm:block" /> You need <span className="text-brand">one shipped agent.</span>
+          You don't need permission to call yourself a builder.<br className="hidden sm:block" /> You need <span className="text-link">one shipped agent.</span>
         </p>
       </div>
 
@@ -517,11 +517,11 @@ export default function AIBuilder() {
         <p className="text-center text-body text-[14px] -mt-6 mb-8 max-w-lg mx-auto">
           Every business has a version of John's problem — real work, nobody has time for it. Once you can build the fix, you can sell it.
         </p>
-        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl p-5 max-w-2xl mx-auto mb-7">
+        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-2xl p-5 max-w-2xl mx-auto mb-7">
           <img src="/john_uwem.jpg" alt="John Uwem" className="w-20 h-20 rounded-full object-cover flex-shrink-0 border-2 border-border-soft" />
           <div className="text-center sm:text-left">
             <span className="font-display font-bold text-ink text-[15px] block mb-1">John Uwem</span>
-            <span className="inline-block text-[11px] font-bold text-brand bg-[#F3EBFF] dark:bg-brand/15 rounded-full px-2.5 py-1 mb-2">
+            <span className="inline-block text-[11px] font-bold text-link bg-[#E8EDF3] dark:bg-brand/15 rounded-full px-2.5 py-1 mb-2">
               Real client work — a US wedding ring brand
             </span>
             <p className="text-[13.5px] text-body-strong leading-relaxed m-0">
@@ -533,8 +533,8 @@ export default function AIBuilder() {
         </div>
         <div className="grid sm:grid-cols-3 gap-3 max-w-3xl mx-auto mb-9">
           {MONEY_PATHS.map((p) => (
-            <div key={p.label} className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl p-4">
-              <div className="w-9 h-9 rounded-lg bg-[#F3EBFF] dark:bg-brand/15 text-brand flex items-center justify-center mb-2.5"><p.icon className="w-4.5 h-4.5" /></div>
+            <div key={p.label} className="bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-2xl p-4">
+              <div className="w-9 h-9 rounded-lg bg-[#E8EDF3] dark:bg-brand/15 text-link flex items-center justify-center mb-2.5"><p.icon className="w-4.5 h-4.5" /></div>
               <h3 className="font-display font-bold text-[13.5px] text-ink mb-1">{p.label}</h3>
               <p className="text-[12px] text-body leading-relaxed m-0">{p.text}</p>
             </div>
@@ -552,9 +552,9 @@ export default function AIBuilder() {
         <SectionHeading>Before you go further — your questions</SectionHeading>
         <div className="grid sm:grid-cols-2 gap-3.5 max-w-3xl mx-auto">
           {FAQS.map((item) => (
-            <div key={item.q} className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl p-4.5">
+            <div key={item.q} className="bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-2xl p-4.5">
               <div className="flex items-start gap-2.5 mb-1.5">
-                <CircleHelp className="w-4 h-4 text-brand mt-0.5 flex-shrink-0" />
+                <CircleHelp className="w-4 h-4 text-link mt-0.5 flex-shrink-0" />
                 <span className="font-display font-bold text-[14px] text-ink">{item.q}</span>
               </div>
               <p className="text-[13px] text-body leading-relaxed m-0 pl-6.5">{item.a}</p>
@@ -567,7 +567,7 @@ export default function AIBuilder() {
       <div className="px-4 sm:px-6 lg:px-[5vw] py-16 max-w-5xl mx-auto">
         <SectionHeading>Are AI Agent Guides for you?</SectionHeading>
         <div className="grid sm:grid-cols-2 gap-4 max-w-3xl mx-auto">
-          <div className="bg-white dark:bg-[#181818] border-[2px] border-green rounded-2xl p-6">
+          <div className="bg-white dark:bg-[#131E2F] border-[2px] border-green rounded-2xl p-6">
             <h3 className="font-display font-bold text-base text-ink mb-4">This is for you if…</h3>
             <ul className="flex flex-col gap-2.5">
               {FOR_YOU.map((item) => (
@@ -575,7 +575,7 @@ export default function AIBuilder() {
               ))}
             </ul>
           </div>
-          <div className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl p-6">
+          <div className="bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-2xl p-6">
             <h3 className="font-display font-bold text-base text-ink mb-4">This might not be for you if…</h3>
             <ul className="flex flex-col gap-2.5">
               {NOT_FOR_YOU.map((item) => (
@@ -592,7 +592,7 @@ export default function AIBuilder() {
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 text-left items-stretch">
           {/* Builder 1 — this page's entry offer */}
-          <div className="rounded-[22px] border-[2.5px] border-green bg-white dark:bg-[#181818] p-6 flex flex-col relative">
+          <div className="rounded-[22px] border-[2.5px] border-green bg-white dark:bg-[#131E2F] p-6 flex flex-col relative">
             <span className="absolute -top-3.5 left-6 bg-green text-white text-[11px] font-extrabold px-3.5 py-1.5 rounded-full">
               START HERE
             </span>
@@ -613,14 +613,14 @@ export default function AIBuilder() {
             </ul>
             <Link
               to="/pricing"
-              className="flex items-center justify-center gap-2 w-full bg-brand hover:bg-brand-deep text-white font-extrabold px-5 py-3.5 rounded-xl shadow-[0_10px_22px_rgba(124,58,237,.35)] transition-colors"
+              className="flex items-center justify-center gap-2 w-full bg-brand hover:bg-brand-deep text-white font-extrabold px-5 py-3.5 rounded-xl shadow-[0_10px_22px_rgba(15,26,42,.35)] transition-colors"
             >
               Claim Builder 1 →
             </Link>
           </div>
 
           {/* Builder 2 */}
-          <div className="rounded-[22px] border-[1.5px] border-border-soft bg-white dark:bg-[#181818] p-6 flex flex-col">
+          <div className="rounded-[22px] border-[1.5px] border-border-soft bg-white dark:bg-[#131E2F] p-6 flex flex-col">
             <div className="font-extrabold text-ink text-lg mt-1">⚡ Builder 2</div>
             <div className="flex items-baseline gap-2.5 mt-2.5 mb-0.5">
               <span className="font-display font-extrabold text-[32px] text-ink">₦<span>{BUILDER2_PRICE.toLocaleString()}</span></span>
@@ -638,7 +638,7 @@ export default function AIBuilder() {
             </ul>
             <Link
               to="/pricing"
-              className="flex items-center justify-center gap-2 w-full bg-white dark:bg-[#181818] border-[1.5px] border-border text-body-strong hover:border-brand hover:text-brand font-extrabold px-5 py-3.5 rounded-xl transition-colors"
+              className="flex items-center justify-center gap-2 w-full bg-white dark:bg-[#131E2F] border-[1.5px] border-border text-body-strong hover:border-brand hover:text-link font-extrabold px-5 py-3.5 rounded-xl transition-colors"
             >
               Get Builder 2 →
             </Link>
@@ -646,13 +646,13 @@ export default function AIBuilder() {
 
           {/* Pro — both tracks */}
           <div
-            className="rounded-[22px] border-[2.5px] border-brand p-6 flex flex-col relative bg-[#FAF7FF] dark:bg-[#181022]"
+            className="rounded-[22px] border-[2.5px] border-brand p-6 flex flex-col relative bg-[#F6F8FB] dark:bg-[#131E2F]"
           >
             <span className="absolute -top-3.5 right-6 bg-brand text-white text-[11px] font-extrabold px-3.5 py-1.5 rounded-full">
               BEST VALUE
             </span>
             <div className="font-extrabold text-ink text-lg mt-1 flex items-center gap-1.5">
-              <Zap className="w-4 h-4 text-brand" /> Pro
+              <Zap className="w-4 h-4 text-link" /> Pro
             </div>
             <div className="font-display font-extrabold text-[32px] text-ink mt-2.5 mb-0.5">
               ₦<span>{PRO_PRICE.toLocaleString()}</span>
@@ -670,7 +670,7 @@ export default function AIBuilder() {
             </ul>
             <Link
               to="/pricing"
-              className="flex items-center justify-center gap-2 w-full bg-brand hover:bg-brand-deep text-white font-extrabold px-5 py-3.5 rounded-xl shadow-[0_10px_22px_rgba(124,58,237,.35)] transition-colors"
+              className="flex items-center justify-center gap-2 w-full bg-brand hover:bg-brand-deep text-white font-extrabold px-5 py-3.5 rounded-xl shadow-[0_10px_22px_rgba(15,26,42,.35)] transition-colors"
             >
               Get everything →
             </Link>
@@ -696,12 +696,12 @@ export default function AIBuilder() {
       {/* Final CTA */}
       <div className="px-4 sm:px-6 lg:px-[5vw] pb-16 max-w-6xl mx-auto">
         <div
-          className="rounded-[24px] px-8 sm:px-10 py-9 flex items-center justify-between flex-wrap gap-5 shadow-[0_20px_44px_-16px_rgba(124,58,237,.6)]"
-          style={{ background: 'linear-gradient(120deg, #7C3AED, #9D5CFF)' }}
+          className="rounded-[24px] px-8 sm:px-10 py-9 flex items-center justify-between flex-wrap gap-5 shadow-[0_20px_44px_-16px_rgba(15,26,42,.6)]"
+          style={{ background: '#264D73' }}
         >
           <div>
             <h2 className="font-display font-extrabold text-2xl sm:text-[26px] text-white m-0">Ready to become an AI Builder?</h2>
-            <p className="text-[#EDE4FF] mt-2 mb-0 text-[15px]">One-time payment. Permanent access. Start today.</p>
+            <p className="text-[#D5DEE9] mt-2 mb-0 text-[15px]">One-time payment. Permanent access. Start today.</p>
           </div>
           <Link
             to="/pricing"

@@ -42,7 +42,7 @@ function OptionRow({ label, selected, onSelect }) {
       onClick={onSelect}
       className={`w-full text-left px-4 py-3 rounded-xl border-[1.5px] text-sm font-semibold transition-colors ${
         selected
-          ? 'border-brand bg-[#F3EBFF] dark:bg-brand/15 text-brand'
+          ? 'border-brand bg-[#E8EDF3] dark:bg-brand/15 text-link'
           : 'border-border-soft text-ink hover:border-brand/40'
       }`}
     >
@@ -56,7 +56,7 @@ function Field({ label, required, children }) {
     <div className="mb-6 last:mb-0">
       <div className="font-bold text-sm text-ink mb-3">
         {label}
-        {required && <span className="text-brand ml-1">*</span>}
+        {required && <span className="text-link ml-1">*</span>}
       </div>
       {children}
     </div>
@@ -150,7 +150,7 @@ export default function WebinarSurvey() {
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
       <m.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
-        <span className="inline-flex items-center gap-2 text-[13px] font-bold px-4 py-1.5 rounded-full bg-[#F3EBFF] dark:bg-brand/15 text-brand">
+        <span className="inline-flex items-center gap-2 text-[13px] font-bold px-4 py-1.5 rounded-full bg-[#E8EDF3] dark:bg-brand/15 text-link">
           2-minute survey
         </span>
         <h1 className="font-display font-extrabold text-[32px] sm:text-[42px] leading-[1.1] text-ink tracking-[-1px] mt-4 mb-3">
@@ -163,7 +163,7 @@ export default function WebinarSurvey() {
 
         <form
           onSubmit={handleSubmit}
-          className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl p-5 sm:p-7"
+          className="bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-2xl p-5 sm:p-7"
         >
           <Field label="Did you join the live webinar?" required>
             <div className="grid grid-cols-2 gap-3">

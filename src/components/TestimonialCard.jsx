@@ -4,7 +4,7 @@ export default function TestimonialCard({ testimonial }) {
   const { display_name, body, rating, source } = testimonial;
 
   return (
-    <div className="flex flex-col gap-3 bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl p-5 h-full">
+    <div className="flex flex-col gap-3 bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-2xl p-5 h-full">
       <div className="flex items-center gap-0.5">
         {Array.from({ length: 5 }).map((_, i) => (
           <Star
