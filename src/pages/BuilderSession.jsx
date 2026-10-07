@@ -16,6 +16,7 @@ import CourseSidebar from '../components/CourseSidebar';
 import WeekCompletionPanel from '../components/WeekCompletionPanel';
 import NotFound from './NotFound';
 
+import EmojiIcon from '../components/EmojiIcon';
 export default function BuilderSession({ progress, tier }) {
   const { slug } = useParams();
   const { theme } = useTheme();
@@ -186,10 +187,10 @@ export default function BuilderSession({ progress, tier }) {
           }}
         >
           <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-link bg-white dark:bg-[#131E2F] border border-brand/25 rounded-full px-3 py-1.5 mb-4">
-            <span>{difficulty.icon}</span> <span>{tier}</span> · Session <span>{index + 1}</span> of <span>{tierAgents.length}</span>
+            <EmojiIcon emoji={difficulty.icon} className="inline-block w-4 h-4 align-[-3px]" /> <span>{tier}</span> · Session <span>{index + 1}</span> of <span>{tierAgents.length}</span>
           </span>
           <div className="flex items-start gap-4">
-            <div className="text-5xl sm:text-6xl">{agent.emoji}</div>
+            <EmojiIcon emoji={agent.emoji} className="w-14 h-14 sm:w-16 sm:h-16 text-link" />
             <div className="flex-1 min-w-0">
               <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-ink leading-tight">{agent.title}</h1>
               <p className="text-body text-sm sm:text-base mt-2 max-w-2xl">{agent.description}</p>

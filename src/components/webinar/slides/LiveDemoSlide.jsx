@@ -1,6 +1,7 @@
 import { m } from 'framer-motion';
 import SlideShell from '../SlideShell';
 
+import { EmojiText } from '../../EmojiIcon';
 // The full Problem→Prompt→Reasoning→Automation→Value / seven-step loop
 // already lives on HowBuildersThinkSlide, immediately before this one —
 // repeating it here would be redundant. This slide is deliberately just a
@@ -17,7 +18,7 @@ export default function LiveDemoSlide() {
         transition={{ duration: 0.5 }}
         className="inline-flex items-center gap-2 text-[13px] font-bold px-4 py-1.5 rounded-full bg-[#FBEAE9] dark:bg-rose/15 text-rose mb-5"
       >
-        🎬 Live now
+        <EmojiText>🎬 Live now</EmojiText>
       </m.span>
 
       <m.h2

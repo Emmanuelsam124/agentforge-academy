@@ -2,6 +2,7 @@ import { m } from 'framer-motion';
 import { useTheme } from '../../../context/ThemeContext';
 import SlideShell from '../SlideShell';
 
+import { EmojiText } from '../../EmojiIcon';
 // Attendees this webinar is actually for — shown as a mirror, not a pitch,
 // so everyone in the Zoom room sees themselves in the first 30 seconds.
 const AUDIENCE = ['Student', 'Graduate', 'Business owner', 'Professional', 'Teacher', 'Customer support', 'Entrepreneur', 'Church leader'];
@@ -20,7 +21,7 @@ export default function WelcomeSlide() {
         transition={{ duration: 0.5 }}
         className="inline-flex items-center gap-2 bg-white dark:bg-[#131E2F] border-[1.5px] border-border text-link font-bold text-[12.5px] px-4 py-2 rounded-full shadow-[0_3px_10px_rgba(15,26,42,.1)] mb-7"
       >
-        🎥 Live session
+        <EmojiText>🎥 Live session</EmojiText>
       </m.span>
 
       <m.h1

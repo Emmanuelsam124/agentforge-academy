@@ -1,5 +1,6 @@
 import { departments } from '../data/departments';
 
+import EmojiIcon from './EmojiIcon';
 export default function DepartmentFilter({ value, onChange }) {
   return (
     <div className="flex gap-2 overflow-x-auto scrollbar-thin pb-2 -mx-1 px-1 flex-wrap">
@@ -13,7 +14,7 @@ export default function DepartmentFilter({ value, onChange }) {
               active ? 'bg-brand border-brand text-white' : 'bg-[#F6F8FB] dark:bg-[#131E2F] border-border text-body-strong hover:border-brand/50'
             }`}
           >
-            <span>{dept.icon}</span>
+            <EmojiIcon emoji={dept.icon} className="w-4 h-4" />
             {dept.name}
           </button>
         );

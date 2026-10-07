@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import { m } from 'framer-motion';
 import { CheckCircle2, AlertCircle, Infinity as InfinityIcon, Loader2, Zap, Info, Sparkles, Bot } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { usePro } from '../hooks/usePro';
@@ -10,6 +9,7 @@ import { agents } from '../data/agents';
 import { BUILDER1_PRICE, BUILDER2_PRICE, PRO_PRICE, VIBECODING_PRICE, AI_AGENT_MASTERY_PRICE } from '../data/pricing';
 import { usePageSeo } from '../hooks/usePageSeo';
 
+import { EmojiText } from '../components/EmojiIcon';
 const builder1Count = agents.filter((a) => a.difficulty === 'Builder 1').length;
 const builder2Count = agents.filter((a) => a.difficulty === 'Builder 2').length;
 
@@ -111,7 +111,7 @@ export default function Pricing() {
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 text-center">
 
       {/* Header */}
-      <m.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mb-14">
+      <div className="mb-14">
         <span className="inline-flex items-center gap-2 text-[13px] font-bold px-4 py-1.5 rounded-full bg-[#E8EDF3] dark:bg-brand/15 text-link">
           Simple, one-time pricing
         </span>
@@ -121,7 +121,7 @@ export default function Pricing() {
         <p className="text-body text-base max-w-xl mx-auto">
           Pick the path that fits — self-paced AI Agent Guides you keep forever, or a live cohort with real classes.
         </p>
-      </m.div>
+      </div>
 
       {/* AI Agent Guides */}
       <div className="text-left mb-6">
@@ -145,13 +145,10 @@ export default function Pricing() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 text-left">
 
         {/* Builder 1 */}
-        <m.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
+        <div
           className="rounded-[22px] border-[1.5px] border-border-soft bg-white dark:bg-[#131E2F] p-7.5 flex flex-col"
         >
-          <div className="font-extrabold text-ink text-lg">🌱 Builder 1</div>
+          <div className="font-extrabold text-ink text-lg"><EmojiText>🌱 Builder 1</EmojiText></div>
           <div className="flex items-baseline gap-2.5 mt-2.5 mb-0.5">
             <span className="font-display font-extrabold text-[34px] text-ink">₦<span>{BUILDER1_PRICE.toLocaleString()}</span></span>
           </div>
@@ -185,16 +182,13 @@ export default function Pricing() {
               {checkoutLoading === 'builder1' ? 'Starting checkout…' : `Pay ₦${BUILDER1_PRICE.toLocaleString()} with Paystack`}
             </button>
           )}
-        </m.div>
+        </div>
 
         {/* Builder 2 */}
-        <m.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
+        <div
           className="rounded-[22px] border-[1.5px] border-border-soft bg-white dark:bg-[#131E2F] p-7.5 flex flex-col"
         >
-          <div className="font-extrabold text-ink text-lg">⚡ Builder 2</div>
+          <div className="font-extrabold text-ink text-lg"><EmojiText>⚡ Builder 2</EmojiText></div>
           <div className="flex items-baseline gap-2.5 mt-2.5 mb-0.5">
             <span className="font-display font-extrabold text-[34px] text-ink">₦<span>{BUILDER2_PRICE.toLocaleString()}</span></span>
           </div>
@@ -228,13 +222,10 @@ export default function Pricing() {
               {checkoutLoading === 'builder2' ? 'Starting checkout…' : `Pay ₦${BUILDER2_PRICE.toLocaleString()} with Paystack`}
             </button>
           )}
-        </m.div>
+        </div>
 
         {/* Pro (bundle) */}
-        <m.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+        <div
           className="rounded-[22px] border-[2.5px] border-brand p-7.5 flex flex-col relative"
           style={{ background: theme === 'dark' ? '#131E2F' : '#FFFFFF' }}
         >
@@ -279,7 +270,7 @@ export default function Pricing() {
               {checkoutLoading === 'pro' ? 'Starting checkout…' : `Pay ₦${PRO_PRICE.toLocaleString()} with Paystack`}
             </button>
           )}
-        </m.div>
+        </div>
       </div>
 
       {/* Live cohorts — Vibe Coding & AI Agent Mastery, each with their own
@@ -292,14 +283,11 @@ export default function Pricing() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-left">
-        {LIVE_COHORTS.map((program, i) => {
+        {LIVE_COHORTS.map((program) => {
           const enrolled = cohortAccess[program.hasKey];
           return (
-            <m.div
+            <div
               key={program.to}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 * i }}
               className="rounded-[22px] border-[1.5px] border-border-soft bg-white dark:bg-[#131E2F] p-7.5 flex flex-col"
             >
               <div className="w-11 h-11 rounded-[14px] bg-[#E8EDF3] dark:bg-brand/15 text-link flex items-center justify-center mb-4">
@@ -328,13 +316,13 @@ export default function Pricing() {
               >
                 {enrolled ? "You're enrolled — go to your classes →" : `Explore ${program.name} →`}
               </Link>
-            </m.div>
+            </div>
           );
         })}
       </div>
 
       {/* Payment methods */}
-      <m.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="mt-14 text-center">
+      <div className="mt-14 text-center">
         <p className="text-[13.5px] text-gray-400 mb-3">
           Payments processed securely by Paystack — cards accepted worldwide
         </p>
@@ -348,7 +336,7 @@ export default function Pricing() {
         <p className="text-xs text-gray-400 mt-6">
           Every plan is a one-time payment — no subscription, no auto-renewal. For billing questions email support@socialdevtechnologies.com
         </p>
-      </m.div>
+      </div>
 
       <CheckoutAuthModal open={authModalOpen} onClose={closeAuthModal} onAuthenticated={handleAuthenticated} />
     </div>

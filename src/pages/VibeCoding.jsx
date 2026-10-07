@@ -1,6 +1,5 @@
 import { useCallback, useSyncExternalStore } from 'react';
 import { Link } from 'react-router-dom';
-import { m } from 'framer-motion';
 import {
   CheckCircle2, ArrowRight, CalendarDays, Info, CircleHelp, Loader2, AlertCircle, Timer,
   Code2, Database, Rocket, Wrench,
@@ -12,6 +11,7 @@ import CheckoutAuthModal from '../components/CheckoutAuthModal';
 import { usePageSeo } from '../hooks/usePageSeo';
 import { VIBECODING_PRICE } from '../data/pricing';
 
+import EmojiIcon from '../components/EmojiIcon';
 // This page sells ONE product: the Vibe Coding bootcamp. Unlike Pricing.jsx
 // / AIBuilder.jsx (which sell builder1/builder2/pro), checkout here is
 // hardcoded to plan: 'vibecoding' — this page never offers the automation
@@ -162,37 +162,26 @@ export default function VibeCoding() {
         style={{ background: '#F6F8FB' }}
       >
         <div className="relative max-w-3xl mx-auto">
-          <m.span
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
+          <span
             className="inline-flex items-center gap-2 bg-white dark:bg-[#131E2F] border-[1.5px] border-border text-link font-bold text-[12.5px] px-4 py-2 rounded-full shadow-[0_3px_10px_rgba(15,26,42,.1)]"
           >
             🚀 Launch cohort — enrollment open
-          </m.span>
+          </span>
 
-          <m.h1
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
+          <h1
             className="font-display font-extrabold text-[36px] sm:text-[54px] leading-[1.05] text-ink tracking-[-1.5px] mt-5"
           >
             Stop just using AI. <span className="text-link">Start building with it.</span>
-          </m.h1>
+          </h1>
 
-          <m.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
+          <p
             className="text-[17px] leading-relaxed text-body mt-5 max-w-lg mx-auto"
           >
             Turn your ideas into real websites, web applications, and AI-powered products — even if you've never
             been a professional programmer. Learn to use AI as your development partner.
-          </m.p>
+          </p>
 
-          <m.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
+          <div
             className="flex flex-col sm:flex-row gap-3.5 items-center justify-center mt-8"
           >
             <a
@@ -204,11 +193,11 @@ export default function VibeCoding() {
             <a href="#what-youll-build" className="text-body-strong font-bold text-[14.5px] hover:text-link transition-colors">
               See what you'll build ↓
             </a>
-          </m.div>
+          </div>
 
-          <m.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.45 }} className="flex flex-wrap justify-center gap-x-5 gap-y-1.5 mt-6 text-[13px] text-body font-semibold">
+          <div className="flex flex-wrap justify-center gap-x-5 gap-y-1.5 mt-6 text-[13px] text-body font-semibold">
             <span>4 weeks</span><span>·</span><span>8 live classes</span><span>·</span><span>6 months access</span>
-          </m.div>
+          </div>
         </div>
       </div>
 
@@ -256,7 +245,7 @@ export default function VibeCoding() {
           {PROJECTS.map((p, i) => (
             <div key={p.name} className="bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-2xl p-5">
               <div className="flex items-center gap-2 mb-2.5">
-                <span className="text-xl">{p.icon}</span>
+                <EmojiIcon emoji={p.icon} className="w-5 h-5 text-link" />
                 <span className="text-[10.5px] font-bold uppercase tracking-wide text-link">Project {i + 1}</span>
               </div>
               <h3 className="font-display font-bold text-[14px] text-ink mb-1.5">{p.name}</h3>

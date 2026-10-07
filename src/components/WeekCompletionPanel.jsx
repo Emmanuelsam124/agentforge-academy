@@ -6,6 +6,7 @@ import { useCertificates } from '../hooks/useCertificates';
 import { useProjectSubmission } from '../hooks/useProjectSubmission';
 import { generateShareText } from '../utils/generateShareText';
 
+import EmojiIcon from './EmojiIcon';
 function CopyBlock({ label, text }) {
   const [copied, setCopied] = useState(false);
   const copy = () => {
@@ -140,7 +141,7 @@ export default function WeekCompletionPanel({ agent, week }) {
     <div className="rounded-2xl border-[1.5px] border-brand/25 bg-[#E8EDF3] dark:bg-brand/10 p-5 sm:p-6 mb-8">
       <div className="flex items-center gap-2 mb-1">
         <Award className="w-5 h-5 text-link" />
-        <h3 className="font-display font-bold text-lg text-ink">Week <span>{week}</span> complete 🎉</h3>
+        <h3 className="font-display font-bold text-lg text-ink">Week <span>{week}</span> complete <EmojiIcon emoji="🎉" className="inline-block w-5 h-5 align-[-3px] text-link" /></h3>
       </div>
       <p className="text-sm text-body mb-4">
         This was Week <span>{week}</span>'s main project — you're good to go for the week.

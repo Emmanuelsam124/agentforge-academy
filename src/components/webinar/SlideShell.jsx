@@ -10,14 +10,6 @@ export default function SlideShell({ children, background, decorations = false, 
     >
       {decorations && (
         <>
-          <div
-            className="absolute top-10 right-[10%] w-[130px] h-[130px] bg-yellow opacity-40 animate-floaty pointer-events-none hidden sm:block"
-            style={{ borderRadius: '38% 62% 63% 37% / 41% 44% 56% 59%' }}
-          />
-          <div
-            className="absolute bottom-10 left-[12%] w-[80px] h-[80px] bg-emerald-400 opacity-30 animate-floaty pointer-events-none hidden sm:block"
-            style={{ borderRadius: '50%', animationDelay: '.5s' }}
-          />
         </>
       )}
       <div className={`relative w-full max-w-5xl mx-auto ${contentClassName}`}>{children}</div>

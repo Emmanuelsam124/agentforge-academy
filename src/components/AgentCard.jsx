@@ -4,6 +4,7 @@ import { getDifficulty, hasAccessToDifficulty } from '../data/departments';
 import { getTechColor } from '../data/techStack';
 import { getBuilderPagePath } from '../data/agents';
 
+import EmojiIcon from './EmojiIcon';
 export default function AgentCard({ agent, completed, onClick, hasBuilder1 = false, hasBuilder2 = false, isAdmin = false }) {
   const difficulty = getDifficulty(agent.difficulty);
   const unlocked = hasAccessToDifficulty(agent.difficulty, { hasBuilder1, hasBuilder2, isAdmin });
@@ -27,9 +28,9 @@ export default function AgentCard({ agent, completed, onClick, hasBuilder1 = fal
           className="inline-flex items-center gap-1 font-bold text-[11px] px-2.5 py-1 rounded-full"
           style={{ background: difficulty.tint, color: difficulty.color }}
         >
-          <span>{difficulty.icon}</span> <span>{difficulty.label}</span>
+          <EmojiIcon emoji={difficulty.icon} className="w-3.5 h-3.5" /> <span>{difficulty.label}</span>
         </span>
-        <span className="text-[15px]">{agent.emoji}</span>
+        <EmojiIcon emoji={agent.emoji} className="w-[18px] h-[18px] text-link" />
       </div>
 
       <h3 className="font-display font-bold text-base text-ink leading-snug mt-0.5">{agent.title}</h3>
@@ -50,7 +51,7 @@ export default function AgentCard({ agent, completed, onClick, hasBuilder1 = fal
 
       <div className="flex justify-between text-[12.5px] text-[#6A7582] dark:text-[#99A4B2] font-semibold pt-2 border-t border-border-soft">
         <span>{agent.buildTime}</span>
-        <span>⚡ <span>{agent.xp}</span> XP</span>
+        <span className="inline-flex items-center gap-1"><EmojiIcon emoji="⚡" className="w-3.5 h-3.5" /> <span>{agent.xp}</span> XP</span>
       </div>
 
       {locked && (

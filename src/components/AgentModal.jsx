@@ -13,6 +13,7 @@ import XPBadge from './XPBadge';
 import SessionGuide from './SessionGuide';
 import YouTubeFacade from './YouTubeFacade';
 
+import EmojiIcon from './EmojiIcon';
 export default function AgentModal({ agent, completed, onToggleComplete, onClose, onSelectAgent }) {
   const [showXpPop, setShowXpPop] = useState(false);
   const [activeTab, setActiveTab] = useState('guide');
@@ -74,14 +75,14 @@ export default function AgentModal({ agent, completed, onToggleComplete, onClose
             </button>
 
             <div className="flex items-start gap-4">
-              <div className="text-5xl sm:text-6xl">{agent.emoji}</div>
+              <EmojiIcon emoji={agent.emoji} className="w-12 h-12 sm:w-14 sm:h-14 text-link" />
               <div className="flex-1 min-w-0">
                 <div className="flex flex-wrap items-center gap-2 mb-2">
                   <span
                     className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-md"
                     style={{ backgroundColor: difficulty.tint, color: difficulty.color }}
                   >
-                    {difficulty.icon} {difficulty.label}
+                    <EmojiIcon emoji={difficulty.icon} className="inline-block w-3.5 h-3.5 align-[-2px]" /> {difficulty.label}
                   </span>
                   <span className="flex items-center gap-1 text-xs text-body">
                     <Clock className="w-3.5 h-3.5" /> {agent.buildTime}
@@ -240,7 +241,7 @@ export default function AgentModal({ agent, completed, onToggleComplete, onClose
                     to={getBuilderPagePath(next)}
                     className="w-full flex items-center gap-4 text-left bg-[#F6F8FB] dark:bg-white/5 hover:bg-[#E8EDF3] dark:hover:bg-brand/10 border border-border-soft rounded-xl p-4 transition-colors"
                   >
-                    <div className="text-3xl">{next.emoji}</div>
+                    <EmojiIcon emoji={next.emoji} className="w-8 h-8 text-link flex-shrink-0" />
                     <div className="flex-1 min-w-0">
                       <p className="font-bold text-ink">{next.title}</p>
                       <p className="text-xs text-body line-clamp-1">{next.description}</p>
@@ -253,7 +254,7 @@ export default function AgentModal({ agent, completed, onToggleComplete, onClose
                     onClick={() => onSelectAgent(next)}
                     className="w-full flex items-center gap-4 text-left bg-[#F6F8FB] dark:bg-white/5 hover:bg-[#E8EDF3] dark:hover:bg-brand/10 border border-border-soft rounded-xl p-4 transition-colors"
                   >
-                    <div className="text-3xl">{next.emoji}</div>
+                    <EmojiIcon emoji={next.emoji} className="w-8 h-8 text-link flex-shrink-0" />
                     <div className="flex-1 min-w-0">
                       <p className="font-bold text-ink">{next.title}</p>
                       <p className="text-xs text-body line-clamp-1">{next.description}</p>

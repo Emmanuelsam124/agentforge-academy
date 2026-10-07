@@ -5,6 +5,7 @@ import SlideShell from '../SlideShell';
 import { useCohortSchedule } from '../../../hooks/useCohortSchedule';
 import { agents } from '../../../data/agents';
 
+import { EmojiText } from '../../EmojiIcon';
 const builder1Count = agents.filter((a) => a.difficulty === 'Builder 1').length;
 // Duplicated from src/data/pricing.js rather than imported (pre-existing,
 // not introduced here) — keep in sync by hand until this is fixed to import.
@@ -60,7 +61,7 @@ export default function TheOfferSlide() {
           transition={{ delay: 0.1 }}
           className="rounded-[22px] border-[2.5px] border-brand bg-white dark:bg-[#131E2F] p-7.5"
         >
-          <div className="font-extrabold text-ink text-lg">🌱 Builder 1</div>
+          <div className="font-extrabold text-ink text-lg"><EmojiText>🌱 Builder 1</EmojiText></div>
           <div className="flex items-baseline gap-2.5 mt-2.5 mb-0.5">
             <span className="text-base text-gray-400 line-through">₦{ANCHOR_PRICE.toLocaleString()}</span>
             <span className="font-display font-extrabold text-[34px] text-ink">₦{BUILDER_PRICE.toLocaleString()}</span>

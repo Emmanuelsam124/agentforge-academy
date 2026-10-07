@@ -5,6 +5,7 @@ import { supabase } from '../lib/supabaseClient';
 import { departments } from '../data/departments';
 import EmailCapture from '../components/EmailCapture';
 
+import EmojiIcon from '../components/EmojiIcon';
 const PAGE_SIZE = 12;
 
 function departmentBadges(ids) {
@@ -105,7 +106,7 @@ export default function News() {
                         className="inline-flex items-center gap-1 font-bold text-[11px] px-2.5 py-1 rounded-full"
                         style={{ background: `${d.color}1A`, color: d.color }}
                       >
-                        {d.icon} {d.name}
+                        <EmojiIcon emoji={d.icon} className="inline-block w-3.5 h-3.5 align-[-2px]" /> {d.name}
                       </span>
                     ))}
                   </div>

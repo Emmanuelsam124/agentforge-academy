@@ -10,6 +10,7 @@ import EmailCapture from '../components/EmailCapture';
 import ShareRail from '../components/ShareRail';
 import NotFound from './NotFound';
 
+import EmojiIcon from '../components/EmojiIcon';
 const TIER_LABEL = { builder1: 'Builder 1', builder2: 'Builder 2' };
 
 export default function NewsArticle() {
@@ -111,7 +112,7 @@ export default function NewsArticle() {
             className="inline-flex items-center gap-1 font-bold text-[11px] px-2.5 py-1 rounded-full"
             style={{ background: `${d.color}1A`, color: d.color }}
           >
-            {d.icon} {d.name}
+            <EmojiIcon emoji={d.icon} className="inline-block w-3.5 h-3.5 align-[-2px]" /> {d.name}
           </span>
         ))}
       </div>

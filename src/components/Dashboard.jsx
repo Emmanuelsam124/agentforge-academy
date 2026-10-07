@@ -9,6 +9,7 @@ import { usePro } from '../hooks/usePro';
 import { useUpgradeOffer } from '../hooks/useUpgradeOffer';
 import UpgradeOfferCard from './UpgradeOfferCard';
 
+import EmojiIcon from './EmojiIcon';
 export default function Dashboard({ progress, onSelectAgent }) {
   const { hasBuilder1, hasBuilder2, isAdmin, isPro } = usePro();
   const { offer: upgradeOffer } = useUpgradeOffer();
@@ -55,7 +56,7 @@ export default function Dashboard({ progress, onSelectAgent }) {
           </div>
           <p className="font-display text-3xl font-extrabold text-ink">{xp.toLocaleString()}</p>
           <p className="text-sm text-body mt-1">
-            {level.icon} {level.name}
+            <EmojiIcon emoji={level.icon} className="inline-block w-4 h-4 align-[-3px]" /> {level.name}
             {nextLevel && ` — ${(levelTarget - levelProgress).toLocaleString()} XP to ${nextLevel.name}`}
           </p>
         </div>
@@ -90,7 +91,7 @@ export default function Dashboard({ progress, onSelectAgent }) {
             value={levelProgress}
             max={levelTarget}
             color="#264D73"
-            label={`${level.icon} ${level.name} → ${nextLevel.icon} ${nextLevel.name}`}
+            label={<><EmojiIcon emoji={level.icon} className="inline-block w-4 h-4 align-[-3px]" /> {level.name} → <EmojiIcon emoji={nextLevel.icon} className="inline-block w-4 h-4 align-[-3px]" /> {nextLevel.name}</>}
           />
         </section>
       )}
@@ -136,7 +137,7 @@ export default function Dashboard({ progress, onSelectAgent }) {
                   value={tierCompleted.length}
                   max={tierAgents.length}
                   color={level.color}
-                  label={`${level.icon} ${level.label}`}
+                  label={<><EmojiIcon emoji={level.icon} className="inline-block w-4 h-4 align-[-3px]" /> {level.label}</>}
                 />
               </div>
             );
@@ -192,13 +193,13 @@ export default function Dashboard({ progress, onSelectAgent }) {
               const className = "flex items-center gap-3 text-left bg-white dark:bg-[#131E2F] hover:bg-[#F6F8FB] dark:hover:bg-white/5 border-[1.5px] border-border-soft rounded-xl p-4 transition-colors";
               const inner = (
                 <>
-                  <div className="text-3xl">{agent.emoji}</div>
+                  <EmojiIcon emoji={agent.emoji} className="w-8 h-8 text-link flex-shrink-0" />
                   <div className="flex-1 min-w-0">
                     <span
                       className="inline-block text-[11px] font-bold px-2 py-0.5 rounded-full mb-1"
                       style={{ backgroundColor: difficulty.tint, color: difficulty.color }}
                     >
-                      {difficulty.icon} {difficulty.label}
+                      <EmojiIcon emoji={difficulty.icon} className="inline-block w-3.5 h-3.5 align-[-2px]" /> {difficulty.label}
                     </span>
                     <p className="font-bold text-ink text-sm leading-snug truncate">{agent.title}</p>
                   </div>

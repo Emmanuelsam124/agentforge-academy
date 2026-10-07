@@ -6,6 +6,7 @@ import { useProgress } from '../hooks/useProgress';
 import { useAuth } from '../context/AuthContext';
 import CourseSidebar from '../components/CourseSidebar';
 
+import EmojiIcon, { EmojiText } from '../components/EmojiIcon';
 // Single scrollable page (not a wizard) — this lives as item 0 in the same
 // Builder 1 sequence CourseSidebar/BuilderSession already use, so it needs
 // to feel like one course with one Previous/Next, not a separate app glued
@@ -42,7 +43,7 @@ function Callout({ type = 'info', icon, children }) {
   };
   return (
     <div className={`flex gap-3 rounded-xl p-4 mb-4 ${styles[type]}`}>
-      <span className="text-xl leading-snug flex-shrink-0">{icon}</span>
+      <EmojiIcon emoji={icon} className="w-5 h-5 mt-0.5 flex-shrink-0" />
       <div className="text-sm text-ink leading-relaxed">{children}</div>
     </div>
   );
@@ -127,7 +128,7 @@ function StepList({ items }) {
 function ReqRow({ icon, title, cost, desc, link, linkLabel }) {
   return (
     <div className="flex gap-3 py-4 border-b border-border-soft last:border-none">
-      <div className="w-9 h-9 rounded-xl bg-brand/10 flex items-center justify-center text-lg flex-shrink-0">{icon}</div>
+      <div className="w-9 h-9 rounded-xl bg-brand/10 flex items-center justify-center flex-shrink-0 text-link"><EmojiIcon emoji={icon} className="w-5 h-5" /></div>
       <div>
         <div className="font-bold text-sm text-ink mb-0.5">
           {title}{cost && <span className="ml-1.5 text-amber font-semibold">{cost}</span>}
@@ -227,7 +228,7 @@ export default function Builder1Guide() {
               rel="noreferrer"
               className="mt-2.5 flex w-fit items-center gap-1.5 text-sm font-bold text-green hover:underline"
             >
-              💬 Join the Builder community on WhatsApp →
+              <EmojiText>{'💬 Join the Builder community on WhatsApp →'}</EmojiText>
             </a>
           </Callout>
 

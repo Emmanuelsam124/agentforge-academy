@@ -7,6 +7,7 @@ import { getDifficulty } from '../data/departments';
 import { CERTIFICATE_TIERS } from '../data/certificateTiers';
 import ProgressBar from '../components/ProgressBar';
 
+import EmojiIcon from '../components/EmojiIcon';
 export default function Certificates({ progress }) {
   const { user, loading: authLoading } = useAuth();
   const { certificates, loading } = useCertificates(user?.id);
@@ -65,7 +66,7 @@ function CertificateCard({ tier, cert, progress }) {
   return (
     <div className="rounded-2xl border-[1.5px] border-border-soft bg-white dark:bg-[#131E2F] p-6 flex flex-col">
       <div className="flex items-center gap-2 mb-4">
-        <span className="text-2xl">{tier.icon}</span>
+        <EmojiIcon emoji={tier.icon} className="w-6 h-6 text-link" />
         <h2 className="font-display font-bold text-lg text-ink">{tier.label}</h2>
       </div>
 
@@ -99,7 +100,7 @@ function ProficiencyCard({ tier, cert, progress }) {
       style={{ background: '#FEF9E7' }}
     >
       <div className="flex items-center gap-3 flex-1 min-w-0">
-        <span className="text-3xl">{tier.icon}</span>
+        <EmojiIcon emoji={tier.icon} className="w-8 h-8 text-link" />
         <div>
           <h2 className="font-display font-bold text-lg text-ink">{tier.label}</h2>
           <p className="text-xs text-body mt-0.5">Awarded once both Builder 1 and Builder 2 are fully complete.</p>
