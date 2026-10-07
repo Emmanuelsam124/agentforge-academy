@@ -43,7 +43,7 @@ export default function TheHonestCheckSlide() {
   return (
     <SlideShell>
       <div className="text-center mb-8">
-        <span className="inline-flex items-center gap-2 text-[13px] font-bold px-4 py-1.5 rounded-full bg-[#F3EBFF] dark:bg-brand/15 text-brand mb-3">
+        <span className="inline-flex items-center gap-2 text-[13px] font-bold px-4 py-1.5 rounded-full bg-[#E8EDF3] dark:bg-brand/15 text-link mb-3">
           A quick gut check
         </span>
         <h2 className="font-display font-extrabold text-[26px] sm:text-[38px] text-ink tracking-[-.8px]">How many of these sound like you?</h2>
@@ -56,10 +56,10 @@ export default function TheHonestCheckSlide() {
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 * i }}
-            className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl p-4.5"
+            className="bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-2xl p-4.5"
           >
             <div className="flex items-center gap-2.5 mb-2.5">
-              <div className="w-8 h-8 rounded-lg bg-[#F3EBFF] dark:bg-brand/15 text-brand flex items-center justify-center flex-shrink-0">
+              <div className="w-8 h-8 rounded-lg bg-[#E8EDF3] dark:bg-brand/15 text-link flex items-center justify-center flex-shrink-0">
                 <group.icon className="w-4 h-4" />
               </div>
               <span className="font-display font-bold text-[14px] text-ink">{group.title}</span>
@@ -81,7 +81,7 @@ export default function TheHonestCheckSlide() {
         transition={{ delay: 0.6 }}
         className="text-center font-display font-bold text-[15px] sm:text-lg text-ink max-w-xl mx-auto"
       >
-        If two or more sound like your week, you don't need more hours. <span className="text-brand">You need a system that runs without you.</span>
+        If two or more sound like your week, you don't need more hours. <span className="text-link">You need a system that runs without you.</span>
       </m.p>
     </SlideShell>
   );

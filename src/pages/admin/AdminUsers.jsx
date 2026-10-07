@@ -15,8 +15,8 @@ import { getDifficulty } from '../../data/departments';
 function StatCard({ icon: Icon, label, value, color, tint }) {
   const { theme } = useTheme();
   return (
-    <div className="rounded-2xl p-5 flex items-center gap-4" style={{ background: theme === 'dark' ? '#181818' : tint }}>
-      <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 bg-white dark:bg-[#0A090F]">
+    <div className="rounded-2xl p-5 flex items-center gap-4" style={{ background: theme === 'dark' ? '#131E2F' : tint }}>
+      <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 bg-white dark:bg-[#0C1420]">
         <Icon className="w-5 h-5" style={{ color }} />
       </div>
       <div>
@@ -124,7 +124,7 @@ function PlanBadge({ user }) {
   const b1 = hasBuilder1(user);
   const b2 = hasBuilder2(user);
   if (b1 && b2) return (
-    <span className="inline-flex items-center gap-1 text-xs font-bold bg-[#F3EBFF] dark:bg-brand/15 text-brand border border-brand/30 px-2 py-0.5 rounded-full">
+    <span className="inline-flex items-center gap-1 text-xs font-bold bg-[#E8EDF3] dark:bg-brand/15 text-link border border-brand/30 px-2 py-0.5 rounded-full">
       <Zap className="w-3 h-3" /> Pro
     </span>
   );
@@ -134,7 +134,7 @@ function PlanBadge({ user }) {
     </span>
   );
   if (b2) return (
-    <span className="inline-flex items-center gap-1 text-xs font-bold bg-[#F3EBFF] dark:bg-brand/15 text-brand border border-brand/20 px-2 py-0.5 rounded-full">
+    <span className="inline-flex items-center gap-1 text-xs font-bold bg-[#E8EDF3] dark:bg-brand/15 text-link border border-brand/20 px-2 py-0.5 rounded-full">
       Builder 2
     </span>
   );
@@ -158,7 +158,7 @@ function UserRow({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: index * 0.02 }}
-        className="hover:bg-[#FAF8FF] dark:hover:bg-white/5 transition-colors"
+        className="hover:bg-[#F6F8FB] dark:hover:bg-white/5 transition-colors"
       >
         {/* User */}
         <td className="px-5 py-4">
@@ -206,7 +206,7 @@ function UserRow({
         <td className="px-5 py-4">
           <button
             onClick={onToggleExpand}
-            className="flex items-center gap-1.5 text-xs font-semibold text-body-strong hover:text-brand transition-colors"
+            className="flex items-center gap-1.5 text-xs font-semibold text-body-strong hover:text-link transition-colors"
           >
             <Sparkles className="w-3.5 h-3.5 text-amber-500" />
             {(u.xp ?? 0).toLocaleString()} XP · {(u.completed || []).length} done
@@ -229,8 +229,8 @@ function UserRow({
               title={hasB1 ? 'Revoke Builder 1' : 'Grant Builder 1'}
               className={`flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg transition-colors disabled:opacity-40 ${
                 hasB1
-                  ? 'bg-[#EAFAF1] dark:bg-green/10 text-green hover:bg-[#FDEEF4] dark:hover:bg-rose/10 hover:text-rose'
-                  : 'bg-[#FAF8FF] dark:bg-white/5 text-body-strong hover:bg-[#EAFAF1] dark:hover:bg-green/10 hover:text-green'
+                  ? 'bg-[#EAFAF1] dark:bg-green/10 text-green hover:bg-[#FBEAE9] dark:hover:bg-rose/10 hover:text-rose'
+                  : 'bg-[#F6F8FB] dark:bg-white/5 text-body-strong hover:bg-[#EAFAF1] dark:hover:bg-green/10 hover:text-green'
               }`}
             >
               {actionLoading === u.id + '_b1' ? (
@@ -248,8 +248,8 @@ function UserRow({
               title={hasB2 ? 'Revoke Builder 2' : 'Grant Builder 2'}
               className={`flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg transition-colors disabled:opacity-40 ${
                 hasB2
-                  ? 'bg-[#F3EBFF] dark:bg-brand/15 text-brand hover:bg-[#FDEEF4] dark:hover:bg-rose/10 hover:text-rose'
-                  : 'bg-[#FAF8FF] dark:bg-white/5 text-body-strong hover:bg-[#F3EBFF] dark:hover:bg-brand/15 hover:text-brand'
+                  ? 'bg-[#E8EDF3] dark:bg-brand/15 text-link hover:bg-[#FBEAE9] dark:hover:bg-rose/10 hover:text-rose'
+                  : 'bg-[#F6F8FB] dark:bg-white/5 text-body-strong hover:bg-[#E8EDF3] dark:hover:bg-brand/15 hover:text-link'
               }`}
             >
               {actionLoading === u.id + '_b2' ? (
@@ -267,8 +267,8 @@ function UserRow({
               title={userIsPro ? 'Revoke Pro' : 'Grant Pro'}
               className={`flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg transition-colors disabled:opacity-40 ${
                 userIsPro
-                  ? 'bg-[#F3EBFF] dark:bg-brand/15 text-brand hover:bg-[#FDEEF4] dark:hover:bg-rose/10 hover:text-rose'
-                  : 'bg-[#FAF8FF] dark:bg-white/5 text-body-strong hover:bg-[#F3EBFF] dark:hover:bg-brand/15 hover:text-brand'
+                  ? 'bg-[#E8EDF3] dark:bg-brand/15 text-link hover:bg-[#FBEAE9] dark:hover:bg-rose/10 hover:text-rose'
+                  : 'bg-[#F6F8FB] dark:bg-white/5 text-body-strong hover:bg-[#E8EDF3] dark:hover:bg-brand/15 hover:text-link'
               }`}
             >
               {actionLoading === u.id + '_pro' ? (
@@ -291,8 +291,8 @@ function UserRow({
               title={hasVibeCoding ? 'Revoke Vibe Coding' : 'Grant Vibe Coding'}
               className={`flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg transition-colors disabled:opacity-40 ${
                 hasVibeCoding
-                  ? 'bg-[#EAFAF1] dark:bg-green/10 text-green hover:bg-[#FDEEF4] dark:hover:bg-rose/10 hover:text-rose'
-                  : 'bg-[#FAF8FF] dark:bg-white/5 text-body-strong hover:bg-[#EAFAF1] dark:hover:bg-green/10 hover:text-green'
+                  ? 'bg-[#EAFAF1] dark:bg-green/10 text-green hover:bg-[#FBEAE9] dark:hover:bg-rose/10 hover:text-rose'
+                  : 'bg-[#F6F8FB] dark:bg-white/5 text-body-strong hover:bg-[#EAFAF1] dark:hover:bg-green/10 hover:text-green'
               }`}
             >
               {actionLoading === u.id + '_vibecoding' ? (
@@ -310,8 +310,8 @@ function UserRow({
               title={hasAiMastery ? 'Revoke AI Agent Mastery' : 'Grant AI Agent Mastery'}
               className={`flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg transition-colors disabled:opacity-40 ${
                 hasAiMastery
-                  ? 'bg-[#EAFAF1] dark:bg-green/10 text-green hover:bg-[#FDEEF4] dark:hover:bg-rose/10 hover:text-rose'
-                  : 'bg-[#FAF8FF] dark:bg-white/5 text-body-strong hover:bg-[#EAFAF1] dark:hover:bg-green/10 hover:text-green'
+                  ? 'bg-[#EAFAF1] dark:bg-green/10 text-green hover:bg-[#FBEAE9] dark:hover:bg-rose/10 hover:text-rose'
+                  : 'bg-[#F6F8FB] dark:bg-white/5 text-body-strong hover:bg-[#EAFAF1] dark:hover:bg-green/10 hover:text-green'
               }`}
             >
               {actionLoading === u.id + '_aimastery' ? (
@@ -329,8 +329,8 @@ function UserRow({
               title={u.is_admin ? 'Revoke Admin' : 'Make Admin'}
               className={`flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg transition-colors disabled:opacity-40 ${
                 u.is_admin
-                  ? 'bg-[#FEF9E7] dark:bg-amber-500/10 text-amber-700 dark:text-amber-400 hover:bg-[#FDEEF4] dark:hover:bg-rose/10 hover:text-rose'
-                  : 'bg-[#FAF8FF] dark:bg-white/5 text-body-strong hover:bg-[#FEF9E7] dark:hover:bg-amber-500/10 hover:text-amber-700 dark:hover:text-amber-400'
+                  ? 'bg-[#FEF9E7] dark:bg-amber-500/10 text-amber-700 dark:text-amber-400 hover:bg-[#FBEAE9] dark:hover:bg-rose/10 hover:text-rose'
+                  : 'bg-[#F6F8FB] dark:bg-white/5 text-body-strong hover:bg-[#FEF9E7] dark:hover:bg-amber-500/10 hover:text-amber-700 dark:hover:text-amber-400'
               }`}
             >
               {actionLoading === u.id + '_admin' ? (
@@ -349,7 +349,7 @@ function UserRow({
         </td>
       </m.tr>
       {expanded && (
-        <tr className="bg-[#FAF8FF] dark:bg-white/5">
+        <tr className="bg-[#F6F8FB] dark:bg-white/5">
           <td colSpan={5} className="px-5 py-4">
             {(u.completed || []).length === 0 ? (
               <p className="text-xs text-gray-400">No completed sessions yet.</p>
@@ -362,7 +362,7 @@ function UserRow({
                   return (
                     <span
                       key={agentId}
-                      className="inline-flex items-center gap-1.5 text-xs font-semibold bg-white dark:bg-[#181818] border border-border-soft rounded-full px-3 py-1.5"
+                      className="inline-flex items-center gap-1.5 text-xs font-semibold bg-white dark:bg-[#131E2F] border border-border-soft rounded-full px-3 py-1.5"
                     >
                       <span
                         className="w-2 h-2 rounded-full flex-shrink-0"
@@ -564,7 +564,7 @@ export default function AdminUsers() {
       <div className="flex items-center justify-between mb-8 flex-wrap gap-3">
         <div>
           <h1 className="font-display text-3xl font-extrabold text-ink flex items-center gap-3">
-            <Shield className="w-7 h-7 text-brand" />
+            <Shield className="w-7 h-7 text-link" />
             Users
           </h1>
           <p className="text-body mt-1">Manage all users, plans, and access</p>
@@ -573,14 +573,14 @@ export default function AdminUsers() {
           <button
             onClick={() => downloadUsersCsv(filtered)}
             disabled={loading || filtered.length === 0}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white dark:bg-[#181818] border border-border-soft text-body-strong hover:bg-[#FAF8FF] dark:hover:bg-white/5 transition-colors text-sm font-medium disabled:opacity-40"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white dark:bg-[#131E2F] border border-border-soft text-body-strong hover:bg-[#F6F8FB] dark:hover:bg-white/5 transition-colors text-sm font-medium disabled:opacity-40"
           >
             <Download className="w-4 h-4" />
             Export CSV
           </button>
           <button
             onClick={fetchUsers}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white dark:bg-[#181818] border border-border-soft text-body-strong hover:bg-[#FAF8FF] dark:hover:bg-white/5 transition-colors text-sm font-medium"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white dark:bg-[#131E2F] border border-border-soft text-body-strong hover:bg-[#F6F8FB] dark:hover:bg-white/5 transition-colors text-sm font-medium"
           >
             <RefreshCw className="w-4 h-4" />
             Refresh
@@ -590,15 +590,15 @@ export default function AdminUsers() {
 
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-        <StatCard icon={Users} label="Total Users" value={stats.total} color="#7C3AED" tint="#F3EBFF" />
+        <StatCard icon={Users} label="Total Users" value={stats.total} color="#264D73" tint="#E8EDF3" />
         <StatCard icon={Crown} label="Admins" value={stats.admins} color="#D9A406" tint="#FEF9E7" />
         <StatCard icon={Zap} label="Pro (Builder 1 or 2)" value={stats.pro} color="#16A34A" tint="#EAFAF1" />
-        <StatCard icon={Users} label="Joined This Week" value={stats.thisWeek} color="#E11D48" tint="#FDEEF4" />
+        <StatCard icon={Users} label="Joined This Week" value={stats.thisWeek} color="#B3261E" tint="#FBEAE9" />
       </div>
 
       {/* Error */}
       {error && (
-        <div className="flex items-start gap-2 text-sm text-rose bg-[#FDEEF4] dark:bg-rose/10 border border-rose/20 rounded-lg px-4 py-3 mb-6">
+        <div className="flex items-start gap-2 text-sm text-rose bg-[#FBEAE9] dark:bg-rose/10 border border-rose/20 rounded-lg px-4 py-3 mb-6">
           <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
           {error}
         </div>
@@ -613,7 +613,7 @@ export default function AdminUsers() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by name or email…"
-            className="w-full pl-11 pr-4 py-3 rounded-xl bg-white dark:bg-[#181818] border border-border text-sm text-ink placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand/40"
+            className="w-full pl-11 pr-4 py-3 rounded-xl bg-white dark:bg-[#131E2F] border border-border text-sm text-ink placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand/40"
           />
         </div>
         <div className="relative">
@@ -621,7 +621,7 @@ export default function AdminUsers() {
           <select
             value={planFilter}
             onChange={(e) => setPlanFilter(e.target.value)}
-            className="appearance-none pl-10 pr-8 py-3 rounded-xl bg-white dark:bg-[#181818] border border-border text-sm text-ink focus:outline-none focus:ring-2 focus:ring-brand/40 cursor-pointer"
+            className="appearance-none pl-10 pr-8 py-3 rounded-xl bg-white dark:bg-[#131E2F] border border-border text-sm text-ink focus:outline-none focus:ring-2 focus:ring-brand/40 cursor-pointer"
           >
             {PLAN_FILTERS.map((opt) => (
               <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -634,7 +634,7 @@ export default function AdminUsers() {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="appearance-none pl-10 pr-8 py-3 rounded-xl bg-white dark:bg-[#181818] border border-border text-sm text-ink focus:outline-none focus:ring-2 focus:ring-brand/40 cursor-pointer"
+            className="appearance-none pl-10 pr-8 py-3 rounded-xl bg-white dark:bg-[#131E2F] border border-border text-sm text-ink focus:outline-none focus:ring-2 focus:ring-brand/40 cursor-pointer"
           >
             {SORT_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -645,11 +645,11 @@ export default function AdminUsers() {
       </div>
 
       {/* Table */}
-      <div className="rounded-2xl border border-border-soft overflow-hidden bg-white dark:bg-[#181818]">
+      <div className="rounded-2xl border border-border-soft overflow-hidden bg-white dark:bg-[#131E2F]">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="bg-[#FAF8FF] dark:bg-white/5 border-b border-border-soft">
+              <tr className="bg-[#F6F8FB] dark:bg-white/5 border-b border-border-soft">
                 <th className="text-left px-5 py-3.5 text-xs font-bold text-body uppercase tracking-wider">User</th>
                 <th className="text-left px-5 py-3.5 text-xs font-bold text-body uppercase tracking-wider">Plan</th>
                 <th className="text-left px-5 py-3.5 text-xs font-bold text-body uppercase tracking-wider">Progress</th>
@@ -661,7 +661,7 @@ export default function AdminUsers() {
               {loading ? (
                 <tr>
                   <td colSpan={5} className="px-5 py-12 text-center">
-                    <Loader2 className="w-6 h-6 animate-spin text-brand mx-auto" />
+                    <Loader2 className="w-6 h-6 animate-spin text-link mx-auto" />
                   </td>
                 </tr>
               ) : filtered.length === 0 ? (

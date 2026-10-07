@@ -37,7 +37,7 @@ export default function ShareRow({ section, slug, title }) {
           target="_blank"
           rel="noreferrer"
           aria-label={`Share on ${label}`}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border text-[13px] font-semibold text-body-strong hover:border-brand hover:text-brand transition-colors"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border text-[13px] font-semibold text-body-strong hover:border-brand hover:text-link transition-colors"
         >
           <Icon className="w-3.5 h-3.5" />
           {label}
@@ -47,7 +47,7 @@ export default function ShareRow({ section, slug, title }) {
       <button
         type="button"
         onClick={copyLink}
-        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border text-[13px] font-semibold text-body-strong hover:border-brand hover:text-brand transition-colors"
+        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border text-[13px] font-semibold text-body-strong hover:border-brand hover:text-link transition-colors"
       >
         {copied ? <Check className="w-3.5 h-3.5" /> : <Link2 className="w-3.5 h-3.5" />}
         {copied ? 'Copied' : 'Copy link'}

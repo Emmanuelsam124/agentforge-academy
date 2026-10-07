@@ -10,7 +10,7 @@ export default function PresenterBio({ initials, name, title, credentials, closi
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="w-24 h-24 rounded-full bg-brand text-white flex items-center justify-center font-display font-extrabold text-2xl mb-4 shadow-[0_12px_28px_-8px_rgba(124,58,237,.4)]"
+        className="w-24 h-24 rounded-full bg-brand text-white flex items-center justify-center font-display font-extrabold text-2xl mb-4 shadow-[0_12px_28px_-8px_rgba(15,26,42,.4)]"
       >
         {initials}
       </m.div>
@@ -42,7 +42,7 @@ export default function PresenterBio({ initials, name, title, credentials, closi
         {credentials.map((c) => (
           <span
             key={c}
-            className="text-[12.5px] font-bold text-body-strong bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-full px-3.5 py-1.5"
+            className="text-[12.5px] font-bold text-body-strong bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-full px-3.5 py-1.5"
           >
             {c}
           </span>

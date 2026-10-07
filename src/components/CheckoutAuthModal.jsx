@@ -94,7 +94,7 @@ export default function CheckoutAuthModal({ open, onClose, onAuthenticated }) {
       onClick={handleClose}
     >
       <div
-        className="relative w-full max-w-sm bg-white dark:bg-[#181818] rounded-[22px] p-6 sm:p-7 shadow-[0_30px_70px_-20px_rgba(20,10,50,.5)]"
+        className="relative w-full max-w-sm bg-white dark:bg-[#131E2F] rounded-[22px] p-6 sm:p-7 shadow-[0_30px_70px_-20px_rgba(15,26,42,.5)]"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -106,7 +106,7 @@ export default function CheckoutAuthModal({ open, onClose, onAuthenticated }) {
         </button>
 
         {error && (
-          <div className="flex items-start gap-2 text-sm text-rose bg-[#FDEEF4] dark:bg-rose/10 border border-rose/20 rounded-lg px-3 py-2.5 mb-4 text-left">
+          <div className="flex items-start gap-2 text-sm text-rose bg-[#FBEAE9] dark:bg-rose/10 border border-rose/20 rounded-lg px-3 py-2.5 mb-4 text-left">
             <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" /> {error}
           </div>
         )}
@@ -172,7 +172,7 @@ export default function CheckoutAuthModal({ open, onClose, onAuthenticated }) {
                 type="button"
                 onClick={handleSendCode}
                 disabled={loading || resendWait > 0}
-                className="text-xs font-semibold text-brand hover:underline disabled:opacity-50 disabled:no-underline w-full text-center"
+                className="text-xs font-semibold text-link hover:underline disabled:opacity-50 disabled:no-underline w-full text-center"
               >
                 {resendWait > 0 ? `Resend code in ${Math.floor(resendWait / 60)}:${String(resendWait % 60).padStart(2, '0')}` : 'Resend code'}
               </button>

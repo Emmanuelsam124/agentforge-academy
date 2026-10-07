@@ -45,8 +45,8 @@ function NavItems({ onNavigate, hasUnreadCommunity }) {
             className={({ isActive }) =>
               `flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-semibold transition-colors ${
                 isActive
-                  ? 'bg-[#F3EBFF] dark:bg-brand/15 text-brand'
-                  : 'text-[#4A4463] dark:text-[#B7AFC9] hover:bg-[#FAF8FF] dark:hover:bg-white/5 hover:text-ink'
+                  ? 'bg-[#E8EDF3] dark:bg-brand/15 text-link'
+                  : 'text-[#4A5B6C] dark:text-[#A2B1C3] hover:bg-[#F6F8FB] dark:hover:bg-white/5 hover:text-ink'
               }`
             }
           >
@@ -78,7 +78,7 @@ function MyCoursesSection({ rowClass, onNavigate }) {
 
   return (
     <>
-      <div className="border-t border-[#EFE9FB] dark:border-[#232228] my-3" />
+      <div className="border-t border-[#E7ECF2] dark:border-[#26364B] my-3" />
       <p data-tour="my-courses" className="text-[9px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-600 px-3.5 mb-1.5">My Courses</p>
       {(hasVibeCoding || isAdmin) && (
         <NavLink to="/vibe-coding/course" onClick={onNavigate} className={rowClass}>
@@ -107,8 +107,8 @@ function MyCoursesSection({ rowClass, onNavigate }) {
 const desktopRowClass = ({ isActive }) =>
   `flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-semibold transition-colors ${
     isActive
-      ? 'bg-[#F3EBFF] dark:bg-brand/15 text-brand'
-      : 'text-[#4A4463] dark:text-[#B7AFC9] hover:bg-[#FAF8FF] dark:hover:bg-white/5 hover:text-ink'
+      ? 'bg-[#E8EDF3] dark:bg-brand/15 text-link'
+      : 'text-[#4A5B6C] dark:text-[#A2B1C3] hover:bg-[#F6F8FB] dark:hover:bg-white/5 hover:text-ink'
   }`;
 
 // Desktop-only persistent left sidebar — mobile nav is the separate
@@ -129,7 +129,7 @@ export default function DashboardSidebar({ hasUnreadCommunity }) {
   };
 
   return (
-    <aside className="hidden lg:flex flex-col fixed left-0 top-0 h-screen w-64 bg-white dark:bg-[#0A090F] border-r border-[#EFE9FB] dark:border-[#232228] px-4 py-5">
+    <aside className="hidden lg:flex flex-col fixed left-0 top-0 h-screen w-64 bg-white dark:bg-[#0C1420] border-r border-[#E7ECF2] dark:border-[#26364B] px-4 py-5">
       <NavLink to="/" className="flex items-center gap-2.5 px-1.5 mb-8">
         <img src="/logo-icon.webp" alt="" className="w-9 h-9 object-contain rounded-lg" />
         <span className="font-display font-extrabold text-[14px] text-ink tracking-tight leading-tight">
@@ -142,7 +142,7 @@ export default function DashboardSidebar({ hasUnreadCommunity }) {
         <MyCoursesSection rowClass={desktopRowClass} />
         {isAdmin && (
           <>
-            <div className="border-t border-[#EFE9FB] dark:border-[#232228] my-3" />
+            <div className="border-t border-[#E7ECF2] dark:border-[#26364B] my-3" />
             <NavLink
               to="/admin"
               className="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-amber-700 dark:text-amber-400 hover:bg-[#FEF9E7] dark:hover:bg-amber-500/10 transition-colors"
@@ -153,7 +153,7 @@ export default function DashboardSidebar({ hasUnreadCommunity }) {
         )}
       </nav>
 
-      <div className="border-t border-[#EFE9FB] dark:border-[#232228] pt-3 mt-3">
+      <div className="border-t border-[#E7ECF2] dark:border-[#26364B] pt-3 mt-3">
         <div className="flex items-center gap-2.5 px-2 py-2">
           <div className="w-8 h-8 rounded-full bg-brand text-white flex items-center justify-center font-extrabold text-[13px] flex-shrink-0">
             {initial}
@@ -162,7 +162,7 @@ export default function DashboardSidebar({ hasUnreadCommunity }) {
         </div>
         <button
           onClick={handleSignOut}
-          className="w-full flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-gray-500 hover:bg-[#FAF8FF] dark:hover:bg-white/5 transition-colors"
+          className="w-full flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-gray-500 hover:bg-[#F6F8FB] dark:hover:bg-white/5 transition-colors"
         >
           <LogOut className="w-[18px] h-[18px] flex-shrink-0" /> Log out
         </button>
@@ -178,17 +178,17 @@ function MoreSheet({ onClose }) {
   const rowClass = ({ isActive }) =>
     `flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-semibold transition-colors ${
       isActive
-        ? 'bg-[#F3EBFF] dark:bg-brand/15 text-brand'
-        : 'text-[#4A4463] dark:text-[#B7AFC9] hover:bg-[#FAF8FF] dark:hover:bg-white/5'
+        ? 'bg-[#E8EDF3] dark:bg-brand/15 text-link'
+        : 'text-[#4A5B6C] dark:text-[#A2B1C3] hover:bg-[#F6F8FB] dark:hover:bg-white/5'
     }`;
 
   return (
     <div className="lg:hidden fixed inset-0 z-50 flex items-end">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-      <div className="relative w-full bg-white dark:bg-[#0A090F] rounded-t-2xl border-t border-[#EFE9FB] dark:border-[#232228] max-h-[75vh] overflow-y-auto pb-[env(safe-area-inset-bottom)]">
-        <div className="flex items-center justify-between px-4 py-3.5 border-b border-[#EFE9FB] dark:border-[#232228]">
+      <div className="relative w-full bg-white dark:bg-[#0C1420] rounded-t-2xl border-t border-[#E7ECF2] dark:border-[#26364B] max-h-[75vh] overflow-y-auto pb-[env(safe-area-inset-bottom)]">
+        <div className="flex items-center justify-between px-4 py-3.5 border-b border-[#E7ECF2] dark:border-[#26364B]">
           <span className="font-display font-bold text-ink text-[15px]">More</span>
-          <button onClick={onClose} aria-label="Close" className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:bg-[#FAF8FF] dark:hover:bg-white/5">
+          <button onClick={onClose} aria-label="Close" className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:bg-[#F6F8FB] dark:hover:bg-white/5">
             <X className="w-4.5 h-4.5" />
           </button>
         </div>
@@ -201,7 +201,7 @@ function MoreSheet({ onClose }) {
           <MyCoursesSection rowClass={rowClass} onNavigate={onClose} />
           {isAdmin && (
             <>
-              <div className="border-t border-[#EFE9FB] dark:border-[#232228] my-2" />
+              <div className="border-t border-[#E7ECF2] dark:border-[#26364B] my-2" />
               <NavLink to="/admin" onClick={onClose} className="flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-semibold text-amber-700 dark:text-amber-400 hover:bg-[#FEF9E7] dark:hover:bg-amber-500/10 transition-colors">
                 <Shield className="w-[18px] h-[18px] flex-shrink-0" /> Admin
               </NavLink>
@@ -224,7 +224,7 @@ export function DashboardMobileNav({ hasUnreadCommunity }) {
 
   return (
     <>
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-[#0A090F] border-t border-[#EFE9FB] dark:border-[#232228] flex items-stretch pb-[env(safe-area-inset-bottom)]">
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-[#0C1420] border-t border-[#E7ECF2] dark:border-[#26364B] flex items-stretch pb-[env(safe-area-inset-bottom)]">
         {primaryItems.map(({ to, end, icon: Icon, label }) => (
           <NavLink
             key={to}
@@ -233,7 +233,7 @@ export function DashboardMobileNav({ hasUnreadCommunity }) {
             data-tour={tourId(to)}
             className={({ isActive }) =>
               `flex-1 flex flex-col items-center justify-center gap-0.5 py-2.5 text-[10.5px] font-semibold transition-colors ${
-                isActive ? 'text-brand' : 'text-gray-400'
+                isActive ? 'text-link' : 'text-gray-400'
               }`
             }
           >

@@ -100,7 +100,7 @@ export default function FAQ() {
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
       <m.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
-        <span className="inline-flex items-center gap-2 text-[13px] font-bold px-4 py-1.5 rounded-full bg-[#F3EBFF] dark:bg-brand/15 text-brand">
+        <span className="inline-flex items-center gap-2 text-[13px] font-bold px-4 py-1.5 rounded-full bg-[#E8EDF3] dark:bg-brand/15 text-link">
           FAQ
         </span>
         <h1 className="font-display font-extrabold text-[32px] sm:text-[42px] leading-[1.1] text-ink tracking-[-1px] mt-4 mb-10">
@@ -113,7 +113,7 @@ export default function FAQ() {
             return (
               <div
                 key={f.q}
-                className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl overflow-hidden"
+                className="bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-2xl overflow-hidden"
               >
                 <button
                   onClick={() => setOpenIndex(open ? -1 : i)}
@@ -133,10 +133,10 @@ export default function FAQ() {
         <div className="mt-12 pt-8 border-t border-border-soft text-center">
           <p className="text-sm text-body mb-3">Still have questions?</p>
           <div className="flex items-center justify-center gap-4 text-sm font-bold">
-            <a href="https://wa.me/2349066006963" target="_blank" rel="noreferrer" className="text-brand hover:underline">
+            <a href="https://wa.me/2349066006963" target="_blank" rel="noreferrer" className="text-link hover:underline">
               Message us on WhatsApp
             </a>
-            <Link to="/" className="text-brand hover:underline">← Back to home</Link>
+            <Link to="/" className="text-link hover:underline">← Back to home</Link>
           </div>
         </div>
       </m.div>

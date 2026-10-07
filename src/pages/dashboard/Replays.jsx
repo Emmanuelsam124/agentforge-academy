@@ -18,7 +18,7 @@ function PasscodeChip({ passcode }) {
   return (
     <button
       onClick={copy}
-      className="flex-shrink-0 flex items-center gap-1.5 text-xs font-semibold text-body-strong bg-[#FAF8FF] dark:bg-white/5 hover:bg-[#F3EBFF] dark:hover:bg-brand/15 px-3 py-2.5 rounded-xl transition-colors"
+      className="flex-shrink-0 flex items-center gap-1.5 text-xs font-semibold text-body-strong bg-[#F6F8FB] dark:bg-white/5 hover:bg-[#E8EDF3] dark:hover:bg-brand/15 px-3 py-2.5 rounded-xl transition-colors"
       title="Copy Zoom passcode"
     >
       {copied ? <Check className="w-3.5 h-3.5 text-green" /> : <Copy className="w-3.5 h-3.5" />}
@@ -33,13 +33,13 @@ function ReplayCard({ session }) {
     <div
       className={`rounded-2xl p-5 flex items-center justify-between flex-wrap gap-4 ${
         available
-          ? 'border-[1.5px] border-border-soft bg-white dark:bg-[#181818]'
+          ? 'border-[1.5px] border-border-soft bg-white dark:bg-[#131E2F]'
           : 'border-2 border-dashed border-border'
       }`}
     >
       <div className="flex items-center gap-4 min-w-0">
-        <div className={`w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 ${available ? 'bg-[#F3EBFF] dark:bg-brand/15' : 'bg-[#FAF8FF] dark:bg-white/5'}`}>
-          {available ? <PlayCircle className="w-5 h-5 text-brand" /> : <Lock className="w-5 h-5 text-gray-400" />}
+        <div className={`w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 ${available ? 'bg-[#E8EDF3] dark:bg-brand/15' : 'bg-[#F6F8FB] dark:bg-white/5'}`}>
+          {available ? <PlayCircle className="w-5 h-5 text-link" /> : <Lock className="w-5 h-5 text-gray-400" />}
         </div>
         <div className="min-w-0">
           <p className="font-bold text-ink truncate">{session.title}</p>
@@ -59,7 +59,7 @@ function ReplayCard({ session }) {
           </a>
         </div>
       ) : (
-        <span className="flex-shrink-0 text-xs font-semibold text-gray-400 bg-[#FAF8FF] dark:bg-white/5 px-3 py-2 rounded-lg">
+        <span className="flex-shrink-0 text-xs font-semibold text-gray-400 bg-[#F6F8FB] dark:bg-white/5 px-3 py-2 rounded-lg">
           Recording coming soon
         </span>
       )}
@@ -74,12 +74,12 @@ export default function Replays() {
   return (
     <div>
       <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-ink mb-6 flex items-center gap-3">
-        <PlayCircle className="w-7 h-7 text-brand" /> Replays
+        <PlayCircle className="w-7 h-7 text-link" /> Replays
       </h1>
 
       {loading ? (
         <div className="flex justify-center py-16">
-          <Loader2 className="w-6 h-6 animate-spin text-brand" />
+          <Loader2 className="w-6 h-6 animate-spin text-link" />
         </div>
       ) : past.length === 0 ? (
         <div className="rounded-2xl border-2 border-dashed border-border p-10 text-center">

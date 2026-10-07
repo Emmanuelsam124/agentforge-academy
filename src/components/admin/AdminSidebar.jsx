@@ -30,8 +30,8 @@ function NavItems({ onNavigate }) {
             className={({ isActive }) =>
               `flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm transition-colors ${
                 isActive
-                  ? 'bg-[#F3EBFF] dark:bg-brand/15 text-brand font-bold'
-                  : 'text-body hover:bg-[#FAF8FF] dark:hover:bg-white/5 hover:text-ink'
+                  ? 'bg-[#E8EDF3] dark:bg-brand/15 text-link font-bold'
+                  : 'text-body hover:bg-[#F6F8FB] dark:hover:bg-white/5 hover:text-ink'
               }`
             }
           >
@@ -53,13 +53,13 @@ export default function AdminSidebar() {
   return (
     <>
       {/* Desktop — persistent sticky sidebar */}
-      <aside className="hidden lg:block sticky top-24 self-start w-full rounded-xl border border-border-soft bg-[#FAF8FF] dark:bg-white/5 p-4">
+      <aside className="hidden lg:block sticky top-24 self-start w-full rounded-xl border border-border-soft bg-[#F6F8FB] dark:bg-white/5 p-4">
         <p className="text-xs font-bold uppercase tracking-wide text-body mb-2 px-1">Admin Dashboard</p>
         <NavItems />
       </aside>
 
       {/* Mobile — collapsible toggle above the content */}
-      <div className="lg:hidden rounded-xl border border-border-soft bg-[#FAF8FF] dark:bg-white/5 overflow-hidden">
+      <div className="lg:hidden rounded-xl border border-border-soft bg-[#F6F8FB] dark:bg-white/5 overflow-hidden">
         <button
           onClick={() => setMobileOpen((v) => !v)}
           className="w-full flex items-center justify-between px-4 py-3"

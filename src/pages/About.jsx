@@ -67,7 +67,7 @@ export default function About() {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
       <m.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
-        <span className="inline-flex items-center gap-2 text-[13px] font-bold px-4 py-1.5 rounded-full bg-[#F3EBFF] dark:bg-brand/15 text-brand">
+        <span className="inline-flex items-center gap-2 text-[13px] font-bold px-4 py-1.5 rounded-full bg-[#E8EDF3] dark:bg-brand/15 text-link">
           About us
         </span>
         <h1 className="font-display font-extrabold text-[32px] sm:text-[42px] leading-[1.1] text-ink tracking-[-1px] mt-4 mb-4">
@@ -91,8 +91,8 @@ export default function About() {
       <h2 className="font-display font-extrabold text-2xl text-ink mb-6">What we believe</h2>
       <div className="grid sm:grid-cols-2 gap-5 mb-14">
         {PRINCIPLES.map((p) => (
-          <div key={p.title} className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-[20px] p-6">
-            <div className="w-11 h-11 rounded-xl bg-[#F3EBFF] dark:bg-brand/15 text-brand flex items-center justify-center mb-4">
+          <div key={p.title} className="bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-[20px] p-6">
+            <div className="w-11 h-11 rounded-xl bg-[#E8EDF3] dark:bg-brand/15 text-link flex items-center justify-center mb-4">
               <p.icon className="w-5 h-5" />
             </div>
             <h3 className="font-display font-bold text-lg text-ink mb-2">{p.title}</h3>
@@ -102,12 +102,12 @@ export default function About() {
       </div>
 
       <div
-        className="rounded-[24px] px-8 sm:px-10 py-9 flex items-center justify-between flex-wrap gap-5 shadow-[0_20px_44px_-16px_rgba(124,58,237,.6)]"
-        style={{ background: 'linear-gradient(120deg, #7C3AED, #9D5CFF)' }}
+        className="rounded-[24px] px-8 sm:px-10 py-9 flex items-center justify-between flex-wrap gap-5 shadow-[0_20px_44px_-16px_rgba(15,26,42,.6)]"
+        style={{ background: '#264D73' }}
       >
         <div>
           <h2 className="font-display font-extrabold text-2xl sm:text-[26px] text-white m-0">Ready to build your first agent?</h2>
-          <p className="text-[#EDE4FF] mt-2 mb-0 text-[15px]">Browse all <span>{publicAgents.length}</span> sessions and pick where to start.</p>
+          <p className="text-[#D5DEE9] mt-2 mb-0 text-[15px]">Browse all <span>{publicAgents.length}</span> sessions and pick where to start.</p>
         </div>
         <Link
           to="/catalog"
@@ -122,8 +122,8 @@ export default function About() {
 
 function Stat({ value, label }) {
   return (
-    <div className="bg-[#F3EBFF] dark:bg-[#181818] rounded-[18px] px-5 py-5.5 text-center">
-      <div className="font-display font-extrabold text-[28px] sm:text-[34px] text-brand">{value}</div>
+    <div className="bg-[#E8EDF3] dark:bg-[#131E2F] rounded-[18px] px-5 py-5.5 text-center">
+      <div className="font-display font-extrabold text-[28px] sm:text-[34px] text-link">{value}</div>
       <div className="text-[13px] text-body font-semibold mt-0.5">{label}</div>
     </div>
   );

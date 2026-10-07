@@ -19,7 +19,7 @@ function CopyBlock({ label, text }) {
         <span className="text-[11px] font-bold uppercase tracking-widest text-body">{label}</span>
         <button
           onClick={copy}
-          className="flex items-center gap-1 text-xs font-semibold text-brand hover:underline"
+          className="flex items-center gap-1 text-xs font-semibold text-link hover:underline"
         >
           {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
           {copied ? 'Copied' : 'Copy'}
@@ -75,7 +75,7 @@ function SubmissionForm({ onSubmit, submitting, error }) {
             value={videoUrl}
             onChange={(e) => setVideoUrl(e.target.value)}
             placeholder="https://..."
-            className="w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0A090F] focus:outline-none focus:ring-2 focus:ring-brand/40"
+            className="w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0C1420] focus:outline-none focus:ring-2 focus:ring-brand/40"
           />
         </div>
       ) : (
@@ -89,7 +89,7 @@ function SubmissionForm({ onSubmit, submitting, error }) {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="I built..."
-            className="w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0A090F] focus:outline-none focus:ring-2 focus:ring-brand/40 resize-none"
+            className="w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0C1420] focus:outline-none focus:ring-2 focus:ring-brand/40 resize-none"
           />
         </div>
       )}
@@ -137,9 +137,9 @@ export default function WeekCompletionPanel({ agent, week }) {
   const shareText = submission ? generateShareText({ agent, submission }) : null;
 
   return (
-    <div className="rounded-2xl border-[1.5px] border-brand/25 bg-[#F3EBFF] dark:bg-brand/10 p-5 sm:p-6 mb-8">
+    <div className="rounded-2xl border-[1.5px] border-brand/25 bg-[#E8EDF3] dark:bg-brand/10 p-5 sm:p-6 mb-8">
       <div className="flex items-center gap-2 mb-1">
-        <Award className="w-5 h-5 text-brand" />
+        <Award className="w-5 h-5 text-link" />
         <h3 className="font-display font-bold text-lg text-ink">Week <span>{week}</span> complete 🎉</h3>
       </div>
       <p className="text-sm text-body mb-4">
@@ -168,7 +168,7 @@ export default function WeekCompletionPanel({ agent, week }) {
         ) : (
           <>
             <p className="text-sm font-bold text-ink mb-3 flex items-center gap-1.5">
-              <Share2 className="w-4 h-4 text-brand" /> Share what you built (optional)
+              <Share2 className="w-4 h-4 text-link" /> Share what you built (optional)
             </p>
             <p className="text-xs text-body mb-4">
               Copy-paste ready for LinkedIn, Instagram, or Facebook — edit however you like before posting.

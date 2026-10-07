@@ -51,7 +51,7 @@ export default function ShareRail({ section, slug, title }) {
   };
 
   const pillCls =
-    'flex flex-col items-center rounded-full bg-white/95 dark:bg-[#1C1B22]/95 backdrop-blur border border-border shadow-[0_8px_28px_rgba(26,19,51,.12)] dark:shadow-[0_8px_28px_rgba(0,0,0,.5)]';
+    'flex flex-col items-center rounded-full bg-white/95 dark:bg-[#1C1B22]/95 backdrop-blur border border-border shadow-[0_8px_28px_rgba(15,26,42,.12)] dark:shadow-[0_8px_28px_rgba(0,0,0,.5)]';
 
   const items = (size) => (
     <>
@@ -68,7 +68,7 @@ export default function ShareRail({ section, slug, title }) {
           aria-label={`Share on ${label}`}
           title={`Share on ${label}`}
           onClick={() => setExpanded(false)}
-          className={`group relative ${size} flex items-center justify-center text-body-strong hover:text-brand transition-colors ${
+          className={`group relative ${size} flex items-center justify-center text-body-strong hover:text-link transition-colors ${
             i > 0 ? 'before:absolute before:top-0 before:inset-x-2.5 before:h-px before:bg-border' : ''
           }`}
         >
@@ -81,7 +81,7 @@ export default function ShareRail({ section, slug, title }) {
         onClick={copyLink}
         aria-label={copied ? 'Link copied' : 'Copy link'}
         title={copied ? 'Link copied' : 'Copy link'}
-        className={`relative ${size} flex items-center justify-center text-body-strong hover:text-brand transition-colors before:absolute before:top-0 before:inset-x-2.5 before:h-px before:bg-border`}
+        className={`relative ${size} flex items-center justify-center text-body-strong hover:text-link transition-colors before:absolute before:top-0 before:inset-x-2.5 before:h-px before:bg-border`}
       >
         {copied
           ? <Check className="w-[18px] h-[18px] text-green" />
@@ -95,8 +95,8 @@ export default function ShareRail({ section, slug, title }) {
       {/* Colours: icons, dividers and the border use semantic tokens
           (text-body-strong, bg-border) with NO dark: override — those
           repaint themselves from :root[data-theme="dark"], per the note in
-          src/index.css. Measured: the icon goes #3A3358 on the near-white
-          pill in light and #E5E1EE on the dark pill in dark, both
+          src/index.css. Measured: the icon goes #1F2C3D on the near-white
+          pill in light and #E3E7EC on the dark pill in dark, both
           comfortably legible.
 
           Only the pill's own background and shadow carry an explicit dark:

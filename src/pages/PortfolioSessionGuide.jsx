@@ -36,7 +36,7 @@ function Callout({ type = 'info', icon, children }) {
     info:    'bg-brand/10 border-l-4 border-brand',
     warn:    'bg-amber/10 border-l-4 border-amber',
     success: 'bg-green/10 border-l-4 border-green',
-    tip:     'bg-[#F3EBFF] dark:bg-brand/10 border-l-4 border-brand',
+    tip:     'bg-[#E8EDF3] dark:bg-brand/10 border-l-4 border-brand',
   };
   return (
     <div className={`flex gap-3 rounded-xl p-4 mb-4 ${styles[type]}`}>
@@ -81,7 +81,7 @@ function Snippet({ children }) {
     setTimeout(() => setCopied(false), 1800);
   };
   return (
-    <div className="relative bg-ink dark:bg-[#0A090F] rounded-xl p-4 my-4 font-mono text-[12.5px] text-[#E7E5E4] leading-relaxed whitespace-pre-wrap overflow-x-auto">
+    <div className="relative bg-ink dark:bg-[#0C1420] rounded-xl p-4 my-4 font-mono text-[12.5px] text-[#E7E5E4] leading-relaxed whitespace-pre-wrap overflow-x-auto">
       <button
         onClick={copy}
         className="absolute top-3 right-3 flex items-center gap-1 bg-white/10 hover:bg-white/20 text-white/80 text-xs font-semibold px-2.5 py-1 rounded-lg transition-colors"
@@ -127,11 +127,11 @@ function GoFurther({ label, children }) {
         className="w-full flex items-center justify-between gap-2 px-5 py-3.5 text-left"
       >
         <div>
-          <span className="text-[10px] font-bold uppercase tracking-widest text-brand mr-2">Go further</span>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-link mr-2">Go further</span>
           <span className="text-sm font-semibold text-ink">{label}</span>
           <span className="ml-2 text-body text-xs">🛠️🛠️🛠️</span>
         </div>
-        <ChevronDown className={`w-4 h-4 text-brand flex-shrink-0 transition-transform ${open ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`w-4 h-4 text-link flex-shrink-0 transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>
       {open && <div className="px-5 pb-5 text-sm text-body leading-relaxed">{children}</div>}
     </div>
@@ -140,8 +140,8 @@ function GoFurther({ label, children }) {
 
 function ConceptBox({ title, children }) {
   return (
-    <div className="bg-[#F8F6FF] dark:bg-[#181818] border border-brand/20 rounded-2xl p-5 mb-4">
-      <div className="text-[10px] font-bold uppercase tracking-widest text-brand mb-2">Concept</div>
+    <div className="bg-[#F8FAFD] dark:bg-[#131E2F] border border-brand/20 rounded-2xl p-5 mb-4">
+      <div className="text-[10px] font-bold uppercase tracking-widest text-link mb-2">Concept</div>
       <div className="font-bold text-sm text-ink mb-2">{title}</div>
       <div className="text-sm text-body leading-relaxed">{children}</div>
     </div>
@@ -150,7 +150,7 @@ function ConceptBox({ title, children }) {
 
 function BuildBadge({ children }) {
   return (
-    <span className="inline-flex items-center gap-1.5 bg-brand/10 text-brand text-[11px] font-bold px-2.5 py-1 rounded-full mr-2">{children}</span>
+    <span className="inline-flex items-center gap-1.5 bg-brand/10 text-link text-[11px] font-bold px-2.5 py-1 rounded-full mr-2">{children}</span>
   );
 }
 
@@ -216,7 +216,7 @@ function CompareTable() {
           <tr className="bg-border-soft">
             <th className="text-left text-[10px] font-bold uppercase tracking-widest text-body px-3 py-2.5 w-28"></th>
             {cols.map((c) => (
-              <th key={c} className={`text-left text-[10px] font-bold uppercase tracking-widest px-3 py-2.5 ${c === 'Claude Cowork' ? 'text-brand' : 'text-body'}`}>{c}</th>
+              <th key={c} className={`text-left text-[10px] font-bold uppercase tracking-widest px-3 py-2.5 ${c === 'Claude Cowork' ? 'text-link' : 'text-body'}`}>{c}</th>
             ))}
           </tr>
         </thead>
@@ -274,7 +274,7 @@ const PANELS = [
         'Share AI learnings, AI tips, AI news, and AI assets with others in the program, their companies, and their networks',
       ].map((item, i) => (
         <li key={i} className="flex items-start gap-2.5 text-sm text-body">
-          <span className="text-brand font-bold flex-shrink-0 mt-0.5">→</span>
+          <span className="text-link font-bold flex-shrink-0 mt-0.5">→</span>
           {item}
         </li>
       ))}
@@ -368,7 +368,7 @@ const PANELS = [
           'Think in outcomes, not instructions',
         ].map((item, i) => (
           <li key={i} className="flex items-start gap-2 text-xs">
-            <span className="text-brand font-bold flex-shrink-0">·</span>
+            <span className="text-link font-bold flex-shrink-0">·</span>
             {item}
           </li>
         ))}
@@ -407,7 +407,7 @@ Contact: Simple, clean footer with contact info`}</Snippet>
     </Callout>
 
     <StepItem num={3}>
-      Once Claude outputs the HTML, copy the entire code, save it as <code className="bg-border-soft px-1 py-0.5 rounded text-brand text-xs">portfolio.html</code> on your computer, and open it in Chrome to preview your site.
+      Once Claude outputs the HTML, copy the entire code, save it as <code className="bg-border-soft px-1 py-0.5 rounded text-link text-xs">portfolio.html</code> on your computer, and open it in Chrome to preview your site.
     </StepItem>
 
     <GoFurther label="Add an animated background to your portfolio">
@@ -438,12 +438,12 @@ Once I've answered, build the animation and embed it directly in my portfolio as
     </ConceptBox>
 
     <StepItem num={1}>
-      If you don't have Chrome, download it at <a href="https://google.com/chrome" target="_blank" rel="noreferrer" className="text-brand font-semibold">google.com/chrome</a> and run the installer.
+      If you don't have Chrome, download it at <a href="https://google.com/chrome" target="_blank" rel="noreferrer" className="text-link font-semibold">google.com/chrome</a> and run the installer.
     </StepItem>
 
     <StepItem num={2}>
       Open Chrome and go to the<span> </span>
-      <a href="https://chromewebstore.google.com/publisher/anthropic" target="_blank" rel="noreferrer" className="text-brand font-semibold inline-flex items-center gap-1">Claude in Chrome extension <ExternalLink className="w-3 h-3" /></a>.
+      <a href="https://chromewebstore.google.com/publisher/anthropic" target="_blank" rel="noreferrer" className="text-link font-semibold inline-flex items-center gap-1">Claude in Chrome extension <ExternalLink className="w-3 h-3" /></a>.
       Click <strong>Add to Chrome</strong> then <strong>Add extension</strong>.
     </StepItem>
 
@@ -512,7 +512,7 @@ Format this as a structured design system document I can paste into future promp
 
     <ConceptBox title="What is an AI skill?">
       <p className="mb-2">An AI skill is a set of instructions that tells AI how to do a specific task.</p>
-      <p className="mb-2">Without a skill, every conversation starts from zero — you have to explain your preferences, standards, and processes over and over. A skill is stored in a <code className="bg-border-soft px-1 rounded text-brand text-xs">.md</code> file and called with a slash command like <code className="bg-border-soft px-1 rounded text-brand text-xs">/google-design</code>.</p>
+      <p className="mb-2">Without a skill, every conversation starts from zero — you have to explain your preferences, standards, and processes over and over. A skill is stored in a <code className="bg-border-soft px-1 rounded text-link text-xs">.md</code> file and called with a slash command like <code className="bg-border-soft px-1 rounded text-link text-xs">/google-design</code>.</p>
       <p className="mb-3">A skill typically includes:</p>
       <ul className="space-y-1.5">
         {[
@@ -522,7 +522,7 @@ Format this as a structured design system document I can paste into future promp
           'A few examples of good output',
         ].map((item, i) => (
           <li key={i} className="flex items-start gap-2 text-xs">
-            <span className="text-brand font-bold flex-shrink-0">·</span>
+            <span className="text-link font-bold flex-shrink-0">·</span>
             {item}
           </li>
         ))}
@@ -555,7 +555,7 @@ Format the file so I can paste it directly into any future prompt with /[site-na
     </StepItem>
 
     <StepItem num={3}>
-      Once Claude outputs the skill file, save it as <code className="bg-border-soft px-1 py-0.5 rounded text-brand text-xs">[site-name]-design.md</code> in your <code className="bg-border-soft px-1 py-0.5 rounded text-brand text-xs">ai-builder</code> folder. In future prompts, paste its contents at the top and Claude will apply the full design system.
+      Once Claude outputs the skill file, save it as <code className="bg-border-soft px-1 py-0.5 rounded text-link text-xs">[site-name]-design.md</code> in your <code className="bg-border-soft px-1 py-0.5 rounded text-link text-xs">ai-builder</code> folder. In future prompts, paste its contents at the top and Claude will apply the full design system.
     </StepItem>
 
     <Faq q="How do I use the skill in future builds?">
@@ -633,7 +633,7 @@ Keep all other cards as "Coming Soon" with empty popups. Output as a complete, u
             '"Add a subtle fade-in animation to the hero section"',
           ].map((p, i) => (
             <li key={i} className="flex items-start gap-2 text-xs text-body">
-              <span className="text-brand font-bold flex-shrink-0">·</span>
+              <span className="text-link font-bold flex-shrink-0">·</span>
               <span className="italic">{p}</span>
             </li>
           ))}
@@ -642,11 +642,11 @@ Keep all other cards as "Coming Soon" with empty popups. Output as a complete, u
     </StepItem>
 
     <StepItem num={4}>
-      When you're happy with your portfolio, you need to publish it. Go to <a href="https://vercel.com" target="_blank" rel="noreferrer" className="text-brand font-semibold">vercel.com</a> or <a href="https://tiiny.host" target="_blank" rel="noreferrer" className="text-brand font-semibold">tiiny.host</a> and create a free account.
+      When you're happy with your portfolio, you need to publish it. Go to <a href="https://vercel.com" target="_blank" rel="noreferrer" className="text-link font-semibold">vercel.com</a> or <a href="https://tiiny.host" target="_blank" rel="noreferrer" className="text-link font-semibold">tiiny.host</a> and create a free account.
     </StepItem>
 
     <StepItem num={5}>
-      On Tiiny Host: drag and drop your <code className="bg-border-soft px-1 py-0.5 rounded text-brand text-xs">portfolio.html</code> file → choose a subdomain → click <strong>Upload</strong>. Your site will be live at <code className="text-brand text-xs">yourname.tiiny.site</code> within seconds.
+      On Tiiny Host: drag and drop your <code className="bg-border-soft px-1 py-0.5 rounded text-link text-xs">portfolio.html</code> file → choose a subdomain → click <strong>Upload</strong>. Your site will be live at <code className="text-link text-xs">yourname.tiiny.site</code> within seconds.
     </StepItem>
 
     <StepItem num={6}>
@@ -803,7 +803,7 @@ export default function PortfolioSessionGuide() {
                   className={`w-full flex items-start gap-2.5 px-2.5 py-2 rounded-xl text-left transition-colors ${isActive ? 'bg-brand/10' : 'hover:bg-border-soft'}`}
                 >
                   <div className={`mt-0.5 w-6 h-6 rounded-full border-2 flex items-center justify-center text-[11px] font-bold flex-shrink-0 transition-all
-                    ${isDone ? 'bg-green border-green text-white' : isActive ? 'border-brand text-brand' : 'border-border text-body'}`}>
+                    ${isDone ? 'bg-green border-green text-white' : isActive ? 'border-brand text-link' : 'border-border text-body'}`}>
                     {isDone ? '✓' : i + 1}
                   </div>
                   <div>
@@ -825,7 +825,7 @@ export default function PortfolioSessionGuide() {
 
         {/* Content */}
         <main className="flex-1 px-5 sm:px-10 py-8 max-w-2xl">
-          <div className="text-[10px] font-bold uppercase tracking-widest text-brand mb-2">
+          <div className="text-[10px] font-bold uppercase tracking-widest text-link mb-2">
             <span>{STEPS[current].eyebrow}</span> · Step <span>{current + 1}</span> of <span>{STEPS.length}</span>
           </div>
           <h1 className="font-display text-2xl sm:text-[28px] font-extrabold text-ink mb-2 leading-tight" style={{ textWrap: 'balance' }}>

@@ -19,9 +19,9 @@ function plainTextToHtml(text) {
       const match = para.trim().match(BUTTON_LINE_RE);
       if (match) {
         const [, label, url] = match;
-        return `<div style="text-align:center;margin:24px 0;"><a href="${url}" style="display:inline-block;background:#7C3AED;color:#ffffff;font-weight:700;font-size:15px;padding:14px 28px;border-radius:10px;text-decoration:none;">${label}</a></div>`;
+        return `<div style="text-align:center;margin:24px 0;"><a href="${url}" style="display:inline-block;background:#264D73;color:#ffffff;font-weight:700;font-size:15px;padding:14px 28px;border-radius:10px;text-decoration:none;">${label}</a></div>`;
       }
-      return `<p style="font-size:15px;color:#3A3358;line-height:1.6;margin:0 0 16px;">${para.replace(/\n/g, '<br/>')}</p>`;
+      return `<p style="font-size:15px;color:#1F2C3D;line-height:1.6;margin:0 0 16px;">${para.replace(/\n/g, '<br/>')}</p>`;
     })
     .join('');
 }
@@ -186,13 +186,13 @@ export default function AdminEmails() {
     <div>
       <div className="flex items-center justify-between mb-5">
         <h1 className="font-display text-3xl font-extrabold text-ink flex items-center gap-3">
-          <Mail className="w-7 h-7 text-brand" />
+          <Mail className="w-7 h-7 text-link" />
           Email Communications
         </h1>
       </div>
 
       {error && (
-        <div className="flex items-start gap-2 text-sm text-rose bg-[#FDEEF4] dark:bg-rose/10 border border-rose/20 rounded-lg px-4 py-3 mb-6">
+        <div className="flex items-start gap-2 text-sm text-rose bg-[#FBEAE9] dark:bg-rose/10 border border-rose/20 rounded-lg px-4 py-3 mb-6">
           <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
           {error}
         </div>
@@ -200,9 +200,9 @@ export default function AdminEmails() {
 
       <div className="grid lg:grid-cols-2 gap-5 mb-5">
         {/* Broadcast composer */}
-        <div className="rounded-2xl border border-border-soft bg-white dark:bg-[#181818] p-5">
+        <div className="rounded-2xl border border-border-soft bg-white dark:bg-[#131E2F] p-5">
           <h3 className="font-bold text-ink text-sm mb-3 flex items-center gap-1.5">
-            <Send className="w-4 h-4 text-brand" /> Send a broadcast
+            <Send className="w-4 h-4 text-link" /> Send a broadcast
           </h3>
           <div className="space-y-3">
             <input
@@ -210,14 +210,14 @@ export default function AdminEmails() {
               value={broadcastSubject}
               onChange={(e) => setBroadcastSubject(e.target.value)}
               placeholder="Subject"
-              className="w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0A090F] focus:outline-none focus:ring-2 focus:ring-brand/40"
+              className="w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0C1420] focus:outline-none focus:ring-2 focus:ring-brand/40"
             />
             <textarea
               value={broadcastBody}
               onChange={(e) => setBroadcastBody(e.target.value)}
               placeholder="Message body (plain text — blank lines start a new paragraph)"
               rows={5}
-              className="w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0A090F] focus:outline-none focus:ring-2 focus:ring-brand/40 resize-none"
+              className="w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0C1420] focus:outline-none focus:ring-2 focus:ring-brand/40 resize-none"
             />
             <p className="text-xs text-gray-400 -mt-1.5">
               Tip: put <code className="font-mono">[Button label](https://url)</code> on its own line to render a purple CTA button there.
@@ -238,7 +238,7 @@ export default function AdminEmails() {
                 onChange={(e) => setBroadcastRecipientsInput(e.target.value)}
                 placeholder="Emails separated by commas or new lines — e.g. a test batch before a full segment send"
                 rows={2}
-                className="w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0A090F] focus:outline-none focus:ring-2 focus:ring-brand/40 resize-none"
+                className="w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0C1420] focus:outline-none focus:ring-2 focus:ring-brand/40 resize-none"
               />
             ) : null}
 
@@ -247,7 +247,7 @@ export default function AdminEmails() {
                 <select
                   value={broadcastSegment}
                   onChange={(e) => setBroadcastSegment(e.target.value)}
-                  className="px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0A090F] focus:outline-none focus:ring-2 focus:ring-brand/40"
+                  className="px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0C1420] focus:outline-none focus:ring-2 focus:ring-brand/40"
                 >
                   <option value="all">Everyone</option>
                   <option value="builder1">Builder 1 students</option>
@@ -268,9 +268,9 @@ export default function AdminEmails() {
         </div>
 
         {/* Automation settings */}
-        <div className="rounded-2xl border border-border-soft bg-white dark:bg-[#181818] p-5">
+        <div className="rounded-2xl border border-border-soft bg-white dark:bg-[#131E2F] p-5">
           <h3 className="font-bold text-ink text-sm mb-1 flex items-center gap-1.5">
-            <UserX className="w-4 h-4 text-brand" /> Win-back &amp; automation
+            <UserX className="w-4 h-4 text-link" /> Win-back &amp; automation
           </h3>
           <p className="text-xs text-body mb-3">
             {inactiveLoading ? 'Checking…' : `${inactiveUsers.length} student${inactiveUsers.length === 1 ? '' : 's'} currently inactive`}
@@ -284,7 +284,7 @@ export default function AdminEmails() {
                 min={1}
                 value={emailSettings.winback_inactive_days}
                 onChange={(e) => setEmailSettings((s) => ({ ...s, winback_inactive_days: Number(e.target.value) || 1 }))}
-                className="w-24 px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0A090F] focus:outline-none focus:ring-2 focus:ring-brand/40 mb-2"
+                className="w-24 px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0C1420] focus:outline-none focus:ring-2 focus:ring-brand/40 mb-2"
               />
               <div className="divide-y divide-border-soft border-t border-border-soft mt-1">
                 <AutomationToggle
@@ -320,7 +320,7 @@ export default function AdminEmails() {
             <button
               onClick={() => invokeEmailFunction('send-winback-emails', {}, `Send a win-back email to ${inactiveUsers.length} inactive student${inactiveUsers.length === 1 ? '' : 's'} right now?`, 'winback')}
               disabled={!!sendingType || inactiveUsers.length === 0}
-              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-lg bg-[#FAF8FF] dark:bg-white/5 text-body-strong hover:bg-[#F3EBFF] dark:hover:bg-brand/15 hover:text-brand transition-colors disabled:opacity-40"
+              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-lg bg-[#F6F8FB] dark:bg-white/5 text-body-strong hover:bg-[#E8EDF3] dark:hover:bg-brand/15 hover:text-link transition-colors disabled:opacity-40"
             >
               {sendingType === 'winback' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <UserX className="w-3.5 h-3.5" />}
               Send win-back now
@@ -328,7 +328,7 @@ export default function AdminEmails() {
             <button
               onClick={() => invokeEmailFunction('send-abandoned-checkout-emails', {}, 'Send abandoned-checkout reminders to everyone currently eligible?', 'abandoned_checkout')}
               disabled={!!sendingType}
-              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-lg bg-[#FAF8FF] dark:bg-white/5 text-body-strong hover:bg-[#F3EBFF] dark:hover:bg-brand/15 hover:text-brand transition-colors disabled:opacity-40"
+              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-lg bg-[#F6F8FB] dark:bg-white/5 text-body-strong hover:bg-[#E8EDF3] dark:hover:bg-brand/15 hover:text-link transition-colors disabled:opacity-40"
             >
               {sendingType === 'abandoned_checkout' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <ShoppingCart className="w-3.5 h-3.5" />}
               Send abandoned-checkout now
@@ -336,7 +336,7 @@ export default function AdminEmails() {
             <button
               onClick={() => invokeEmailFunction('send-cohort-reminder-emails', {}, 'Send cohort-start reminders to everyone currently eligible?', 'cohort_reminder')}
               disabled={!!sendingType}
-              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-lg bg-[#FAF8FF] dark:bg-white/5 text-body-strong hover:bg-[#F3EBFF] dark:hover:bg-brand/15 hover:text-brand transition-colors disabled:opacity-40"
+              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-lg bg-[#F6F8FB] dark:bg-white/5 text-body-strong hover:bg-[#E8EDF3] dark:hover:bg-brand/15 hover:text-link transition-colors disabled:opacity-40"
             >
               {sendingType === 'cohort_reminder' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CalendarDays className="w-3.5 h-3.5" />}
               Send cohort reminder now
@@ -347,13 +347,13 @@ export default function AdminEmails() {
 
       {/* Email log */}
       <div className="flex items-center gap-2 mb-3">
-        <History className="w-4 h-4 text-brand" />
+        <History className="w-4 h-4 text-link" />
         <h3 className="font-bold text-ink text-sm">Recent sends</h3>
       </div>
-      <div className="rounded-2xl border border-border-soft overflow-hidden bg-white dark:bg-[#181818]">
+      <div className="rounded-2xl border border-border-soft overflow-hidden bg-white dark:bg-[#131E2F]">
         {emailLogLoading ? (
           <div className="px-5 py-8 text-center">
-            <Loader2 className="w-5 h-5 animate-spin text-brand mx-auto" />
+            <Loader2 className="w-5 h-5 animate-spin text-link mx-auto" />
           </div>
         ) : emailLog.length === 0 ? (
           <div className="px-5 py-8 text-center text-gray-400 text-sm">No emails sent yet.</div>
@@ -361,7 +361,7 @@ export default function AdminEmails() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-[#FAF8FF] dark:bg-white/5 border-b border-border-soft">
+                <tr className="bg-[#F6F8FB] dark:bg-white/5 border-b border-border-soft">
                   <th className="text-left px-5 py-2.5 text-xs font-bold text-body uppercase tracking-wider">Recipient</th>
                   <th className="text-left px-5 py-2.5 text-xs font-bold text-body uppercase tracking-wider">Type</th>
                   <th className="text-left px-5 py-2.5 text-xs font-bold text-body uppercase tracking-wider">Subject</th>

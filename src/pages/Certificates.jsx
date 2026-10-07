@@ -20,7 +20,7 @@ export default function Certificates({ progress }) {
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <div className="mb-8">
         <h1 className="font-display text-3xl sm:text-4xl font-extrabold text-ink flex items-center gap-3">
-          <Award className="w-7 h-7 text-brand" />
+          <Award className="w-7 h-7 text-link" />
           My Certificates
         </h1>
         <p className="text-body mt-2">Earned automatically the moment you complete every session in a tier.</p>
@@ -63,7 +63,7 @@ function CertificateCard({ tier, cert, progress }) {
   const completedCount = tierAgents.filter((a) => progress.isCompleted(a.id)).length;
 
   return (
-    <div className="rounded-2xl border-[1.5px] border-border-soft bg-white dark:bg-[#181818] p-6 flex flex-col">
+    <div className="rounded-2xl border-[1.5px] border-border-soft bg-white dark:bg-[#131E2F] p-6 flex flex-col">
       <div className="flex items-center gap-2 mb-4">
         <span className="text-2xl">{tier.icon}</span>
         <h2 className="font-display font-bold text-lg text-ink">{tier.label}</h2>
@@ -79,7 +79,7 @@ function CertificateCard({ tier, cert, progress }) {
           </p>
           <Link
             to={`/catalog?difficulty=${encodeURIComponent(tier.label)}`}
-            className="flex items-center justify-center gap-2 bg-[#FAF8FF] dark:bg-white/5 hover:bg-[#F3EBFF] dark:hover:bg-brand/10 border border-border-soft text-body-strong font-bold px-5 py-2.5 rounded-xl transition-colors"
+            className="flex items-center justify-center gap-2 bg-[#F6F8FB] dark:bg-white/5 hover:bg-[#E8EDF3] dark:hover:bg-brand/10 border border-border-soft text-body-strong font-bold px-5 py-2.5 rounded-xl transition-colors"
           >
             Continue building
           </Link>
@@ -96,7 +96,7 @@ function ProficiencyCard({ tier, cert, progress }) {
   return (
     <div
       className="rounded-2xl border-[2px] border-amber-400 p-6 flex flex-col sm:flex-row sm:items-center gap-5"
-      style={{ background: 'linear-gradient(120deg, #FEF9E7, #FFFFFF)' }}
+      style={{ background: '#FEF9E7' }}
     >
       <div className="flex items-center gap-3 flex-1 min-w-0">
         <span className="text-3xl">{tier.icon}</span>

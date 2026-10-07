@@ -18,14 +18,14 @@ const fmtDate = (iso) =>
 function StatusBadge({ status, redeemed, enrolled }) {
   if (redeemed) {
     return (
-      <span className="flex items-center gap-1 text-[11px] font-bold text-brand bg-[#F3EBFF] dark:bg-brand/15 px-2.5 py-1 rounded-full">
+      <span className="flex items-center gap-1 text-[11px] font-bold text-link bg-[#E8EDF3] dark:bg-brand/15 px-2.5 py-1 rounded-full">
         <CheckCircle2 className="w-3 h-3" /> Enrolled · paid scholarship price
       </span>
     );
   }
   if (status === 'approved' && enrolled) {
     return (
-      <span className="flex items-center gap-1 text-[11px] font-bold text-brand bg-[#F3EBFF] dark:bg-brand/15 px-2.5 py-1 rounded-full">
+      <span className="flex items-center gap-1 text-[11px] font-bold text-link bg-[#E8EDF3] dark:bg-brand/15 px-2.5 py-1 rounded-full">
         <CheckCircle2 className="w-3 h-3" /> Enrolled · other payment
       </span>
     );
@@ -39,7 +39,7 @@ function StatusBadge({ status, redeemed, enrolled }) {
   }
   if (status === 'rejected') {
     return (
-      <span className="flex items-center gap-1 text-[11px] font-bold text-rose bg-[#FDEEF4] dark:bg-rose/10 px-2.5 py-1 rounded-full">
+      <span className="flex items-center gap-1 text-[11px] font-bold text-rose bg-[#FBEAE9] dark:bg-rose/10 px-2.5 py-1 rounded-full">
         <XCircle className="w-3 h-3" /> Rejected
       </span>
     );
@@ -53,7 +53,7 @@ function StatusBadge({ status, redeemed, enrolled }) {
 
 function Stat({ label, value, tone = 'text-ink' }) {
   return (
-    <div className="rounded-xl border border-border-soft bg-white dark:bg-[#181818] px-4 py-3">
+    <div className="rounded-xl border border-border-soft bg-white dark:bg-[#131E2F] px-4 py-3">
       <p className={`font-display font-extrabold text-2xl ${tone}`}>{value}</p>
       <p className="text-[11.5px] font-bold uppercase tracking-wide text-gray-400">{label}</p>
     </div>
@@ -174,11 +174,11 @@ export default function AdminScholarships() {
     <div>
       <div className="flex items-center justify-between mb-5">
         <h1 className="font-display text-3xl font-extrabold text-ink flex items-center gap-3">
-          <GraduationCap className="w-7 h-7 text-brand" />
+          <GraduationCap className="w-7 h-7 text-link" />
           Scholarships
         </h1>
         {applications.length > 0 && (
-          <span className="text-xs font-bold text-body bg-[#F3EBFF] dark:bg-brand/15 px-2.5 py-1 rounded-full">
+          <span className="text-xs font-bold text-body bg-[#E8EDF3] dark:bg-brand/15 px-2.5 py-1 rounded-full">
             {applications.length} shown
           </span>
         )}
@@ -188,7 +188,7 @@ export default function AdminScholarships() {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
           <Stat label="Applications" value={allApplications.length} />
           <Stat label="Approved" value={approved.length} tone="text-green" />
-          <Stat label="Enrolled" value={enrolledCount} tone="text-brand" />
+          <Stat label="Enrolled" value={enrolledCount} tone="text-link" />
           <Stat label="Approved, not enrolled" value={awaitingCount} tone="text-amber-600" />
         </div>
       )}
@@ -201,7 +201,7 @@ export default function AdminScholarships() {
             className={`text-[13px] font-semibold px-4 py-2 rounded-full border transition-colors ${
               status === t.id
                 ? 'bg-brand text-white border-brand'
-                : 'bg-white dark:bg-[#181818] text-body-strong border-border hover:border-brand/40'
+                : 'bg-white dark:bg-[#131E2F] text-body-strong border-border hover:border-brand/40'
             }`}
           >
             {t.label}
@@ -210,16 +210,16 @@ export default function AdminScholarships() {
       </div>
 
       {error && (
-        <div className="flex items-start gap-2 text-sm text-rose bg-[#FDEEF4] dark:bg-rose/10 border border-rose/20 rounded-lg px-4 py-3 mb-6">
+        <div className="flex items-start gap-2 text-sm text-rose bg-[#FBEAE9] dark:bg-rose/10 border border-rose/20 rounded-lg px-4 py-3 mb-6">
           <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
           {error}
         </div>
       )}
 
-      <div className="rounded-2xl border border-border-soft overflow-hidden bg-white dark:bg-[#181818]">
+      <div className="rounded-2xl border border-border-soft overflow-hidden bg-white dark:bg-[#131E2F]">
         {loading ? (
           <div className="px-5 py-12 text-center">
-            <Loader2 className="w-6 h-6 animate-spin text-brand mx-auto" />
+            <Loader2 className="w-6 h-6 animate-spin text-link mx-auto" />
           </div>
         ) : applications.length === 0 ? (
           <div className="px-5 py-12 text-center text-gray-400 text-sm">

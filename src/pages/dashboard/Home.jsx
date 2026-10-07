@@ -37,7 +37,7 @@ function OnboardingChecklist({ hasIndustry, hasCompletedBuild }) {
   if (doneCount === items.length) return null;
 
   return (
-    <div className="rounded-2xl border-[1.5px] border-border-soft bg-white dark:bg-[#181818] p-5 mb-6">
+    <div className="rounded-2xl border-[1.5px] border-border-soft bg-white dark:bg-[#131E2F] p-5 mb-6">
       <div className="flex items-center justify-between mb-3">
         <h3 className="font-display font-bold text-sm text-ink">Get set up</h3>
         <span className="text-xs text-body font-semibold">{doneCount} / {items.length}</span>
@@ -92,12 +92,12 @@ export default function Home() {
       {nextSession && (
         <div
           className="rounded-2xl px-6 py-5 mb-6 flex items-center justify-between flex-wrap gap-4"
-          style={{ background: 'linear-gradient(120deg, #7C3AED, #9D5CFF)' }}
+          style={{ background: '#264D73' }}
         >
           <div>
-            <p className="text-[11px] font-bold uppercase tracking-wide text-[#EDE4FF] mb-1">Next live session</p>
+            <p className="text-[11px] font-bold uppercase tracking-wide text-[#D5DEE9] mb-1">Next live session</p>
             <p className="font-display font-extrabold text-lg text-white">{nextSession.title}</p>
-            <p className="text-sm text-[#EDE4FF] mt-0.5">{formatSessionTime(nextSession.session_date)}</p>
+            <p className="text-sm text-[#D5DEE9] mt-0.5">{formatSessionTime(nextSession.session_date)}</p>
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
             <a
@@ -130,13 +130,13 @@ export default function Home() {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-3">
             <h2 className="font-display text-lg font-bold text-ink">Upcoming sessions</h2>
-            <Link to="/dashboard/live-sessions" className="text-sm font-semibold text-brand hover:underline flex items-center gap-1">
+            <Link to="/dashboard/live-sessions" className="text-sm font-semibold text-link hover:underline flex items-center gap-1">
               See all <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {upcoming.slice(0, 2).map((s) => (
-              <div key={s.id} className="rounded-xl border-[1.5px] border-border-soft bg-white dark:bg-[#181818] p-4">
+              <div key={s.id} className="rounded-xl border-[1.5px] border-border-soft bg-white dark:bg-[#131E2F] p-4">
                 <p className="font-bold text-ink text-sm truncate">{s.title}</p>
                 <p className="text-xs text-body mt-1">{formatSessionTime(s.session_date)}</p>
               </div>

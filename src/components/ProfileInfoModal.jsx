@@ -71,14 +71,14 @@ export default function ProfileInfoModal() {
     <AnimatePresence>
       {modalOpen && (
         <m.div
-          className="fixed inset-0 z-50 flex items-start sm:items-center justify-center bg-[#1A1333]/55 backdrop-blur-sm p-4"
+          className="fixed inset-0 z-50 flex items-start sm:items-center justify-center bg-[#0F1A2A]/55 backdrop-blur-sm p-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={() => closeModal({ skip: true })}
         >
           <m.div
-            className="relative w-full sm:max-w-md rounded-2xl overflow-hidden bg-white dark:bg-[#181818] border border-border-soft mt-16 sm:mt-0"
+            className="relative w-full sm:max-w-md rounded-2xl overflow-hidden bg-white dark:bg-[#131E2F] border border-border-soft mt-16 sm:mt-0"
             initial={{ opacity: 0, y: 40, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 40, scale: 0.97 }}
@@ -87,14 +87,14 @@ export default function ProfileInfoModal() {
           >
             <button
               onClick={() => closeModal({ skip: true })}
-              className="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-lg bg-[#FAF8FF] dark:bg-[#0A090F] hover:bg-[#F3EBFF] dark:hover:bg-brand/15 text-brand transition-colors"
+              className="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-lg bg-[#F6F8FB] dark:bg-[#0C1420] hover:bg-[#E8EDF3] dark:hover:bg-brand/15 text-link transition-colors"
             >
               <X className="w-4 h-4" />
             </button>
 
             <form onSubmit={handleSubmit} className="p-6 sm:p-8 space-y-4">
               <div className="flex items-center gap-2.5">
-                <Briefcase className="w-5 h-5 text-brand flex-shrink-0" />
+                <Briefcase className="w-5 h-5 text-link flex-shrink-0" />
                 <p className="font-display text-lg font-extrabold text-ink">A little about you</p>
               </div>
               <p className="text-sm text-body -mt-2">
@@ -107,7 +107,7 @@ export default function ProfileInfoModal() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Your name"
-                  className="w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0A090F] focus:outline-none focus:ring-2 focus:ring-brand/40"
+                  className="w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0C1420] focus:outline-none focus:ring-2 focus:ring-brand/40"
                 />
               </div>
 
@@ -118,7 +118,7 @@ export default function ProfileInfoModal() {
                 <select
                   value={selectedIndustry}
                   onChange={(e) => setSelectedIndustry(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0A090F] focus:outline-none focus:ring-2 focus:ring-brand/40"
+                  className="w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0C1420] focus:outline-none focus:ring-2 focus:ring-brand/40"
                 >
                   <option value="" disabled>Choose an industry…</option>
                   {industries.map((i) => (
@@ -133,7 +133,7 @@ export default function ProfileInfoModal() {
                   value={customIndustry}
                   onChange={(e) => setCustomIndustry(e.target.value)}
                   placeholder="Your industry"
-                  className="w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0A090F] focus:outline-none focus:ring-2 focus:ring-brand/40"
+                  className="w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0C1420] focus:outline-none focus:ring-2 focus:ring-brand/40"
                 />
               )}
 

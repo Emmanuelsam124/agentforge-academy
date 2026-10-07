@@ -94,11 +94,11 @@ export default function TestimonialPrompt({ completedCount }) {
   }
 
   return (
-    <div className="rounded-xl border-[1.5px] border-brand/25 bg-[#F3EBFF] dark:bg-brand/10 p-5 mb-8">
+    <div className="rounded-xl border-[1.5px] border-brand/25 bg-[#E8EDF3] dark:bg-brand/10 p-5 mb-8">
       {!open ? (
         <div className="flex items-center justify-between gap-4 flex-wrap">
           <div className="flex items-center gap-3">
-            <MessageSquareText className="w-5 h-5 text-brand flex-shrink-0" />
+            <MessageSquareText className="w-5 h-5 text-link flex-shrink-0" />
             <p className="text-sm font-semibold text-ink">
               You've completed {completedCount} sessions — mind sharing a quick testimonial?
             </p>

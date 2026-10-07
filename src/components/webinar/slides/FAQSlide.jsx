@@ -32,10 +32,10 @@ export default function FAQSlide() {
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.07 * i }}
-            className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl p-4.5"
+            className="bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-2xl p-4.5"
           >
             <div className="flex items-start gap-2.5 mb-1.5">
-              <CircleHelp className="w-4 h-4 text-brand mt-0.5 flex-shrink-0" />
+              <CircleHelp className="w-4 h-4 text-link mt-0.5 flex-shrink-0" />
               <span className="font-display font-bold text-[14px] text-ink">{item.q}</span>
             </div>
             <p className="text-[13px] text-body leading-relaxed m-0 pl-6.5">{item.a}</p>

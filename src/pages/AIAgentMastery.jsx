@@ -164,11 +164,11 @@ function CohortCountdown() {
   return (
     <div data-client-only className="mt-8 flex flex-col items-center gap-2.5">
       <span className="inline-flex items-center gap-1.5 text-[12.5px] font-bold uppercase tracking-wide text-body">
-        <Timer className="w-3.5 h-3.5 text-brand" /> Next cohort starts in
+        <Timer className="w-3.5 h-3.5 text-link" /> Next cohort starts in
       </span>
       <div className="flex items-center gap-2 sm:gap-2.5">
         {units.map((unit) => (
-          <div key={unit.label} className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-xl px-3 sm:px-3.5 py-2 min-w-[58px] sm:min-w-[64px] text-center">
+          <div key={unit.label} className="bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-xl px-3 sm:px-3.5 py-2 min-w-[58px] sm:min-w-[64px] text-center">
             <div className="font-display font-extrabold text-xl sm:text-2xl text-ink tabular-nums leading-none">{String(unit.value).padStart(2, '0')}</div>
             <div className="text-[10.5px] font-bold uppercase tracking-wide text-gray-400 mt-1">{unit.label}</div>
           </div>
@@ -183,7 +183,7 @@ function SectionHeading({ eyebrow, children }) {
   return (
     <div className="text-center mb-9">
       {eyebrow && (
-        <span className="inline-flex items-center gap-2 text-[13px] font-bold px-4 py-1.5 rounded-full bg-[#F3EBFF] dark:bg-brand/15 text-brand mb-3">
+        <span className="inline-flex items-center gap-2 text-[13px] font-bold px-4 py-1.5 rounded-full bg-[#E8EDF3] dark:bg-brand/15 text-link mb-3">
           {eyebrow}
         </span>
       )}
@@ -265,13 +265,13 @@ export default function AIAgentMastery() {
       {/* Hero */}
       <div
         className="relative overflow-hidden pt-16 pb-14 px-4 sm:px-6 lg:px-[5vw] text-center"
-        style={{ background: 'radial-gradient(120% 100% at 50% 0%, #F3EBFF 0%, #FBFAFF 55%)' }}
+        style={{ background: '#F6F8FB' }}
       >
         <div className="relative max-w-3xl mx-auto">
           <m.span
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 bg-white dark:bg-[#181818] border-[1.5px] border-border text-brand font-bold text-[12.5px] px-4 py-2 rounded-full shadow-[0_3px_10px_rgba(124,58,237,.1)]"
+            className="inline-flex items-center gap-2 bg-white dark:bg-[#131E2F] border-[1.5px] border-border text-link font-bold text-[12.5px] px-4 py-2 rounded-full shadow-[0_3px_10px_rgba(15,26,42,.1)]"
           >
             🤖 Live cohort — enrollment open
           </m.span>
@@ -293,7 +293,7 @@ export default function AIAgentMastery() {
             className="font-display font-extrabold text-[32px] sm:text-[50px] leading-[1.08] text-ink tracking-[-1.5px] mt-5"
           >
             Build the Exact Multi-Agent System That Replaced My Business Overhead
-            {' '}<span className="text-brand">— Live, in 3 Days.</span>
+            {' '}<span className="text-link">— Live, in 3 Days.</span>
           </m.h1>
 
           <m.p
@@ -316,11 +316,11 @@ export default function AIAgentMastery() {
             <a
               href="#pricing"
               onClick={jumpToPricing}
-              className="bg-brand text-white font-extrabold text-base px-8 py-4 rounded-2xl shadow-[0_10px_22px_rgba(124,58,237,.4)] hover:bg-brand-deep transition-colors"
+              className="bg-brand text-white font-extrabold text-base px-8 py-4 rounded-2xl shadow-[0_10px_22px_rgba(15,26,42,.4)] hover:bg-brand-deep transition-colors"
             >
               Join the next cohort →
             </a>
-            <a href="#demo" className="text-body-strong font-bold text-[14.5px] hover:text-brand transition-colors">
+            <a href="#demo" className="text-body-strong font-bold text-[14.5px] hover:text-link transition-colors">
               Watch it in action ↓
             </a>
           </m.div>
@@ -354,18 +354,18 @@ export default function AIAgentMastery() {
       <InstructorSection closingLine="AI Agent Mastery is that exact system, taught live, over the course of the cohort." />
 
       {/* Curriculum */}
-      <div className="bg-[#FBFAFF] dark:bg-[#141416] border-y border-border-soft px-4 sm:px-6 lg:px-[5vw] py-16">
+      <div className="bg-[#F6F8FB] dark:bg-[#141416] border-y border-border-soft px-4 sm:px-6 lg:px-[5vw] py-16">
         <div className="max-w-3xl mx-auto">
           <SectionHeading eyebrow="The curriculum">Three days, one working assistant</SectionHeading>
           <div className="flex flex-col gap-4 mb-8">
             {CURRICULUM_DAYS.map((d) => (
-              <div key={d.day} className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl p-5 sm:p-6 text-left">
-                <span className="inline-flex items-center text-[11px] font-extrabold text-brand bg-[#F3EBFF] dark:bg-brand/15 px-2.5 py-1 rounded-full mb-2.5">{d.day}</span>
+              <div key={d.day} className="bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-2xl p-5 sm:p-6 text-left">
+                <span className="inline-flex items-center text-[11px] font-extrabold text-link bg-[#E8EDF3] dark:bg-brand/15 px-2.5 py-1 rounded-full mb-2.5">{d.day}</span>
                 <h3 className="font-display font-bold text-[16px] sm:text-[18px] text-ink mb-1.5">{d.title}</h3>
                 <p className="text-[13px] text-body leading-relaxed mb-3">{d.text}</p>
                 <div className="flex flex-wrap gap-1.5">
                   {d.tags.map((tag) => (
-                    <span key={tag} className="text-[10.5px] font-bold uppercase tracking-wide text-gray-400 bg-[#FAF8FF] dark:bg-white/5 px-2 py-1 rounded-md">{tag}</span>
+                    <span key={tag} className="text-[10.5px] font-bold uppercase tracking-wide text-gray-400 bg-[#F6F8FB] dark:bg-white/5 px-2 py-1 rounded-md">{tag}</span>
                   ))}
                 </div>
               </div>
@@ -386,7 +386,7 @@ export default function AIAgentMastery() {
         <SectionHeading eyebrow="A quick gut check">How many of these sound like you?</SectionHeading>
         <div className="grid sm:grid-cols-3 gap-3.5 max-w-4xl mx-auto mb-6">
           {HONEST_CHECK.map((group) => (
-            <div key={group.title} className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl p-4.5">
+            <div key={group.title} className="bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-2xl p-4.5">
               <span className="font-display font-bold text-[14px] text-ink block mb-2.5">{group.title}</span>
               <ul className="flex flex-col gap-1.5">
                 {group.items.map((item) => (
@@ -397,7 +397,7 @@ export default function AIAgentMastery() {
           ))}
         </div>
         <p className="text-center font-display font-bold text-[15px] sm:text-lg text-ink max-w-xl mx-auto">
-          If two or more sound like your week, you don't need another app. <span className="text-brand">You need an assistant that just handles it.</span>
+          If two or more sound like your week, you don't need another app. <span className="text-link">You need an assistant that just handles it.</span>
         </p>
       </div>
 
@@ -406,8 +406,8 @@ export default function AIAgentMastery() {
         <SectionHeading eyebrow="One assistant, four jobs">What your agent will handle</SectionHeading>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3.5 max-w-4xl mx-auto">
           {CAPABILITIES.map((c) => (
-            <div key={c.name} className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl p-5 text-center">
-              <div className="w-11 h-11 mx-auto rounded-full bg-[#F3EBFF] dark:bg-brand/15 text-brand flex items-center justify-center mb-3">
+            <div key={c.name} className="bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-2xl p-5 text-center">
+              <div className="w-11 h-11 mx-auto rounded-full bg-[#E8EDF3] dark:bg-brand/15 text-link flex items-center justify-center mb-3">
                 <c.icon className="w-5 h-5" />
               </div>
               <h3 className="font-display font-bold text-[14.5px] text-ink mb-1.5">{c.name}</h3>
@@ -421,7 +421,7 @@ export default function AIAgentMastery() {
       <div className="px-4 sm:px-6 lg:px-[5vw] py-16 max-w-5xl mx-auto">
         <SectionHeading>Using AI tools vs. owning an assistant</SectionHeading>
         <div className="grid sm:grid-cols-2 gap-4 max-w-3xl mx-auto">
-          <div className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl p-5">
+          <div className="bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-2xl p-5">
             <div className="flex items-center gap-2.5 mb-3">
               <div className="w-9 h-9 rounded-lg bg-gray-100 dark:bg-white/10 text-gray-400 flex items-center justify-center"><MessageSquare className="w-4.5 h-4.5" /></div>
               <h3 className="font-display font-bold text-[15px] text-ink">Using AI tools</h3>
@@ -432,9 +432,9 @@ export default function AIAgentMastery() {
               ))}
             </ul>
           </div>
-          <div className="bg-white dark:bg-[#181818] border-[2px] border-brand rounded-2xl p-5 shadow-[0_16px_36px_-18px_rgba(124,58,237,.4)]">
+          <div className="bg-white dark:bg-[#131E2F] border-[2px] border-brand rounded-2xl p-5 shadow-[0_16px_36px_-18px_rgba(15,26,42,.4)]">
             <div className="flex items-center gap-2.5 mb-3">
-              <div className="w-9 h-9 rounded-lg bg-[#F3EBFF] dark:bg-brand/15 text-brand flex items-center justify-center"><Zap className="w-4.5 h-4.5" /></div>
+              <div className="w-9 h-9 rounded-lg bg-[#E8EDF3] dark:bg-brand/15 text-link flex items-center justify-center"><Zap className="w-4.5 h-4.5" /></div>
               <h3 className="font-display font-bold text-[15px] text-ink">Owning an assistant</h3>
             </div>
             <ul className="space-y-2">
@@ -447,7 +447,7 @@ export default function AIAgentMastery() {
       </div>
 
       {/* What you'll learn */}
-      <div className="bg-[#FBFAFF] dark:bg-[#141416] border-y border-border-soft px-4 sm:px-6 lg:px-[5vw] py-16">
+      <div className="bg-[#F6F8FB] dark:bg-[#141416] border-y border-border-soft px-4 sm:px-6 lg:px-[5vw] py-16">
         <div className="max-w-3xl mx-auto">
           <SectionHeading eyebrow="By the end of the cohort">What you'll walk away knowing</SectionHeading>
           <div className="grid sm:grid-cols-2 gap-2.5 text-left">
@@ -465,7 +465,7 @@ export default function AIAgentMastery() {
         <SectionHeading eyebrow="Who is this for">Built for people who want their time back</SectionHeading>
         <div className="grid sm:grid-cols-2 gap-3 max-w-3xl mx-auto">
           {WHO_FOR.map((w) => (
-            <div key={w.title} className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl p-4.5">
+            <div key={w.title} className="bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-2xl p-4.5">
               <h3 className="font-display font-bold text-[13.5px] text-ink mb-1.5">{w.title}</h3>
               <p className="text-[12px] text-body leading-relaxed">{w.text}</p>
             </div>
@@ -475,8 +475,8 @@ export default function AIAgentMastery() {
 
       {/* Guardrails note — sets expectations about an assistant that acts on your behalf */}
       <div className="px-4 sm:px-6 lg:px-[5vw] pb-16 max-w-3xl mx-auto">
-        <div className="flex items-start gap-3 bg-[#F3EBFF] dark:bg-brand/10 rounded-2xl p-5">
-          <ShieldCheck className="w-5 h-5 text-brand mt-0.5 flex-shrink-0" />
+        <div className="flex items-start gap-3 bg-[#E8EDF3] dark:bg-brand/10 rounded-2xl p-5">
+          <ShieldCheck className="w-5 h-5 text-link mt-0.5 flex-shrink-0" />
           <p className="text-[13.5px] text-body-strong leading-relaxed">
             An assistant that can send emails and manage your calendar needs real guardrails, not blind trust — a core
             part of the cohort is building in the checks that keep your agent asking before it acts on anything risky.
@@ -488,7 +488,7 @@ export default function AIAgentMastery() {
       <div className="px-4 sm:px-6 lg:px-[5vw] pb-16 max-w-5xl mx-auto">
         <SectionHeading>Is AI Agent Mastery for you?</SectionHeading>
         <div className="grid sm:grid-cols-2 gap-4 max-w-3xl mx-auto">
-          <div className="bg-white dark:bg-[#181818] border-[2px] border-green rounded-2xl p-6">
+          <div className="bg-white dark:bg-[#131E2F] border-[2px] border-green rounded-2xl p-6">
             <h3 className="font-display font-bold text-base text-ink mb-4">This is for you if…</h3>
             <ul className="flex flex-col gap-2.5">
               {FOR_YOU.map((item) => (
@@ -496,7 +496,7 @@ export default function AIAgentMastery() {
               ))}
             </ul>
           </div>
-          <div className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl p-6">
+          <div className="bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-2xl p-6">
             <h3 className="font-display font-bold text-base text-ink mb-4">This might not be for you if…</h3>
             <ul className="flex flex-col gap-2.5">
               {NOT_FOR_YOU.map((item) => (
@@ -516,9 +516,9 @@ export default function AIAgentMastery() {
         <SectionHeading>Your questions, answered</SectionHeading>
         <div className="grid sm:grid-cols-2 gap-3.5 max-w-3xl mx-auto">
           {FAQS.map((item) => (
-            <div key={item.q} className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl p-4.5">
+            <div key={item.q} className="bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-2xl p-4.5">
               <div className="flex items-start gap-2.5 mb-1.5">
-                <CircleHelp className="w-4 h-4 text-brand mt-0.5 flex-shrink-0" />
+                <CircleHelp className="w-4 h-4 text-link mt-0.5 flex-shrink-0" />
                 <span className="font-display font-bold text-[14px] text-ink">{item.q}</span>
               </div>
               <p className="text-[13px] text-body leading-relaxed m-0 pl-6.5">{item.a}</p>
@@ -532,13 +532,13 @@ export default function AIAgentMastery() {
         <SectionHeading eyebrow="Your investment">Join the cohort</SectionHeading>
 
         {checkoutError && (
-          <div className="max-w-md mx-auto mb-6 flex items-start gap-2 text-sm text-rose bg-[#FDEEF4] dark:bg-rose/10 border border-rose/20 rounded-lg px-3 py-2.5 text-left">
+          <div className="max-w-md mx-auto mb-6 flex items-start gap-2 text-sm text-rose bg-[#FBEAE9] dark:bg-rose/10 border border-rose/20 rounded-lg px-3 py-2.5 text-left">
             <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
             {checkoutError}
           </div>
         )}
 
-        <div className="rounded-[24px] border-[2.5px] border-brand bg-[#FAF7FF] dark:bg-[#181022] p-7 sm:p-8 relative">
+        <div className="rounded-[24px] border-[2.5px] border-brand bg-[#F6F8FB] dark:bg-[#131E2F] p-7 sm:p-8 relative">
           <span className="absolute -top-3.5 left-7 bg-brand text-white text-[11px] font-extrabold px-3.5 py-1.5 rounded-full">
             LIVE COHORT
           </span>
@@ -551,7 +551,7 @@ export default function AIAgentMastery() {
           {hasScholarship && (
             <p className="text-[12.5px] font-bold text-green mb-3">Scholarship price applied</p>
           )}
-          <span className="inline-flex items-center gap-1 bg-white dark:bg-[#141319] text-brand font-bold text-[12px] px-2.5 py-1 rounded-full w-fit mb-4">
+          <span className="inline-flex items-center gap-1 bg-white dark:bg-[#131E2F] text-link font-bold text-[12px] px-2.5 py-1 rounded-full w-fit mb-4">
             <CalendarDays className="w-3.5 h-3.5" /> Next cohort: <CohortRange />
           </span>
           <ul className="flex flex-col gap-2.5 mb-6">
@@ -578,7 +578,7 @@ export default function AIAgentMastery() {
             <button
               onClick={() => checkout('aimastery')}
               disabled={checkoutLoading === 'aimastery'}
-              className="flex items-center justify-center gap-2 w-full bg-brand hover:bg-brand-deep disabled:opacity-60 text-white font-extrabold px-5 py-3.5 rounded-xl shadow-[0_10px_22px_rgba(124,58,237,.35)] transition-colors"
+              className="flex items-center justify-center gap-2 w-full bg-brand hover:bg-brand-deep disabled:opacity-60 text-white font-extrabold px-5 py-3.5 rounded-xl shadow-[0_10px_22px_rgba(15,26,42,.35)] transition-colors"
             >
               {checkoutLoading === 'aimastery' ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
               {checkoutLoading === 'aimastery' ? 'Starting checkout…' : `Join the cohort — ₦${price.toLocaleString()} →`}
@@ -587,7 +587,7 @@ export default function AIAgentMastery() {
 
           {!hasAiMastery && !hasScholarship && isScholarshipOpen() && (
             <p className="text-[13px] text-body mt-3">
-              <Link to="/scholarship" className="font-bold text-brand hover:underline">Apply for a scholarship →</Link>
+              <Link to="/scholarship" className="font-bold text-link hover:underline">Apply for a scholarship →</Link>
             </p>
           )}
 
@@ -601,14 +601,14 @@ export default function AIAgentMastery() {
       {/* Final CTA */}
       <div className="px-4 sm:px-6 lg:px-[5vw] pb-16 max-w-6xl mx-auto">
         <div
-          className="rounded-[24px] px-8 sm:px-10 py-9 flex items-center justify-between flex-wrap gap-5 shadow-[0_20px_44px_-16px_rgba(124,58,237,.6)]"
-          style={{ background: 'linear-gradient(120deg, #7C3AED, #9D5CFF)' }}
+          className="rounded-[24px] px-8 sm:px-10 py-9 flex items-center justify-between flex-wrap gap-5 shadow-[0_20px_44px_-16px_rgba(15,26,42,.6)]"
+          style={{ background: '#264D73' }}
         >
           <div>
             <h2 className="font-display font-extrabold text-2xl sm:text-[26px] text-white m-0 flex items-center gap-2.5">
               <Bot className="w-6 h-6" /> Ready to build your assistant?
             </h2>
-            <p className="text-[#EDE4FF] mt-2 mb-0 text-[15px]">Live cohort. One agent that actually runs your busywork.</p>
+            <p className="text-[#D5DEE9] mt-2 mb-0 text-[15px]">Live cohort. One agent that actually runs your busywork.</p>
           </div>
           <a
             href="#pricing"

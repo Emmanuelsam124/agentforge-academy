@@ -16,7 +16,7 @@ const TRACKS = [
   },
   {
     tag: "⚡ Builder 2 · What's next",
-    tagClass: 'bg-[#F3EBFF] dark:bg-brand/15 text-brand',
+    tagClass: 'bg-[#E8EDF3] dark:bg-brand/15 text-link',
     borderClass: 'border-border-soft border-[1.5px]',
     title: 'The next level',
     text: `${builder2Count} multi-step, API-integrated builds — waiting once you've shipped your first few agents.`,
@@ -55,7 +55,7 @@ export default function LearningTrackSlide() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.1 + i * 0.15 }}
-              className={`bg-white dark:bg-[#181818] border ${track.borderClass} rounded-2xl p-5 w-full text-left`}
+              className={`bg-white dark:bg-[#131E2F] border ${track.borderClass} rounded-2xl p-5 w-full text-left`}
             >
               <span className={`inline-flex items-center gap-1.5 font-bold text-[11px] px-2.5 py-1 rounded-full mb-3 ${track.tagClass}`}>
                 {track.tag}

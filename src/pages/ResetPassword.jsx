@@ -66,18 +66,18 @@ export default function ResetPassword() {
       className="relative overflow-hidden min-h-[calc(100vh-4rem)] flex items-center justify-center px-4"
       style={{
         background: theme === 'dark'
-          ? 'radial-gradient(120% 100% at 85% 0%, #181022 0%, #0A090F 55%)'
-          : 'radial-gradient(120% 100% at 85% 0%, #F3EBFF 0%, #FBFAFF 55%)',
+          ? '#0C1420'
+          : '#F6F8FB',
       }}
     >
       <m.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md rounded-[22px] border-[1.5px] border-border-soft bg-white dark:bg-[#181818] shadow-[0_20px_44px_-16px_rgba(124,58,237,.18)] p-6 sm:p-8"
+        className="w-full max-w-md rounded-[22px] border-[1.5px] border-border-soft bg-white dark:bg-[#131E2F] shadow-[0_20px_44px_-16px_rgba(15,26,42,.18)] p-6 sm:p-8"
       >
         {checking ? (
           <div className="flex flex-col items-center text-center py-8 gap-3">
-            <Loader2 className="w-6 h-6 animate-spin text-brand" />
+            <Loader2 className="w-6 h-6 animate-spin text-link" />
             <p className="text-sm text-body">Checking your reset link…</p>
           </div>
         ) : success ? (
@@ -90,7 +90,7 @@ export default function ResetPassword() {
           </div>
         ) : !user ? (
           <div className="text-center py-6">
-            <div className="w-14 h-14 rounded-full bg-[#FDEEF4] dark:bg-rose/10 border border-rose/30 flex items-center justify-center mx-auto mb-4">
+            <div className="w-14 h-14 rounded-full bg-[#FBEAE9] dark:bg-rose/10 border border-rose/30 flex items-center justify-center mx-auto mb-4">
               <AlertCircle className="w-6 h-6 text-rose" />
             </div>
             <h1 className="font-display text-xl font-bold text-ink mb-2">This link has expired</h1>
@@ -121,7 +121,7 @@ export default function ResetPassword() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="At least 6 characters"
-                    className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-white dark:bg-[#0A090F] border border-border dark:border-[#353539] text-sm text-ink placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-white dark:bg-[#0C1420] border border-border dark:border-[#26364B] text-sm text-ink placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand"
                   />
                 </div>
               </div>
@@ -137,13 +137,13 @@ export default function ResetPassword() {
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="Re-enter your password"
-                    className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-white dark:bg-[#0A090F] border border-border dark:border-[#353539] text-sm text-ink placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-white dark:bg-[#0C1420] border border-border dark:border-[#26364B] text-sm text-ink placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand"
                   />
                 </div>
               </div>
 
               {error && (
-                <div className="flex items-start gap-2 text-sm text-rose bg-[#FDEEF4] dark:bg-rose/10 border border-rose/20 rounded-lg px-3 py-2.5">
+                <div className="flex items-start gap-2 text-sm text-rose bg-[#FBEAE9] dark:bg-rose/10 border border-rose/20 rounded-lg px-3 py-2.5">
                   <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
                   {error}
                 </div>
@@ -152,7 +152,7 @@ export default function ResetPassword() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-2 bg-brand hover:bg-brand-deep disabled:opacity-50 text-white font-bold rounded-lg px-5 py-3 shadow-[0_10px_22px_rgba(124,58,237,.35)] transition-colors"
+                className="w-full flex items-center justify-center gap-2 bg-brand hover:bg-brand-deep disabled:opacity-50 text-white font-bold rounded-lg px-5 py-3 shadow-[0_10px_22px_rgba(15,26,42,.35)] transition-colors"
               >
                 {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Lock className="w-4 h-4" />}
                 Update password

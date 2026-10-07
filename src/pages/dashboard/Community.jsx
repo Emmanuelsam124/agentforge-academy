@@ -14,7 +14,7 @@ function renderBody(body) {
   const parts = body.split(new RegExp(`(${MENTION_TOKEN.source})`, 'gi'));
   return parts.map((part, i) =>
     /^@[a-z0-9_]+$/i.test(part)
-      ? <span key={i} className="font-bold text-brand">{part}</span>
+      ? <span key={i} className="font-bold text-link">{part}</span>
       : <span key={i}>{part}</span>,
   );
 }
@@ -114,7 +114,7 @@ function ChannelRoom({ channel, currentUserId, isAdmin }) {
   };
 
   return (
-    <div className="bg-white dark:bg-[#181818] border border-border-soft rounded-2xl flex flex-col h-[65vh] min-h-[420px]">
+    <div className="bg-white dark:bg-[#131E2F] border border-border-soft rounded-2xl flex flex-col h-[65vh] min-h-[420px]">
       {channel.description && (
         <p className="text-[12px] text-gray-400 px-5 pt-4 pb-1 border-b border-border-soft">
           {channel.description}
@@ -124,7 +124,7 @@ function ChannelRoom({ channel, currentUserId, isAdmin }) {
       <div className="flex-1 overflow-y-auto px-5 py-4 flex flex-col gap-4">
         {loading ? (
           <div className="flex-1 flex items-center justify-center">
-            <Loader2 className="w-5 h-5 animate-spin text-brand" />
+            <Loader2 className="w-5 h-5 animate-spin text-link" />
           </div>
         ) : error ? (
           <p className="text-sm text-rose-600 text-center py-6">{error}</p>
@@ -158,7 +158,7 @@ function ChannelRoom({ channel, currentUserId, isAdmin }) {
                     <button
                       type="button"
                       onClick={() => { setReplyTo(m); textareaRef.current?.focus(); }}
-                      className="flex items-center gap-1 text-[11px] font-semibold text-gray-400 hover:text-brand"
+                      className="flex items-center gap-1 text-[11px] font-semibold text-gray-400 hover:text-link"
                     >
                       <CornerUpLeft className="w-3 h-3" /> Reply
                     </button>
@@ -182,7 +182,7 @@ function ChannelRoom({ channel, currentUserId, isAdmin }) {
 
       <form onSubmit={handleSend} className="border-t border-border-soft p-3 relative">
         {replyTo && (
-          <div className="flex items-center justify-between gap-2 bg-[#FAF8FF] dark:bg-white/5 rounded-lg px-3 py-1.5 mb-2 text-[12px] text-body">
+          <div className="flex items-center justify-between gap-2 bg-[#F6F8FB] dark:bg-white/5 rounded-lg px-3 py-1.5 mb-2 text-[12px] text-body">
             <span className="truncate">
               Replying to <span className="font-semibold">{memberByUserId(replyTo.user_id)?.display_name || 'a message'}</span>
             </span>
@@ -193,13 +193,13 @@ function ChannelRoom({ channel, currentUserId, isAdmin }) {
         )}
 
         {mentionSuggestions.length > 0 && (
-          <div className="absolute bottom-full left-3 mb-1 bg-white dark:bg-[#181818] border border-border-soft rounded-xl shadow-lg overflow-hidden w-56 z-10">
+          <div className="absolute bottom-full left-3 mb-1 bg-white dark:bg-[#131E2F] border border-border-soft rounded-xl shadow-lg overflow-hidden w-56 z-10">
             {mentionSuggestions.map((m) => (
               <button
                 key={m.user_id}
                 type="button"
                 onClick={() => applyMention(m)}
-                className="w-full text-left px-3 py-2 text-[13px] hover:bg-[#FAF8FF] dark:hover:bg-white/5 flex items-center gap-2"
+                className="w-full text-left px-3 py-2 text-[13px] hover:bg-[#F6F8FB] dark:hover:bg-white/5 flex items-center gap-2"
               >
                 <Avatar name={m.display_name} />
                 <span className="truncate">
@@ -225,7 +225,7 @@ function ChannelRoom({ channel, currentUserId, isAdmin }) {
             placeholder="Message the class… use @ to mention someone"
             rows={1}
             maxLength={1000}
-            className="flex-1 resize-none rounded-xl border border-border-soft bg-[#FAF8FF] dark:bg-white/5 px-3.5 py-2.5 text-[13.5px] text-ink focus:outline-none focus:ring-2 focus:ring-brand/40"
+            className="flex-1 resize-none rounded-xl border border-border-soft bg-[#F6F8FB] dark:bg-white/5 px-3.5 py-2.5 text-[13.5px] text-ink focus:outline-none focus:ring-2 focus:ring-brand/40"
           />
           <button
             type="submit"
@@ -251,15 +251,15 @@ export default function Community() {
   if (channelsLoading) {
     return (
       <div className="py-16 text-center">
-        <Loader2 className="w-6 h-6 animate-spin text-brand mx-auto" />
+        <Loader2 className="w-6 h-6 animate-spin text-link mx-auto" />
       </div>
     );
   }
 
   if (channels.length === 0) {
     return (
-      <div className="bg-white dark:bg-[#181818] border border-border-soft rounded-2xl p-6 sm:p-8 text-center">
-        <MessagesSquare className="w-8 h-8 text-brand mx-auto mb-3" />
+      <div className="bg-white dark:bg-[#131E2F] border border-border-soft rounded-2xl p-6 sm:p-8 text-center">
+        <MessagesSquare className="w-8 h-8 text-link mx-auto mb-3" />
         <h1 className="font-display text-xl font-extrabold text-ink mb-1.5">Community</h1>
         <p className="text-body max-w-sm mx-auto">
           Enroll in any class to unlock its community room, plus the general room for everyone.
@@ -272,7 +272,7 @@ export default function Community() {
     <div className="space-y-4">
       <div>
         <h1 className="font-display text-2xl font-extrabold text-ink flex items-center gap-2.5">
-          <MessagesSquare className="w-6 h-6 text-brand" /> Community
+          <MessagesSquare className="w-6 h-6 text-link" /> Community
         </h1>
         <p className="text-body mt-1.5">Text and emoji only — say hi, ask questions, help each other out.</p>
       </div>
@@ -287,7 +287,7 @@ export default function Community() {
             className={`flex-shrink-0 text-[13px] font-bold px-3.5 py-2 rounded-full border-[1.5px] transition-colors ${
               c.id === activeChannelId
                 ? 'bg-brand text-white border-brand'
-                : 'bg-white dark:bg-[#181818] text-body-strong border-border-soft hover:border-brand'
+                : 'bg-white dark:bg-[#131E2F] text-body-strong border-border-soft hover:border-brand'
             }`}
           >
             {c.name}

@@ -47,7 +47,7 @@ export default function TheOfferSlide() {
   return (
     <SlideShell decorations>
       <div className="text-center mb-8">
-        <span className="inline-flex items-center gap-2 text-[13px] font-bold px-4 py-1.5 rounded-full bg-[#F3EBFF] dark:bg-brand/15 text-brand mb-3">
+        <span className="inline-flex items-center gap-2 text-[13px] font-bold px-4 py-1.5 rounded-full bg-[#E8EDF3] dark:bg-brand/15 text-link mb-3">
           The offer
         </span>
         <h2 className="font-display font-extrabold text-[26px] sm:text-[38px] text-ink tracking-[-.8px]">Start Builder 1 today.</h2>
@@ -58,7 +58,7 @@ export default function TheOfferSlide() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="rounded-[22px] border-[2.5px] border-brand bg-white dark:bg-[#181818] p-7.5"
+          className="rounded-[22px] border-[2.5px] border-brand bg-white dark:bg-[#131E2F] p-7.5"
         >
           <div className="font-extrabold text-ink text-lg">🌱 Builder 1</div>
           <div className="flex items-baseline gap-2.5 mt-2.5 mb-0.5">
@@ -70,7 +70,7 @@ export default function TheOfferSlide() {
               <Tag className="w-3 h-3" /> Save ₦{BUILDER_SAVINGS.toLocaleString()} · {BUILDER_SAVINGS_PERCENT}% off
             </span>
             {builder1Cohort && (
-              <span className="inline-flex items-center gap-1 bg-[#F3EBFF] dark:bg-brand/15 text-brand font-bold text-[11.5px] px-2.5 py-1 rounded-full">
+              <span className="inline-flex items-center gap-1 bg-[#E8EDF3] dark:bg-brand/15 text-link font-bold text-[11.5px] px-2.5 py-1 rounded-full">
                 <CalendarDays className="w-3 h-3" /> Cohort starts {builder1Cohort}
               </span>
             )}
@@ -84,7 +84,7 @@ export default function TheOfferSlide() {
           </ul>
           <Link
             to="/pricing"
-            className="flex items-center justify-center gap-2 w-full bg-brand hover:bg-brand-deep text-white font-extrabold px-6 py-3.5 rounded-xl shadow-[0_10px_22px_rgba(124,58,237,.35)] transition-colors"
+            className="flex items-center justify-center gap-2 w-full bg-brand hover:bg-brand-deep text-white font-extrabold px-6 py-3.5 rounded-xl shadow-[0_10px_22px_rgba(15,26,42,.35)] transition-colors"
           >
             Claim Builder 1 →
           </Link>
@@ -99,12 +99,12 @@ export default function TheOfferSlide() {
           transition={{ delay: 0.25 }}
           className="flex flex-col gap-4"
         >
-          <div className="bg-[#FAF8FF] dark:bg-white/5 border border-border-soft rounded-2xl p-5">
+          <div className="bg-[#F6F8FB] dark:bg-white/5 border border-border-soft rounded-2xl p-5">
             <div className="text-[11px] font-bold uppercase tracking-wide text-body mb-3">What happens after you pay</div>
             <ul className="flex flex-col gap-2.5">
               {AFTER_PAYMENT.map((step) => (
                 <li key={step.text} className="flex items-center gap-2.5 text-[13px] text-body-strong">
-                  <step.icon className="w-4 h-4 text-brand flex-shrink-0" /> {step.text}
+                  <step.icon className="w-4 h-4 text-link flex-shrink-0" /> {step.text}
                 </li>
               ))}
             </ul>

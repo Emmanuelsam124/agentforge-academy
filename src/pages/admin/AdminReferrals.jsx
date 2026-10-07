@@ -61,7 +61,7 @@ export default function AdminReferrals() {
     <div>
       <div className="flex items-center justify-between mb-5">
         <h1 className="font-display text-3xl font-extrabold text-ink flex items-center gap-3">
-          <Gift className="w-7 h-7 text-brand" />
+          <Gift className="w-7 h-7 text-link" />
           Referral Payouts
         </h1>
         {earnings.length > 0 && status === 'pending' && (
@@ -79,7 +79,7 @@ export default function AdminReferrals() {
             className={`text-[13px] font-semibold px-4 py-2 rounded-full border transition-colors ${
               status === t.id
                 ? 'bg-brand text-white border-brand'
-                : 'bg-white dark:bg-[#181818] text-body-strong border-border hover:border-brand/40'
+                : 'bg-white dark:bg-[#131E2F] text-body-strong border-border hover:border-brand/40'
             }`}
           >
             {t.label}
@@ -88,16 +88,16 @@ export default function AdminReferrals() {
       </div>
 
       {error && (
-        <div className="flex items-start gap-2 text-sm text-rose bg-[#FDEEF4] dark:bg-rose/10 border border-rose/20 rounded-lg px-4 py-3 mb-6">
+        <div className="flex items-start gap-2 text-sm text-rose bg-[#FBEAE9] dark:bg-rose/10 border border-rose/20 rounded-lg px-4 py-3 mb-6">
           <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
           {error}
         </div>
       )}
 
-      <div className="rounded-2xl border border-border-soft overflow-hidden bg-white dark:bg-[#181818]">
+      <div className="rounded-2xl border border-border-soft overflow-hidden bg-white dark:bg-[#131E2F]">
         {loading ? (
           <div className="px-5 py-12 text-center">
-            <Loader2 className="w-6 h-6 animate-spin text-brand mx-auto" />
+            <Loader2 className="w-6 h-6 animate-spin text-link mx-auto" />
           </div>
         ) : earnings.length === 0 ? (
           <div className="px-5 py-12 text-center text-gray-400 text-sm">
@@ -110,7 +110,7 @@ export default function AdminReferrals() {
                 <div className="flex items-center gap-2 flex-wrap mb-0.5">
                   <span className="font-semibold text-ink text-sm">{e.referrer_display_name}</span>
                   <span className="text-[11px] font-semibold text-gray-400">{e.referrer_email}</span>
-                  <span className="text-[11px] font-bold text-brand bg-[#F3EBFF] dark:bg-brand/15 px-2 py-0.5 rounded-full">
+                  <span className="text-[11px] font-bold text-link bg-[#E8EDF3] dark:bg-brand/15 px-2 py-0.5 rounded-full">
                     {e.code}
                   </span>
                 </div>

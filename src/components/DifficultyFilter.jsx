@@ -10,7 +10,7 @@ export default function DifficultyFilter({ difficulty, onDifficultyChange, sort,
         <button
           onClick={() => onDifficultyChange('All')}
           className={`font-bold text-[13px] px-3.5 py-2 rounded-full border-[1.5px] transition-colors ${
-            difficulty === 'All' ? 'bg-brand border-brand text-white' : 'bg-[#FAF8FF] dark:bg-[#181818] border-border text-body-strong hover:border-brand/50'
+            difficulty === 'All' ? 'bg-brand border-brand text-white' : 'bg-[#F6F8FB] dark:bg-[#131E2F] border-border text-body-strong hover:border-brand/50'
           }`}
         >
           All Levels
@@ -22,7 +22,7 @@ export default function DifficultyFilter({ difficulty, onDifficultyChange, sort,
               key={level.id}
               onClick={() => onDifficultyChange(level.id)}
               className={`flex items-center gap-1.5 font-bold text-[13px] px-3.5 py-2 rounded-full border-[1.5px] transition-colors ${
-                active ? 'text-white' : 'bg-[#FAF8FF] dark:bg-[#181818] border-border text-body-strong hover:border-brand/50'
+                active ? 'text-white' : 'bg-[#F6F8FB] dark:bg-[#131E2F] border-border text-body-strong hover:border-brand/50'
               }`}
               style={active ? { background: level.color, borderColor: level.color } : undefined}
             >
@@ -38,7 +38,7 @@ export default function DifficultyFilter({ difficulty, onDifficultyChange, sort,
         <select
           value={sort}
           onChange={(e) => onSortChange(e.target.value)}
-          className="appearance-none pl-3.5 pr-9 py-2.5 rounded-xl bg-white dark:bg-[#181818] border border-border text-sm font-semibold text-body-strong focus:outline-none focus:ring-2 focus:ring-brand/40 cursor-pointer"
+          className="appearance-none pl-3.5 pr-9 py-2.5 rounded-xl bg-white dark:bg-[#131E2F] border border-border text-sm font-semibold text-body-strong focus:outline-none focus:ring-2 focus:ring-brand/40 cursor-pointer"
         >
           {sortOptions.map((opt) => (
             <option key={opt} value={opt}>

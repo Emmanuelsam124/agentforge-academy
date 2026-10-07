@@ -25,7 +25,7 @@ export default function MakeMoneyFromThisSlide() {
   return (
     <SlideShell decorations>
       <div className="text-center mb-7">
-        <span className="inline-flex items-center gap-2 text-[13px] font-bold px-4 py-1.5 rounded-full bg-[#F3EBFF] dark:bg-brand/15 text-brand mb-3">
+        <span className="inline-flex items-center gap-2 text-[13px] font-bold px-4 py-1.5 rounded-full bg-[#E8EDF3] dark:bg-brand/15 text-link mb-3">
           Beyond your own work
         </span>
         <h2 className="font-display font-extrabold text-[26px] sm:text-[38px] text-ink tracking-[-.8px]">You can get paid for this.</h2>
@@ -37,7 +37,7 @@ export default function MakeMoneyFromThisSlide() {
       <m.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col sm:flex-row items-center sm:items-start gap-5 bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl p-5 max-w-2xl mx-auto mb-7"
+        className="flex flex-col sm:flex-row items-center sm:items-start gap-5 bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-2xl p-5 max-w-2xl mx-auto mb-7"
       >
         <img
           src={CLIENT_STORY.photo}
@@ -46,7 +46,7 @@ export default function MakeMoneyFromThisSlide() {
         />
         <div className="text-center sm:text-left">
           <span className="font-display font-bold text-ink text-[15px] block mb-1">{CLIENT_STORY.name}</span>
-          <span className="inline-block text-[11px] font-bold text-brand bg-[#F3EBFF] dark:bg-brand/15 rounded-full px-2.5 py-1 mb-2">
+          <span className="inline-block text-[11px] font-bold text-link bg-[#E8EDF3] dark:bg-brand/15 rounded-full px-2.5 py-1 mb-2">
             {CLIENT_STORY.tag}
           </span>
           <p className="text-[13.5px] text-body-strong leading-relaxed m-0">{CLIENT_STORY.summary}</p>
@@ -60,9 +60,9 @@ export default function MakeMoneyFromThisSlide() {
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 + 0.1 * i }}
-            className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-2xl p-4"
+            className="bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-2xl p-4"
           >
-            <div className="w-9 h-9 rounded-lg bg-[#F3EBFF] dark:bg-brand/15 text-brand flex items-center justify-center mb-2.5">
+            <div className="w-9 h-9 rounded-lg bg-[#E8EDF3] dark:bg-brand/15 text-link flex items-center justify-center mb-2.5">
               <p.icon className="w-4.5 h-4.5" />
             </div>
             <h3 className="font-display font-bold text-[13.5px] text-ink mb-1">{p.label}</h3>

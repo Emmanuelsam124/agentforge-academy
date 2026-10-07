@@ -75,22 +75,22 @@ export default function Navbar() {
   const initial = displayName.charAt(0).toUpperCase();
 
   return (
-    <header className="sticky top-0 z-40 bg-[#FFFDFF] dark:bg-[#0A090F] border-b border-[#EFE9FB] dark:border-[#232228]">
+    <header className="sticky top-0 z-40 bg-[#FFFFFF] dark:bg-[#0C1420] border-b border-[#E7ECF2] dark:border-[#26364B]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[70px] flex items-center gap-4">
         <Link to="/" className="flex items-center gap-2.5 flex-shrink-0">
           <img src="/logo-icon.webp" alt="" className="w-9 h-9 sm:w-10 sm:h-10 object-contain rounded-lg" />
           <span className="font-display font-extrabold text-[15px] sm:text-base text-ink tracking-tight whitespace-nowrap">
-            Social Dev<span className="text-brand"> Technologies</span>
+            Social Dev<span className="text-link"> Technologies</span>
           </span>
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-6 ml-6 font-semibold text-[14.5px] text-[#4A4463] dark:text-[#B7AFC9] flex-shrink-0">
+        <nav className="hidden lg:flex items-center gap-6 ml-6 font-semibold text-[14.5px] text-[#4A5B6C] dark:text-[#A2B1C3] flex-shrink-0">
           {links.map((link) =>
             link.children ? (
               <div key={link.label} className="relative group flex-shrink-0">
                 <button
                   className={`flex items-center gap-1 whitespace-nowrap transition-colors ${
-                    link.children.some((c) => location.pathname.startsWith(c.to)) ? 'text-brand' : 'hover:text-ink'
+                    link.children.some((c) => location.pathname.startsWith(c.to)) ? 'text-link' : 'hover:text-ink'
                   }`}
                 >
                   {link.label}
@@ -99,7 +99,7 @@ export default function Navbar() {
                 {/* Hover-opened, but rendered in the DOM at all times so the
                     links inside are always crawlable. */}
                 <div className="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity">
-                  <div className="w-44 bg-white dark:bg-[#141319] border border-[#EFE9FB] dark:border-[#232228] rounded-xl shadow-[0_16px_40px_-12px_rgba(30,20,60,.3)] py-1.5 overflow-hidden">
+                  <div className="w-44 bg-white dark:bg-[#131E2F] border border-[#E7ECF2] dark:border-[#26364B] rounded-xl shadow-[0_16px_40px_-12px_rgba(15,26,42,.3)] py-1.5 overflow-hidden">
                     {link.children.map((child) => (
                       <NavLink
                         key={child.to}
@@ -107,8 +107,8 @@ export default function Navbar() {
                         className={({ isActive }) =>
                           `block px-4 py-2.5 text-sm font-semibold transition-colors ${
                             isActive
-                              ? 'text-brand bg-[#F7F4FF] dark:bg-white/5'
-                              : 'text-[#4A4463] dark:text-[#B7AFC9] hover:bg-[#FAF8FF] dark:hover:bg-white/5'
+                              ? 'text-link bg-[#F1F4F8] dark:bg-white/5'
+                              : 'text-[#4A5B6C] dark:text-[#A2B1C3] hover:bg-[#F6F8FB] dark:hover:bg-white/5'
                           }`
                         }
                       >
@@ -123,7 +123,7 @@ export default function Navbar() {
                 key={link.to}
                 to={link.to}
                 end={link.to === '/'}
-                className={({ isActive }) => `flex-shrink-0 whitespace-nowrap transition-colors ${isActive ? 'text-brand' : 'hover:text-ink'}`}
+                className={({ isActive }) => `flex-shrink-0 whitespace-nowrap transition-colors ${isActive ? 'text-link' : 'hover:text-ink'}`}
               >
                 {link.label}
               </NavLink>
@@ -139,7 +139,7 @@ export default function Navbar() {
           <button
             onClick={toggleTheme}
             aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
-            className="w-9 h-9 flex items-center justify-center rounded-lg bg-[#F3EBFF] dark:bg-white/10 text-brand flex-shrink-0 transition-colors"
+            className="w-9 h-9 flex items-center justify-center rounded-lg bg-[#E8EDF3] dark:bg-white/10 text-link flex-shrink-0 transition-colors"
           >
             {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           </button>
@@ -147,7 +147,7 @@ export default function Navbar() {
             <div className="relative flex-shrink-0" ref={menuRef}>
               <button
                 onClick={() => setMenuOpen((o) => !o)}
-                className="flex items-center gap-2 pl-2 pr-2.5 py-1.5 rounded-full hover:bg-[#F7F4FF] dark:hover:bg-white/5 transition-colors"
+                className="flex items-center gap-2 pl-2 pr-2.5 py-1.5 rounded-full hover:bg-[#F1F4F8] dark:hover:bg-white/5 transition-colors"
               >
                 <div className="w-8 h-8 rounded-full bg-brand text-white flex items-center justify-center font-extrabold text-[13px] flex-shrink-0">
                   {initial}
@@ -172,13 +172,13 @@ export default function Navbar() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -6 }}
                     transition={{ duration: 0.15 }}
-                    className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-[#141319] border border-[#EFE9FB] dark:border-[#232228] rounded-xl shadow-[0_16px_40px_-12px_rgba(30,20,60,.3)] py-1.5 overflow-hidden"
+                    className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-[#131E2F] border border-[#E7ECF2] dark:border-[#26364B] rounded-xl shadow-[0_16px_40px_-12px_rgba(15,26,42,.3)] py-1.5 overflow-hidden"
                   >
                     <NavLink
                       to="/dashboard"
                       onClick={() => setMenuOpen(false)}
                       className={({ isActive }) =>
-                        `flex items-center gap-2.5 px-4 py-2.5 text-sm font-semibold transition-colors ${isActive ? 'text-brand bg-[#F7F4FF] dark:bg-white/5' : 'text-[#4A4463] dark:text-[#B7AFC9] hover:bg-[#FAF8FF] dark:hover:bg-white/5'}`
+                        `flex items-center gap-2.5 px-4 py-2.5 text-sm font-semibold transition-colors ${isActive ? 'text-link bg-[#F1F4F8] dark:bg-white/5' : 'text-[#4A5B6C] dark:text-[#A2B1C3] hover:bg-[#F6F8FB] dark:hover:bg-white/5'}`
                       }
                     >
                       <LayoutDashboard className="w-4 h-4" /> My Dashboard
@@ -187,7 +187,7 @@ export default function Navbar() {
                       to="/certificates"
                       onClick={() => setMenuOpen(false)}
                       className={({ isActive }) =>
-                        `flex items-center gap-2.5 px-4 py-2.5 text-sm font-semibold transition-colors ${isActive ? 'text-brand bg-[#F7F4FF] dark:bg-white/5' : 'text-[#4A4463] dark:text-[#B7AFC9] hover:bg-[#FAF8FF] dark:hover:bg-white/5'}`
+                        `flex items-center gap-2.5 px-4 py-2.5 text-sm font-semibold transition-colors ${isActive ? 'text-link bg-[#F1F4F8] dark:bg-white/5' : 'text-[#4A5B6C] dark:text-[#A2B1C3] hover:bg-[#F6F8FB] dark:hover:bg-white/5'}`
                       }
                     >
                       <Award className="w-4 h-4" /> Certificates
@@ -197,16 +197,16 @@ export default function Navbar() {
                         to="/admin"
                         onClick={() => setMenuOpen(false)}
                         className={({ isActive }) =>
-                          `flex items-center gap-2.5 px-4 py-2.5 text-sm font-semibold transition-colors ${isActive ? 'text-brand bg-[#F7F4FF] dark:bg-white/5' : 'text-amber-600 hover:bg-[#FAF8FF] dark:hover:bg-white/5'}`
+                          `flex items-center gap-2.5 px-4 py-2.5 text-sm font-semibold transition-colors ${isActive ? 'text-link bg-[#F1F4F8] dark:bg-white/5' : 'text-amber-600 hover:bg-[#F6F8FB] dark:hover:bg-white/5'}`
                         }
                       >
                         <Shield className="w-4 h-4" /> Admin
                       </NavLink>
                     )}
-                    <div className="border-t border-[#EFE9FB] dark:border-[#232228] my-1" />
+                    <div className="border-t border-[#E7ECF2] dark:border-[#26364B] my-1" />
                     <button
                       onClick={() => { setMenuOpen(false); handleSignOut(); }}
-                      className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm font-semibold text-gray-500 hover:bg-[#FAF8FF] dark:hover:bg-white/5 transition-colors"
+                      className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm font-semibold text-gray-500 hover:bg-[#F6F8FB] dark:hover:bg-white/5 transition-colors"
                     >
                       <LogOut className="w-4 h-4" /> Log out
                     </button>
@@ -216,12 +216,12 @@ export default function Navbar() {
             </div>
           ) : (
             <>
-              <Link to="/welcome" className="font-bold text-brand text-[14.5px] whitespace-nowrap flex-shrink-0">
+              <Link to="/welcome" className="font-bold text-link text-[14.5px] whitespace-nowrap flex-shrink-0">
                 Log in
               </Link>
               <Link
                 to="/welcome"
-                className="bg-brand text-white font-bold px-5 py-2.5 rounded-full text-[14.5px] whitespace-nowrap flex-shrink-0 shadow-[0_6px_16px_rgba(124,58,237,.35)] hover:bg-brand-deep transition-colors"
+                className="bg-brand text-white font-bold px-5 py-2.5 rounded-full text-[14.5px] whitespace-nowrap flex-shrink-0 shadow-[0_6px_16px_rgba(15,26,42,.35)] hover:bg-brand-deep transition-colors"
               >
                 Start building
               </Link>
@@ -233,7 +233,7 @@ export default function Navbar() {
           onClick={() => setOpen((o) => !o)}
           aria-label={open ? 'Close menu' : 'Open menu'}
           aria-expanded={open}
-          className="lg:hidden ml-auto w-9 h-9 flex items-center justify-center rounded-lg bg-[#F3EBFF] dark:bg-white/10 text-brand flex-shrink-0"
+          className="lg:hidden ml-auto w-9 h-9 flex items-center justify-center rounded-lg bg-[#E8EDF3] dark:bg-white/10 text-link flex-shrink-0"
         >
           {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
@@ -245,12 +245,12 @@ export default function Navbar() {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="lg:hidden border-t border-[#EFE9FB] dark:border-[#232228] overflow-hidden bg-white dark:bg-[#0A090F]"
+            className="lg:hidden border-t border-[#E7ECF2] dark:border-[#26364B] overflow-hidden bg-white dark:bg-[#0C1420]"
           >
             <div className="px-4 py-4 flex flex-col gap-1">
               <button
                 onClick={toggleTheme}
-                className="flex items-center gap-2 px-3.5 py-2.5 rounded-lg text-sm font-semibold text-[#4A4463] dark:text-[#B7AFC9] hover:bg-[#FAF8FF] dark:hover:bg-white/5 mb-1"
+                className="flex items-center gap-2 px-3.5 py-2.5 rounded-lg text-sm font-semibold text-[#4A5B6C] dark:text-[#A2B1C3] hover:bg-[#F6F8FB] dark:hover:bg-white/5 mb-1"
               >
                 {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
                 {theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
@@ -270,7 +270,7 @@ export default function Navbar() {
                   onClick={() => setOpen(false)}
                   className={({ isActive }) =>
                     `px-3.5 py-2.5 rounded-lg text-sm font-semibold transition-colors ${
-                      isActive ? 'text-brand bg-[#F3EBFF] dark:bg-white/10' : 'text-[#4A4463] dark:text-[#B7AFC9] hover:bg-[#FAF8FF] dark:hover:bg-white/5'
+                      isActive ? 'text-link bg-[#E8EDF3] dark:bg-white/10' : 'text-[#4A5B6C] dark:text-[#A2B1C3] hover:bg-[#F6F8FB] dark:hover:bg-white/5'
                     }`
                   }
                 >
@@ -278,7 +278,7 @@ export default function Navbar() {
                 </NavLink>
               ))}
 
-              <div className="border-t border-[#EFE9FB] dark:border-[#232228] mt-2 pt-3">
+              <div className="border-t border-[#E7ECF2] dark:border-[#26364B] mt-2 pt-3">
                 {user ? (
                   <>
                     <div className="flex items-center gap-2 px-3.5 py-2 mb-1">
@@ -299,14 +299,14 @@ export default function Navbar() {
                     <NavLink
                       to="/dashboard"
                       onClick={() => setOpen(false)}
-                      className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-lg text-sm font-semibold text-[#4A4463] dark:text-[#B7AFC9] hover:bg-[#FAF8FF] dark:hover:bg-white/5"
+                      className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-lg text-sm font-semibold text-[#4A5B6C] dark:text-[#A2B1C3] hover:bg-[#F6F8FB] dark:hover:bg-white/5"
                     >
                       <LayoutDashboard className="w-4 h-4" /> My Dashboard
                     </NavLink>
                     <NavLink
                       to="/certificates"
                       onClick={() => setOpen(false)}
-                      className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-lg text-sm font-semibold text-[#4A4463] dark:text-[#B7AFC9] hover:bg-[#FAF8FF] dark:hover:bg-white/5"
+                      className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-lg text-sm font-semibold text-[#4A5B6C] dark:text-[#A2B1C3] hover:bg-[#F6F8FB] dark:hover:bg-white/5"
                     >
                       <Award className="w-4 h-4" /> Certificates
                     </NavLink>
@@ -321,7 +321,7 @@ export default function Navbar() {
                     )}
                     <button
                       onClick={() => { setOpen(false); handleSignOut(); }}
-                      className="w-full text-left px-3.5 py-2.5 rounded-lg text-sm font-semibold text-gray-500 hover:bg-[#FAF8FF] dark:hover:bg-white/5"
+                      className="w-full text-left px-3.5 py-2.5 rounded-lg text-sm font-semibold text-gray-500 hover:bg-[#F6F8FB] dark:hover:bg-white/5"
                     >
                       Log out
                     </button>

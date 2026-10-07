@@ -14,13 +14,13 @@ export default function UpgradeOfferCard({ offer }) {
   return (
     <section
       className="rounded-2xl px-6 sm:px-7 py-6 flex items-center justify-between flex-wrap gap-4"
-      style={{ background: 'linear-gradient(120deg, #7C3AED, #9D5CFF)' }}
+      style={{ background: '#264D73' }}
     >
       <div className="min-w-0">
         <div className="font-display font-extrabold text-lg text-white flex items-center gap-2">
           <Zap className="w-5 h-5 text-yellow" /> Upgrade to Pro for ₦{offer.price.toLocaleString()}
         </div>
-        <div className="text-[13.5px] text-[#EDE4FF] max-w-xl">
+        <div className="text-[13.5px] text-[#D5DEE9] max-w-xl">
           You already own {offer.ownedLabel}. Unlock {offer.missingLabel} for just the difference to Pro —
           ₦{offer.price.toLocaleString()} instead of ₦{offer.listPrice.toLocaleString()}. One payment, yours permanently.
         </div>

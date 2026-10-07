@@ -11,7 +11,7 @@ const FILTERS = [
 
 function StatCard({ label, value, sub }) {
   return (
-    <div className="rounded-xl border border-border-soft bg-white dark:bg-[#181818] px-4 py-3.5">
+    <div className="rounded-xl border border-border-soft bg-white dark:bg-[#131E2F] px-4 py-3.5">
       <div className="text-[11px] font-bold uppercase tracking-wide text-body mb-1">{label}</div>
       <div className="font-display text-2xl font-extrabold text-ink">{value}</div>
       {sub && <div className="text-[11px] text-body mt-0.5">{sub}</div>}
@@ -24,7 +24,7 @@ function StatCard({ label, value, sub }) {
 function BreakdownBars({ title, counts, total }) {
   if (counts.length === 0) return null;
   return (
-    <div className="rounded-2xl border border-border-soft bg-white dark:bg-[#181818] p-5">
+    <div className="rounded-2xl border border-border-soft bg-white dark:bg-[#131E2F] p-5">
       <div className="font-bold text-sm text-ink mb-4">{title}</div>
       <div className="flex flex-col gap-3">
         {counts.map(([label, count]) => (
@@ -33,7 +33,7 @@ function BreakdownBars({ title, counts, total }) {
               <span className="text-body-strong font-semibold">{label}</span>
               <span className="text-body">{count} · {Math.round((count / total) * 100)}%</span>
             </div>
-            <div className="h-2 rounded-full bg-[#F3EBFF] dark:bg-white/5 overflow-hidden">
+            <div className="h-2 rounded-full bg-[#E8EDF3] dark:bg-white/5 overflow-hidden">
               <div
                 className="h-full rounded-full bg-brand"
                 style={{ width: `${Math.max((count / total) * 100, 3)}%` }}
@@ -66,7 +66,7 @@ function ResponseRow({ r }) {
           </span>
           <span className="text-sm font-semibold text-ink truncate">{r.no_signup_reason}</span>
           {r.willingness_to_pay && (
-            <span className="text-[11px] font-bold text-brand bg-[#F3EBFF] dark:bg-brand/15 px-2 py-0.5 rounded-full flex-shrink-0">
+            <span className="text-[11px] font-bold text-link bg-[#E8EDF3] dark:bg-brand/15 px-2 py-0.5 rounded-full flex-shrink-0">
               {r.willingness_to_pay}
             </span>
           )}
@@ -172,13 +172,13 @@ export default function AdminSurvey() {
     <div>
       <div className="flex items-center justify-between mb-5">
         <h1 className="font-display text-3xl font-extrabold text-ink flex items-center gap-3">
-          <ClipboardList className="w-7 h-7 text-brand" />
+          <ClipboardList className="w-7 h-7 text-link" />
           Webinar Survey
         </h1>
       </div>
 
       {error && (
-        <div className="flex items-start gap-2 text-sm text-rose bg-[#FDEEF4] dark:bg-rose/10 border border-rose/20 rounded-lg px-4 py-3 mb-6">
+        <div className="flex items-start gap-2 text-sm text-rose bg-[#FBEAE9] dark:bg-rose/10 border border-rose/20 rounded-lg px-4 py-3 mb-6">
           <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
           {error}
         </div>
@@ -186,10 +186,10 @@ export default function AdminSurvey() {
 
       {loading ? (
         <div className="px-5 py-12 text-center">
-          <Loader2 className="w-6 h-6 animate-spin text-brand mx-auto" />
+          <Loader2 className="w-6 h-6 animate-spin text-link mx-auto" />
         </div>
       ) : responses.length === 0 ? (
-        <div className="rounded-2xl border border-border-soft bg-white dark:bg-[#181818] px-5 py-12 text-center text-gray-400 text-sm">
+        <div className="rounded-2xl border border-border-soft bg-white dark:bg-[#131E2F] px-5 py-12 text-center text-gray-400 text-sm">
           No responses yet.
         </div>
       ) : (
@@ -214,7 +214,7 @@ export default function AdminSurvey() {
                 className={`text-[13px] font-semibold px-4 py-2 rounded-full border transition-colors ${
                   filter === f.id
                     ? 'bg-brand text-white border-brand'
-                    : 'bg-white dark:bg-[#181818] text-body-strong border-border hover:border-brand/40'
+                    : 'bg-white dark:bg-[#131E2F] text-body-strong border-border hover:border-brand/40'
                 }`}
               >
                 {f.label}
@@ -222,7 +222,7 @@ export default function AdminSurvey() {
             ))}
           </div>
 
-          <div className="rounded-2xl border border-border-soft overflow-hidden bg-white dark:bg-[#181818]">
+          <div className="rounded-2xl border border-border-soft overflow-hidden bg-white dark:bg-[#131E2F]">
             {filtered.length === 0 ? (
               <div className="px-5 py-12 text-center text-gray-400 text-sm">Nothing matches this filter.</div>
             ) : (

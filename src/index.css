@@ -14,63 +14,70 @@
   --font-display: "Bricolage Grotesque", "Plus Jakarta Sans", sans-serif;
   --font-mono: "Roboto Mono", ui-monospace, monospace;
 
-  --color-ink: #1A1333;
-  --color-brand: #7C3AED;
-  --color-brand-deep: #5B21B6;
-  --color-body: #5A5473;
-  --color-body-strong: #3A3358;
-  --color-yellow: #F5D90A;
-  --color-green: #15803D;
-  --color-amber: #F59E0B;
-  /* Darkened from #E11D48: that failed WCAG AA on the --color-rose tint
-     background (#FDEEF4) at 4.19:1, which is the pairing used in ~35 places
-     (error banners, status pills, the homepage "LIVE THIS WEEK" badge).
-     This clears it at 4.99:1 on the tint and 5.60:1 on white. */
-  --color-rose: #C81E4E;
-  --color-border-soft: #EEE6FB;
-  --color-border: #E6DDFA;
-  --color-bg: #FDFCFF;
+  /* Blue palette taken from the logo (#264D73 / #22355B). One primary, one
+     amber accent, flat fills only — no gradients anywhere. The semantic names
+     below are the app's existing ones (brand, ink, body…), so every utility
+     keeps working; --color-link / --color-band / --color-border-strong are
+     new. */
+  --color-ink: #0F1A2A;            /* text */
+  --color-brand: #264D73;          /* primary: fills, with white text */
+  --color-brand-deep: #22355B;     /* primary hover */
+  --color-link: #264D73;           /* text, icons and outlines in the primary colour */
+  --color-band: #264D73;           /* the blue sections and CTA band */
+  --color-body: #4A5B6C;           /* muted text */
+  --color-body-strong: #1F2C3D;
+  --color-yellow: #F2A93B;         /* accent: XP badges, one highlight per screen. A fill, never text on light */
+  --color-green: #15803D;          /* success as text: #1F8A4C fails AA at small sizes */
+  --color-amber: #D98F1F;          /* accent hover */
+  /* Danger. #B3261E clears AA on white (6.5:1) and on its own tint. */
+  --color-rose: #B3261E;
+  --color-border-soft: #E7ECF2;
+  --color-border: #DDE3EA;
+  --color-border-strong: #7A8CA0;  /* input outlines need 3:1; --color-border is ~1.2:1 */
+  --color-bg: #F6F8FB;
+  --color-surface: #FFFFFF;
 
   --color-beginner: #16A34A;
-  --color-intermediate: #7C3AED;
-  --color-advanced: #F59E0B;
-  --color-worldclass: #E11D48;
+  --color-intermediate: #264D73;
+  --color-advanced: #D98F1F;
+  --color-worldclass: #B3261E;
 
-  --color-dept-sales: #0EA5E9;
-  --color-dept-marketing: #EC4899;
-  --color-dept-operations: #14B8A6;
-  --color-dept-finance: #22C55E;
-  --color-dept-hr: #A855F7;
-  --color-dept-legal: #6366F1;
-  --color-dept-support: #F97316;
-  --color-dept-engineering: #06B6D4;
-  --color-dept-data: #8B5CF6;
-  --color-dept-strategy: #F43F5E;
+  /* One hue for every department: the name and icon tell them apart. */
+  --color-dept-sales: #264D73;
+  --color-dept-marketing: #264D73;
+  --color-dept-operations: #264D73;
+  --color-dept-finance: #264D73;
+  --color-dept-hr: #264D73;
+  --color-dept-legal: #264D73;
+  --color-dept-support: #264D73;
+  --color-dept-engineering: #264D73;
+  --color-dept-data: #264D73;
+  --color-dept-strategy: #264D73;
   --color-dept-all: #64748B;
 }
 
-/* Dark theme — ChainGPT-inspired palette (via the dark-website-ideas-2
-   design skill). Overriding the same custom property names that @theme
-   generated above means every existing bg-ink / text-body / bg-brand /
-   border-border-soft / etc. utility across the whole app repaints
-   automatically — no per-component changes needed for anything already
-   using these semantic tokens. Only one-off bg-[#hex] utilities (arbitrary
-   values) need explicit dark: variants added by hand, since Tailwind bakes
-   those literal hex values in at build time rather than referencing a
-   variable. */
+/* Dark theme, derived from the same token names so every existing utility
+   repaints automatically. Primary splits in two in the dark: --color-brand is
+   the fill (white text on it, 4.7:1) and --color-link is the lighter blue that
+   reads as text. Only one-off bg-[#hex] utilities need explicit dark: variants,
+   because Tailwind bakes literal hex values in at build time. */
 :root[data-theme="dark"] {
-  --color-ink: #EFEFE5;
-  --color-brand: #7D63FF;
-  --color-brand-deep: #5240B5;
-  --color-body: #B7AFC9;
-  --color-body-strong: #E5E1EE;
-  --color-yellow: #FFD700;
-  --color-green: #00C853;
-  --color-amber: #FF8C00;
-  --color-rose: #FF4D4D;
-  --color-border-soft: #232228;
-  --color-border: #353539;
-  --color-bg: #0A090F;
+  --color-ink: #E9EFF6;
+  --color-brand: #3B76B6;
+  --color-brand-deep: #2F659F;
+  --color-link: #86B4E6;
+  --color-band: #1B3A5C;
+  --color-body: #A2B1C3;
+  --color-body-strong: #D5DEE9;
+  --color-yellow: #F2A93B;
+  --color-green: #3FBF76;
+  --color-amber: #D98F1F;
+  --color-rose: #FF7B72;
+  --color-border-soft: #1B2A3E;
+  --color-border: #26364B;
+  --color-border-strong: #51677F;
+  --color-bg: #0C1420;
+  --color-surface: #131E2F;
 }
 
 * {
@@ -134,12 +141,12 @@ body {
 
 /* Decorative photo-placeholder style used where real photography belongs */
 .ph {
-  background-image: repeating-linear-gradient(45deg, #ede9fe, #ede9fe 9px, #f6f3ff 9px, #f6f3ff 18px);
-  border: 1.5px dashed #c4b5fd;
+  background: rgba(38, 77, 115, 0.06);
+  border: 1.5px dashed #7A8CA0;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #7C3AED;
+  color: #264D73;
   font: 600 12px ui-monospace, Menlo, monospace;
   text-align: center;
   padding: 8px;
@@ -150,7 +157,7 @@ body {
   height: 6px;
 }
 .scrollbar-thin::-webkit-scrollbar-thumb {
-  background-color: rgba(124, 58, 237, 0.3);
+  background-color: rgba(38, 77, 115, 0.3);
   border-radius: 9999px;
 }
 .scrollbar-thin::-webkit-scrollbar-track {
@@ -160,27 +167,6 @@ body {
 /* Code block styling */
 pre code {
   font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
-}
-
-/* Signature dark-theme accent (per the dark-website-ideas-2 design skill):
-   a full-spectrum gradient used ONLY as a border/glow on the highest-value
-   CTAs — never as a fill. No-op in light mode. */
-[data-theme="dark"] .rainbow-accent {
-  position: relative;
-  isolation: isolate;
-}
-[data-theme="dark"] .rainbow-accent::before {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  z-index: -1;
-  border-radius: inherit;
-  padding: 2px;
-  background: linear-gradient(135deg, #FF3B3B, #FF8C00, #FFD700, #00C853, #1E90FF, #7D63FF);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
 }
 
 /* Line clamp utilities */

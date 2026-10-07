@@ -19,10 +19,10 @@ import { AI_AGENT_MASTERY_PRICE } from '../data/pricing';
 const WHATSAPP_URL = 'https://wa.me/2349066006963';
 
 const inputClass =
-  'w-full rounded-xl border-[1.5px] border-border-soft bg-white dark:bg-[#181818] text-ink px-4 py-3 text-[15px] focus:outline-none focus:border-brand';
+  'w-full rounded-xl border-[1.5px] border-border-soft bg-white dark:bg-[#131E2F] text-ink px-4 py-3 text-[15px] focus:outline-none focus:border-brand';
 
 const cardClass =
-  'rounded-[24px] border-[1.5px] border-border-soft bg-white dark:bg-[#181818] shadow-[0_20px_44px_-24px_rgba(124,58,237,.35)]';
+  'rounded-[24px] border-[1.5px] border-border-soft bg-white dark:bg-[#131E2F] shadow-[0_20px_44px_-24px_rgba(15,26,42,.35)]';
 
 const EMPTY = {
   full_name: '',
@@ -57,7 +57,7 @@ function Shell({ children }) {
   return (
     <div
       className="min-h-[70vh] px-4 sm:px-6 py-14"
-      style={{ background: 'radial-gradient(120% 60% at 50% 0%, #F3EBFF 0%, #FBFAFF 60%)' }}
+      style={{ background: '#F6F8FB' }}
     >
       <div className="max-w-xl mx-auto">{children}</div>
     </div>
@@ -108,7 +108,7 @@ export default function Scholarship() {
     return (
       <Shell>
         <div className={`${cardClass} p-7 sm:p-9 text-center`}>
-          <GraduationCap className="w-10 h-10 text-brand mx-auto mb-3" />
+          <GraduationCap className="w-10 h-10 text-link mx-auto mb-3" />
           <h1 className="font-display font-extrabold text-2xl text-ink mb-2">Applications are closed</h1>
           <p className="text-[15px] text-body leading-relaxed mb-6">
             Scholarship applications for this AI Agent Mastery cohort closed on {formatWatDateTime(SCHOLARSHIP_CLOSES_AT)}.
@@ -122,7 +122,7 @@ export default function Scholarship() {
           </Link>
           <p className="text-[12.5px] text-body mt-5">
             Questions? Message us on{' '}
-            <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="text-brand underline">WhatsApp</a>.
+            <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="text-link underline">WhatsApp</a>.
           </p>
         </div>
       </Shell>
@@ -158,7 +158,7 @@ export default function Scholarship() {
   return (
     <Shell>
       <div className="text-center mb-7">
-        <span className="inline-flex items-center gap-2 bg-white dark:bg-[#181818] border-[1.5px] border-border text-brand font-bold text-[12.5px] px-4 py-2 rounded-full shadow-[0_3px_10px_rgba(124,58,237,.1)]">
+        <span className="inline-flex items-center gap-2 bg-white dark:bg-[#131E2F] border-[1.5px] border-border text-link font-bold text-[12.5px] px-4 py-2 rounded-full shadow-[0_3px_10px_rgba(15,26,42,.1)]">
           <GraduationCap className="w-4 h-4" /> AI Agent Mastery scholarship
         </span>
         <h1 className="font-display font-extrabold text-[30px] sm:text-[38px] leading-[1.1] text-ink tracking-[-1px] mt-4">
@@ -270,7 +270,7 @@ export default function Scholarship() {
               type="checkbox"
               checked={form.consent}
               onChange={(e) => setForm((f) => ({ ...f, consent: e.target.checked }))}
-              className="mt-1 w-4 h-4 accent-[#7C3AED] flex-shrink-0"
+              className="mt-1 w-4 h-4 accent-[#264D73] flex-shrink-0"
             />
             <span className="text-[13.5px] text-body-strong leading-relaxed">
               I agree that the information I've given is used only to review my application and to contact me about the cohort.
@@ -280,7 +280,7 @@ export default function Scholarship() {
         </div>
 
         {submitError && (
-          <div className="flex items-start gap-2 text-sm text-rose bg-[#FDEEF4] dark:bg-rose/10 border border-rose/20 rounded-lg px-3 py-2.5" role="alert">
+          <div className="flex items-start gap-2 text-sm text-rose bg-[#FBEAE9] dark:bg-rose/10 border border-rose/20 rounded-lg px-3 py-2.5" role="alert">
             <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" /> {submitError}
           </div>
         )}
@@ -288,7 +288,7 @@ export default function Scholarship() {
         <button
           type="submit"
           disabled={sending}
-          className="flex items-center justify-center gap-2 w-full bg-brand hover:bg-brand-deep disabled:opacity-60 text-white font-extrabold px-5 py-3.5 rounded-xl shadow-[0_10px_22px_rgba(124,58,237,.35)] transition-colors"
+          className="flex items-center justify-center gap-2 w-full bg-brand hover:bg-brand-deep disabled:opacity-60 text-white font-extrabold px-5 py-3.5 rounded-xl shadow-[0_10px_22px_rgba(15,26,42,.35)] transition-colors"
         >
           {sending && <Loader2 className="w-4 h-4 animate-spin" />}
           {sending ? 'Submitting…' : 'Submit application'}
@@ -297,7 +297,7 @@ export default function Scholarship() {
         <p className="flex items-start gap-1.5 text-[12px] text-body">
           <Lock className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
           <span>
-            Your details are only seen by our team. See our <Link to="/legal/privacy" className="underline hover:text-brand">privacy policy</Link>.
+            Your details are only seen by our team. See our <Link to="/legal/privacy" className="underline hover:text-link">privacy policy</Link>.
           </span>
         </p>
       </form>

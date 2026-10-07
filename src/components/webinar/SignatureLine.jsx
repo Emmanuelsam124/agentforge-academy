@@ -6,7 +6,7 @@ import { m } from 'framer-motion';
 // leaves able to finish the sentence themselves.
 export default function SignatureLine({ variant = 'light', delay = 0, className = '' }) {
   const textColor = variant === 'dark' ? 'text-white' : 'text-ink';
-  const accentColor = variant === 'dark' ? 'text-yellow' : 'text-brand';
+  const accentColor = variant === 'dark' ? 'text-yellow' : 'text-link';
 
   return (
     <m.p

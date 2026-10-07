@@ -78,7 +78,7 @@ function UpgradeButton({ offer, loading, onClick, target }) {
       <button
         onClick={onClick}
         disabled={loading}
-        className="flex items-center justify-center gap-2 w-full bg-brand hover:bg-brand-deep disabled:opacity-60 text-white font-extrabold px-6 py-3.5 rounded-xl shadow-[0_10px_22px_rgba(124,58,237,.35)] transition-colors"
+        className="flex items-center justify-center gap-2 w-full bg-brand hover:bg-brand-deep disabled:opacity-60 text-white font-extrabold px-6 py-3.5 rounded-xl shadow-[0_10px_22px_rgba(15,26,42,.35)] transition-colors"
       >
         {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
         {loading ? 'Starting checkout…' : `${label} — pay ₦${offer.price.toLocaleString()}`}
@@ -112,7 +112,7 @@ export default function Pricing() {
 
       {/* Header */}
       <m.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mb-14">
-        <span className="inline-flex items-center gap-2 text-[13px] font-bold px-4 py-1.5 rounded-full bg-[#F3EBFF] dark:bg-brand/15 text-brand">
+        <span className="inline-flex items-center gap-2 text-[13px] font-bold px-4 py-1.5 rounded-full bg-[#E8EDF3] dark:bg-brand/15 text-link">
           Simple, one-time pricing
         </span>
         <h1 className="font-display font-extrabold text-[32px] sm:text-[42px] leading-[1.1] text-ink tracking-[-1px] mt-4 mb-2.5">
@@ -129,13 +129,13 @@ export default function Pricing() {
         <p className="text-body text-[14.5px]">Self-paced. Builder 1, Builder 2, or both as Pro.</p>
       </div>
 
-      <div className="inline-flex items-center gap-2 text-[13px] font-semibold text-brand bg-[#F3EBFF] dark:bg-brand/15 rounded-full px-4 py-2 mb-6">
+      <div className="inline-flex items-center gap-2 text-[13px] font-semibold text-link bg-[#E8EDF3] dark:bg-brand/15 rounded-full px-4 py-2 mb-6">
         <Info className="w-4 h-4 flex-shrink-0" />
         All you need is a free Gemini API key from Google AI Studio — no paid AI subscription required.
       </div>
 
       {checkoutError && (
-        <div className="max-w-md mx-auto mb-6 flex items-start gap-2 text-sm text-rose bg-[#FDEEF4] dark:bg-rose/10 border border-rose/20 rounded-lg px-3 py-2.5 text-left">
+        <div className="max-w-md mx-auto mb-6 flex items-start gap-2 text-sm text-rose bg-[#FBEAE9] dark:bg-rose/10 border border-rose/20 rounded-lg px-3 py-2.5 text-left">
           <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
           {checkoutError}
         </div>
@@ -149,7 +149,7 @@ export default function Pricing() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="rounded-[22px] border-[1.5px] border-border-soft bg-white dark:bg-[#181818] p-7.5 flex flex-col"
+          className="rounded-[22px] border-[1.5px] border-border-soft bg-white dark:bg-[#131E2F] p-7.5 flex flex-col"
         >
           <div className="font-extrabold text-ink text-lg">🌱 Builder 1</div>
           <div className="flex items-baseline gap-2.5 mt-2.5 mb-0.5">
@@ -179,7 +179,7 @@ export default function Pricing() {
             <button
               onClick={() => handleCheckout('builder1')}
               disabled={checkoutLoading === 'builder1'}
-              className="flex items-center justify-center gap-2 w-full bg-brand hover:bg-brand-deep disabled:opacity-60 text-white font-extrabold px-6 py-3.5 rounded-xl shadow-[0_10px_22px_rgba(124,58,237,.35)] transition-colors"
+              className="flex items-center justify-center gap-2 w-full bg-brand hover:bg-brand-deep disabled:opacity-60 text-white font-extrabold px-6 py-3.5 rounded-xl shadow-[0_10px_22px_rgba(15,26,42,.35)] transition-colors"
             >
               {checkoutLoading === 'builder1' ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
               {checkoutLoading === 'builder1' ? 'Starting checkout…' : `Pay ₦${BUILDER1_PRICE.toLocaleString()} with Paystack`}
@@ -192,7 +192,7 @@ export default function Pricing() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="rounded-[22px] border-[1.5px] border-border-soft bg-white dark:bg-[#181818] p-7.5 flex flex-col"
+          className="rounded-[22px] border-[1.5px] border-border-soft bg-white dark:bg-[#131E2F] p-7.5 flex flex-col"
         >
           <div className="font-extrabold text-ink text-lg">⚡ Builder 2</div>
           <div className="flex items-baseline gap-2.5 mt-2.5 mb-0.5">
@@ -222,7 +222,7 @@ export default function Pricing() {
             <button
               onClick={() => handleCheckout('builder2')}
               disabled={checkoutLoading === 'builder2'}
-              className="flex items-center justify-center gap-2 w-full bg-brand hover:bg-brand-deep disabled:opacity-60 text-white font-extrabold px-6 py-3.5 rounded-xl shadow-[0_10px_22px_rgba(124,58,237,.35)] transition-colors"
+              className="flex items-center justify-center gap-2 w-full bg-brand hover:bg-brand-deep disabled:opacity-60 text-white font-extrabold px-6 py-3.5 rounded-xl shadow-[0_10px_22px_rgba(15,26,42,.35)] transition-colors"
             >
               {checkoutLoading === 'builder2' ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
               {checkoutLoading === 'builder2' ? 'Starting checkout…' : `Pay ₦${BUILDER2_PRICE.toLocaleString()} with Paystack`}
@@ -236,13 +236,13 @@ export default function Pricing() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
           className="rounded-[22px] border-[2.5px] border-brand p-7.5 flex flex-col relative"
-          style={{ background: theme === 'dark' ? 'linear-gradient(180deg, #181022, #181818)' : 'linear-gradient(180deg, #FAF7FF, #FFF)' }}
+          style={{ background: theme === 'dark' ? '#131E2F' : '#FFFFFF' }}
         >
           <span className="absolute -top-3.5 right-6 bg-brand text-white text-[11px] font-extrabold px-3.5 py-1.5 rounded-full">
             BEST VALUE
           </span>
           <div className="font-extrabold text-ink text-lg flex items-center gap-1.5">
-            <Zap className="w-4 h-4 text-brand" /> Pro
+            <Zap className="w-4 h-4 text-link" /> Pro
           </div>
           <div className="font-display font-extrabold text-[38px] text-ink mt-2.5 mb-0.5">
             ₦<span>{PRO_PRICE.toLocaleString()}</span>
@@ -273,7 +273,7 @@ export default function Pricing() {
             <button
               onClick={() => handleCheckout('pro')}
               disabled={checkoutLoading === 'pro'}
-              className="flex items-center justify-center gap-2 w-full bg-brand hover:bg-brand-deep disabled:opacity-60 text-white font-extrabold px-6 py-3.5 rounded-xl shadow-[0_10px_22px_rgba(124,58,237,.35)] transition-colors"
+              className="flex items-center justify-center gap-2 w-full bg-brand hover:bg-brand-deep disabled:opacity-60 text-white font-extrabold px-6 py-3.5 rounded-xl shadow-[0_10px_22px_rgba(15,26,42,.35)] transition-colors"
             >
               {checkoutLoading === 'pro' ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
               {checkoutLoading === 'pro' ? 'Starting checkout…' : `Pay ₦${PRO_PRICE.toLocaleString()} with Paystack`}
@@ -300,9 +300,9 @@ export default function Pricing() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 * i }}
-              className="rounded-[22px] border-[1.5px] border-border-soft bg-white dark:bg-[#181818] p-7.5 flex flex-col"
+              className="rounded-[22px] border-[1.5px] border-border-soft bg-white dark:bg-[#131E2F] p-7.5 flex flex-col"
             >
-              <div className="w-11 h-11 rounded-[14px] bg-[#F3EBFF] dark:bg-brand/15 text-brand flex items-center justify-center mb-4">
+              <div className="w-11 h-11 rounded-[14px] bg-[#E8EDF3] dark:bg-brand/15 text-link flex items-center justify-center mb-4">
                 <program.icon className="w-5 h-5" />
               </div>
               <div className="font-extrabold text-ink text-lg mb-1">{program.name}</div>
@@ -323,7 +323,7 @@ export default function Pricing() {
                 className={`flex items-center justify-center gap-2 w-full font-extrabold px-6 py-3.5 rounded-xl transition-colors ${
                   enrolled
                     ? 'bg-[#EAFAF1] dark:bg-green/10 text-green border border-green/30'
-                    : 'bg-brand hover:bg-brand-deep text-white shadow-[0_10px_22px_rgba(124,58,237,.35)]'
+                    : 'bg-brand hover:bg-brand-deep text-white shadow-[0_10px_22px_rgba(15,26,42,.35)]'
                 }`}
               >
                 {enrolled ? "You're enrolled — go to your classes →" : `Explore ${program.name} →`}

@@ -14,12 +14,12 @@ export default function QASlide() {
   const { theme } = useTheme();
   const [qrDataUrl, setQrDataUrl] = useState(null);
   const bg = theme === 'dark'
-    ? 'radial-gradient(120% 100% at 50% 0%, #181022 0%, #0A090F 60%)'
-    : 'radial-gradient(120% 100% at 50% 0%, #F3EBFF 0%, #FBFAFF 60%)';
+    ? '#0C1420'
+    : '#F6F8FB';
 
   useEffect(() => {
     const url = `${window.location.origin}/pricing`;
-    QRCode.toDataURL(url, { width: 140, margin: 1, color: { dark: '#1A1333', light: '#FFFFFFFF' } })
+    QRCode.toDataURL(url, { width: 140, margin: 1, color: { dark: '#0F1A2A', light: '#FFFFFFFF' } })
       .then(setQrDataUrl)
       .catch(() => setQrDataUrl(null));
   }, []);
@@ -30,7 +30,7 @@ export default function QASlide() {
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="inline-flex items-center gap-2 bg-white dark:bg-[#181818] border-[1.5px] border-border text-brand font-bold text-[12.5px] px-4 py-2 rounded-full shadow-[0_3px_10px_rgba(124,58,237,.1)] mb-7"
+        className="inline-flex items-center gap-2 bg-white dark:bg-[#131E2F] border-[1.5px] border-border text-link font-bold text-[12.5px] px-4 py-2 rounded-full shadow-[0_3px_10px_rgba(15,26,42,.1)] mb-7"
       >
         🙋 Open floor
       </m.span>
@@ -61,13 +61,13 @@ export default function QASlide() {
       >
         <Link
           to="/pricing"
-          className="bg-brand hover:bg-brand-deep text-white font-bold text-[15px] px-6 py-3 rounded-xl shadow-[0_8px_20px_rgba(124,58,237,.3)] transition-colors"
+          className="bg-brand hover:bg-brand-deep text-white font-bold text-[15px] px-6 py-3 rounded-xl shadow-[0_8px_20px_rgba(15,26,42,.3)] transition-colors"
         >
           Get Builder 1 →
         </Link>
 
         {qrDataUrl && (
-          <div className="bg-white dark:bg-[#181818] border border-border-soft rounded-xl p-2.5 shadow-sm">
+          <div className="bg-white dark:bg-[#131E2F] border border-border-soft rounded-xl p-2.5 shadow-sm">
             <img src={qrDataUrl} alt="QR code to Builder 1 pricing" width={80} height={80} />
           </div>
         )}

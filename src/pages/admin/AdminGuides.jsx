@@ -303,13 +303,13 @@ export default function AdminGuides() {
     }
   };
 
-  const inputCls = 'w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0A090F] focus:outline-none focus:ring-2 focus:ring-brand/40';
+  const inputCls = 'w-full px-3 py-2 rounded-lg border border-border text-sm text-ink bg-white dark:bg-[#0C1420] focus:outline-none focus:ring-2 focus:ring-brand/40';
 
   return (
     <div>
       <div className="flex items-center justify-between mb-5 flex-wrap gap-3">
         <h1 className="font-display text-3xl font-extrabold text-ink flex items-center gap-3">
-          <BookOpen className="w-7 h-7 text-brand" /> Guides
+          <BookOpen className="w-7 h-7 text-link" /> Guides
         </h1>
         <button
           onClick={startNew}
@@ -320,14 +320,14 @@ export default function AdminGuides() {
       </div>
 
       {error && (
-        <div className="flex items-start gap-2 text-sm text-rose bg-[#FDEEF4] dark:bg-rose/10 border border-rose/20 rounded-lg px-4 py-3 mb-6">
+        <div className="flex items-start gap-2 text-sm text-rose bg-[#FBEAE9] dark:bg-rose/10 border border-rose/20 rounded-lg px-4 py-3 mb-6">
           <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
           {error}
         </div>
       )}
 
       {editorOpen && (
-        <form onSubmit={save} className="rounded-2xl border border-border-soft bg-white dark:bg-[#181818] p-5 mb-6 space-y-3">
+        <form onSubmit={save} className="rounded-2xl border border-border-soft bg-white dark:bg-[#131E2F] p-5 mb-6 space-y-3">
           <div className="flex items-center justify-between">
             <h3 className="font-bold text-ink text-sm">{form.id ? 'Edit guide' : 'New guide'}</h3>
             <button
@@ -378,7 +378,7 @@ export default function AdminGuides() {
           </div>
 
           <label className="flex items-center gap-2 text-sm text-body-strong">
-            <input type="checkbox" checked={form.is_hub} onChange={(e) => setForm((f) => ({ ...f, is_hub: e.target.checked }))} className="w-4 h-4 accent-[#7C3AED]" />
+            <input type="checkbox" checked={form.is_hub} onChange={(e) => setForm((f) => ({ ...f, is_hub: e.target.checked }))} className="w-4 h-4 accent-[#264D73]" />
             Make this the hub guide (the broad "start here" one — only one at a time)
           </label>
 
@@ -415,9 +415,9 @@ export default function AdminGuides() {
         </form>
       )}
 
-      <div className="rounded-2xl border border-border-soft overflow-hidden bg-white dark:bg-[#181818]">
+      <div className="rounded-2xl border border-border-soft overflow-hidden bg-white dark:bg-[#131E2F]">
         {loading ? (
-          <div className="px-5 py-12 text-center"><Loader2 className="w-6 h-6 animate-spin text-brand mx-auto" /></div>
+          <div className="px-5 py-12 text-center"><Loader2 className="w-6 h-6 animate-spin text-link mx-auto" /></div>
         ) : guides.length === 0 ? (
           <div className="px-5 py-12 text-center text-gray-400 text-sm">No guides yet.</div>
         ) : (
@@ -430,25 +430,25 @@ export default function AdminGuides() {
                     <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${g.status === 'published' ? 'text-green bg-[#EAFAF1] dark:bg-green/10' : 'text-gray-500 bg-gray-100 dark:bg-white/5'}`}>
                       {g.status === 'published' ? 'Published' : 'Draft'}
                     </span>
-                    <span className="text-[11px] font-bold text-brand bg-[#F3EBFF] dark:bg-brand/15 px-2 py-0.5 rounded-full">
+                    <span className="text-[11px] font-bold text-link bg-[#E8EDF3] dark:bg-brand/15 px-2 py-0.5 rounded-full">
                       {g.category === 'how-to' ? 'How-to' : 'Agent guide'}
                     </span>
                     {g.is_hub && <span className="text-[11px] font-bold text-amber-700 bg-amber-100 dark:bg-amber-500/15 px-2 py-0.5 rounded-full">Hub</span>}
                   </div>
                   <p className="font-semibold text-ink text-sm">{g.title}</p>
                   <p className="text-xs text-body mt-0.5 line-clamp-2">{g.dek}</p>
-                  <a href={`/guides/${g.slug}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-[11px] text-gray-400 hover:text-brand mt-1.5">
+                  <a href={`/guides/${g.slug}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-[11px] text-gray-400 hover:text-link mt-1.5">
                     <ExternalLink className="w-3 h-3" /> /guides/{g.slug}
                   </a>
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0 flex-wrap">
-                  <button onClick={() => startEdit(g)} className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-[#FAF8FF] dark:bg-white/5 text-body-strong hover:bg-[#F3EBFF] dark:hover:bg-brand/15 hover:text-brand transition-colors">
+                  <button onClick={() => startEdit(g)} className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-[#F6F8FB] dark:bg-white/5 text-body-strong hover:bg-[#E8EDF3] dark:hover:bg-brand/15 hover:text-link transition-colors">
                     <Pencil className="w-3 h-3" /> Edit
                   </button>
                   {g.status === 'published' && (
                     <button
                       onClick={() => setShareId((cur) => (cur === g.id ? null : g.id))}
-                      className={`flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg transition-colors ${shareId === g.id ? 'bg-brand text-white' : 'bg-[#FAF8FF] dark:bg-white/5 text-body-strong hover:bg-[#F3EBFF] dark:hover:bg-brand/15 hover:text-brand'}`}
+                      className={`flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg transition-colors ${shareId === g.id ? 'bg-brand text-white' : 'bg-[#F6F8FB] dark:bg-white/5 text-body-strong hover:bg-[#E8EDF3] dark:hover:bg-brand/15 hover:text-link'}`}
                     >
                       <Share2 className="w-3 h-3" /> Post
                     </button>
@@ -456,7 +456,7 @@ export default function AdminGuides() {
                   <button
                     onClick={() => setStatus(g.id, g.status === 'published' ? 'draft' : 'published')}
                     disabled={!!actionLoading}
-                    className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-[#FAF8FF] dark:bg-white/5 text-body-strong hover:bg-[#F3EBFF] dark:hover:bg-brand/15 hover:text-brand transition-colors disabled:opacity-40"
+                    className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-[#F6F8FB] dark:bg-white/5 text-body-strong hover:bg-[#E8EDF3] dark:hover:bg-brand/15 hover:text-link transition-colors disabled:opacity-40"
                   >
                     {g.status === 'published' ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
                     {g.status === 'published' ? 'Unpublish' : 'Publish'}
@@ -464,7 +464,7 @@ export default function AdminGuides() {
                   <button
                     onClick={() => remove(g.id)}
                     disabled={!!actionLoading}
-                    className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-[#FAF8FF] dark:bg-white/5 text-body-strong hover:bg-[#FDEEF4] dark:hover:bg-rose/10 hover:text-rose transition-colors disabled:opacity-40"
+                    className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-[#F6F8FB] dark:bg-white/5 text-body-strong hover:bg-[#FBEAE9] dark:hover:bg-rose/10 hover:text-rose transition-colors disabled:opacity-40"
                   >
                     <Trash2 className="w-3 h-3" />
                   </button>

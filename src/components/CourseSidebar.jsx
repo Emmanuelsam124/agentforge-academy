@@ -23,8 +23,8 @@ function LessonRow({ agent, i, currentSlug, progress, onNavigate }) {
         onClick={onNavigate}
         className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors ${
           isCurrent
-            ? 'bg-[#F3EBFF] dark:bg-brand/15 text-brand font-bold'
-            : 'text-body hover:bg-[#FAF8FF] dark:hover:bg-white/5 hover:text-ink'
+            ? 'bg-[#E8EDF3] dark:bg-brand/15 text-link font-bold'
+            : 'text-body hover:bg-[#F6F8FB] dark:hover:bg-white/5 hover:text-ink'
         }`}
       >
         {isDone ? (
@@ -35,7 +35,7 @@ function LessonRow({ agent, i, currentSlug, progress, onNavigate }) {
         <span className="text-[11px] font-mono text-gray-400 flex-shrink-0 w-4 text-right">{i + 1}</span>
         <span className="truncate flex-1 min-w-0">{agent.title}</span>
         {agent.isMainProject && (
-          <span className="text-[9px] font-bold uppercase tracking-wide text-brand bg-brand/10 px-1.5 py-0.5 rounded-full flex-shrink-0">
+          <span className="text-[9px] font-bold uppercase tracking-wide text-link bg-brand/10 px-1.5 py-0.5 rounded-full flex-shrink-0">
             Main
           </span>
         )}
@@ -56,8 +56,8 @@ function LessonList({ tier, tierAgents, currentSlug, progress, onNavigate }) {
         onClick={onNavigate}
         className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors ${
           location.pathname === guidePath
-            ? 'bg-[#F3EBFF] dark:bg-brand/15 text-brand font-bold'
-            : 'text-body hover:bg-[#FAF8FF] dark:hover:bg-white/5 hover:text-ink'
+            ? 'bg-[#E8EDF3] dark:bg-brand/15 text-link font-bold'
+            : 'text-body hover:bg-[#F6F8FB] dark:hover:bg-white/5 hover:text-ink'
         }`}
       >
         <Flag className="w-4 h-4 flex-shrink-0" />
@@ -128,7 +128,7 @@ export default function CourseSidebar({ tier, tierAgents, currentSlug, progress 
   return (
     <>
       {/* Desktop — persistent sticky sidebar */}
-      <aside className="hidden lg:block sticky top-24 self-start w-full rounded-xl border border-border-soft bg-[#FAF8FF] dark:bg-white/5 p-4">
+      <aside className="hidden lg:block sticky top-24 self-start w-full rounded-xl border border-border-soft bg-[#F6F8FB] dark:bg-white/5 p-4">
         <p className="text-xs font-bold uppercase tracking-wide text-body mb-2"><span>{tier}</span> Sessions</p>
         <div className="mb-4">
           <ProgressBar value={completedCount} max={tierAgents.length} showLabel={false} height="h-1.5" />
@@ -138,7 +138,7 @@ export default function CourseSidebar({ tier, tierAgents, currentSlug, progress 
       </aside>
 
       {/* Mobile — collapsible toggle above the content */}
-      <div className="lg:hidden rounded-xl border border-border-soft bg-[#FAF8FF] dark:bg-white/5 overflow-hidden">
+      <div className="lg:hidden rounded-xl border border-border-soft bg-[#F6F8FB] dark:bg-white/5 overflow-hidden">
         <button
           onClick={() => setMobileOpen((v) => !v)}
           className="w-full flex items-center justify-between px-4 py-3"

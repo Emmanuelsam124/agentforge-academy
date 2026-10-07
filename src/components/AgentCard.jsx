@@ -10,15 +10,15 @@ export default function AgentCard({ agent, completed, onClick, hasBuilder1 = fal
   const locked = !unlocked;
 
   const card = (
-    <div className="relative flex flex-col gap-2 text-left bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-[18px] p-4.5 h-full transition-all hover:border-brand/40 hover:shadow-[0_10px_28px_-8px_rgba(124,58,237,.18)]">
+    <div className="relative flex flex-col gap-2 text-left bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-[18px] p-4.5 h-full transition-all hover:border-brand/40 hover:shadow-[0_10px_28px_-8px_rgba(15,26,42,.18)]">
       {completed && (
         <div className="absolute top-3 right-3 z-10 bg-green rounded-full p-1 shadow">
           <CheckCircle2 className="w-4 h-4 text-white" />
         </div>
       )}
       {locked && !completed && (
-        <div className="absolute top-3 right-3 z-10 bg-white dark:bg-[#181818] border border-border rounded-full p-1.5 shadow">
-          <Lock className="w-3.5 h-3.5 text-brand" />
+        <div className="absolute top-3 right-3 z-10 bg-white dark:bg-[#131E2F] border border-border rounded-full p-1.5 shadow">
+          <Lock className="w-3.5 h-3.5 text-link" />
         </div>
       )}
 
@@ -48,13 +48,13 @@ export default function AgentCard({ agent, completed, onClick, hasBuilder1 = fal
         ))}
       </div>
 
-      <div className="flex justify-between text-[12.5px] text-[#6E6389] dark:text-[#9B93B8] font-semibold pt-2 border-t border-border-soft">
+      <div className="flex justify-between text-[12.5px] text-[#6A7582] dark:text-[#99A4B2] font-semibold pt-2 border-t border-border-soft">
         <span>{agent.buildTime}</span>
         <span>⚡ <span>{agent.xp}</span> XP</span>
       </div>
 
       {locked && (
-        <div className="mt-1 text-center text-[12.5px] font-bold text-brand bg-[#F3EBFF] dark:bg-brand/15 rounded-lg py-2">
+        <div className="mt-1 text-center text-[12.5px] font-bold text-link bg-[#E8EDF3] dark:bg-brand/15 rounded-lg py-2">
           Upgrade to unlock
         </div>
       )}

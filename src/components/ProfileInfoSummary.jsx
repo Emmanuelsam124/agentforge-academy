@@ -10,13 +10,13 @@ export default function ProfileInfoSummary() {
 
   if (status === 'set') {
     return (
-      <div className="flex items-center justify-between gap-3 rounded-xl border border-border-soft bg-[#FAF8FF] dark:bg-white/5 px-5 py-3 mb-8">
+      <div className="flex items-center justify-between gap-3 rounded-xl border border-border-soft bg-[#F6F8FB] dark:bg-white/5 px-5 py-3 mb-8">
         <p className="text-sm text-body">
           You're in <span className="font-semibold text-ink">{savedIndustry}</span>
         </p>
         <button
           onClick={() => setModalOpen(true)}
-          className="flex items-center gap-1.5 text-sm font-semibold text-brand hover:text-brand-deep"
+          className="flex items-center gap-1.5 text-sm font-semibold text-link hover:text-brand-deep"
         >
           <Pencil className="w-3.5 h-3.5" /> Edit
         </button>
@@ -28,7 +28,7 @@ export default function ProfileInfoSummary() {
     return (
       <button
         onClick={() => setModalOpen(true)}
-        className="flex items-center gap-2 text-sm text-body hover:text-brand mb-8 -mt-2"
+        className="flex items-center gap-2 text-sm text-body hover:text-link mb-8 -mt-2"
       >
         <Briefcase className="w-3.5 h-3.5" />
         Want tailored tips? Tell us your industry

@@ -69,7 +69,7 @@ export default function News() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-6">
       <div>
         <h1 className="font-display text-3xl sm:text-4xl font-extrabold text-ink flex items-center gap-3">
-          <Newspaper className="w-7 h-7 text-brand" />
+          <Newspaper className="w-7 h-7 text-link" />
           AI News
         </h1>
         <p className="text-body mt-2">The AI news that actually matters for people building real agents — picked daily, explained plainly.</p>
@@ -77,7 +77,7 @@ export default function News() {
 
       {loading ? (
         <div className="py-16 text-center">
-          <Loader2 className="w-6 h-6 animate-spin text-brand mx-auto" />
+          <Loader2 className="w-6 h-6 animate-spin text-link mx-auto" />
         </div>
       ) : articles.length === 0 ? (
         <div className="py-16 text-center text-body">No articles yet — check back soon.</div>
@@ -88,13 +88,13 @@ export default function News() {
               <Link
                 key={a.slug}
                 to={`/news/${a.slug}`}
-                className="flex flex-col bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-[18px] overflow-hidden transition-all hover:border-brand/40 hover:shadow-[0_10px_28px_-8px_rgba(124,58,237,.18)]"
+                className="flex flex-col bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-[18px] overflow-hidden transition-all hover:border-brand/40 hover:shadow-[0_10px_28px_-8px_rgba(15,26,42,.18)]"
               >
                 {a.image_url ? (
                   <img src={a.image_url} alt="" className="w-full aspect-[16/9] object-cover" loading="lazy" />
                 ) : (
-                  <div className="w-full aspect-[16/9] bg-[#F3EBFF] dark:bg-white/5 flex items-center justify-center">
-                    <Newspaper className="w-8 h-8 text-brand/40" />
+                  <div className="w-full aspect-[16/9] bg-[#E8EDF3] dark:bg-white/5 flex items-center justify-center">
+                    <Newspaper className="w-8 h-8 text-link/40" />
                   </div>
                 )}
                 <div className="p-4.5 flex flex-col gap-2 flex-1">
@@ -124,7 +124,7 @@ export default function News() {
               <button
                 onClick={loadMore}
                 disabled={loadingMore}
-                className="inline-flex items-center gap-2 text-sm font-semibold px-5 py-2.5 rounded-full border border-border-soft text-body-strong hover:border-brand/40 hover:text-brand transition-colors disabled:opacity-40"
+                className="inline-flex items-center gap-2 text-sm font-semibold px-5 py-2.5 rounded-full border border-border-soft text-body-strong hover:border-brand/40 hover:text-link transition-colors disabled:opacity-40"
               >
                 {loadingMore && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                 Load more

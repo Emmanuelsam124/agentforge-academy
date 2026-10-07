@@ -21,7 +21,7 @@ export default function IdentityLadderSlide() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.12 * i, duration: 0.5 }}
             className={`flex flex-col items-center gap-2 rounded-2xl px-5 py-5 ${
-              i === 1 ? 'bg-brand text-white shadow-[0_16px_36px_-12px_rgba(124,58,237,.5)]' : 'bg-white dark:bg-[#181818] border-[1.5px] border-border-soft'
+              i === 1 ? 'bg-brand text-white shadow-[0_16px_36px_-12px_rgba(15,26,42,.5)]' : 'bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft'
             }`}
             style={{ minWidth: 110 }}
           >
@@ -42,7 +42,7 @@ export default function IdentityLadderSlide() {
         transition={{ delay: 1.3, duration: 0.6, ease: 'easeOut' }}
         className="font-display font-extrabold text-2xl sm:text-4xl text-ink leading-tight max-w-2xl mx-auto mt-8"
       >
-        You don't need permission to call yourself a builder.<br className="hidden sm:block" /> You need <span className="text-brand">one shipped agent.</span>
+        You don't need permission to call yourself a builder.<br className="hidden sm:block" /> You need <span className="text-link">one shipped agent.</span>
       </m.p>
     </SlideShell>
   );

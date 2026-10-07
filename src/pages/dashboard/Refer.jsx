@@ -62,15 +62,15 @@ export default function Refer() {
   if (loading) {
     return (
       <div className="py-16 text-center">
-        <Loader2 className="w-6 h-6 animate-spin text-brand mx-auto" />
+        <Loader2 className="w-6 h-6 animate-spin text-link mx-auto" />
       </div>
     );
   }
 
   if (!eligible) {
     return (
-      <div className="bg-white dark:bg-[#181818] border border-border-soft rounded-2xl p-6 sm:p-8 text-center">
-        <Gift className="w-8 h-8 text-brand mx-auto mb-3" />
+      <div className="bg-white dark:bg-[#131E2F] border border-border-soft rounded-2xl p-6 sm:p-8 text-center">
+        <Gift className="w-8 h-8 text-link mx-auto mb-3" />
         <h1 className="font-display text-xl font-extrabold text-ink mb-1.5">Refer & Earn</h1>
         <p className="text-body max-w-sm mx-auto">
           Enroll in any of our courses to get your referral link — you'll earn {REFERRAL_COMMISSION_PERCENT}% of
@@ -84,17 +84,17 @@ export default function Refer() {
     <div className="space-y-6">
       <div>
         <h1 className="font-display text-2xl font-extrabold text-ink flex items-center gap-2.5">
-          <Gift className="w-6 h-6 text-brand" /> Refer & Earn
+          <Gift className="w-6 h-6 text-link" /> Refer & Earn
         </h1>
         <p className="text-body mt-1.5">
           Share your link. When someone signs up through it and pays for any course you're enrolled in, you earn {REFERRAL_COMMISSION_PERCENT}% of what they pay.
         </p>
       </div>
 
-      <div className="bg-white dark:bg-[#181818] border border-border-soft rounded-2xl p-5">
+      <div className="bg-white dark:bg-[#131E2F] border border-border-soft rounded-2xl p-5">
         <p className="text-[11px] font-bold uppercase tracking-wide text-gray-400 mb-2">Your referral link</p>
         <div className="flex items-center gap-2">
-          <code className="flex-1 min-w-0 truncate px-3 py-2.5 rounded-lg bg-[#FAF8FF] dark:bg-white/5 text-[13px] text-body-strong">
+          <code className="flex-1 min-w-0 truncate px-3 py-2.5 rounded-lg bg-[#F6F8FB] dark:bg-white/5 text-[13px] text-body-strong">
             {link}
           </code>
           <button
@@ -109,23 +109,23 @@ export default function Refer() {
       </div>
 
       <div className="grid grid-cols-3 gap-3">
-        <div className="bg-white dark:bg-[#181818] border border-border-soft rounded-2xl p-4 text-center">
+        <div className="bg-white dark:bg-[#131E2F] border border-border-soft rounded-2xl p-4 text-center">
           <p className="text-2xl font-display font-extrabold text-ink">{referrals.length}</p>
           <p className="text-[11px] font-semibold text-body mt-0.5">Signed up</p>
         </div>
-        <div className="bg-white dark:bg-[#181818] border border-border-soft rounded-2xl p-4 text-center">
+        <div className="bg-white dark:bg-[#131E2F] border border-border-soft rounded-2xl p-4 text-center">
           <p className="text-2xl font-display font-extrabold text-ink">{naira(totalPaid)}</p>
           <p className="text-[11px] font-semibold text-body mt-0.5">Paid out</p>
         </div>
-        <div className="bg-white dark:bg-[#181818] border border-border-soft rounded-2xl p-4 text-center">
+        <div className="bg-white dark:bg-[#131E2F] border border-border-soft rounded-2xl p-4 text-center">
           <p className="text-2xl font-display font-extrabold text-ink">{naira(totalPending)}</p>
           <p className="text-[11px] font-semibold text-body mt-0.5">Pending</p>
         </div>
       </div>
 
-      <div className="bg-white dark:bg-[#181818] border border-border-soft rounded-2xl p-5">
+      <div className="bg-white dark:bg-[#131E2F] border border-border-soft rounded-2xl p-5">
         <h2 className="font-display font-bold text-ink flex items-center gap-2 mb-4">
-          <Users className="w-[18px] h-[18px] text-brand" /> People you've referred
+          <Users className="w-[18px] h-[18px] text-link" /> People you've referred
         </h2>
 
         {error && <p className="text-sm text-rose-600 mb-3">{error}</p>}

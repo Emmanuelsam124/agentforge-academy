@@ -75,19 +75,19 @@ export default function AdminCohorts() {
     <div>
       <div className="flex items-center justify-between mb-5">
         <h1 className="font-display text-3xl font-extrabold text-ink flex items-center gap-3">
-          <CalendarDays className="w-7 h-7 text-brand" />
+          <CalendarDays className="w-7 h-7 text-link" />
           Cohort Schedule
         </h1>
       </div>
 
       {error && (
-        <div className="flex items-start gap-2 text-sm text-rose bg-[#FDEEF4] dark:bg-rose/10 border border-rose/20 rounded-lg px-4 py-3 mb-6">
+        <div className="flex items-start gap-2 text-sm text-rose bg-[#FBEAE9] dark:bg-rose/10 border border-rose/20 rounded-lg px-4 py-3 mb-6">
           <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
           {error}
         </div>
       )}
 
-      <div className="rounded-2xl border border-border-soft overflow-hidden bg-white dark:bg-[#181818] mb-4">
+      <div className="rounded-2xl border border-border-soft overflow-hidden bg-white dark:bg-[#131E2F] mb-4">
         <CohortDateRow
           label="Builder 1"
           value={cohortDates.builder1}

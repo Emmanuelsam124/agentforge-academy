@@ -94,7 +94,7 @@ export default function Legal() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <p className="text-ink text-xl font-bold mb-4">Page not found</p>
-          <Link to="/" className="text-brand hover:underline">Back to home</Link>
+          <Link to="/" className="text-link hover:underline">Back to home</Link>
         </div>
       </div>
     );
@@ -122,7 +122,7 @@ export default function Legal() {
           </div>
 
           <div className="mt-12 pt-8 border-t border-border-soft text-center">
-            <Link to="/" className="text-sm text-brand hover:underline">← Back to Social Dev Technologies</Link>
+            <Link to="/" className="text-sm text-link hover:underline">← Back to Social Dev Technologies</Link>
           </div>
         </m.div>
       </div>

@@ -46,14 +46,14 @@ function JoinRoomCards() {
   return (
     <div className="mb-8">
       <div className="flex items-center gap-2 mb-3">
-        <Video className="w-4 h-4 text-brand" />
+        <Video className="w-4 h-4 text-link" />
         <h2 className="font-display font-bold text-lg text-ink">Join room</h2>
         <span className="text-xs text-body">Fri, Sat &amp; Mon · 7:00 PM WAT</span>
       </div>
       <div className="grid sm:grid-cols-3 gap-4">
         {CLASS_DAYS.map((c, i) => (
-          <div key={c.day} className="rounded-2xl border-[1.5px] border-border-soft bg-white dark:bg-[#181818] p-5 flex flex-col">
-            <span className="inline-flex w-fit text-[11px] font-extrabold text-brand bg-[#F3EBFF] dark:bg-brand/15 px-2.5 py-1 rounded-full mb-2.5">{c.day}</span>
+          <div key={c.day} className="rounded-2xl border-[1.5px] border-border-soft bg-white dark:bg-[#131E2F] p-5 flex flex-col">
+            <span className="inline-flex w-fit text-[11px] font-extrabold text-link bg-[#E8EDF3] dark:bg-brand/15 px-2.5 py-1 rounded-full mb-2.5">{c.day}</span>
             <p className="font-display font-bold text-[15px] text-ink leading-snug">{c.title}</p>
             <p className="text-[13px] text-body mt-1.5 mb-4">{formatClassDay(days[i])} · 7:00 PM WAT</p>
             {canJoin ? (
@@ -69,7 +69,7 @@ function JoinRoomCards() {
               <button
                 type="button"
                 disabled
-                className="mt-auto inline-flex items-center justify-center gap-2 text-sm font-bold text-gray-400 bg-[#F3F1F8] dark:bg-white/5 px-4 py-2.5 rounded-xl cursor-not-allowed"
+                className="mt-auto inline-flex items-center justify-center gap-2 text-sm font-bold text-gray-400 bg-[#F2F4F7] dark:bg-white/5 px-4 py-2.5 rounded-xl cursor-not-allowed"
               >
                 <Lock className="w-4 h-4" /> Join class
               </button>
@@ -96,7 +96,7 @@ function PasscodeChip({ passcode }) {
   return (
     <button
       onClick={copy}
-      className="flex items-center gap-1.5 text-xs font-semibold text-body-strong bg-[#FAF8FF] dark:bg-white/5 hover:bg-[#F3EBFF] dark:hover:bg-brand/15 px-3 py-2 rounded-lg transition-colors"
+      className="flex items-center gap-1.5 text-xs font-semibold text-body-strong bg-[#F6F8FB] dark:bg-white/5 hover:bg-[#E8EDF3] dark:hover:bg-brand/15 px-3 py-2 rounded-lg transition-colors"
       title="Copy Zoom passcode"
     >
       {copied ? <Check className="w-3.5 h-3.5 text-green" /> : <Copy className="w-3.5 h-3.5" />}
@@ -112,7 +112,7 @@ function OutlineItem({ session, index, isSelected, onSelect }) {
     <button
       onClick={onSelect}
       className={`w-full flex items-start gap-3 text-left px-3.5 py-3 rounded-xl transition-colors ${
-        isSelected ? 'bg-[#F3EBFF] dark:bg-brand/15' : 'hover:bg-[#FAF8FF] dark:hover:bg-white/5'
+        isSelected ? 'bg-[#E8EDF3] dark:bg-brand/15' : 'hover:bg-[#F6F8FB] dark:hover:bg-white/5'
       }`}
     >
       {hasReplay ? (
@@ -120,10 +120,10 @@ function OutlineItem({ session, index, isSelected, onSelect }) {
       ) : isPast ? (
         <Circle className="w-4 h-4 text-gray-300 mt-0.5 flex-shrink-0" />
       ) : (
-        <Calendar className="w-4 h-4 text-brand mt-0.5 flex-shrink-0" />
+        <Calendar className="w-4 h-4 text-link mt-0.5 flex-shrink-0" />
       )}
       <div className="min-w-0">
-        <p className={`text-[13px] font-semibold leading-snug ${isSelected ? 'text-brand' : 'text-ink'}`}>
+        <p className={`text-[13px] font-semibold leading-snug ${isSelected ? 'text-link' : 'text-ink'}`}>
           Class {index + 1}: {session.title}
         </p>
         <p className="text-[11px] text-gray-400 mt-0.5">
@@ -143,7 +143,7 @@ function EmbedArea({ session }) {
 
   return (
     <div>
-      <div className="rounded-2xl overflow-hidden bg-[#0A090F] aspect-video flex items-center justify-center relative">
+      <div className="rounded-2xl overflow-hidden bg-[#0C1420] aspect-video flex items-center justify-center relative">
         {hasReplay ? (
           <iframe
             key={session.id}
@@ -160,7 +160,7 @@ function EmbedArea({ session }) {
           </div>
         ) : (
           <div className="text-center px-6">
-            <Calendar className="w-9 h-9 text-brand mx-auto mb-2" />
+            <Calendar className="w-9 h-9 text-link mx-auto mb-2" />
             <p className="text-white text-sm font-semibold">This class hasn't happened yet</p>
             <p className="text-gray-400 text-xs mt-1">{formatDate(session.session_date)}</p>
           </div>
@@ -173,7 +173,7 @@ function EmbedArea({ session }) {
             href={session.recording_url}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-body-strong bg-[#FAF8FF] dark:bg-white/5 hover:bg-[#F3EBFF] dark:hover:bg-brand/15 px-3 py-2 rounded-lg transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-body-strong bg-[#F6F8FB] dark:bg-white/5 hover:bg-[#E8EDF3] dark:hover:bg-brand/15 px-3 py-2 rounded-lg transition-colors"
           >
             <ExternalLink className="w-3.5 h-3.5" /> Open on Zoom
           </a>
@@ -196,7 +196,7 @@ function EmbedArea({ session }) {
 
       {session.topics?.length > 0 && (
         <div className="mt-5">
-          <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-brand mb-2">
+          <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-link mb-2">
             <ListChecks className="w-3.5 h-3.5" /> Topics
           </p>
           <ul className="flex flex-col gap-1.5">
@@ -212,7 +212,7 @@ function EmbedArea({ session }) {
 
       {session.resources?.length > 0 && (
         <div className="mt-5">
-          <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-brand mb-2">
+          <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-link mb-2">
             <BookOpen className="w-3.5 h-3.5" /> Resources
           </p>
           <div className="flex flex-col gap-2">
@@ -222,7 +222,7 @@ function EmbedArea({ session }) {
                 href={r.url}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center justify-between text-sm text-body-strong hover:text-ink bg-[#FAF8FF] dark:bg-white/5 hover:bg-[#F3EBFF] dark:hover:bg-brand/10 border border-border-soft rounded-lg px-3.5 py-2.5 transition-colors"
+                className="flex items-center justify-between text-sm text-body-strong hover:text-ink bg-[#F6F8FB] dark:bg-white/5 hover:bg-[#E8EDF3] dark:hover:bg-brand/10 border border-border-soft rounded-lg px-3.5 py-2.5 transition-colors"
               >
                 {r.title}
                 <ExternalLink className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
@@ -260,16 +260,16 @@ export default function AIAgentMasteryCourse() {
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
       <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-ink mb-6 flex items-center gap-3">
-        <Bot className="w-7 h-7 text-brand" /> AI Agent Mastery
+        <Bot className="w-7 h-7 text-link" /> AI Agent Mastery
       </h1>
 
       {loading ? (
         <div className="flex justify-center py-16">
-          <Loader2 className="w-6 h-6 animate-spin text-brand" />
+          <Loader2 className="w-6 h-6 animate-spin text-link" />
         </div>
       ) : !hasAiMastery && !isAdmin ? (
         <div className="rounded-2xl border-2 border-dashed border-border p-10 text-center">
-          <Lock className="w-8 h-8 text-brand mx-auto mb-3" />
+          <Lock className="w-8 h-8 text-link mx-auto mb-3" />
           <p className="text-ink font-bold">This is AI Agent Mastery content</p>
           <p className="text-sm text-body mt-1 mb-4">Join the cohort to unlock your classes.</p>
           <Link to="/ai-agent-mastery#pricing" className="inline-flex items-center gap-2 bg-brand hover:bg-brand-deep text-white font-bold px-5 py-2.5 rounded-xl transition-colors">
@@ -318,7 +318,7 @@ function AIAgentMasteryCourseBody({ liveSessions, selectedId, setSelectedId }) {
         <EmbedArea session={selected} />
       </div>
 
-      <div className="order-2 lg:order-1 lg:col-start-1 rounded-2xl border-[1.5px] border-border-soft bg-white dark:bg-[#181818] overflow-hidden lg:sticky lg:top-24 px-1.5 py-1.5 flex flex-col gap-0.5">
+      <div className="order-2 lg:order-1 lg:col-start-1 rounded-2xl border-[1.5px] border-border-soft bg-white dark:bg-[#131E2F] overflow-hidden lg:sticky lg:top-24 px-1.5 py-1.5 flex flex-col gap-0.5">
         {sessions.map((s, index) => (
           <OutlineItem
             key={s.id}

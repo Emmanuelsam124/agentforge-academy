@@ -169,7 +169,7 @@ export default function BuilderSession({ progress, tier }) {
           <div className="min-w-0">
         <Link
           to={`/catalog?difficulty=${encodeURIComponent(tier)}`}
-          className="inline-flex items-center gap-1.5 text-sm font-semibold text-body hover:text-brand transition-colors mb-6"
+          className="inline-flex items-center gap-1.5 text-sm font-semibold text-body hover:text-link transition-colors mb-6"
         >
           <ArrowLeft className="w-4 h-4" /> Back to <span>{tier}</span> catalog
         </Link>
@@ -181,11 +181,11 @@ export default function BuilderSession({ progress, tier }) {
           className="rounded-2xl border-[1.5px] border-border-soft p-6 sm:p-8 mb-8"
           style={{
             background: theme === 'dark'
-              ? 'linear-gradient(135deg, #181022, #181818)'
-              : 'linear-gradient(135deg, #F3EBFF, #FBFAFF)',
+              ? '#131E2F'
+              : '#EEF2F7',
           }}
         >
-          <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-brand bg-white dark:bg-[#181818] border border-brand/25 rounded-full px-3 py-1.5 mb-4">
+          <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-link bg-white dark:bg-[#131E2F] border border-brand/25 rounded-full px-3 py-1.5 mb-4">
             <span>{difficulty.icon}</span> <span>{tier}</span> · Session <span>{index + 1}</span> of <span>{tierAgents.length}</span>
           </span>
           <div className="flex items-start gap-4">
@@ -203,13 +203,13 @@ export default function BuilderSession({ progress, tier }) {
           </div>
         </m.div>
 
-        <div className="flex items-start gap-2 text-[13px] text-brand bg-[#F3EBFF] dark:bg-brand/15 rounded-lg px-3.5 py-2.5 mb-8">
+        <div className="flex items-start gap-2 text-[13px] text-link bg-[#E8EDF3] dark:bg-brand/15 rounded-lg px-3.5 py-2.5 mb-8">
           <Info className="w-4 h-4 mt-0.5 flex-shrink-0" />
           All you need is a free Gemini API key from Google AI Studio — no paid AI subscription required to follow along with this build.
         </div>
 
         {/* Mark complete */}
-        <div className="relative flex items-center justify-between gap-4 rounded-xl border border-border-soft bg-[#FAF8FF] dark:bg-white/5 px-5 py-4 mb-8">
+        <div className="relative flex items-center justify-between gap-4 rounded-xl border border-border-soft bg-[#F6F8FB] dark:bg-white/5 px-5 py-4 mb-8">
           <AnimatePresence>
             {showXpPop && (
               <m.div
@@ -235,7 +235,7 @@ export default function BuilderSession({ progress, tier }) {
           {locked ? (
             <Link
               to="/pricing"
-              className="flex items-center gap-2 font-bold rounded-lg px-5 py-2.5 flex-shrink-0 bg-white dark:bg-[#181818] border border-border-soft text-body-strong hover:border-brand/40 transition-colors"
+              className="flex items-center gap-2 font-bold rounded-lg px-5 py-2.5 flex-shrink-0 bg-white dark:bg-[#131E2F] border border-border-soft text-body-strong hover:border-brand/40 transition-colors"
             >
               <Lock className="w-4 h-4" /> See plans
             </Link>
@@ -268,7 +268,7 @@ export default function BuilderSession({ progress, tier }) {
 
         {!loading && locked && (
           <div className="flex flex-col items-center text-center gap-3 py-16 border-2 border-dashed border-border rounded-2xl mb-8">
-            <Lock className="w-8 h-8 text-brand" />
+            <Lock className="w-8 h-8 text-link" />
             <p className="font-bold text-ink">This session's guide is <span>{tier}</span> content</p>
             <p className="text-sm text-body max-w-sm">
               Get <span>{tier}</span> (or the Pro bundle) to unlock the full step-by-step build, prompts, and resources — permanent access, yours to keep.
@@ -329,7 +329,7 @@ export default function BuilderSession({ progress, tier }) {
                   href={r.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-between text-sm text-body-strong hover:text-ink bg-[#FAF8FF] dark:bg-white/5 hover:bg-[#F3EBFF] dark:hover:bg-brand/10 border border-border-soft rounded-lg px-3.5 py-2.5 transition-colors"
+                  className="flex items-center justify-between text-sm text-body-strong hover:text-ink bg-[#F6F8FB] dark:bg-white/5 hover:bg-[#E8EDF3] dark:hover:bg-brand/10 border border-border-soft rounded-lg px-3.5 py-2.5 transition-colors"
                 >
                   {r.title}
                   <ExternalLink className="w-3.5 h-3.5 text-gray-400" />
@@ -345,9 +345,9 @@ export default function BuilderSession({ progress, tier }) {
             {prevAgent ? (
               <Link
                 to={getBuilderPagePath(prevAgent)}
-                className="flex items-center gap-2 bg-white dark:bg-[#181818] border-[1.5px] border-border-soft hover:border-brand/40 rounded-xl pl-2.5 pr-4 py-2.5 transition-colors min-w-0"
+                className="flex items-center gap-2 bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft hover:border-brand/40 rounded-xl pl-2.5 pr-4 py-2.5 transition-colors min-w-0"
               >
-                <ChevronLeft className="w-4 h-4 text-brand flex-shrink-0" />
+                <ChevronLeft className="w-4 h-4 text-link flex-shrink-0" />
                 <span className="min-w-0">
                   <span className="block text-[10px] font-bold uppercase tracking-wide text-gray-400">Previous</span>
                   <span className="block text-xs sm:text-sm font-bold text-ink truncate">{prevAgent.title}</span>
@@ -356,9 +356,9 @@ export default function BuilderSession({ progress, tier }) {
             ) : showGuideBack ? (
               <Link
                 to="/builder-1-guide"
-                className="flex items-center gap-2 bg-white dark:bg-[#181818] border-[1.5px] border-border-soft hover:border-brand/40 rounded-xl pl-2.5 pr-4 py-2.5 transition-colors min-w-0"
+                className="flex items-center gap-2 bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft hover:border-brand/40 rounded-xl pl-2.5 pr-4 py-2.5 transition-colors min-w-0"
               >
-                <ChevronLeft className="w-4 h-4 text-brand flex-shrink-0" />
+                <ChevronLeft className="w-4 h-4 text-link flex-shrink-0" />
                 <span className="min-w-0">
                   <span className="block text-[10px] font-bold uppercase tracking-wide text-gray-400">Previous</span>
                   <span className="block text-xs sm:text-sm font-bold text-ink truncate">Getting Started Guide</span>
@@ -390,7 +390,7 @@ export default function BuilderSession({ progress, tier }) {
 function SectionTitle({ icon: Icon, title }) {
   return (
     <div className="flex items-center gap-2 mb-3">
-      <Icon className="w-4 h-4 text-brand" />
+      <Icon className="w-4 h-4 text-link" />
       <h3 className="font-bold text-ink text-sm uppercase tracking-wide">{title}</h3>
     </div>
   );

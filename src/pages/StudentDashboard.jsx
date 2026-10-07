@@ -43,7 +43,7 @@ export default function StudentDashboard({ progress, onSelectAgent }) {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-bg">
-        <Loader2 className="w-6 h-6 animate-spin text-brand" />
+        <Loader2 className="w-6 h-6 animate-spin text-link" />
       </div>
     );
   }

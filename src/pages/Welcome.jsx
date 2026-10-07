@@ -192,8 +192,8 @@ export default function Welcome() {
       className="relative overflow-hidden min-h-[calc(100vh-4rem)]"
       style={{
         background: theme === 'dark'
-          ? 'radial-gradient(120% 100% at 85% 0%, #181022 0%, #0A090F 55%)'
-          : 'radial-gradient(120% 100% at 85% 0%, #F3EBFF 0%, #FBFAFF 55%)',
+          ? '#0C1420'
+          : '#F6F8FB',
       }}
     >
       <div
@@ -208,7 +208,7 @@ export default function Welcome() {
             <img src="/logo.jpeg" alt="Social Dev Technologies" className="w-12 h-12 object-contain rounded-lg" />
             <div>
               <p className="font-display font-extrabold text-ink text-lg leading-tight">Social Dev</p>
-              <p className="text-[10px] font-semibold text-brand uppercase tracking-widest">Technologies</p>
+              <p className="text-[10px] font-semibold text-link uppercase tracking-widest">Technologies</p>
             </div>
           </div>
 
@@ -224,8 +224,8 @@ export default function Welcome() {
           <div className="space-y-6">
             {highlights.map((h) => (
               <div key={h.title} className="flex items-start gap-4">
-                <div className="w-11 h-11 rounded-xl bg-white dark:bg-[#181818] border border-border-soft flex items-center justify-center flex-shrink-0">
-                  <h.icon className="w-5 h-5 text-brand" />
+                <div className="w-11 h-11 rounded-xl bg-white dark:bg-[#131E2F] border border-border-soft flex items-center justify-center flex-shrink-0">
+                  <h.icon className="w-5 h-5 text-link" />
                 </div>
                 <div>
                   <p className="font-bold text-ink">{h.title}</p>
@@ -240,7 +240,7 @@ export default function Welcome() {
         <m.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="rounded-[22px] border-[1.5px] border-border-soft bg-white dark:bg-[#181818] shadow-[0_20px_44px_-16px_rgba(124,58,237,.18)] p-6 sm:p-8"
+          className="rounded-[22px] border-[1.5px] border-border-soft bg-white dark:bg-[#131E2F] shadow-[0_20px_44px_-16px_rgba(15,26,42,.18)] p-6 sm:p-8"
         >
           {!isConfigured && (
             <div className="mb-6 flex items-start gap-2 text-sm text-amber-700 dark:text-amber-400 bg-[#FEF9E7] dark:bg-amber-500/10 border border-amber/30 rounded-lg px-3 py-2.5">
@@ -253,7 +253,7 @@ export default function Welcome() {
           )}
 
           {/* Mode tabs */}
-          <div className="grid grid-cols-2 gap-2 mb-6 p-1 rounded-lg bg-[#FAF8FF] dark:bg-[#0A090F] border border-border-soft">
+          <div className="grid grid-cols-2 gap-2 mb-6 p-1 rounded-lg bg-[#F6F8FB] dark:bg-[#0C1420] border border-border-soft">
             <button
               onClick={() => { setMode('signup'); resetAuxState(); }}
               className={`py-2.5 rounded-md text-sm font-bold transition-colors ${mode === 'signup' ? 'bg-brand text-white' : 'text-body-strong hover:text-ink'}`}
@@ -285,7 +285,7 @@ export default function Welcome() {
               <button
                 onClick={handleGoogleSignIn}
                 disabled={googleLoading || !isConfigured}
-                className="w-full flex items-center justify-center gap-3 bg-white dark:bg-[#181818] hover:bg-gray-50 dark:hover:bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed text-body-strong border-[1.5px] border-border font-bold rounded-lg px-5 py-3 transition-colors mb-5"
+                className="w-full flex items-center justify-center gap-3 bg-white dark:bg-[#131E2F] hover:bg-gray-50 dark:hover:bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed text-body-strong border-[1.5px] border-border font-bold rounded-lg px-5 py-3 transition-colors mb-5"
               >
                 {googleLoading ? <Loader2 className="w-5 h-5 animate-spin text-gray-500" /> : <GoogleIcon />}
                 {googleLoading ? 'Redirecting to Google…' : 'Continue with Google'}
@@ -311,7 +311,7 @@ export default function Welcome() {
                     <button
                       type="button"
                       onClick={() => { setLoginMethod('password'); setResetSent(false); setError(''); }}
-                      className="text-brand font-bold text-sm hover:underline"
+                      className="text-link font-bold text-sm hover:underline"
                     >
                       Back to log in
                     </button>
@@ -329,13 +329,13 @@ export default function Welcome() {
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           placeholder="you@example.com"
-                          className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-white dark:bg-[#0A090F] border border-border dark:border-[#353539] text-sm text-ink placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand"
+                          className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-white dark:bg-[#0C1420] border border-border dark:border-[#26364B] text-sm text-ink placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand"
                         />
                       </div>
                     </div>
 
                     {error && (
-                      <div className="flex items-start gap-2 text-sm text-rose bg-[#FDEEF4] dark:bg-rose/10 border border-rose/20 rounded-lg px-3 py-2.5">
+                      <div className="flex items-start gap-2 text-sm text-rose bg-[#FBEAE9] dark:bg-rose/10 border border-rose/20 rounded-lg px-3 py-2.5">
                         <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
                         {error}
                       </div>
@@ -344,14 +344,14 @@ export default function Welcome() {
                     <button
                       type="submit"
                       disabled={loading || !isConfigured}
-                      className="w-full flex items-center justify-center gap-2 bg-brand hover:bg-brand-deep disabled:opacity-50 text-white font-bold rounded-lg px-5 py-3 shadow-[0_10px_22px_rgba(124,58,237,.35)] transition-colors"
+                      className="w-full flex items-center justify-center gap-2 bg-brand hover:bg-brand-deep disabled:opacity-50 text-white font-bold rounded-lg px-5 py-3 shadow-[0_10px_22px_rgba(15,26,42,.35)] transition-colors"
                     >
                       {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mail className="w-4 h-4" />}
                       Send reset link
                     </button>
 
                     <p className="text-xs text-gray-400 text-center">
-                      <button type="button" onClick={() => { setLoginMethod('password'); setError(''); }} className="text-brand font-bold hover:underline">
+                      <button type="button" onClick={() => { setLoginMethod('password'); setError(''); }} className="text-link font-bold hover:underline">
                         Back to log in
                       </button>
                     </p>
@@ -370,7 +370,7 @@ export default function Welcome() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="you@example.com"
-                        className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-white dark:bg-[#0A090F] border border-border dark:border-[#353539] text-sm text-ink placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand disabled:bg-[#FAF8FF] dark:disabled:bg-white/5 disabled:text-body"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-white dark:bg-[#0C1420] border border-border dark:border-[#26364B] text-sm text-ink placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand disabled:bg-[#F6F8FB] dark:disabled:bg-white/5 disabled:text-body"
                       />
                     </div>
                   </div>
@@ -380,7 +380,7 @@ export default function Welcome() {
                       type="button"
                       onClick={handleSendCode}
                       disabled={loading || !isConfigured}
-                      className="w-full flex items-center justify-center gap-2 bg-brand hover:bg-brand-deep disabled:opacity-50 text-white font-bold rounded-lg px-5 py-3 shadow-[0_10px_22px_rgba(124,58,237,.35)] transition-colors"
+                      className="w-full flex items-center justify-center gap-2 bg-brand hover:bg-brand-deep disabled:opacity-50 text-white font-bold rounded-lg px-5 py-3 shadow-[0_10px_22px_rgba(15,26,42,.35)] transition-colors"
                     >
                       {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mail className="w-4 h-4" />}
                       Send me a login code
@@ -398,11 +398,11 @@ export default function Welcome() {
                             value={code}
                             onChange={(e) => setCode(e.target.value)}
                             placeholder="Enter your code"
-                            className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-white dark:bg-[#0A090F] border border-border dark:border-[#353539] text-sm text-ink placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand tracking-widest"
+                            className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-white dark:bg-[#0C1420] border border-border dark:border-[#26364B] text-sm text-ink placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand tracking-widest"
                           />
                         </div>
                         <p className="text-xs text-gray-400 mt-1.5">
-                          If <span>{email}</span> has an account, a code is on its way. No email after a few minutes? Check the address, or <button type="button" onClick={handleSendCode} className="text-brand font-semibold hover:underline">resend the code</button>.
+                          If <span>{email}</span> has an account, a code is on its way. No email after a few minutes? Check the address, or <button type="button" onClick={handleSendCode} className="text-link font-semibold hover:underline">resend the code</button>.
                         </p>
                       </div>
 
@@ -414,7 +414,7 @@ export default function Welcome() {
                       <button
                         type="submit"
                         disabled={loading || !isConfigured}
-                        className="w-full flex items-center justify-center gap-2 bg-brand hover:bg-brand-deep disabled:opacity-50 text-white font-bold rounded-lg px-5 py-3 shadow-[0_10px_22px_rgba(124,58,237,.35)] transition-colors"
+                        className="w-full flex items-center justify-center gap-2 bg-brand hover:bg-brand-deep disabled:opacity-50 text-white font-bold rounded-lg px-5 py-3 shadow-[0_10px_22px_rgba(15,26,42,.35)] transition-colors"
                       >
                         {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Rocket className="w-4 h-4" />}
                         Verify & Log In
@@ -423,14 +423,14 @@ export default function Welcome() {
                   )}
 
                   {error && (
-                    <div className="flex items-start gap-2 text-sm text-rose bg-[#FDEEF4] dark:bg-rose/10 border border-rose/20 rounded-lg px-3 py-2.5">
+                    <div className="flex items-start gap-2 text-sm text-rose bg-[#FBEAE9] dark:bg-rose/10 border border-rose/20 rounded-lg px-3 py-2.5">
                       <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
                       {error}
                     </div>
                   )}
 
                   <p className="text-xs text-gray-400 text-center">
-                    <button type="button" onClick={() => { setLoginMethod('password'); setCode(''); setCodeSent(false); setError(''); }} className="text-brand font-bold hover:underline">
+                    <button type="button" onClick={() => { setLoginMethod('password'); setCode(''); setCodeSent(false); setError(''); }} className="text-link font-bold hover:underline">
                       Use my password instead
                     </button>
                   </p>
@@ -447,7 +447,7 @@ export default function Welcome() {
                           value={name}
                           onChange={(e) => setName(e.target.value)}
                           placeholder="Your name"
-                          className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-white dark:bg-[#0A090F] border border-border dark:border-[#353539] text-sm text-ink placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand"
+                          className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-white dark:bg-[#0C1420] border border-border dark:border-[#26364B] text-sm text-ink placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand"
                         />
                       </div>
                     </div>
@@ -463,7 +463,7 @@ export default function Welcome() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="you@example.com"
-                        className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-white dark:bg-[#0A090F] border border-border dark:border-[#353539] text-sm text-ink placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-white dark:bg-[#0C1420] border border-border dark:border-[#26364B] text-sm text-ink placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand"
                       />
                     </div>
                   </div>
@@ -483,7 +483,7 @@ export default function Welcome() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder={mode === 'signup' ? 'At least 12 characters' : 'Your password'}
-                        className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-white dark:bg-[#0A090F] border border-border dark:border-[#353539] text-sm text-ink placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-white dark:bg-[#0C1420] border border-border dark:border-[#26364B] text-sm text-ink placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand"
                       />
                     </div>
                     {/* Supabase Auth rejects weak passwords server-side (12 chars,
@@ -502,7 +502,7 @@ export default function Welcome() {
                       <button
                         type="button"
                         onClick={() => { setLoginMethod('forgot'); setError(''); }}
-                        className="text-xs text-brand font-semibold hover:underline"
+                        className="text-xs text-link font-semibold hover:underline"
                       >
                         Forgot password?
                       </button>
@@ -517,7 +517,7 @@ export default function Welcome() {
                   )}
 
                   {error && (
-                    <div className="flex items-start gap-2 text-sm text-rose bg-[#FDEEF4] dark:bg-rose/10 border border-rose/20 rounded-lg px-3 py-2.5">
+                    <div className="flex items-start gap-2 text-sm text-rose bg-[#FBEAE9] dark:bg-rose/10 border border-rose/20 rounded-lg px-3 py-2.5">
                       <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
                       {error}
                     </div>
@@ -526,7 +526,7 @@ export default function Welcome() {
                   <button
                     type="submit"
                     disabled={loading || !isConfigured}
-                    className="w-full flex items-center justify-center gap-2 bg-brand hover:bg-brand-deep disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-lg px-5 py-3 shadow-[0_10px_22px_rgba(124,58,237,.35)] transition-colors"
+                    className="w-full flex items-center justify-center gap-2 bg-brand hover:bg-brand-deep disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-lg px-5 py-3 shadow-[0_10px_22px_rgba(15,26,42,.35)] transition-colors"
                   >
                     {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : mode === 'signup' ? <Flame className="w-4 h-4" /> : <Rocket className="w-4 h-4" />}
                     {mode === 'signup' ? 'Create Account' : 'Log In'}
@@ -535,17 +535,17 @@ export default function Welcome() {
                   <p className="text-xs text-gray-400 text-center">
                     {mode === 'signup' ? (
                       <>Already have an account?<span> </span>
-                        <button type="button" onClick={() => { setMode('login'); resetAuxState(); }} className="text-brand font-bold hover:underline">Log in</button>
+                        <button type="button" onClick={() => { setMode('login'); resetAuxState(); }} className="text-link font-bold hover:underline">Log in</button>
                       </>
                     ) : (
                       <>
-                        <button type="button" onClick={() => setLoginMethod('code')} className="text-brand font-bold hover:underline">
+                        <button type="button" onClick={() => setLoginMethod('code')} className="text-link font-bold hover:underline">
                           Log in with an emailed code instead
                         </button>
                         <br className="sm:hidden" />
                         <span> </span>·<span> </span>
                         Don't have an account?<span> </span>
-                        <button type="button" onClick={() => { setMode('signup'); resetAuxState(); }} className="text-brand font-bold hover:underline">Sign up</button>
+                        <button type="button" onClick={() => { setMode('signup'); resetAuxState(); }} className="text-link font-bold hover:underline">Sign up</button>
                       </>
                     )}
                   </p>
@@ -557,7 +557,7 @@ export default function Welcome() {
       </div>
 
       <div className="relative text-center pb-12 text-sm text-body">
-        <Link to="/" className="hover:text-brand transition-colors">← Back to home</Link>
+        <Link to="/" className="hover:text-link transition-colors">← Back to home</Link>
       </div>
     </div>
   );

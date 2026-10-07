@@ -53,7 +53,7 @@ export default function YouTubeFacade({ videoId, title, className = '', thumbnai
       />
       <span className="absolute inset-0 bg-black/25 group-hover:bg-black/35 transition-colors" />
       <span className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white/95 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
-        <Play className="w-6 h-6 sm:w-7 sm:h-7 text-brand ml-1" fill="currentColor" />
+        <Play className="w-6 h-6 sm:w-7 sm:h-7 text-link ml-1" fill="currentColor" />
       </span>
     </button>
   );

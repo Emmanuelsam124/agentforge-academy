@@ -31,9 +31,9 @@ function formatCohortDate(dateStr) {
 // going out of date the next time that page's design changes.
 function LiveClassMockup() {
   return (
-    <div className="relative bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-[22px] p-5 shadow-[0_20px_44px_-24px_rgba(80,40,160,.5)]">
+    <div className="relative bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-[22px] p-5 shadow-[0_20px_44px_-24px_rgba(15,26,42,.5)]">
       <div className="flex items-center justify-between mb-4">
-        <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-rose bg-[#FDEEF4] dark:bg-rose/10 px-2.5 py-1 rounded-full">
+        <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-rose bg-[#FBEAE9] dark:bg-rose/10 px-2.5 py-1 rounded-full">
           <span className="w-1.5 h-1.5 rounded-full bg-rose animate-pulse" /> LIVE THIS WEEK
         </span>
         <CalendarDays className="w-4 h-4 text-gray-300" />
@@ -43,8 +43,8 @@ function LiveClassMockup() {
         { title: 'AI Agent Mastery — Office hours', tier: 'AI Agent Mastery' },
       ].map((s) => (
         <div key={s.title} className="flex items-center gap-3 rounded-xl border border-border-soft px-3.5 py-3 mb-2.5 last:mb-0">
-          <div className="w-9 h-9 rounded-lg bg-[#F3EBFF] dark:bg-brand/15 flex items-center justify-center flex-shrink-0">
-            <Video className="w-4 h-4 text-brand" />
+          <div className="w-9 h-9 rounded-lg bg-[#E8EDF3] dark:bg-brand/15 flex items-center justify-center flex-shrink-0">
+            <Video className="w-4 h-4 text-link" />
           </div>
           <div className="min-w-0 flex-1">
             <p className="font-bold text-sm text-ink truncate">{s.title}</p>
@@ -64,14 +64,14 @@ function LiveClassMockup() {
 // and made-up (but realistic) support exchange, not real members' names,
 // photos, or messages.
 const CHAT_MESSAGES = [
-  { who: 'A', color: '#7C3AED', text: 'Anyone else stuck on the Gmail agent OAuth step? 😩', mine: false },
+  { who: 'A', color: '#264D73', text: 'Anyone else stuck on the Gmail agent OAuth step? 😩', mine: false },
   { who: 'D', color: '#16A34A', text: 'yep — check the scope you granted, easy to miss one', mine: false },
-  { who: 'Me', color: '#F5D90A', text: 'that was it, thank you!! 🙏', mine: true },
+  { who: 'Me', color: '#F2A93B', text: 'that was it, thank you!! 🙏', mine: true },
 ];
 
 function CommunityMockup() {
   return (
-    <div className="relative bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-[22px] overflow-hidden shadow-[0_20px_44px_-24px_rgba(22,163,74,.35)]">
+    <div className="relative bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-[22px] overflow-hidden shadow-[0_20px_44px_-24px_rgba(22,163,74,.35)]">
       <div className="flex items-center gap-2.5 px-4 py-3 bg-[#075E54]">
         <div className="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center text-white">
           <MessageCircle className="w-4 h-4" />
@@ -177,8 +177,8 @@ const OUTCOMES = [
 ];
 
 const HOW_IT_WORKS = [
-  { num: 1, bg: '#7C3AED', fg: '#fff', title: 'Pick a session', text: `${publicAgents.length} guided builds across Builder 1 and Builder 2. Each has a time estimate and clear outcomes.` },
-  { num: 2, bg: '#F5D90A', fg: '#1A1333', title: 'Follow the guide', text: 'Every build ships a clear, step-by-step guide with ready-to-use prompts — no blank page, just follow along and build.' },
+  { num: 1, bg: '#264D73', fg: '#fff', title: 'Pick a session', text: `${publicAgents.length} guided builds across Builder 1 and Builder 2. Each has a time estimate and clear outcomes.` },
+  { num: 2, bg: '#F2A93B', fg: '#0F1A2A', title: 'Follow the guide', text: 'Every build ships a clear, step-by-step guide with ready-to-use prompts — no blank page, just follow along and build.' },
   { num: 3, bg: '#16A34A', fg: '#fff', title: 'Ship to portfolio', text: 'Each session ends with a write-up prompt: LinkedIn post, resume bullets, project blurb.' },
 ];
 
@@ -270,8 +270,8 @@ export default function Home({ progress, onSelectAgent }) {
         className="relative overflow-hidden pt-14 pb-14 px-4 sm:px-6 lg:px-[5vw]"
         style={{
           background: theme === 'dark'
-            ? 'radial-gradient(120% 100% at 85% 0%, #181022 0%, #0A090F 55%)'
-            : 'radial-gradient(120% 100% at 85% 0%, #F3EBFF 0%, #FBFAFF 55%)',
+            ? '#0C1420'
+            : '#F6F8FB',
         }}
       >
         <div
@@ -285,12 +285,12 @@ export default function Home({ progress, onSelectAgent }) {
 
         <div className="relative max-w-6xl mx-auto grid lg:grid-cols-[1.05fr_.95fr] gap-11 items-center">
           <div>
-            <span className="inline-flex items-center gap-2 bg-white dark:bg-[#181818] border-[1.5px] border-border text-brand font-bold text-[12.5px] px-4 py-2 rounded-full shadow-[0_3px_10px_rgba(124,58,237,.1)]">
+            <span className="inline-flex items-center gap-2 bg-white dark:bg-[#131E2F] border-[1.5px] border-border text-link font-bold text-[12.5px] px-4 py-2 rounded-full shadow-[0_3px_10px_rgba(15,26,42,.1)]">
               🚀 Learn by building real agents
             </span>
             <h1 className="font-display font-extrabold text-[40px] sm:text-[54px] leading-[1.04] text-ink tracking-[-1px] sm:tracking-[-1.5px] mt-5">
               Build real AI agents.<br />
-              <span className="text-brand">Earn XP.</span>{' '}
+              <span className="text-link">Earn XP.</span>{' '}
               <span className="inline-block bg-yellow px-2.5 rounded-lg -rotate-[1.5deg]">Level up.</span>
             </h1>
             <p className="text-[17px] leading-relaxed text-body mt-5 mb-5 max-w-[480px]">
@@ -301,13 +301,13 @@ export default function Home({ progress, onSelectAgent }) {
             <div className="flex gap-3.5 items-center flex-wrap mt-2">
               <Link
                 to="/pricing"
-                className="bg-brand text-white font-bold text-base px-7 py-[15px] rounded-2xl shadow-[0_10px_22px_rgba(124,58,237,.4)] hover:bg-brand-deep transition-colors"
+                className="bg-brand text-white font-bold text-base px-7 py-[15px] rounded-2xl shadow-[0_10px_22px_rgba(15,26,42,.4)] hover:bg-brand-deep transition-colors"
               >
                 Get started →
               </Link>
               <Link
                 to="/catalog"
-                className="bg-white dark:bg-[#181818] border-[1.5px] border-[#E0D6F5] dark:border-[#353539] text-body-strong font-bold text-base px-6.5 py-[15px] rounded-2xl hover:bg-[#FAF8FF] dark:hover:bg-white/5 transition-colors"
+                className="bg-white dark:bg-[#131E2F] border-[1.5px] border-[#DDE3EA] dark:border-[#26364B] text-body-strong font-bold text-base px-6.5 py-[15px] rounded-2xl hover:bg-[#F6F8FB] dark:hover:bg-white/5 transition-colors"
               >
                 Browse catalog
               </Link>
@@ -315,7 +315,7 @@ export default function Home({ progress, onSelectAgent }) {
           </div>
 
           <div className="relative">
-            <div className="relative h-[220px] sm:h-[280px] lg:h-[320px] rounded-[22px] overflow-hidden shadow-[0_24px_50px_-18px_rgba(80,40,160,.4)] bg-[#1A1333]">
+            <div className="relative h-[220px] sm:h-[280px] lg:h-[320px] rounded-[22px] overflow-hidden shadow-[0_24px_50px_-18px_rgba(15,26,42,.4)] bg-[#0F1A2A]">
               <YouTubeFacade
                 className="w-full h-full"
                 videoId={YOUTUBE_VIDEO_ID}
@@ -330,7 +330,7 @@ export default function Home({ progress, onSelectAgent }) {
               animate={{ opacity: 1, x: 0, y: 0 }}
               transition={{ duration: 0.7, delay: 0.9, ease: 'easeOut' }}
             >
-              <div className="bg-white rounded-2xl px-4 py-3 shadow-[0_12px_26px_rgba(80,40,160,.22)] animate-floaty2 flex items-center gap-2.5">
+              <div className="bg-white rounded-2xl px-4 py-3 shadow-[0_12px_26px_rgba(15,26,42,.22)] animate-floaty2 flex items-center gap-2.5">
                 <div className="w-9 h-9 rounded-[10px] bg-[#ECFDF5] flex items-center justify-center text-lg">✅</div>
                 <div>
                   <div className="font-display font-extrabold text-sm text-ink">Agent shipped!</div>
@@ -344,7 +344,7 @@ export default function Home({ progress, onSelectAgent }) {
               animate={{ opacity: 1, x: 0, y: 0 }}
               transition={{ duration: 0.7, delay: 1.3, ease: 'easeOut' }}
             >
-              <div className="bg-brand text-white rounded-2xl px-4 py-3 shadow-[0_12px_26px_rgba(124,58,237,.4)] animate-floaty" style={{ animationDelay: '.8s' }}>
+              <div className="bg-brand text-white rounded-2xl px-4 py-3 shadow-[0_12px_26px_rgba(15,26,42,.4)] animate-floaty" style={{ animationDelay: '.8s' }}>
                 <div className="text-[11px] opacity-85 font-semibold">Your level</div>
                 <div className="font-display font-extrabold text-base">🔨 Builder</div>
               </div>
@@ -354,7 +354,7 @@ export default function Home({ progress, onSelectAgent }) {
       </div>
 
       {/* ── Tech marquee ── */}
-      <div className="bg-[#1A1333] py-4 overflow-hidden whitespace-nowrap">
+      <div className="bg-[#0F1A2A] py-4 overflow-hidden whitespace-nowrap">
         <div className="inline-flex gap-[52px] animate-marquee font-bold text-sm text-white/55">
           {[...TECH_MARQUEE, ...TECH_MARQUEE].map((t, i) => (
             <span key={i} className="flex gap-[52px]">
@@ -367,7 +367,7 @@ export default function Home({ progress, onSelectAgent }) {
       {/* ── Automation flow showcase ── */}
       <div className="px-4 sm:px-6 lg:px-[5vw] pt-14 max-w-6xl mx-auto">
         <div className="text-center mb-8">
-          <span className="inline-flex items-center gap-2 text-[13px] font-bold px-4 py-1.5 rounded-full bg-[#F3EBFF] dark:bg-brand/15 text-brand mb-3">
+          <span className="inline-flex items-center gap-2 text-[13px] font-bold px-4 py-1.5 rounded-full bg-[#E8EDF3] dark:bg-brand/15 text-link mb-3">
             <Workflow className="w-3.5 h-3.5" /> See an agent at work
           </span>
           <h2 className="font-display font-extrabold text-[30px] text-ink tracking-[-.8px] m-0">From trigger to done — automatically</h2>
@@ -382,7 +382,7 @@ export default function Home({ progress, onSelectAgent }) {
       {/* ── Three programs ── */}
       <div className="px-4 sm:px-6 lg:px-[5vw] pt-14 pb-14 max-w-6xl mx-auto">
         <div className="text-center mb-7">
-          <span className="inline-flex items-center gap-2 text-[13px] font-bold px-4 py-1.5 rounded-full bg-[#F3EBFF] dark:bg-brand/15 text-brand mb-3">
+          <span className="inline-flex items-center gap-2 text-[13px] font-bold px-4 py-1.5 rounded-full bg-[#E8EDF3] dark:bg-brand/15 text-link mb-3">
             What we offer
           </span>
           <h2 className="font-display font-extrabold text-[30px] text-ink tracking-[-.8px] m-0">Three ways to build with AI</h2>
@@ -393,7 +393,7 @@ export default function Home({ progress, onSelectAgent }) {
             <Link
               key={program.to}
               to={program.to}
-              className={`bg-white dark:bg-[#181818] rounded-[20px] p-6.5 transition-colors ${
+              className={`bg-white dark:bg-[#131E2F] rounded-[20px] p-6.5 transition-colors ${
                 program.accent === 'green'
                   ? 'border-[2px] border-green hover:border-green'
                   : 'border-[2px] border-brand hover:border-brand'
@@ -403,14 +403,14 @@ export default function Home({ progress, onSelectAgent }) {
                 className={`inline-flex items-center gap-1.5 font-bold text-[11px] px-2.5 py-1 rounded-full mb-4 ${
                   program.accent === 'green'
                     ? 'bg-[#EAFAF1] dark:bg-green/10 text-green'
-                    : 'bg-[#F3EBFF] dark:bg-brand/15 text-brand'
+                    : 'bg-[#E8EDF3] dark:bg-brand/15 text-link'
                 }`}
               >
                 {program.tag}
               </span>
               <div
                 className={`w-12 h-12 rounded-[14px] flex items-center justify-center mb-4 ${
-                  program.accent === 'green' ? 'bg-[#EAFAF1] dark:bg-green/10 text-green' : 'bg-[#F3EBFF] dark:bg-brand/15 text-brand'
+                  program.accent === 'green' ? 'bg-[#EAFAF1] dark:bg-green/10 text-green' : 'bg-[#E8EDF3] dark:bg-brand/15 text-link'
                 }`}
               >
                 <program.icon className="w-6 h-6" />
@@ -420,14 +420,14 @@ export default function Home({ progress, onSelectAgent }) {
               <ul className="flex flex-col gap-1.5 mb-5">
                 {program.bullets.map((b) => (
                   <li key={b} className="flex items-start gap-2 text-[12.5px] text-body-strong">
-                    <CheckCheck className={`w-3.5 h-3.5 mt-0.5 flex-shrink-0 ${program.accent === 'green' ? 'text-green' : 'text-brand'}`} />
+                    <CheckCheck className={`w-3.5 h-3.5 mt-0.5 flex-shrink-0 ${program.accent === 'green' ? 'text-green' : 'text-link'}`} />
                     <span>{b}</span>
                   </li>
                 ))}
               </ul>
               <div className="flex items-center justify-between pt-4 border-t border-border-soft">
                 <span className="font-display font-extrabold text-ink">{program.price}</span>
-                <span className={`inline-flex items-center gap-1.5 font-bold text-sm ${program.accent === 'green' ? 'text-green' : 'text-brand'}`}>
+                <span className={`inline-flex items-center gap-1.5 font-bold text-sm ${program.accent === 'green' ? 'text-green' : 'text-link'}`}>
                   Explore <ArrowRight className="w-3.5 h-3.5" />
                 </span>
               </div>
@@ -437,14 +437,14 @@ export default function Home({ progress, onSelectAgent }) {
       </div>
 
       {/* ── Track record ── */}
-      <div className="bg-[#1A1333] px-4 sm:px-6 lg:px-[5vw] py-14">
+      <div className="bg-[#0F1A2A] px-4 sm:px-6 lg:px-[5vw] py-14">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-9">
             <span className="inline-flex items-center gap-2 text-[13px] font-bold px-4 py-1.5 rounded-full bg-white/10 text-yellow mb-3">
               Proven track record
             </span>
             <h2 className="font-display font-extrabold text-[30px] text-white tracking-[-.8px] m-0">Real outcomes, not just sessions</h2>
-            <p className="text-[#C9BFE8] mt-2 max-w-xl mx-auto">
+            <p className="text-[#D5DEE9] mt-2 max-w-xl mx-auto">
               500+ students taught across three programs — with outcomes that show up at work, not just a certificate.
             </p>
           </div>
@@ -453,7 +453,7 @@ export default function Home({ progress, onSelectAgent }) {
               <div key={stat.label} className="bg-white/5 border border-white/10 rounded-[18px] px-5 py-6 text-center">
                 <stat.icon className="w-5 h-5 text-yellow mx-auto mb-2" />
                 <div className="font-display font-extrabold text-2xl text-white">{stat.value}</div>
-                <div className="text-[13px] text-[#C9BFE8] font-semibold mt-0.5">{stat.label}</div>
+                <div className="text-[13px] text-[#D5DEE9] font-semibold mt-0.5">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -464,7 +464,7 @@ export default function Home({ progress, onSelectAgent }) {
                   <item.icon className="w-5 h-5" />
                 </div>
                 <h3 className="font-display font-bold text-lg text-white mb-2">{item.title}</h3>
-                <p className="text-sm leading-relaxed text-[#C9BFE8] m-0">{item.text}</p>
+                <p className="text-sm leading-relaxed text-[#D5DEE9] m-0">{item.text}</p>
               </div>
             ))}
           </div>
@@ -484,19 +484,19 @@ export default function Home({ progress, onSelectAgent }) {
 
       {/* ── Stats row ── */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 px-4 sm:px-6 lg:px-[5vw] py-10 max-w-6xl mx-auto">
-        <div className="bg-[#F3EBFF] dark:bg-[#181818] rounded-[18px] px-5 py-5.5 text-center">
-          <div className="font-display font-extrabold text-[34px] text-brand">{publicAgents.length}</div>
+        <div className="bg-[#E8EDF3] dark:bg-[#131E2F] rounded-[18px] px-5 py-5.5 text-center">
+          <div className="font-display font-extrabold text-[34px] text-link">{publicAgents.length}</div>
           <div className="text-[13px] text-body font-semibold mt-0.5">AI Agents</div>
         </div>
-        <div className="bg-[#FEF9E7] dark:bg-[#181818] rounded-[18px] px-5 py-5.5 text-center">
+        <div className="bg-[#FEF9E7] dark:bg-[#131E2F] rounded-[18px] px-5 py-5.5 text-center">
           <div className="font-display font-extrabold text-[34px] text-[#B45309]">{realDepartments.length}</div>
           <div className="text-[13px] text-body font-semibold mt-0.5">Departments</div>
         </div>
-        <div className="bg-[#EAFAF1] dark:bg-[#181818] rounded-[18px] px-5 py-5.5 text-center">
+        <div className="bg-[#EAFAF1] dark:bg-[#131E2F] rounded-[18px] px-5 py-5.5 text-center">
           <div className="font-display font-extrabold text-[34px] text-green"><span>{Math.round(totalXP / 1000)}</span>k+</div>
           <div className="text-[13px] text-body font-semibold mt-0.5">XP Available</div>
         </div>
-        <div className="bg-[#FDEEF4] dark:bg-[#181818] rounded-[18px] px-5 py-5.5 text-center">
+        <div className="bg-[#FBEAE9] dark:bg-[#131E2F] rounded-[18px] px-5 py-5.5 text-center">
           <div className="font-display font-extrabold text-[34px] text-rose"><span>{totalHours}</span>+</div>
           <div className="text-[13px] text-body font-semibold mt-0.5">Hours of content</div>
         </div>
@@ -517,9 +517,9 @@ export default function Home({ progress, onSelectAgent }) {
         </p>
         <div className="grid sm:grid-cols-3 gap-5">
           {HOW_IT_WORKS.map((step) => (
-            <div key={step.num} className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-[20px] p-6.5">
+            <div key={step.num} className="bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-[20px] p-6.5">
               <div
-                className="w-12 h-12 rounded-[14px] font-display font-extrabold text-xl flex items-center justify-center shadow-[0_8px_18px_rgba(124,58,237,.35)]"
+                className="w-12 h-12 rounded-[14px] font-display font-extrabold text-xl flex items-center justify-center shadow-[0_8px_18px_rgba(15,26,42,.35)]"
                 style={{ background: step.bg, color: step.fg }}
               >
                 {step.num}
@@ -537,8 +537,8 @@ export default function Home({ progress, onSelectAgent }) {
         <p className="text-center text-body mt-2 mb-7">What you actually need — no surprises after checkout</p>
         <div className="grid sm:grid-cols-3 gap-5">
           {BEFORE_YOU_START.map((item) => (
-            <div key={item.title} className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-[20px] p-6.5">
-              <div className="w-11 h-11 rounded-xl bg-[#F3EBFF] dark:bg-brand/15 text-brand flex items-center justify-center mb-4">
+            <div key={item.title} className="bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-[20px] p-6.5">
+              <div className="w-11 h-11 rounded-xl bg-[#E8EDF3] dark:bg-brand/15 text-link flex items-center justify-center mb-4">
                 <item.icon className="w-5 h-5" />
               </div>
               <h3 className="font-display font-bold text-lg text-ink mb-2">{item.title}</h3>
@@ -560,11 +560,11 @@ export default function Home({ progress, onSelectAgent }) {
               <Link
                 key={item.label}
                 to={primary ? getBuilderPagePath(primary) : '/catalog'}
-                className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-[20px] p-6 hover:border-brand/40 transition-colors"
+                className="bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-[20px] p-6 hover:border-brand/40 transition-colors"
               >
                 <div className="flex gap-1.5 mb-4">
                   {buildAgents.map((a) => (
-                    <span key={a.id} className="w-11 h-11 rounded-xl bg-[#F3EBFF] dark:bg-brand/15 flex items-center justify-center text-xl flex-shrink-0">
+                    <span key={a.id} className="w-11 h-11 rounded-xl bg-[#E8EDF3] dark:bg-brand/15 flex items-center justify-center text-xl flex-shrink-0">
                       {a.emoji}
                     </span>
                   ))}
@@ -584,8 +584,8 @@ export default function Home({ progress, onSelectAgent }) {
           <p className="text-center text-body mt-2 mb-7">Builder 1's first month, mapped out — each week has one main project and two optional ones</p>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {builder1Weeks.map(({ week, agents: weekAgents, mainAgent }) => (
-              <div key={week} className="bg-white dark:bg-[#181818] border-[1.5px] border-border-soft rounded-[20px] p-6">
-                <span className="inline-block text-[11px] font-bold uppercase tracking-widest text-brand bg-[#F3EBFF] dark:bg-brand/15 px-2.5 py-1 rounded-full mb-3">
+              <div key={week} className="bg-white dark:bg-[#131E2F] border-[1.5px] border-border-soft rounded-[20px] p-6">
+                <span className="inline-block text-[11px] font-bold uppercase tracking-widest text-link bg-[#E8EDF3] dark:bg-brand/15 px-2.5 py-1 rounded-full mb-3">
                   Week <span>{week}</span>
                 </span>
                 <h3 className="font-display font-bold text-lg text-ink mb-1">{WEEK_THEMES[week] || `Week ${week}`}</h3>
@@ -605,7 +605,7 @@ export default function Home({ progress, onSelectAgent }) {
       <div className="px-4 sm:px-6 lg:px-[5vw] pt-2 pb-14 max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-4.5">
           <h2 className="font-display font-extrabold text-2xl text-ink m-0">Browse by department</h2>
-          <Link to="/catalog" className="font-bold text-sm text-brand">View all →</Link>
+          <Link to="/catalog" className="font-bold text-sm text-link">View all →</Link>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
           {realDepartments.map((d) => (
@@ -644,7 +644,7 @@ export default function Home({ progress, onSelectAgent }) {
       <div className="px-4 sm:px-6 lg:px-[5vw] pt-2 pb-14 max-w-6xl mx-auto">
         <div className="grid lg:grid-cols-[1fr_1.1fr] gap-10 items-center">
           <div className="order-2 lg:order-1">
-            <span className="inline-flex items-center gap-2 bg-[#FDEEF4] dark:bg-rose/10 text-rose font-bold text-[12.5px] px-4 py-2 rounded-full">
+            <span className="inline-flex items-center gap-2 bg-[#FBEAE9] dark:bg-rose/10 text-rose font-bold text-[12.5px] px-4 py-2 rounded-full">
               <Video className="w-3.5 h-3.5" /> Live classes
             </span>
             <h2 className="font-display font-extrabold text-[28px] sm:text-[32px] text-ink tracking-[-.7px] mt-4 mb-3">
@@ -656,14 +656,14 @@ export default function Home({ progress, onSelectAgent }) {
               recorded and added to your replays.
             </p>
             {nextCohort && (
-              <p className="inline-flex items-center gap-2 text-sm font-bold text-ink bg-[#F3EBFF] dark:bg-brand/15 px-4 py-2 rounded-full mb-5">
-                <CalendarDays className="w-4 h-4 text-brand" /> Next cohort starts <span>{nextCohort}</span>
+              <p className="inline-flex items-center gap-2 text-sm font-bold text-ink bg-[#E8EDF3] dark:bg-brand/15 px-4 py-2 rounded-full mb-5">
+                <CalendarDays className="w-4 h-4 text-link" /> Next cohort starts <span>{nextCohort}</span>
               </p>
             )}
             <div>
               <Link
                 to="/pricing"
-                className="inline-flex bg-brand text-white font-bold text-base px-7 py-[15px] rounded-2xl shadow-[0_10px_22px_rgba(124,58,237,.4)] hover:bg-brand-deep transition-colors"
+                className="inline-flex bg-brand text-white font-bold text-base px-7 py-[15px] rounded-2xl shadow-[0_10px_22px_rgba(15,26,42,.4)] hover:bg-brand-deep transition-colors"
               >
                 See the live cohorts →
               </Link>
@@ -694,7 +694,7 @@ export default function Home({ progress, onSelectAgent }) {
             </p>
             <Link
               to="/pricing"
-              className="inline-flex bg-brand text-white font-bold text-base px-7 py-[15px] rounded-2xl shadow-[0_10px_22px_rgba(124,58,237,.4)] hover:bg-brand-deep transition-colors"
+              className="inline-flex bg-brand text-white font-bold text-base px-7 py-[15px] rounded-2xl shadow-[0_10px_22px_rgba(15,26,42,.4)] hover:bg-brand-deep transition-colors"
             >
               Get started →
             </Link>
@@ -707,12 +707,12 @@ export default function Home({ progress, onSelectAgent }) {
       {/* ── Pricing CTA band ── */}
       <div className="px-4 sm:px-6 lg:px-[5vw] pb-14 max-w-6xl mx-auto">
         <div
-          className="rounded-[24px] px-8 sm:px-10 py-9 flex items-center justify-between flex-wrap gap-5 shadow-[0_20px_44px_-16px_rgba(124,58,237,.6)]"
-          style={{ background: 'linear-gradient(120deg, #7C3AED, #9D5CFF)' }}
+          className="rounded-[24px] px-8 sm:px-10 py-9 flex items-center justify-between flex-wrap gap-5 shadow-[0_20px_44px_-16px_rgba(15,26,42,.6)]"
+          style={{ background: '#264D73' }}
         >
           <div>
             <h2 className="font-display font-extrabold text-2xl sm:text-[26px] text-white m-0">Ready to start building?</h2>
-            <p className="text-[#EDE4FF] mt-2 mb-0 text-[15px]">AI Agent Mastery, AI Agent Guides, or Vibe Coding — every program and price in one place.</p>
+            <p className="text-[#D5DEE9] mt-2 mb-0 text-[15px]">AI Agent Mastery, AI Agent Guides, or Vibe Coding — every program and price in one place.</p>
           </div>
           <Link
             to="/pricing"

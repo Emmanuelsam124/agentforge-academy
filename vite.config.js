@@ -28,8 +28,8 @@ export default defineConfig({
         start_url: '/dashboard',
         scope: '/',
         display: 'standalone',
-        background_color: '#FBFAFF',
-        theme_color: '#7C3AED',
+        background_color: '#F6F8FB',
+        theme_color: '#264D73',
         icons: [
           { src: '/pwa-192.png', sizes: '192x192', type: 'image/png' },
           { src: '/pwa-512.png', sizes: '512x512', type: 'image/png' },

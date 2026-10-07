@@ -37,14 +37,14 @@ export default function ConfirmEmail() {
 
   return (
     <div className="min-h-[60vh] flex items-center justify-center px-4 py-16">
-      <div className="w-full max-w-sm text-center bg-white dark:bg-[#181818] rounded-[22px] p-7 shadow-[0_30px_70px_-20px_rgba(20,10,50,.25)]">
-        <MailCheck className="w-10 h-10 text-brand mx-auto mb-3" />
+      <div className="w-full max-w-sm text-center bg-white dark:bg-[#131E2F] rounded-[22px] p-7 shadow-[0_30px_70px_-20px_rgba(15,26,42,.25)]">
+        <MailCheck className="w-10 h-10 text-link mx-auto mb-3" />
         <h1 className="font-display font-extrabold text-xl text-ink mb-1.5">Confirm your email</h1>
         {tokenHash ? (
           <>
             <p className="text-[13.5px] text-body mb-5">Press the button to finish confirming your account.</p>
             {error && (
-              <div className="flex items-start gap-2 text-sm text-rose bg-[#FDEEF4] dark:bg-rose/10 border border-rose/20 rounded-lg px-3 py-2.5 mb-4 text-left">
+              <div className="flex items-start gap-2 text-sm text-rose bg-[#FBEAE9] dark:bg-rose/10 border border-rose/20 rounded-lg px-3 py-2.5 mb-4 text-left">
                 <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" /> {error}
               </div>
             )}
