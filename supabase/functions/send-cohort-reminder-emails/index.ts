@@ -30,12 +30,12 @@ function corsHeadersFor(req) {
 
 function emailShell(innerHtml) {
   return `
-    <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:32px 24px;background:#FBFAFF;">
+    <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:32px 24px;background:#F6F8FB;">
       <div style="text-align:center;margin-bottom:24px;">
-        <span style="font-size:18px;font-weight:800;color:#1A1333;">Social Dev <span style="color:#7C3AED;">Technologies</span></span>
+        <span style="font-size:18px;font-weight:800;color:#0F1A2A;">Social Dev <span style="color:#264D73;">Technologies</span></span>
       </div>
       ${innerHtml}
-      <div style="margin-top:32px;padding-top:16px;border-top:1px solid #EEE6FB;font-size:12px;color:#8A82AD;text-align:center;">
+      <div style="margin-top:32px;padding-top:16px;border-top:1px solid #E7ECF2;font-size:12px;color:#4A5B6C;text-align:center;">
         Social Dev Technologies · You're receiving this because you have an account with us.<br/>
         Questions? Reply to this email or contact support@socialdevtechnologies.com.
       </div>
@@ -64,14 +64,14 @@ const TIER_LABELS = { builder1: 'Builder 1', builder2: 'Builder 2' };
 
 function cohortReminderHtml(name, tierLabel, startDateFormatted) {
   return `
-    <p style="font-size:15px;color:#1A1333;">Hey ${name},</p>
-    <p style="font-size:15px;color:#3A3358;line-height:1.6;">
+    <p style="font-size:15px;color:#0F1A2A;">Hey ${name},</p>
+    <p style="font-size:15px;color:#1F2C3D;line-height:1.6;">
       Your <strong>${tierLabel}</strong> cohort starts <strong>${startDateFormatted}</strong>.
       If you haven't started building yet, now's a great time to get ahead of the group.
     </p>
     <div style="text-align:center;margin:28px 0;">
       <a href="https://socialdevtechnologies.com/dashboard"
-         style="display:inline-block;background:#7C3AED;color:#fff;padding:12px 28px;border-radius:10px;text-decoration:none;font-weight:700;">
+         style="display:inline-block;background:#264D73;color:#fff;padding:12px 28px;border-radius:10px;text-decoration:none;font-weight:700;">
         Go to my dashboard →
       </a>
     </div>

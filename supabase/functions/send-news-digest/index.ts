@@ -25,12 +25,12 @@ function corsHeadersFor(req) {
 
 function emailShell(innerHtml) {
   return `
-    <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:32px 24px;background:#FBFAFF;">
+    <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:32px 24px;background:#F6F8FB;">
       <div style="text-align:center;margin-bottom:24px;">
-        <span style="font-size:18px;font-weight:800;color:#1A1333;">Social Dev <span style="color:#7C3AED;">Technologies</span></span>
+        <span style="font-size:18px;font-weight:800;color:#0F1A2A;">Social Dev <span style="color:#264D73;">Technologies</span></span>
       </div>
       ${innerHtml}
-      <div style="margin-top:32px;padding-top:16px;border-top:1px solid #EEE6FB;font-size:12px;color:#8A82AD;text-align:center;">
+      <div style="margin-top:32px;padding-top:16px;border-top:1px solid #E7ECF2;font-size:12px;color:#4A5B6C;text-align:center;">
         Social Dev Technologies · You're receiving this because you have an account with us.<br/>
         Questions? Reply to this email or contact support@socialdevtechnologies.com.
       </div>
@@ -52,23 +52,23 @@ function digestEmailHtml(fullArticles, blurbs) {
     .map(
       (a) => `
       <div style="margin:0 0 20px;">
-        <a href="https://socialdevtechnologies.com/news/${a.slug}" style="font-size:16px;font-weight:700;color:#1A1333;text-decoration:none;">${a.title}</a>
-        <p style="font-size:14px;color:#3A3358;line-height:1.5;margin:4px 0 0;">${a.dek}</p>
-        <a href="https://socialdevtechnologies.com/news/${a.slug}" style="font-size:13px;font-weight:600;color:#7C3AED;text-decoration:none;">Read more →</a>
+        <a href="https://socialdevtechnologies.com/news/${a.slug}" style="font-size:16px;font-weight:700;color:#0F1A2A;text-decoration:none;">${a.title}</a>
+        <p style="font-size:14px;color:#1F2C3D;line-height:1.5;margin:4px 0 0;">${a.dek}</p>
+        <a href="https://socialdevtechnologies.com/news/${a.slug}" style="font-size:13px;font-weight:600;color:#264D73;text-decoration:none;">Read more →</a>
       </div>`,
     )
     .join('');
   const blurbItems = blurbs
-    .map((b) => `<li style="font-size:14px;color:#3A3358;line-height:1.6;margin-bottom:8px;">${b.dek}</li>`)
+    .map((b) => `<li style="font-size:14px;color:#1F2C3D;line-height:1.6;margin-bottom:8px;">${b.dek}</li>`)
     .join('');
 
   return `
-    <p style="font-size:15px;color:#1A1333;">Hey there,</p>
-    <p style="font-size:15px;color:#3A3358;line-height:1.6;">Here's what happened in AI today — picked and written for people actually building with this stuff.</p>
+    <p style="font-size:15px;color:#0F1A2A;">Hey there,</p>
+    <p style="font-size:15px;color:#1F2C3D;line-height:1.6;">Here's what happened in AI today — picked and written for people actually building with this stuff.</p>
     ${articleItems}
-    ${blurbs.length ? `<p style="font-size:14px;font-weight:700;color:#1A1333;margin:20px 0 8px;">Also worth knowing:</p><ul style="padding-left:20px;margin:0;">${blurbItems}</ul>` : ''}
+    ${blurbs.length ? `<p style="font-size:14px;font-weight:700;color:#0F1A2A;margin:20px 0 8px;">Also worth knowing:</p><ul style="padding-left:20px;margin:0;">${blurbItems}</ul>` : ''}
     <div style="text-align:center;margin:28px 0;">
-      <a href="https://socialdevtechnologies.com/news" style="display:inline-block;background:#7C3AED;color:#fff;padding:12px 28px;border-radius:10px;text-decoration:none;font-weight:700;">Read more on the site →</a>
+      <a href="https://socialdevtechnologies.com/news" style="display:inline-block;background:#264D73;color:#fff;padding:12px 28px;border-radius:10px;text-decoration:none;font-weight:700;">Read more on the site →</a>
     </div>
   `;
 }

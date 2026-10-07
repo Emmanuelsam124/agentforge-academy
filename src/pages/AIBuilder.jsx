@@ -205,7 +205,7 @@ export default function AIBuilder() {
                 className="w-full h-full"
                 videoId={DEMO_VIDEO_ID}
                 title="Learn to build real AI agents with Claude"
-                thumbnailSrc="/video-thumbnail.jpg"
+                thumbnailSrc="/video-thumbnail-hd.jpg"
                 priority
               />
             </div>

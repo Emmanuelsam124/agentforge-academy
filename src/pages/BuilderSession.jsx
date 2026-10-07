@@ -306,17 +306,19 @@ export default function BuilderSession({ progress, tier }) {
               ))}
             </div>
           </div>
-          <div>
-            <SectionTitle icon={ListChecks} title="Prerequisites" />
-            <ul className="space-y-1.5">
-              {agent.prerequisites.map((p) => (
-                <li key={p} className="flex items-start gap-2 text-sm text-body">
-                  <Circle className="w-2 h-2 mt-1.5 fill-gray-400 text-gray-400 flex-shrink-0" />
-                  {p}
-                </li>
-              ))}
-            </ul>
-          </div>
+          {agent.prerequisites.length > 0 && (
+            <div>
+              <SectionTitle icon={ListChecks} title="Prerequisites" />
+              <ul className="space-y-1.5">
+                {agent.prerequisites.map((p) => (
+                  <li key={p} className="flex items-start gap-2 text-sm text-body">
+                    <Circle className="w-2 h-2 mt-1.5 fill-gray-400 text-gray-400 flex-shrink-0" />
+                    {p}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </section>
 
         {/* Resources — gated, from fetched content */}

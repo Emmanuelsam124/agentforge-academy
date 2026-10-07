@@ -36,12 +36,12 @@ function escapeHtml(value) {
 
 function emailShell(innerHtml) {
   return `
-    <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:32px 24px;background:#FBFAFF;">
+    <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:32px 24px;background:#F6F8FB;">
       <div style="text-align:center;margin-bottom:24px;">
-        <span style="font-size:18px;font-weight:800;color:#1A1333;">Social Dev <span style="color:#7C3AED;">Technologies</span></span>
+        <span style="font-size:18px;font-weight:800;color:#0F1A2A;">Social Dev <span style="color:#264D73;">Technologies</span></span>
       </div>
       ${innerHtml}
-      <div style="margin-top:32px;padding-top:16px;border-top:1px solid #EEE6FB;font-size:12px;color:#8A82AD;text-align:center;">
+      <div style="margin-top:32px;padding-top:16px;border-top:1px solid #E7ECF2;font-size:12px;color:#4A5B6C;text-align:center;">
         Social Dev Technologies · You're receiving this because you started a checkout on socialdevtechnologies.com.
         It's one of two reminders we send for a checkout — never more.<br/>
         Questions? Message us on WhatsApp: wa.me/2349066006963.
@@ -151,7 +151,7 @@ function ctaLink(product, stage) {
   return `
     <div style="text-align:center;margin:28px 0;">
       <a href="${url}"
-         style="display:inline-block;background:#7C3AED;color:#fff;padding:12px 28px;border-radius:10px;text-decoration:none;font-weight:700;">
+         style="display:inline-block;background:#264D73;color:#fff;padding:12px 28px;border-radius:10px;text-decoration:none;font-weight:700;">
         Finish my checkout →
       </a>
     </div>`;
@@ -160,23 +160,23 @@ function ctaLink(product, stage) {
 function factsList(product) {
   if (!product.facts.length) return '';
   return `
-    <ul style="font-size:14px;color:#3A3358;line-height:1.7;padding-left:20px;margin:16px 0;">
+    <ul style="font-size:14px;color:#1F2C3D;line-height:1.7;padding-left:20px;margin:16px 0;">
       ${product.facts.map((f) => `<li>${escapeHtml(f)}</li>`).join('')}
     </ul>`;
 }
 
 function stage1Html(name, product) {
-  const extra = product.extra ? `<p style="font-size:14px;color:#3A3358;line-height:1.6;">${product.extra()}</p>` : '';
+  const extra = product.extra ? `<p style="font-size:14px;color:#1F2C3D;line-height:1.6;">${product.extra()}</p>` : '';
   return `
-    <p style="font-size:15px;color:#1A1333;">Hey ${escapeHtml(name)},</p>
-    <p style="font-size:15px;color:#3A3358;line-height:1.6;">
+    <p style="font-size:15px;color:#0F1A2A;">Hey ${escapeHtml(name)},</p>
+    <p style="font-size:15px;color:#1F2C3D;line-height:1.6;">
       You started checking out for <strong>${escapeHtml(product.label)}</strong> but the payment didn't go through,
       so your access isn't active yet. Here's what you'd be getting:
     </p>
     ${factsList(product)}
     ${extra}
     ${ctaLink(product, 1)}
-    <p style="font-size:14px;color:#3A3358;line-height:1.6;">
+    <p style="font-size:14px;color:#1F2C3D;line-height:1.6;">
       If your card was declined or the payment page timed out, it's safe to try again — you're only charged when a
       payment succeeds. Using a different card, or another payment option if the page offers one, often fixes it.
     </p>
@@ -184,19 +184,19 @@ function stage1Html(name, product) {
 }
 
 function stage2Html(name, product) {
-  const extra = product.extra ? `<p style="font-size:14px;color:#3A3358;line-height:1.6;">${product.extra()}</p>` : '';
+  const extra = product.extra ? `<p style="font-size:14px;color:#1F2C3D;line-height:1.6;">${product.extra()}</p>` : '';
   return `
-    <p style="font-size:15px;color:#1A1333;">Hey ${escapeHtml(name)},</p>
-    <p style="font-size:15px;color:#3A3358;line-height:1.6;">
+    <p style="font-size:15px;color:#0F1A2A;">Hey ${escapeHtml(name)},</p>
+    <p style="font-size:15px;color:#1F2C3D;line-height:1.6;">
       Quick follow-up on <strong>${escapeHtml(product.label)}</strong>. If something stopped you — a payment problem, a
       question about whether it's right for you, or just bad timing — we'd rather help than leave it hanging.
     </p>
     ${factsList(product)}
     ${extra}
     ${ctaLink(product, 2)}
-    <p style="font-size:14px;color:#3A3358;line-height:1.6;">
+    <p style="font-size:14px;color:#1F2C3D;line-height:1.6;">
       Not sure it fits? Message us on WhatsApp:
-      <a href="https://wa.me/2349066006963" style="color:#7C3AED;">wa.me/2349066006963</a>
+      <a href="https://wa.me/2349066006963" style="color:#264D73;">wa.me/2349066006963</a>
       (we reply 10am–5pm WAT, Monday to Saturday).
     </p>
   `;

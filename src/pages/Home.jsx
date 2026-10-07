@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, CalendarDays, MessageCircle, Video } from 'lucide-react';
+import { ArrowRight, CalendarDays, Video } from 'lucide-react';
 import AutomationFlowDiagram from '../components/AutomationFlowDiagram';
 import YouTubeFacade from '../components/YouTubeFacade';
 import EmojiIcon from '../components/EmojiIcon';
@@ -59,14 +59,6 @@ const BEFORE_YOU_START = [
   },
 ];
 
-// Made-up messages in a WhatsApp-style frame, captioned on the page as an
-// illustration. Generic initials, no member count.
-const CHAT_MESSAGES = [
-  { who: 'A', text: 'Anyone else stuck on the Gmail agent OAuth step? 😩' },
-  { who: 'D', text: 'yep, check the scope you granted, easy to miss one' },
-  { who: null, text: 'that was it, thank you!! 🙏' },
-];
-
 // Sections share one content width: about 1008px at 1440 (the padding sits
 // inside the max-width box). The hero alone uses the full 1152.
 const INNER = 'px-4 sm:px-6 lg:px-[5vw] max-w-6xl mx-auto';
@@ -96,7 +88,7 @@ function Hero() {
               className="w-full h-full"
               videoId={YOUTUBE_VIDEO_ID}
               title={YOUTUBE_VIDEO_TITLE}
-              thumbnailSrc="/video-thumbnail.jpg"
+              thumbnailSrc="/video-thumbnail-hd.jpg"
               priority
             />
           </div>
@@ -113,7 +105,7 @@ function StatsStrip() {
       <div className={`${INNER} flex flex-col lg:flex-row lg:items-center gap-6 lg:gap-0`}>
         <div className="lg:flex-[1.5] min-w-0 lg:pr-8">
           <h2 className="font-display font-bold text-2xl md:text-[26px] leading-[1.15] tracking-[-0.02em] text-ink mb-2 md:mb-2.5">
-            Stay ahead of the curve
+            Bring AI into your actual work
           </h2>
           <p className="t-card text-body max-w-[26em]">
             Students walk into work already using AI skills their teams and managers are only just starting to ask for.
@@ -290,51 +282,28 @@ function LiveClasses() {
   );
 }
 
-function ChatIllustration() {
-  return (
-    <div aria-hidden="true" className="rounded-2xl border border-border bg-surface overflow-hidden">
-      <div className="flex items-center gap-2.5 px-4 py-3 bg-[#075E54]">
-        <div className="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center text-white">
-          <MessageCircle className="w-4 h-4" />
-        </div>
-        <p className="text-white font-bold text-sm leading-tight">Social Dev Builders</p>
-      </div>
-      <div className="p-4 flex flex-col gap-2.5 bg-[#E5DDD5]">
-        {CHAT_MESSAGES.map((m) =>
-          m.who ? (
-            <div key={m.text} className="flex items-end gap-2">
-              <div className="w-6 h-6 rounded-full bg-[#22355B] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">
-                {m.who}
-              </div>
-              <div className="max-w-[80%] lg:max-w-[75%] rounded-xl rounded-bl-[2px] bg-white px-3 py-2 text-[13px] leading-snug text-[#1F1F1F]">
-                {m.text}
-              </div>
-            </div>
-          ) : (
-            <div key={m.text} className="flex justify-end">
-              <div className="max-w-[80%] lg:max-w-[75%] rounded-xl rounded-br-[2px] bg-[#DCF8C6] px-3 py-2 text-[13px] leading-snug text-[#1F1F1F]">
-                {m.text}
-              </div>
-            </div>
-          ),
-        )}
-      </div>
-    </div>
-  );
-}
-
 function Community() {
   return (
     <section className="py-14 md:py-20">
-      <div className={`${INNER} grid lg:grid-cols-[1.1fr_1fr] gap-8 lg:gap-12 items-center`}>
+      <div className={`${INNER} grid lg:grid-cols-[1.45fr_1fr] gap-8 lg:gap-12 items-center`}>
         <div className="min-w-0 order-2 lg:order-1">
-          <ChatIllustration />
-          <p className="mt-2.5 text-[13px] text-body">Illustration, not a real conversation.</p>
+          {/* A real screenshot of a room in the student community chat (the AI Agent
+              Mastery room: a greeting and the Social Dev Assistant's welcome reply). */}
+          <img
+            src="/images/community-chat.webp"
+            alt="Screenshot of the Community chat in the student dashboard, in the AI Agent Mastery room. A student says hello, and the Social Dev Assistant replies with a welcome and an invitation to ask questions and share progress."
+            width={976}
+            height={408}
+            loading="lazy"
+            decoding="async"
+            className="block w-full h-auto rounded-2xl border border-border"
+          />
+          <p className="mt-2.5 text-[13px] text-body">A room in the student community chat</p>
         </div>
         <div className="min-w-0 order-1 lg:order-2">
-          <h2 className="t-h2 text-ink mb-4">Stuck on a build? Ask in the WhatsApp group.</h2>
+          <h2 className="t-h2 text-ink mb-4">Stuck on a build? Ask in the community chat.</h2>
           <p className="t-body text-body mb-6 md:mb-7 max-w-[32em]">
-            Every student joins our WhatsApp community. Ask a question, share what you've built, and get an answer from
+            Every student joins our community. Ask a question, share what you've built, and get an answer from
             other students or from us the same day.
           </p>
           <Link to="/pricing" className="btn btn-primary w-full sm:w-auto">

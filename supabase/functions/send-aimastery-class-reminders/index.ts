@@ -48,12 +48,12 @@ function escapeHtml(value) {
 
 function emailShell(innerHtml) {
   return `
-    <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:32px 24px;background:#FBFAFF;">
+    <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:32px 24px;background:#F6F8FB;">
       <div style="text-align:center;margin-bottom:24px;">
-        <span style="font-size:18px;font-weight:800;color:#1A1333;">Social Dev <span style="color:#7C3AED;">Technologies</span></span>
+        <span style="font-size:18px;font-weight:800;color:#0F1A2A;">Social Dev <span style="color:#264D73;">Technologies</span></span>
       </div>
       ${innerHtml}
-      <div style="margin-top:32px;padding-top:16px;border-top:1px solid #EEE6FB;font-size:12px;color:#8A82AD;text-align:center;">
+      <div style="margin-top:32px;padding-top:16px;border-top:1px solid #E7ECF2;font-size:12px;color:#4A5B6C;text-align:center;">
         Social Dev Technologies · You're receiving this because you registered for AI Agent Mastery.<br/>
         Questions? Reply to this email or contact support@socialdevtechnologies.com.
       </div>
@@ -82,16 +82,16 @@ const fmtDay = (d, opts) => d.toLocaleDateString('en-GB', { timeZone: 'Africa/La
 
 function hourReminderHtml(name) {
   return `
-    <p style="font-size:15px;color:#1A1333;">Hey ${escapeHtml(name)},</p>
-    <p style="font-size:15px;color:#3A3358;line-height:1.6;">
+    <p style="font-size:15px;color:#0F1A2A;">Hey ${escapeHtml(name)},</p>
+    <p style="font-size:15px;color:#1F2C3D;line-height:1.6;">
       Your <strong>AI Agent Mastery</strong> class starts in <strong>1 hour</strong> — <strong>7:00 PM WAT</strong> tonight.
     </p>
-    <p style="font-size:15px;color:#3A3358;line-height:1.6;">
+    <p style="font-size:15px;color:#1F2C3D;line-height:1.6;">
       Your join link is on your dashboard under <strong>Live Sessions</strong>. Log in now so you're ready when we start.
     </p>
     <div style="text-align:center;margin:28px 0;">
       <a href="https://socialdevtechnologies.com/dashboard/live-sessions"
-         style="display:inline-block;background:#7C3AED;color:#fff;padding:12px 28px;border-radius:10px;text-decoration:none;font-weight:700;">
+         style="display:inline-block;background:#264D73;color:#fff;padding:12px 28px;border-radius:10px;text-decoration:none;font-weight:700;">
         Join the class →
       </a>
     </div>
@@ -100,20 +100,20 @@ function hourReminderHtml(name) {
 
 function reminderHtml(name, dayLines) {
   return `
-    <p style="font-size:15px;color:#1A1333;">Hey ${escapeHtml(name)},</p>
-    <p style="font-size:15px;color:#3A3358;line-height:1.6;">
+    <p style="font-size:15px;color:#0F1A2A;">Hey ${escapeHtml(name)},</p>
+    <p style="font-size:15px;color:#1F2C3D;line-height:1.6;">
       Your <strong>AI Agent Mastery</strong> cohort starts <strong>today at 7:00 PM WAT</strong>. Here's the full schedule — all three evenings at 7:00 PM WAT:
     </p>
-    <ul style="font-size:15px;color:#3A3358;line-height:1.8;padding-left:20px;margin:12px 0;">
+    <ul style="font-size:15px;color:#1F2C3D;line-height:1.8;padding-left:20px;margin:12px 0;">
       ${dayLines.map((l) => `<li>${l}</li>`).join('')}
     </ul>
-    <p style="font-size:15px;color:#3A3358;line-height:1.6;">
+    <p style="font-size:15px;color:#1F2C3D;line-height:1.6;">
       Your join links are on your dashboard under <strong>Live Sessions</strong>. Log in a few minutes early so you're in when we start.
       If you can't remember how to log in, use “Log in with an emailed code instead” on the login page.
     </p>
     <div style="text-align:center;margin:28px 0;">
       <a href="https://socialdevtechnologies.com/dashboard/live-sessions"
-         style="display:inline-block;background:#7C3AED;color:#fff;padding:12px 28px;border-radius:10px;text-decoration:none;font-weight:700;">
+         style="display:inline-block;background:#264D73;color:#fff;padding:12px 28px;border-radius:10px;text-decoration:none;font-weight:700;">
         Open my live sessions →
       </a>
     </div>

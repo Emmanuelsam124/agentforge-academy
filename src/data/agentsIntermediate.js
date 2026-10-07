@@ -27,7 +27,6 @@ export const agentsIntermediate = [
     xp: 480,
     popularity: 88,
     prerequisites: [
-      "Basic Python",
       "Completed at least one Builder 1 agent",
       "Tavily API key (free tier)",
     ],
@@ -60,7 +59,6 @@ export const agentsIntermediate = [
     xp: 420,
     popularity: 90,
     prerequisites: [
-      "Basic Python",
       "Streamlit basics",
       "LinkedIn account",
     ],
@@ -93,7 +91,6 @@ export const agentsIntermediate = [
     xp: 440,
     popularity: 77,
     prerequisites: [
-      "Basic Python",
       "Sample contract PDFs/DOCX",
     ],
     tags: [
@@ -125,7 +122,6 @@ export const agentsIntermediate = [
     xp: 500,
     popularity: 81,
     prerequisites: [
-      "Basic Python",
       "Google Cloud service account",
       "Sample invoice PDFs",
     ],
@@ -158,7 +154,6 @@ export const agentsIntermediate = [
     xp: 500,
     popularity: 79,
     prerequisites: [
-      "Basic Python",
       "Airtable account (free tier)",
       "Sample CVs (PDF)",
     ],
@@ -225,7 +220,6 @@ export const agentsIntermediate = [
     xp: 540,
     popularity: 85,
     prerequisites: [
-      "Basic Python",
       "DataForSEO account",
       "Completed Web Research Agent recommended",
     ],
@@ -259,7 +253,6 @@ export const agentsIntermediate = [
     xp: 560,
     popularity: 84,
     prerequisites: [
-      "Basic Python",
       "HubSpot account (free tier works)",
       "Gmail account",
     ],
@@ -293,7 +286,6 @@ export const agentsIntermediate = [
     xp: 500,
     popularity: 80,
     prerequisites: [
-      "Basic Python",
       "pandas basics",
       "Sample transactions CSV",
     ],
@@ -361,7 +353,6 @@ export const agentsIntermediate = [
     xp: 480,
     popularity: 74,
     prerequisites: [
-      "Basic Python",
       "pandas basics",
       "Sample customer + product CSVs",
     ],
@@ -428,7 +419,6 @@ export const agentsIntermediate = [
     xp: 600,
     popularity: 93,
     prerequisites: [
-      "Basic Python",
       "REST API basics",
       "Pinecone account (free tier)",
     ],

@@ -30,24 +30,27 @@ const outDir = path.join(publicDir, 'og');
 const WIDTH = 1200;
 const HEIGHT = 630;
 
-// Mirrors src/data/departments.js. Duplicated rather than imported because
+// Mirrors the department names in src/data/departments.js. Duplicated rather than imported because
 // that module is part of the React bundle and pulls in nothing this script
 // needs — and the card set is a design artifact, not app state. If a
 // department is added there, add it here and re-run.
+// The redesign collapsed the department colours to one hue and swapped emoji
+// for Lucide icons, so every card shares one look and the heading tells them
+// apart.
 // `audience` is the heading's subject, kept deliberately short — the full
 // `name` reads fine in the small eyebrow pill but pushes the 66px heading to
 // three lines, which crowds the footer.
 const DEPARTMENTS = [
-  { id: 'sales', name: 'Sales', audience: 'sales teams', icon: '💼', color: '#0EA5E9' },
-  { id: 'marketing', name: 'Marketing', audience: 'marketers', icon: '📢', color: '#EC4899' },
-  { id: 'operations', name: 'Operations', audience: 'ops teams', icon: '⚙️', color: '#14B8A6' },
-  { id: 'finance', name: 'Finance', audience: 'finance teams', icon: '💰', color: '#22C55E' },
-  { id: 'hr', name: 'HR & People', audience: 'HR teams', icon: '👥', color: '#A855F7' },
-  { id: 'legal', name: 'Legal', audience: 'legal teams', icon: '⚖️', color: '#6366F1' },
-  { id: 'support', name: 'Customer Support', audience: 'support teams', icon: '🎧', color: '#F97316' },
-  { id: 'engineering', name: 'Engineering', audience: 'engineers', icon: '💻', color: '#06B6D4' },
-  { id: 'data', name: 'Data & Analytics', audience: 'data teams', icon: '📊', color: '#8B5CF6' },
-  { id: 'strategy', name: 'Executive / Strategy', audience: 'founders', icon: '🧭', color: '#F43F5E' },
+  { id: 'sales', name: 'Sales', audience: 'sales teams' },
+  { id: 'marketing', name: 'Marketing', audience: 'marketers' },
+  { id: 'operations', name: 'Operations', audience: 'ops teams' },
+  { id: 'finance', name: 'Finance', audience: 'finance teams' },
+  { id: 'hr', name: 'HR & People', audience: 'HR teams' },
+  { id: 'legal', name: 'Legal', audience: 'legal teams' },
+  { id: 'support', name: 'Customer Support', audience: 'support teams' },
+  { id: 'engineering', name: 'Engineering', audience: 'engineers' },
+  { id: 'data', name: 'Data & Analytics', audience: 'data teams' },
+  { id: 'strategy', name: 'Executive / Strategy', audience: 'founders' },
 ];
 
 // Cards that aren't tied to a department. `news` is the fallback for an
@@ -55,28 +58,25 @@ const DEPARTMENTS = [
 const GENERIC_CARDS = [
   {
     file: 'default',
-    color: '#7C3AED',
     eyebrow: 'Builder 1 · Builder 2',
     heading: 'Build real AI agents.',
-    sub: '25 guided sessions across Builder 1 and Builder 2 — plus portfolio-ready projects.',
+    sub: '25 guided sessions across Builder 1 and Builder 2 plus portfolio-ready projects.',
   },
   {
     file: 'news',
-    color: '#7C3AED',
     eyebrow: 'AI News',
     heading: 'The AI news that actually matters.',
-    sub: 'Picked daily, explained plainly, no hype — for people building real agents.',
+    sub: 'Picked daily, explained plainly, no hype, for people building real agents.',
   },
   {
     file: 'guides',
-    color: '#16A34A',
     eyebrow: 'Guides',
     heading: 'Step-by-step AI build guides.',
     sub: 'Practical walkthroughs you can follow end to end, no prior experience needed.',
   },
 ];
 
-function cardHtml({ color, eyebrow, heading, sub, icon, logoDataUri }) {
+function cardHtml({ eyebrow, heading, sub, logoDataUri }) {
   return `<!doctype html>
 <html>
   <head>
@@ -87,24 +87,12 @@ function cardHtml({ color, eyebrow, heading, sub, icon, logoDataUri }) {
       body {
         width: ${WIDTH}px; height: ${HEIGHT}px;
         position: relative; overflow: hidden;
-        background: #1A1333;
+        background: #264D73;
         font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
         color: #fff;
       }
-      /* Two offset radial washes in the accent colour over the deep ink
-         base — gives each department card a distinct cast while keeping
-         the whole set recognisably one family. */
-      .wash-a {
-        position: absolute; top: -280px; right: -180px;
-        width: 900px; height: 900px; border-radius: 50%;
-        background: radial-gradient(circle, ${color}66 0%, ${color}00 68%);
-      }
-      .wash-b {
-        position: absolute; bottom: -420px; left: -240px;
-        width: 820px; height: 820px; border-radius: 50%;
-        background: radial-gradient(circle, #7C3AED55 0%, #7C3AED00 70%);
-      }
-      .edge { position: absolute; left: 0; top: 0; bottom: 0; width: 14px; background: ${color}; }
+      /* Flat fills only: the brand blue, one amber edge. */
+      .edge { position: absolute; left: 0; top: 0; bottom: 0; width: 14px; background: #F2A93B; }
       .inner {
         position: relative; z-index: 2;
         height: 100%; padding: 68px 76px 60px 90px;
@@ -113,14 +101,13 @@ function cardHtml({ color, eyebrow, heading, sub, icon, logoDataUri }) {
       .brandrow { display: flex; align-items: center; gap: 18px; }
       .brandrow img { width: 68px; height: 68px; border-radius: 16px; display: block; }
       .brandname {
-        font-weight: 700; font-size: 22px; letter-spacing: 0.14em;
-        text-transform: uppercase; color: #E4DBFF;
+        font-weight: 700; font-size: 26px; color: #fff;
       }
       .eyebrow {
         display: inline-flex; align-items: center; gap: 12px; align-self: flex-start;
-        background: ${color}2E; border: 1.5px solid ${color}80;
-        color: #fff; font-weight: 700; font-size: 21px;
-        letter-spacing: 0.05em; padding: 11px 22px; border-radius: 999px;
+        background: rgba(255, 255, 255, 0.12); border: 1.5px solid rgba(255, 255, 255, 0.4);
+        color: #fff; font-weight: 700; font-size: 22px;
+        padding: 11px 22px; border-radius: 999px;
         margin-bottom: 26px;
       }
       h1 {
@@ -130,18 +117,16 @@ function cardHtml({ color, eyebrow, heading, sub, icon, logoDataUri }) {
       }
       .sub {
         margin-top: 22px; font-size: 25px; line-height: 1.45;
-        color: #C9BFEA; font-weight: 500; max-width: 30ch;
+        color: rgba(255, 255, 255, 0.86); font-weight: 500; max-width: 30ch;
       }
       .foot {
         display: flex; align-items: center; justify-content: space-between;
-        font-size: 21px; font-weight: 600; color: #A99FD0;
+        font-size: 21px; font-weight: 600; color: rgba(255, 255, 255, 0.8);
       }
       .foot .url { color: #fff; }
     </style>
   </head>
   <body>
-    <div class="wash-a"></div>
-    <div class="wash-b"></div>
     <div class="edge"></div>
     <div class="inner">
       <div class="brandrow">
@@ -149,7 +134,7 @@ function cardHtml({ color, eyebrow, heading, sub, icon, logoDataUri }) {
         <div class="brandname">Social Dev Technologies</div>
       </div>
       <div>
-        <div class="eyebrow">${icon ? `<span>${icon}</span>` : ''}<span>${eyebrow}</span></div>
+        <div class="eyebrow">${eyebrow}</div>
         <h1>${heading}</h1>
         <div class="sub">${sub}</div>
       </div>
@@ -172,11 +157,9 @@ async function main() {
     ...GENERIC_CARDS.map((c) => ({ ...c, logoDataUri })),
     ...DEPARTMENTS.map((d) => ({
       file: `dept-${d.id}`,
-      color: d.color,
-      icon: d.icon,
       eyebrow: `AI News · ${d.name}`,
       heading: `The AI news that matters for ${d.audience}.`,
-      sub: 'Picked daily, explained plainly — for people building real agents.',
+      sub: 'Picked daily, explained plainly, for people building real agents.',
       logoDataUri,
     })),
   ];

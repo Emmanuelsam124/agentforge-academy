@@ -88,32 +88,32 @@ export function approvalEmail(application, now = Date.now()) {
     ? `Please register before class starts — <strong>${escapeHtml(formatDeadline(EXPIRES_AT))}</strong> — because the scholarship price expires then.`
     : '';
   const html = `
-    <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:32px 24px;background:#FBFAFF;">
+    <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:32px 24px;background:#F6F8FB;">
       <div style="text-align:center;margin-bottom:24px;">
-        <span style="font-size:18px;font-weight:800;color:#1A1333;">Social Dev <span style="color:#7C3AED;">Technologies</span></span>
+        <span style="font-size:18px;font-weight:800;color:#0F1A2A;">Social Dev <span style="color:#264D73;">Technologies</span></span>
       </div>
-      <p style="font-size:15px;color:#1A1333;">Hi ${escapeHtml(firstName)},</p>
-      <p style="font-size:15px;color:#3A3358;line-height:1.6;">
+      <p style="font-size:15px;color:#0F1A2A;">Hi ${escapeHtml(firstName)},</p>
+      <p style="font-size:15px;color:#1F2C3D;line-height:1.6;">
         Great news — your scholarship for the <strong>AI Agent Mastery</strong> live cohort has been <strong>approved</strong>. 🎉
       </p>
-      <p style="font-size:15px;color:#3A3358;line-height:1.6;">
+      <p style="font-size:15px;color:#1F2C3D;line-height:1.6;">
         To claim it, register on the AI Agent Mastery page using <strong>the same email you applied with</strong>
         (<strong>${escapeHtml(application.email)}</strong>). The scholarship price of <strong>${escapeHtml(price)}</strong>
         is applied automatically at checkout — there's no code to enter.
       </p>
       <div style="text-align:center;margin:28px 0;">
         <a href="${SITE}/ai-agent-mastery"
-           style="display:inline-block;background:#7C3AED;color:#fff;padding:12px 28px;border-radius:10px;text-decoration:none;font-weight:700;">
+           style="display:inline-block;background:#264D73;color:#fff;padding:12px 28px;border-radius:10px;text-decoration:none;font-weight:700;">
           Register now →
         </a>
       </div>
-      ${deadline ? `<p style="font-size:15px;color:#3A3358;line-height:1.6;">${deadline}</p>` : ''}
-      <p style="font-size:14px;color:#3A3358;line-height:1.6;">
+      ${deadline ? `<p style="font-size:15px;color:#1F2C3D;line-height:1.6;">${deadline}</p>` : ''}
+      <p style="font-size:14px;color:#1F2C3D;line-height:1.6;">
         Questions? Message us on WhatsApp:
-        <a href="https://wa.me/2349066006963" style="color:#7C3AED;">wa.me/2349066006963</a>
+        <a href="https://wa.me/2349066006963" style="color:#264D73;">wa.me/2349066006963</a>
         (we reply 10am–5pm WAT, Monday to Saturday).
       </p>
-      <div style="margin-top:32px;padding-top:16px;border-top:1px solid #EEE6FB;font-size:12px;color:#8A82AD;text-align:center;line-height:1.6;">
+      <div style="margin-top:32px;padding-top:16px;border-top:1px solid #E7ECF2;font-size:12px;color:#4A5B6C;text-align:center;line-height:1.6;">
         Social Dev Technologies · You're receiving this because you applied for an AI Agent Mastery scholarship on our website.
       </div>
     </div>`;

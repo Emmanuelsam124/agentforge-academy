@@ -71,12 +71,12 @@ function escapeHtml(value) {
 
 function shell(innerHtml, footerHtml) {
   return `
-    <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:32px 24px;background:#FBFAFF;">
+    <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:32px 24px;background:#F6F8FB;">
       <div style="text-align:center;margin-bottom:24px;">
-        <span style="font-size:18px;font-weight:800;color:#1A1333;">Social Dev <span style="color:#7C3AED;">Technologies</span></span>
+        <span style="font-size:18px;font-weight:800;color:#0F1A2A;">Social Dev <span style="color:#264D73;">Technologies</span></span>
       </div>
       ${innerHtml}
-      <div style="margin-top:32px;padding-top:16px;border-top:1px solid #EEE6FB;font-size:12px;color:#8A82AD;text-align:center;line-height:1.6;">
+      <div style="margin-top:32px;padding-top:16px;border-top:1px solid #E7ECF2;font-size:12px;color:#4A5B6C;text-align:center;line-height:1.6;">
         ${footerHtml}
       </div>
     </div>
@@ -85,11 +85,11 @@ function shell(innerHtml, footerHtml) {
 
 const button = (href, label) => `
   <div style="text-align:center;margin:28px 0;">
-    <a href="${href}" style="display:inline-block;background:#7C3AED;color:#fff;padding:12px 28px;border-radius:10px;text-decoration:none;font-weight:700;">${label}</a>
+    <a href="${href}" style="display:inline-block;background:#264D73;color:#fff;padding:12px 28px;border-radius:10px;text-decoration:none;font-weight:700;">${label}</a>
   </div>`;
 
-const p = (html) => `<p style="font-size:15px;color:#3A3358;line-height:1.6;">${html}</p>`;
-const link = (href, label) => `<a href="${href}" style="color:#7C3AED;">${label}</a>`;
+const p = (html) => `<p style="font-size:15px;color:#1F2C3D;line-height:1.6;">${html}</p>`;
+const link = (href, label) => `<a href="${href}" style="color:#264D73;">${label}</a>`;
 
 async function sendResendEmail(to, subject, html, extraHeaders = undefined) {
   const res = await fetch('https://api.resend.com/emails', {
@@ -118,7 +118,7 @@ function confirmationEmail(token) {
       ${p(`Someone — hopefully you — asked for our free <strong>AI agent starter series</strong> on socialdevtechnologies.com.
         Press the button to confirm your email address and we'll send the first email straight away.`)}
       ${button(url, 'Yes, send me the series')}
-      ${p(`<span style="font-size:13px;color:#8A82AD;">If that wasn't you, ignore this email — nothing will be sent and you won't hear from us.</span>`)}
+      ${p(`<span style="font-size:13px;color:#4A5B6C;">If that wasn't you, ignore this email — nothing will be sent and you won't hear from us.</span>`)}
     `,
       `Social Dev Technologies · You're receiving this because this address was entered on our website.`,
     ),
@@ -162,7 +162,7 @@ function dripEmail(step, unsubscribeUrl) {
         `
         ${p('Hey,')}
         ${p(`Every agent you'll ever build — however fancy it looks — is the same four parts. Once you see them, new builds stop feeling like starting from zero:`)}
-        <ol style="font-size:15px;color:#3A3358;line-height:1.7;padding-left:22px;">
+        <ol style="font-size:15px;color:#1F2C3D;line-height:1.7;padding-left:22px;">
           <li><strong>A trigger</strong> — what starts it (a schedule, a new email, a message).</li>
           <li><strong>Instructions</strong> — the prompt that tells the AI exactly what to do, and what a good answer looks like.</li>
           <li><strong>Tools</strong> — where it gets information or does work (news feeds, your inbox, a spreadsheet).</li>
@@ -185,7 +185,7 @@ function dripEmail(step, unsubscribeUrl) {
       `
       ${p('Hey,')}
       ${p(`This is the last email in the series. If the walkthrough made you want to build more, here's how people continue:`)}
-      <ul style="font-size:15px;color:#3A3358;line-height:1.7;padding-left:22px;">
+      <ul style="font-size:15px;color:#1F2C3D;line-height:1.7;padding-left:22px;">
         <li><strong>Builder 1 — ${fmt(BUILDER1_PRICE)}.</strong> 12 step-by-step agent guides with copy-paste prompts. One payment, yours permanently.</li>
         <li><strong>Builder 2 — ${fmt(BUILDER2_PRICE)}.</strong> 13 multi-step, API-integrated agent builds. One payment, yours permanently.</li>
         <li><strong>Pro — ${fmt(PRO_PRICE)}.</strong> Both tracks together — cheaper than buying them separately.</li>

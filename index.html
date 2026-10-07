@@ -29,41 +29,18 @@
     <script defer src="/gtag-init.js"></script>
     <script defer src="/meta-pixel-init.js"></script>
 
-    <!-- Preconnects: fonts and YouTube video thumbnails are on the critical
-         path from the very first paint, so warm the connections up front
-         instead of waiting for CSS/JS discovery to find them. -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!-- No i.ytimg.com preconnect: the homepage hero now uses a self-hosted
+    <!-- Fonts are self-hosted (public/fonts, @font-face in src/index.css), so
+         there is no third-party font request and nothing render-blocking: the
+         faces are only fetched once text uses them, and font-display: swap
+         paints the fallback first. The two latin faces below are on every
+         page's first paint (headings and body), so they are preloaded.
+         Latin-extended, and Roboto Mono, load only when a page needs them.
+         No i.ytimg.com preconnect: the homepage hero uses a self-hosted
          /video-thumbnail.jpg, so that origin is never requested on first
-         load and Lighthouse flagged the hint as unused. AgentModal still
-         falls back to i.ytimg.com, but only after a user opens a modal —
-         far too late for a preconnect to have helped. -->
-    <!-- Loaded as non-render-blocking: media="print" makes the browser fetch
-         it at full priority without waiting for it before first paint.
-         src/main.jsx flips data-defer-font links to media="all" once each
-         has loaded (NOT an inline onload= attribute — this site's CSP
-         script-src has no 'unsafe-inline', which would silently block it).
-         Every font is already requested with &display=swap, so text renders
-         immediately in the fallback font and swaps in once these apply —
-         deferring just moves *when* that swap can start. The noscript
-         fallback covers JS-disabled visits. -->
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
-      media="print"
-      data-defer-font
-    />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&display=swap"
-      media="print"
-      data-defer-font
-    />
-    <noscript>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&display=swap" />
-    </noscript>
+         load. AgentModal still falls back to i.ytimg.com, but only after a
+         user opens a modal, far too late for a preconnect to help. -->
+    <link rel="preload" href="/fonts/bricolage-grotesque-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/plus-jakarta-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
 
     <!-- Primary SEO -->
     <title>Social Dev Technologies — Learn AI & Digital Skills in Africa</title>

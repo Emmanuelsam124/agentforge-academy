@@ -19,7 +19,7 @@ export default function YouTubeFacade({ videoId, title, className = '', thumbnai
   // Defaults to YouTube's own CDN (i.ytimg.com), which only serves a 2-hour
   // cache lifetime — fine for the many different per-agent thumbnails in
   // AgentModal, but the homepage hero passes a self-hosted thumbnailSrc
-  // (see public/video-thumbnail.jpg) so that one specific always-loaded
+  // (see public/video-thumbnail-hd.jpg) so that one specific always-loaded
   // image gets our own long-lived Cache-Control (vercel.json) instead.
   const thumbnail = thumbnailSrc || `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
 

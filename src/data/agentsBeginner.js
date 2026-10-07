@@ -71,7 +71,6 @@ export const agentsBeginner = [
     xp: 200,
     popularity: 92,
     prerequisites: [
-      "Basic Python",
     ],
     tags: [
       "marketing",
@@ -103,7 +102,6 @@ export const agentsBeginner = [
     xp: 220,
     popularity: 82,
     prerequisites: [
-      "Basic Python",
       "Basic pandas familiarity",
     ],
     tags: [
@@ -136,7 +134,6 @@ export const agentsBeginner = [
     xp: 280,
     popularity: 75,
     prerequisites: [
-      "Basic Python",
       "Google Cloud account (optional, for Docs export)",
     ],
     tags: [
@@ -169,7 +166,6 @@ export const agentsBeginner = [
     xp: 250,
     popularity: 88,
     prerequisites: [
-      "Basic Python",
       "Slack workspace admin access",
     ],
     tags: [
@@ -202,7 +198,6 @@ export const agentsBeginner = [
     xp: 250,
     popularity: 90,
     prerequisites: [
-      "Basic Python",
       "Streamlit Cloud account (free)",
     ],
     tags: [
@@ -235,7 +230,6 @@ export const agentsBeginner = [
     xp: 250,
     popularity: 76,
     prerequisites: [
-      "Basic Python",
       "Google Cloud account",
     ],
     tags: [
@@ -271,7 +265,6 @@ export const agentsBeginner = [
     xp: 300,
     popularity: 98,
     prerequisites: [
-      "Basic Python",
       "Gmail account",
       "Google Cloud account (free)",
     ],
@@ -307,7 +300,6 @@ export const agentsBeginner = [
     xp: 270,
     popularity: 85,
     prerequisites: [
-      "Basic Python",
     ],
     tags: [
       "documents",
@@ -341,7 +333,6 @@ export const agentsBeginner = [
     xp: 300,
     popularity: 78,
     prerequisites: [
-      "Basic Python",
       "Basic HTML/CSS selector knowledge",
     ],
     tags: [
@@ -375,7 +366,6 @@ export const agentsBeginner = [
     xp: 320,
     popularity: 87,
     prerequisites: [
-      "Basic Python",
       "Typeform account",
       "HubSpot account (free CRM tier works)",
     ],
