@@ -35,12 +35,12 @@ function corsHeadersFor(req) {
 // practice for any account-based transactional/marketing email.
 function emailShell(innerHtml) {
   return `
-    <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:32px 24px;background:#FBFAFF;">
+    <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:32px 24px;background:#F6F8FB;">
       <div style="text-align:center;margin-bottom:24px;">
-        <span style="font-size:18px;font-weight:800;color:#1A1333;">Social Dev <span style="color:#7C3AED;">Technologies</span></span>
+        <span style="font-size:18px;font-weight:800;color:#0F1A2A;">Social Dev <span style="color:#264D73;">Technologies</span></span>
       </div>
       ${innerHtml}
-      <div style="margin-top:32px;padding-top:16px;border-top:1px solid #EEE6FB;font-size:12px;color:#8A82AD;text-align:center;">
+      <div style="margin-top:32px;padding-top:16px;border-top:1px solid #E7ECF2;font-size:12px;color:#4A5B6C;text-align:center;">
         Social Dev Technologies · You're receiving this because you have an account with us.<br/>
         Questions? Reply to this email or contact support@socialdevtechnologies.com.
       </div>

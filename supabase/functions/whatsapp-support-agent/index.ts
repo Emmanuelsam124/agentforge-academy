@@ -136,7 +136,7 @@ async function emailOwner(phone: string, name: string, question: string, reason:
 
   const html = `
     <div style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:24px;">
-      <h2 style="color:#7C3AED;margin-bottom:8px;">💬 WhatsApp question needs you</h2>
+      <h2 style="color:#264D73;margin-bottom:8px;">💬 WhatsApp question needs you</h2>
       <p style="color:#666;font-size:14px;margin-top:0;">
         The support agent handed this one off instead of answering it.
       </p>
@@ -145,7 +145,7 @@ async function emailOwner(phone: string, name: string, question: string, reason:
         <tr><td style="padding:8px 0;color:#666;">Number</td><td style="padding:8px 0;font-weight:600;">+${escapeHtml(phone)}</td></tr>
         <tr><td style="padding:8px 0;color:#666;vertical-align:top;">Why</td><td style="padding:8px 0;">${escapeHtml(reason)}</td></tr>
       </table>
-      <div style="margin-top:16px;padding:14px;background:#FAF8FF;border-left:3px solid #7C3AED;border-radius:6px;">
+      <div style="margin-top:16px;padding:14px;background:#F6F8FB;border-left:3px solid #264D73;border-radius:6px;">
         <p style="margin:0;color:#333;font-size:14px;white-space:pre-wrap;">${escapeHtml(question)}</p>
       </div>
       <a href="https://socialdevtechnologies.com/admin/support" style="display:inline-block;margin-top:18px;background:#25D366;color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:600;">

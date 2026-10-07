@@ -92,12 +92,12 @@ function escapeHtml(value) {
 
 function emailShell(innerHtml) {
   return `
-    <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:32px 24px;background:#FBFAFF;">
+    <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:32px 24px;background:#F6F8FB;">
       <div style="text-align:center;margin-bottom:24px;">
-        <span style="font-size:18px;font-weight:800;color:#1A1333;">Social Dev <span style="color:#7C3AED;">Technologies</span></span>
+        <span style="font-size:18px;font-weight:800;color:#0F1A2A;">Social Dev <span style="color:#264D73;">Technologies</span></span>
       </div>
       ${innerHtml}
-      <div style="margin-top:32px;padding-top:16px;border-top:1px solid #EEE6FB;font-size:12px;color:#8A82AD;text-align:center;">
+      <div style="margin-top:32px;padding-top:16px;border-top:1px solid #E7ECF2;font-size:12px;color:#4A5B6C;text-align:center;">
         Social Dev Technologies · You're receiving this because you have an account with us.<br/>
         Questions? Reply to this email or contact support@socialdevtechnologies.com.
       </div>
@@ -141,7 +141,7 @@ async function buildCohortLines(supabase, plan) {
       return `<li>${labels[row.tier]} cohort starts <strong>${formatted}</strong></li>`;
     });
   if (lines.length === 0) return '';
-  return `<ul style="font-size:14px;color:#3A3358;line-height:1.7;padding-left:20px;margin:16px 0;">${lines.join('')}</ul>`;
+  return `<ul style="font-size:14px;color:#1F2C3D;line-height:1.7;padding-left:20px;margin:16px 0;">${lines.join('')}</ul>`;
 }
 
 // One-tier buyers can unlock the other tier for the difference to Pro
@@ -153,13 +153,13 @@ function upgradeUpsell(plan) {
   const upgradePrice = UPGRADE_PRICES[plan];
   const normalPrice = PRICES[plan === 'builder1' ? 'builder2' : 'builder1'];
   return `
-    <div style="margin:20px 0;padding:14px 16px;border:1.5px solid #EEE6FB;border-radius:12px;background:#FFFFFF;">
-      <p style="margin:0 0 6px;font-size:14px;font-weight:700;color:#1A1333;">Want ${otherLabel} too?</p>
-      <p style="margin:0;font-size:14px;color:#3A3358;line-height:1.6;">
+    <div style="margin:20px 0;padding:14px 16px;border:1.5px solid #E7ECF2;border-radius:12px;background:#FFFFFF;">
+      <p style="margin:0 0 6px;font-size:14px;font-weight:700;color:#0F1A2A;">Want ${otherLabel} too?</p>
+      <p style="margin:0;font-size:14px;color:#1F2C3D;line-height:1.6;">
         Because you own ${PLAN_LABELS[plan]}, you can unlock ${otherLabel} for just
         <strong>₦${upgradePrice.toLocaleString('en-US')}</strong> instead of ₦${normalPrice.toLocaleString('en-US')} —
         you only pay the difference to Pro. Find it on the
-        <a href="https://socialdevtechnologies.com/pricing" style="color:#7C3AED;">pricing page</a> whenever you're ready.
+        <a href="https://socialdevtechnologies.com/pricing" style="color:#264D73;">pricing page</a> whenever you're ready.
       </p>
     </div>`;
 }
@@ -180,37 +180,37 @@ function welcomeHtml(name, planLabel, cohortLines, plan) {
     bullets = `
       <li>Your live classes and replays are on your dashboard under Live Sessions.</li>
       <li>The prompt library (8 reusable prompts for the bootcamp) is also on your dashboard.</li>
-      <li>Stuck on something? Reach us on WhatsApp: <a href="https://wa.me/2349066006963" style="color:#7C3AED;">wa.me/2349066006963</a></li>
+      <li>Stuck on something? Reach us on WhatsApp: <a href="https://wa.me/2349066006963" style="color:#264D73;">wa.me/2349066006963</a></li>
     `;
   } else if (plan === 'aimastery') {
     bullets = `
       <li>Your live classes and replays are on your dashboard under Live Sessions.</li>
-      <li>Stuck on something? Reach us on WhatsApp: <a href="https://wa.me/2349066006963" style="color:#7C3AED;">wa.me/2349066006963</a></li>
+      <li>Stuck on something? Reach us on WhatsApp: <a href="https://wa.me/2349066006963" style="color:#264D73;">wa.me/2349066006963</a></li>
     `;
   } else {
     bullets = `
       <li>All you need is a free Gemini API key from Google AI Studio — no paid AI subscription required.</li>
       <li>Every session ends with a portfolio write-up prompt — that's what makes this resume-ready, don't skip it.</li>
-      <li>Stuck on a build? Reach us on WhatsApp: <a href="https://wa.me/2349066006963" style="color:#7C3AED;">wa.me/2349066006963</a></li>
+      <li>Stuck on a build? Reach us on WhatsApp: <a href="https://wa.me/2349066006963" style="color:#264D73;">wa.me/2349066006963</a></li>
     `;
   }
   const accessLine = isPermanentGuides
     ? `You're in! Your <strong>${planLabel}</strong> access is live right now — yours to keep, no expiry.`
     : `You're in! Your <strong>${planLabel}</strong> access is live right now, for the next 6 months.`;
   return `
-    <p style="font-size:15px;color:#1A1333;">Hey ${escapeHtml(name)},</p>
-    <p style="font-size:15px;color:#3A3358;line-height:1.6;">
+    <p style="font-size:15px;color:#0F1A2A;">Hey ${escapeHtml(name)},</p>
+    <p style="font-size:15px;color:#1F2C3D;line-height:1.6;">
       ${accessLine}
     </p>
     ${cohortLines}
     ${upgradeUpsell(plan)}
-    <p style="font-size:15px;color:#3A3358;line-height:1.6;">A few things before you start:</p>
-    <ul style="font-size:14px;color:#3A3358;line-height:1.7;padding-left:20px;">
+    <p style="font-size:15px;color:#1F2C3D;line-height:1.6;">A few things before you start:</p>
+    <ul style="font-size:14px;color:#1F2C3D;line-height:1.7;padding-left:20px;">
       ${bullets}
     </ul>
     <div style="text-align:center;margin:28px 0;">
       <a href="https://socialdevtechnologies.com/dashboard"
-         style="display:inline-block;background:#7C3AED;color:#fff;padding:12px 28px;border-radius:10px;text-decoration:none;font-weight:700;">
+         style="display:inline-block;background:#264D73;color:#fff;padding:12px 28px;border-radius:10px;text-decoration:none;font-weight:700;">
         Go to my dashboard →
       </a>
     </div>
