@@ -113,7 +113,7 @@ function StatsStrip() {
       <div className={`${INNER} flex flex-col lg:flex-row lg:items-center gap-6 lg:gap-0`}>
         <div className="lg:flex-[1.5] min-w-0 lg:pr-8">
           <h2 className="font-display font-bold text-2xl md:text-[26px] leading-[1.15] tracking-[-0.02em] text-ink mb-2 md:mb-2.5">
-            Stay ahead of the curve
+            Bring AI into your actual work
           </h2>
           <p className="t-card text-body max-w-[26em]">
             Students walk into work already using AI skills their teams and managers are only just starting to ask for.
