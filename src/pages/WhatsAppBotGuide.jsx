@@ -192,8 +192,7 @@ export default function WhatsAppBotGuide() {
     <div>
       {/* Hero */}
       <div
-        className="relative overflow-hidden pt-14 pb-10 px-4 sm:px-6 lg:px-[5vw]"
-        style={{ background: '#F6F8FB' }}
+        className="relative overflow-hidden pt-14 pb-10 px-4 sm:px-6 lg:px-[5vw] bg-bg"
       >
         <div className="relative max-w-3xl mx-auto">
           <span
