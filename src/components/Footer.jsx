@@ -14,7 +14,7 @@ export default function Footer() {
             <span className="font-display font-extrabold text-[15px]">Social Dev Technologies</span>
           </Link>
           <p className="text-sm text-[#B7C3D1] leading-relaxed">
-            Learn AI by building real agents — hands-on sessions, real prompts, a portfolio that gets you hired.
+            Learn AI by building real agents: hands-on sessions, real prompts, a portfolio that gets you hired.
           </p>
         </div>
 
