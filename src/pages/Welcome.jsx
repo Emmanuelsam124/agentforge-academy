@@ -196,11 +196,6 @@ export default function Welcome() {
           : '#F6F8FB',
       }}
     >
-      <div
-        className="absolute top-10 right-[15%] w-[150px] h-[150px] bg-yellow opacity-40 animate-floaty pointer-events-none hidden sm:block"
-        style={{ borderRadius: '38% 62% 63% 37% / 41% 44% 56% 59%' }}
-      />
-
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 grid lg:grid-cols-2 gap-12 items-center">
         {/* Left: pitch */}
         <m.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>

@@ -200,29 +200,6 @@ body {
   transition: background-color 0.25s ease, color 0.25s ease;
 }
 
-/* Still used by Welcome.jsx and AgentsLiveFlowDiagram.jsx (listed as follow-ups). */
-@keyframes floaty {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-9px); }
-}
-@keyframes nodeBreathe {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.06); }
-}
-@keyframes nodePing {
-  0% { opacity: .6; transform: scale(1); }
-  20%, 100% { opacity: 0; transform: scale(var(--ping-scale, 1.4)); }
-}
-@keyframes dashFlow {
-  to { stroke-dashoffset: -24; }
-}
-
-.animate-floaty { animation: floaty 6s ease-in-out infinite; }
-.animate-node-breathe { animation: nodeBreathe 2.8s ease-in-out infinite; }
-.animate-node-ping { animation: nodePing 4s ease-out infinite both; }
-[data-flow-paused="true"] * { animation-play-state: paused; }
-.animate-dash-flow { animation: dashFlow 1s linear infinite; }
-
 /* One rule for the whole site, so a future animation can't forget to opt out. */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -230,7 +207,6 @@ body {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-  .flow-packet { display: none; }
 }
 
 /* Decorative photo-placeholder style used where real photography belongs */

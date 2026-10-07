@@ -1,5 +1,3 @@
-import { m } from 'framer-motion';
-
 const WHATSAPP_LINK = 'https://wa.me/2349066006963?text=' + encodeURIComponent(
   "Hi! I'd like to know more about Social Dev Technologies."
 );
@@ -17,25 +15,22 @@ function WhatsAppGlyph({ className }) {
 }
 
 // Global floating "chat with an advisor" launcher, mounted once in App.jsx.
+// Flat on purpose (no glow, pulse, entrance pop or hover scale), and in
+// WhatsApp's darker teal green: white on the bright #25D366 is only ~2:1.
 // A pre-sale contact channel — distinct from the (post-purchase) student
 // WhatsApp community removed from the homepage's community section, which
 // is only shared once someone actually signs up.
 export default function WhatsAppFloatButton() {
   return (
-    <m.a
+    <a
       href={WHATSAPP_LINK}
       target="_blank"
       rel="noreferrer"
       aria-label="Chat with an advisor on WhatsApp"
       title="Chat with an advisor on WhatsApp"
-      initial={{ opacity: 0, scale: 0.7 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ delay: 1, duration: 0.3 }}
-      whileHover={{ scale: 1.08 }}
-      className="fixed bottom-5 right-5 z-30 w-14 h-14 rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-[0_10px_26px_rgba(37,211,102,.5)]"
+      className="fixed bottom-5 right-5 z-30 w-14 h-14 rounded-full bg-[#128C7E] hover:bg-[#075E54] text-white flex items-center justify-center transition-colors"
     >
-      <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-40" />
-      <WhatsAppGlyph className="w-7 h-7 relative" />
-    </m.a>
+      <WhatsAppGlyph className="w-7 h-7" />
+    </a>
   );
 }

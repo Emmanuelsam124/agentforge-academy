@@ -1,308 +1,159 @@
-import { useEffect, useRef } from 'react';
 import { Send, MessageCircle, Bot, Sparkles, Brain, Zap, Check, Search, PenLine, ListChecks } from 'lucide-react';
 
-// Same engineering pattern as AutomationFlowDiagram.jsx (the homepage's
-// automation-flow showcase): everything loops forever from a fully-visible
-// first frame (CSS + SVG SMIL, no framer-motion mount transitions), so a
-// prerender snapshot or a crawler's render pass never catches it half-hidden.
-// A dedicated component rather than a generalized/shared one — the shape
-// (2 triggers fanning into a hub, then fanning out to 3 board agents) is
-// different enough from the homepage's single-branch layout that sharing
-// would mean threading a pile of position/color props through it.
-
+// The AI Agent Mastery page's system diagram, drawn the same way as the
+// homepage's AutomationFlowDiagram: static, theme colours, solid arrows. Two
+// message channels reach one agent (Day 1), which hands work to three agents
+// sharing a dashboard (Day 2). It used to loop (pulsing nodes, travelling
+// dots, floating chips) and carried a made-up run log ("Runs automatically,
+// 24/7", "Last run succeeded · 6 steps · 2.1s"); neither is a real agent, so
+// both are gone and the page captions it as an illustration. The component
+// keeps its old AgentsLive name; renaming it is churn with no user impact.
+//
+// Laid out on a 1000×440 grid shared by the SVG edges and the HTML nodes; node
+// sizes use cqw so both layers scale together with the container.
 const W = 1000;
 const H = 440;
-const CYCLE = 5;
-
-// Two message channels feeding the same hub — this is Day 1 of the
-// workshop. Telegram/WhatsApp accent colors are the real brand colors,
-// used only as accents (no logos), same way the rest of the page names
-// the channels directly without naming the underlying agent framework.
-const TRIGGERS = [
-  { id: 'telegram', x: 95, y: 130, icon: Send, accent: '#29B6F6', title: 'New message', sub: 'Telegram', delay: 0, trigger: true },
-  { id: 'whatsapp', x: 95, y: 310, icon: MessageCircle, accent: '#25D366', title: 'New message', sub: 'WhatsApp', delay: 0.03, trigger: true },
-];
-
-// The multi-agent dashboard — Day 2. Three agents sharing one task board,
-// each with its own job, feeding off the same hub.
-const BOARD_AGENTS = [
-  { id: 'research', x: 650, y: 100, icon: Search, accent: '#60A5FA', title: 'Research agent', sub: 'Gathering context', delay: 0.5 },
-  { id: 'reply', x: 650, y: 220, icon: PenLine, accent: '#F2A93B', title: 'Reply agent', sub: 'Drafting response', delay: 0.5 },
-  { id: 'ops', x: 650, y: 340, icon: ListChecks, accent: '#34D399', title: 'Ops agent', sub: 'Logging task', delay: 0.5 },
-];
-
-const SUB_NODES = [
-  { id: 'model', x: 290, y: 375, icon: Sparkles, accent: '#60A5FA', title: 'Model', delay: 0.3 },
-  { id: 'memory', x: 370, y: 375, icon: Brain, accent: '#A4BDDC', title: 'Memory', delay: 0.3 },
-];
-
-const EDGES = [
-  { d: 'M127 130 C 175 130 205 165 248 192', from: 0, to: 0.16, color: '#29B6F6' },
-  { d: 'M127 310 C 175 310 205 275 248 248', from: 0.02, to: 0.18, color: '#25D366' },
-  { d: 'M412 196 C 480 160 555 122 626 100', from: 0.42, to: 0.62, color: '#60A5FA' },
-  { d: 'M415 220 C 480 220 555 220 626 220', from: 0.42, to: 0.62, color: '#F2A93B' },
-  { d: 'M412 244 C 480 280 555 318 626 340', from: 0.42, to: 0.62, color: '#34D399' },
-];
-
-const SUB_EDGES = [
-  { d: 'M300 252 C 300 300 290 305 290 351', from: 0.2, to: 0.4, color: '#60A5FA' },
-  { d: 'M360 252 C 360 300 370 305 370 351', from: 0.2, to: 0.4, color: '#A4BDDC' },
-];
-
-const HANDLES = [
-  [127, 130], [127, 310], [248, 192], [248, 248], [412, 196], [415, 220], [412, 244], [626, 100], [626, 220], [626, 340],
-];
-
-const RESULTS = [
-  { x: 800, y: 100, text: 'Lead researched', color: '#60A5FA' },
-  { x: 800, y: 220, text: 'Reply sent', color: '#F2A93B' },
-  { x: 800, y: 340, text: 'Task logged', color: '#34D399' },
-];
 
 const pct = (x, y) => ({ left: `${(x / W) * 100}%`, top: `${(y / H) * 100}%` });
 
-function Packet({ d, from, to, color, roundTrip }) {
-  const mid = (from + to) / 2;
-  const motion = roundTrip
-    ? { keyPoints: '0;0;1;0;0', keyTimes: `0;${from};${mid};${to};1` }
-    : { keyPoints: '0;0;1;1', keyTimes: `0;${from};${to};1` };
-  const fade = `0;${from};${from + 0.02};${to - 0.02};${to};1`;
-  return (
-    <g className="flow-packet" opacity="0">
-      <circle r="9" fill={color} opacity="0.35" filter="url(#ald-glow)" />
-      <circle r="4" fill="#fff" />
-      <animateMotion dur={`${CYCLE}s`} repeatCount="indefinite" calcMode="linear" path={d} {...motion} />
-      <animate attributeName="opacity" dur={`${CYCLE}s`} repeatCount="indefinite" values="0;0;1;1;0;0" keyTimes={fade} />
-    </g>
-  );
-}
+// Right-pointing arrowhead whose tip sits at (x, y).
+const arrow = (x, y) => `${x - 8},${y - 5} ${x},${y} ${x - 8},${y + 5}`;
 
-function Ping({ color, delay, scale = 1.4 }) {
-  return (
-    <span
-      aria-hidden="true"
-      className="absolute inset-0 animate-node-ping"
-      style={{ borderRadius: 'inherit', background: color, animationDelay: `${delay * CYCLE}s`, '--ping-scale': scale }}
-    />
-  );
-}
+const TRIGGERS = [
+  { x: 95, y: 130, icon: Send, title: 'New message', sub: 'Telegram' },
+  { x: 95, y: 310, icon: MessageCircle, title: 'New message', sub: 'WhatsApp' },
+];
 
-function NodeLabel({ title, sub }) {
+const BOARD_AGENTS = [
+  { x: 650, y: 100, icon: Search, title: 'Research agent', sub: 'Gathering context', result: 'Lead researched' },
+  { x: 650, y: 220, icon: PenLine, title: 'Reply agent', sub: 'Drafting response', result: 'Reply sent' },
+  { x: 650, y: 340, icon: ListChecks, title: 'Ops agent', sub: 'Logging task', result: 'Task logged' },
+];
+
+const SUB_NODES = [
+  { x: 290, y: 375, icon: Sparkles, title: 'Model' },
+  { x: 370, y: 375, icon: Brain, title: 'Memory' },
+];
+
+function Label({ title, sub }) {
   return (
     <div className="absolute left-1/2 top-full -translate-x-1/2 mt-[1.1cqw] text-center whitespace-nowrap">
-      <div className="font-display font-bold text-white leading-tight" style={{ fontSize: 'clamp(10px, 1.3cqw, 13.5px)' }}>{title}</div>
-      {sub && <div className="text-[#A2B1C3] leading-tight mt-0.5" style={{ fontSize: 'clamp(9px, 1.1cqw, 11.5px)' }}>{sub}</div>}
+      <div className="font-display font-bold text-ink leading-tight" style={{ fontSize: 'clamp(10px, 1.3cqw, 13.5px)' }}>{title}</div>
+      {sub && <div className="text-body leading-tight mt-0.5" style={{ fontSize: 'clamp(9px, 1.1cqw, 11.5px)' }}>{sub}</div>}
     </div>
   );
 }
 
-function FlowNode({ x, y, icon: Icon, accent, title, sub, delay, trigger }) {
+function Node({ x, y, icon: Icon, title, sub, trigger = false }) {
   return (
     <div className="absolute -translate-x-1/2 -translate-y-1/2" style={pct(x, y)}>
       <div
-        className="relative w-[6.4cqw] h-[6.4cqw]"
-        style={{ borderRadius: trigger ? '3.2cqw 1.3cqw 1.3cqw 3.2cqw' : '1.3cqw' }}
+        className={`relative w-[6.4cqw] h-[6.4cqw] bg-surface border-[1.5px] border-brand flex items-center justify-center text-link ${
+          trigger ? 'rounded-[3.2cqw_1.3cqw_1.3cqw_3.2cqw]' : 'rounded-[1.3cqw]'
+        }`}
       >
-        <Ping color={`${accent}99`} delay={delay} />
-        <div
-          className="absolute inset-0 flex items-center justify-center border-[1.5px]"
-          style={{
-            borderRadius: 'inherit',
-            borderColor: `${accent}B3`,
-            background: '#1B2A3E',
-            boxShadow: `0 10px 24px -10px ${accent}80, inset 0 1px 0 rgba(255,255,255,.06)`,
-          }}
-        >
-          <Icon style={{ width: '2.7cqw', height: '2.7cqw', color: accent }} strokeWidth={2.2} />
-        </div>
+        <Icon style={{ width: '2.4cqw', height: '2.4cqw' }} />
         {trigger && (
-          <span className="absolute -top-[0.9cqw] -left-[0.9cqw] w-[2.4cqw] h-[2.4cqw] rounded-full bg-[#F2A93B] flex items-center justify-center shadow-[0_4px_10px_rgba(245,217,10,.45)]">
-            <Zap style={{ width: '1.4cqw', height: '1.4cqw' }} className="text-[#0F1A2A]" fill="currentColor" />
+          <span className="absolute -top-[0.9cqw] -left-[0.9cqw] w-[2.4cqw] h-[2.4cqw] rounded-full bg-yellow flex items-center justify-center text-[#0F1A2A]">
+            <Zap style={{ width: '1.4cqw', height: '1.4cqw' }} />
           </span>
         )}
       </div>
-      <NodeLabel title={title} sub={sub} />
+      <Label title={title} sub={sub} />
     </div>
   );
 }
 
-function SubNode({ x, y, icon: Icon, accent, title, delay }) {
+function SubNode({ x, y, icon: Icon, title }) {
   return (
     <div className="absolute -translate-x-1/2 -translate-y-1/2" style={pct(x, y)}>
-      <div className="relative w-[4.8cqw] h-[4.8cqw] rounded-full">
-        <Ping color={`${accent}99`} delay={delay} scale={1.5} />
-        <div
-          className="absolute inset-0 rounded-full flex items-center justify-center border-[1.5px] border-dashed"
-          style={{ borderColor: `${accent}B3`, background: '#1B2A3E' }}
-        >
-          <Icon style={{ width: '2cqw', height: '2cqw', color: accent }} strokeWidth={2.2} />
-        </div>
+      <div className="w-[4.8cqw] h-[4.8cqw] rounded-full bg-surface border-[1.5px] border-dashed border-brand flex items-center justify-center text-link">
+        <Icon style={{ width: '2cqw', height: '2cqw' }} />
       </div>
-      <NodeLabel title={title} />
+      <Label title={title} />
     </div>
   );
 }
 
-function HubNode() {
+function Result({ x, y, text }) {
   return (
-    <div className="absolute -translate-x-1/2 -translate-y-1/2" style={pct(330, 220)}>
-      <div className="relative w-[17cqw] h-[6.4cqw] rounded-[1.3cqw]">
-        <Ping color="#A7C0DE99" delay={0.18} scale={1.15} />
-        <div
-          className="absolute inset-0 rounded-[1.3cqw] border-[1.5px] border-[#A7C0DE] flex items-center gap-[1.1cqw] px-[1.2cqw]"
-          style={{
-            background: '#1B2A3E',
-            boxShadow: '0 14px 32px -10px rgba(15,26,42,.7), inset 0 1px 0 rgba(255,255,255,.08)',
-          }}
-        >
-          <div className="w-[4cqw] h-[4cqw] rounded-[1cqw] flex-shrink-0 flex items-center justify-center bg-brand animate-node-breathe">
-            <Bot style={{ width: '2.3cqw', height: '2.3cqw' }} className="text-white" strokeWidth={2.2} />
-          </div>
-          <div className="min-w-0 whitespace-nowrap">
-            <div className="font-display font-extrabold text-white leading-tight" style={{ fontSize: 'clamp(11px, 1.45cqw, 15px)' }}>Your agent</div>
-            <div className="flex items-center gap-1 text-[#D5DEE9] leading-tight mt-0.5" style={{ fontSize: 'clamp(9px, 1.1cqw, 11.5px)' }}>
-              <span className="w-1.5 h-1.5 rounded-full bg-[#34D399] animate-pulse" /> Coordinating…
-            </div>
-          </div>
-        </div>
+    <div className="absolute -translate-y-1/2" style={pct(x, y)}>
+      <div className="flex items-center gap-[0.6cqw] rounded-full border border-border bg-surface px-[1cqw] py-[0.5cqw] whitespace-nowrap">
+        <span className="w-[1.9cqw] h-[1.9cqw] rounded-full bg-green flex items-center justify-center text-white">
+          <Check style={{ width: '1.2cqw', height: '1.2cqw' }} strokeWidth={2.5} />
+        </span>
+        <span className="font-bold text-ink" style={{ fontSize: 'clamp(10px, 1.2cqw, 13px)' }}>{text}</span>
       </div>
     </div>
   );
 }
 
 export default function AgentsLiveFlowDiagram() {
-  const rootRef = useRef(null);
-
-  useEffect(() => {
-    const root = rootRef.current;
-    const svg = root.querySelector('svg');
-    svg.setCurrentTime(0);
-    root.getAnimations({ subtree: true }).forEach((a) => { a.currentTime = 0; });
-
-    const io = new IntersectionObserver(([entry]) => {
-      root.dataset.flowPaused = String(!entry.isIntersecting);
-      if (entry.isIntersecting) svg.unpauseAnimations();
-      else svg.pauseAnimations();
-    });
-    io.observe(root);
-    return () => io.disconnect();
-  }, []);
-
   return (
-    <div
-      ref={rootRef}
-      role="img"
-      aria-label="Animated diagram: a message on Telegram or WhatsApp reaches your AI agent, which coordinates a team of agents sharing one dashboard — one researches, one drafts the reply, one logs the task — each confirming when it's done."
-      className="relative rounded-[24px] overflow-hidden border border-white/10 bg-[#0F1A2A] shadow-[0_30px_60px_-24px_rgba(15,26,42,.6)]"
-    >
+    <>
       <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            'transparent',
-        }}
-      />
-
-      <div className="relative flex items-center justify-between gap-3 px-4 sm:px-5 py-3 border-b border-white/10 bg-white/[.03]">
-        <div className="flex items-center gap-3 min-w-0">
-          <div className="flex gap-1.5 flex-shrink-0">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#FF5F57]" />
-            <span className="w-2.5 h-2.5 rounded-full bg-[#FEBC2E]" />
-            <span className="w-2.5 h-2.5 rounded-full bg-[#28C840]" />
-          </div>
-          <span className="text-[12.5px] font-semibold text-[#D5DEE9] truncate">agent-team.dashboard</span>
-        </div>
-        <div className="flex items-center gap-2 flex-shrink-0">
-          <span className="hidden sm:inline text-[11.5px] text-[#7A8CA0]">Runs automatically, 24/7</span>
-          <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#34D399] bg-[#34D399]/10 border border-[#34D399]/25 px-2.5 py-1 rounded-full">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#34D399] animate-pulse" /> Active
-          </span>
-        </div>
-      </div>
-
-      <div className="relative overflow-x-auto">
+        role="img"
+        aria-label="Diagram of the system you build: a message on Telegram or WhatsApp reaches your AI agent, which uses a model and memory and hands work to three agents on one shared dashboard. One researches, one drafts the reply, and one logs the task."
+        className="relative rounded-2xl border border-border bg-surface overflow-x-auto"
+      >
         <div className="relative min-w-[600px]" style={{ containerType: 'inline-size' }}>
-          {/* Establishes the box's height the old bulletproof way — a
-              normal-flow spacer with padding-top as a percentage, which the
-              CSS spec always resolves against the *containing block's
-              width*, in every browser, unconditionally. Deliberately not
-              `aspect-[1000/440]`: that shorthand needs the browser to
-              derive height from an aspect-ratio on a non-replaced element
-              that also establishes size containment (container-type:
-              inline-size) — exactly the kind of combination engines have
-              disagreed on, and it reportedly rendered as a blank box on at
-              least one real device even though it looked fine here in
-              Chromium (no WebKit available in this sandbox to confirm). */}
+          {/* A normal-flow spacer whose percentage padding resolves against the
+              container's width, in every browser. Deliberately not
+              `aspect-[1000/440]`: that needs the engine to derive a height from an
+              aspect ratio on a non-replaced element that also has
+              container-type: inline-size, a combination engines have
+              disagreed on. */}
           <div style={{ paddingTop: `${(H / W) * 100}%` }} />
           <svg viewBox={`0 0 ${W} ${H}`} className="absolute inset-0 w-full h-full" aria-hidden="true">
-            <defs>
-              <pattern id="ald-grid" width="22" height="22" patternUnits="userSpaceOnUse">
-                <circle cx="11" cy="11" r="1.2" fill="rgba(255,255,255,.09)" />
-              </pattern>
-              <filter id="ald-glow" x="-100%" y="-100%" width="300%" height="300%">
-                <feGaussianBlur stdDeviation="4" />
-              </filter>
-            </defs>
-
-            <rect width={W} height={H} fill="url(#ald-grid)" />
-
-            {/* Dashboard panel — groups the 3 board agents visually so the
-                "multi-agent dashboard" reads as one shared surface, not
-                three unrelated branches. */}
-            <rect x="565" y="40" width="390" height="360" rx="18" fill="rgba(15,26,42,.05)" stroke="#A7C0DE" strokeOpacity="0.35" strokeWidth="1.5" strokeDasharray="6 6" />
-
-            {EDGES.map((e) => (
-              <g key={e.d}>
-                <path d={e.d} fill="none" stroke="#86B4E6" strokeWidth="6" strokeOpacity="0.14" strokeLinecap="round" />
-                <path d={e.d} fill="none" stroke="#86B4E6" strokeWidth="2.2" strokeLinecap="round" strokeDasharray="7 5" className="animate-dash-flow" />
-              </g>
-            ))}
-            {SUB_EDGES.map((e) => (
-              <path key={e.d} d={e.d} fill="none" stroke={e.color} strokeOpacity="0.55" strokeWidth="1.6" strokeDasharray="3 5" strokeLinecap="round" />
-            ))}
-
-            {HANDLES.map(([cx, cy]) => (
-              <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r="4.5" fill="#0F1A2A" stroke="#7A8CA0" strokeWidth="1.5" />
-            ))}
-
-            {EDGES.map((e) => <Packet key={e.d} {...e} />)}
-            {SUB_EDGES.map((e) => <Packet key={e.d} {...e} roundTrip />)}
+            {/* The dashboard panel that groups the three board agents */}
+            <rect x="565" y="40" width="390" height="388" rx="16" fill="none" stroke="var(--color-border-strong)" strokeWidth="1.5" strokeDasharray="6 6" />
+            <g fill="none" stroke="var(--color-link)" strokeWidth="2.2" strokeLinecap="round">
+              <path d="M127 130 C 185 130 185 196 237 196" />
+              <path d="M127 310 C 185 310 185 244 237 244" />
+              <path d="M415 196 C 500 196 530 100 610 100" />
+              <path d="M415 220 H610" />
+              <path d="M415 244 C 500 244 530 340 610 340" />
+              <path d="M290 252V351M370 252V351" strokeWidth="1.6" strokeDasharray="4 5" />
+            </g>
+            <g fill="var(--color-link)">
+              <polygon points={arrow(245, 196)} />
+              <polygon points={arrow(245, 244)} />
+              <polygon points={arrow(618, 100)} />
+              <polygon points={arrow(618, 220)} />
+              <polygon points={arrow(618, 340)} />
+            </g>
           </svg>
 
           <span
-            className="absolute font-bold uppercase tracking-wide text-[#A7C0DE] bg-[#0F1A2A] px-[0.8cqw]"
-            style={{ ...pct(575, 40), fontSize: 'clamp(8.5px, 1cqw, 10.5px)' }}
+            className="absolute -translate-y-1/2 bg-surface px-[0.8cqw] font-semibold text-body"
+            style={{ ...pct(575, 40), fontSize: 'clamp(9px, 1.15cqw, 12px)' }}
           >
             Multi-agent dashboard
           </span>
 
-          {TRIGGERS.map((n) => <FlowNode key={n.id} {...n} />)}
-          {BOARD_AGENTS.map((n) => <FlowNode key={n.id} {...n} />)}
-          {SUB_NODES.map((n) => <SubNode key={n.id} {...n} />)}
-          <HubNode />
+          {TRIGGERS.map((n) => <Node key={n.sub} {...n} trigger />)}
 
-          {RESULTS.map((r, i) => (
-            <div key={r.text} className="absolute -translate-y-1/2" style={pct(r.x, r.y)}>
-              <div
-                className="flex items-center gap-[0.6cqw] rounded-full border px-[1cqw] py-[0.5cqw] bg-[#131E2F]/90 backdrop-blur animate-floaty whitespace-nowrap"
-                style={{ borderColor: `${r.color}55`, animationDelay: `${i * 0.8}s` }}
-              >
-                <span className="w-[1.7cqw] h-[1.7cqw] rounded-full flex items-center justify-center" style={{ background: r.color }}>
-                  <Check style={{ width: '1.1cqw', height: '1.1cqw' }} className="text-[#0F1A2A]" strokeWidth={3} />
-                </span>
-                <span className="font-bold text-white" style={{ fontSize: 'clamp(9.5px, 1.15cqw, 12px)' }}>{r.text}</span>
+          <div className="absolute -translate-x-1/2 -translate-y-1/2" style={pct(330, 220)}>
+            <div className="w-[17cqw] h-[6.4cqw] rounded-[1.3cqw] bg-brand flex items-center gap-[1.1cqw] px-[1.2cqw]">
+              <div className="w-[4cqw] h-[4cqw] rounded-[1cqw] flex-shrink-0 flex items-center justify-center bg-yellow text-[#0F1A2A]">
+                <Bot style={{ width: '2.3cqw', height: '2.3cqw' }} />
+              </div>
+              <div className="min-w-0 whitespace-nowrap">
+                <div className="font-display font-extrabold text-white leading-tight" style={{ fontSize: 'clamp(11px, 1.45cqw, 15px)' }}>Your agent</div>
+                <div className="text-white/85 leading-tight mt-0.5" style={{ fontSize: 'clamp(9px, 1.1cqw, 11.5px)' }}>Coordinating</div>
               </div>
             </div>
-          ))}
+          </div>
+
+          {BOARD_AGENTS.map((a) => <Node key={a.title} x={a.x} y={a.y} icon={a.icon} title={a.title} sub={a.sub} />)}
+          {SUB_NODES.map((n) => <SubNode key={n.title} {...n} />)}
+          {BOARD_AGENTS.map((a) => <Result key={a.result} x={800} y={a.y} text={a.result} />)}
         </div>
       </div>
-
-      <div className="relative flex items-center justify-between gap-3 flex-wrap px-4 sm:px-5 py-3 border-t border-white/10 text-[11.5px] text-[#7A8CA0]">
-        <span className="inline-flex items-center gap-1.5">
-          <Check className="w-3.5 h-3.5 text-[#34D399]" strokeWidth={3} /> Last run succeeded · 6 steps · 2.1s
-        </span>
-        <span className="sm:hidden">Swipe to see the full flow →</span>
-      </div>
-    </div>
+      <p className="mt-2.5 text-[13px] text-body text-center">
+        Illustration of the system you'll build.
+        <span className="sm:hidden"> Swipe to see the full flow.</span>
+      </p>
+    </>
   );
 }
