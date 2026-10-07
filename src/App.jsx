@@ -135,7 +135,7 @@ function AppShell() {
         {!hideChrome && <Navbar />}
         <main className="flex-1">
           <Routes>
-            <Route path="/" element={<Home progress={progress} onSelectAgent={setSelectedAgent} />} />
+            <Route path="/" element={<Home />} />
             <Route path="/catalog" element={<Catalog progress={progress} onSelectAgent={setSelectedAgent} />} />
             <Route path="/paths" element={<PathDetail progress={progress} />} />
             <Route path="/builder-1/:slug" element={<BuilderSession progress={progress} tier="Builder 1" />} />

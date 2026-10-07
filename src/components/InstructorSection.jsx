@@ -1,12 +1,4 @@
-const INSTRUCTOR = {
-  name: 'Emmanuel A. Samuel',
-  title: 'Web / AI Automation Engineer',
-  photo: '/images/agentslive-instructor.jpg',
-  bio: [
-    "Seven years as a web engineer, the last two of those spent building AI agents — connecting them to real tools, real customers, and real revenue, not just demos.",
-    "In January of this year, one of those agents took over the customer-messaging work of a 3-person team, without a single new hire to replace them.",
-  ],
-};
+import { INSTRUCTOR } from '../data/instructor';
 
 // Shared "About the instructor" card — same photo, name, title, and bio on
 // AIAgentMastery.jsx (it was shared with the AI Agents Live page, removed
