@@ -55,7 +55,7 @@ function emailShell(innerHtml) {
       ${innerHtml}
       <div style="margin-top:32px;padding-top:16px;border-top:1px solid #E7ECF2;font-size:12px;color:#4A5B6C;text-align:center;">
         Social Dev Technologies · You're receiving this because you registered for AI Agent Mastery.<br/>
-        Questions? Reply to this email or contact support@socialdevtechnologies.com.
+        Need help? Message us on WhatsApp: <a href="https://wa.me/2349066006963" style="color:#264D73;">wa.me/2349066006963</a>
       </div>
     </div>
   `;
@@ -80,7 +80,33 @@ async function sendResendEmail(to, subject, html) {
 
 const fmtDay = (d, opts) => d.toLocaleDateString('en-GB', { timeZone: 'Africa/Lagos', ...opts });
 
-function hourReminderHtml(name) {
+// joinLink is the Zoom room from aimastery_room (it carries the meeting passcode, so
+// it's read server-side at send time and only ever goes to registered students). With
+// no usable link the email falls back to pointing at the dashboard's Live Sessions.
+function hourReminderHtml(name, joinLink) {
+  if (joinLink) {
+    return `
+    <p style="font-size:15px;color:#0F1A2A;">Hey ${escapeHtml(name)},</p>
+    <p style="font-size:15px;color:#1F2C3D;line-height:1.6;">
+      Your <strong>AI Agent Mastery</strong> class starts in <strong>1 hour</strong> — <strong>7:00 PM WAT</strong> tonight.
+      Here's your link to join the call:
+    </p>
+    <div style="text-align:center;margin:28px 0;">
+      <a href="${escapeHtml(joinLink)}"
+         style="display:inline-block;background:#264D73;color:#fff;padding:12px 28px;border-radius:10px;text-decoration:none;font-weight:700;">
+        Join the class →
+      </a>
+    </div>
+    <p style="font-size:13px;color:#4A5B6C;line-height:1.6;word-break:break-all;">
+      Button not working? Copy this link into your browser:<br/>
+      <a href="${escapeHtml(joinLink)}" style="color:#264D73;">${escapeHtml(joinLink)}</a>
+    </p>
+    <p style="font-size:14px;color:#1F2C3D;line-height:1.6;">
+      The link is also on your dashboard under <strong>Live Sessions</strong>:
+      <a href="https://socialdevtechnologies.com/dashboard/live-sessions" style="color:#264D73;">open my dashboard</a>.
+    </p>
+  `;
+  }
   return `
     <p style="font-size:15px;color:#0F1A2A;">Hey ${escapeHtml(name)},</p>
     <p style="font-size:15px;color:#1F2C3D;line-height:1.6;">
@@ -209,9 +235,28 @@ serve(async (req) => {
     return `${fmtDay(d, { weekday: 'long', day: 'numeric', month: 'long' })} — 7:00 PM WAT`;
   });
 
+  // The one-hour email carries the Zoom room link. Read it here, server-side, from the
+  // service role (RLS keeps it away from everyone but enrolled students and admins);
+  // only an https URL is used, and if the lookup fails the email falls back to the
+  // dashboard wording instead of failing to send.
+  let joinLink = null;
+  if (kind === 'hour') {
+    const { data: room, error: roomErr } = await serviceClient
+      .from('aimastery_room')
+      .select('join_link')
+      .eq('id', 1)
+      .maybeSingle();
+    if (roomErr) console.error('aimastery_room query failed:', roomErr.message);
+    const link = String(room?.join_link ?? '').trim();
+    joinLink = /^https:\/\/\S+$/.test(link) ? link : null;
+  }
+
   const todo = (profiles || []).filter((p) => p.email && !sentSet.has(p.id));
   if (dryRun) {
-    return jsonResponse({ ok: true, dryRun: true, kind, cohortStart: startIso, registered: userIds.length, wouldSend: todo.length });
+    return jsonResponse({
+      ok: true, dryRun: true, kind, cohortStart: startIso, registered: userIds.length, wouldSend: todo.length,
+      ...(kind === 'hour' ? { joinLinkSet: Boolean(joinLink) } : {}),
+    });
   }
 
   let sent = 0;
@@ -220,19 +265,25 @@ serve(async (req) => {
     const subject = kind === 'hour'
       ? 'Starting in 1 hour: AI Agent Mastery, 7 PM WAT tonight'
       : 'Your AI Agent Mastery cohort starts today at 7 PM WAT';
-    const html = kind === 'hour' ? hourReminderHtml(name) : reminderHtml(name, dayLines);
+    const html = kind === 'hour' ? hourReminderHtml(name, joinLink) : reminderHtml(name, dayLines);
     const ok = await sendResendEmail(p.email, subject, emailShell(html));
     if (ok) {
       sent += 1;
-      await serviceClient.from('email_log').insert({
+      const { error: logErr } = await serviceClient.from('email_log').insert({
         user_id: p.id,
         email: p.email,
         email_type: emailType,
         subject,
         metadata: { cohort_start: startIso },
       });
+      // A failed insert blinds the dedupe above (it did silently until
+      // supabase/email-log-aimastery-types.sql), so say so rather than swallow it.
+      if (logErr) console.error('email_log insert failed:', logErr.code, logErr.message);
     }
   }
 
-  return jsonResponse({ ok: true, kind, cohortStart: startIso, registered: userIds.length, matched: todo.length, sent });
+  return jsonResponse({
+    ok: true, kind, cohortStart: startIso, registered: userIds.length, matched: todo.length, sent,
+    ...(kind === 'hour' ? { joinLinkSet: Boolean(joinLink) } : {}),
+  });
 });
