@@ -1,198 +1,419 @@
 insert into public.course_content_draft (course_id, what_you_build, what_you_learn, session, starter_code, test_it_out, troubleshooting, resources, tier, change_note)
 values (
   11,
-  $wyb$A morning script that reads today's Google Calendar events and your open tasks, asks the AI (Gemini or Claude) to turn both into a realistic time-blocked plan, and saves it as a plain-text file you can open (or print) before your day starts. Every parsing and formatting piece is unit-tested against realistic fake data first, so you can trust the code before you ever touch a live Google account, and the plan-generation step checks the AI's reply for dropped or duplicated tasks before you ever see it.$wyb$,
+  $wyb$A morning planner that runs for free on Google's servers, with nothing to install. Every morning it reads today's Google Calendar and your open Google Tasks, asks Gemini (free API key) to fit the tasks into the gaps between meetings, checks the AI's answer with ordinary code (dropped, repeated or invented tasks, and tasks placed on top of a meeting), retries once if it finds a problem, and emails you a clean, color-coded plan. Your real meetings never pass through the AI, so it can't lose or invent one.$wyb$,
   $wyl$[
-  "Authenticate with a real Google API using OAuth 2.0, not a service account or API key",
-  "Convert Google Calendar's raw JSON (including all-day events) into a clean, predictable shape",
-  "Read and normalize a plain-text task list without needing any external account",
-  "Design a bracket-marker prompt format that degrades gracefully instead of crashing on malformed AI output",
-  "Write a coverage check that catches an AI dropping or duplicating a task before you trust the output",
-  "Call the AI through your own key (a free Gemini key or your own Claude/Anthropic key), with a graceful fallback to a second model when one is overloaded",
-  "Wire independently-tested pieces into one script you could actually schedule to run every morning"
+  "Write and run a Google Apps Script from your browser, with nothing to install",
+  "Read your real Google Calendar and Google Tasks with Google's built-in services",
+  "Call the Gemini API with a free key stored safely in Script Properties",
+  "Give every task an ID so the AI answers with IDs only, not free text",
+  "Check an AI's answer in plain code: dropped, double-booked, invented and overlapping tasks",
+  "Retry once automatically and tell the AI exactly what it got wrong",
+  "Schedule the script with a time-based trigger so it runs while your computer is off"
 ]$wyl$::jsonb,
   $sess${
-  "model": "Google Gemini (gemini-flash-latest) or Claude Haiku 4.5 - your choice, see sdt_ai.py setup",
-  "builds": [
-    {
-      "time": "15 min",
-      "steps": [
-        {
-          "prompt": "requests\npython-dotenv\ngoogle-api-python-client\ngoogle-auth-oauthlib\n",
-          "verify": "requirements.txt sits directly inside your project folder, not in a subfolder. The next step installs everything it lists.",
-          "instruction": "Make an empty folder for this project and open it in your code editor (in VS Code: File > Open Folder). Inside it, create `requirements.txt` with this content - it lists every library this project uses:"
-        },
-        {
-          "instruction": "Set up Python for this project (once, about 5 minutes). Check your version with `python3 --version` on Mac/Linux or `py --version` on Windows. If it is missing or older than 3.10, install the latest Python from python.org/downloads (on Windows, tick \"Add python.exe to PATH\" on the installer's first screen), then open a new terminal. Now open a terminal in your project folder (in VS Code: Terminal > New Terminal) and run the commands below for your system. They create a virtual environment - a private set of libraries for this project only - and install everything requirements.txt lists.",
-          "prompt": "# Mac / Linux\npython3 -m venv .venv\nsource .venv/bin/activate\npython -m pip install -r requirements.txt\n\n# Windows (PowerShell)\npy -m venv .venv\n.venv\\Scripts\\Activate.ps1\npython -m pip install -r requirements.txt\n\n# Windows says \"running scripts is disabled\"? Run this once, then the Activate line again:\n#   Set-ExecutionPolicy -Scope CurrentUser RemoteSigned\n# Ubuntu/Debian says venv or ensurepip is not available? Run: sudo apt install python3-venv",
-          "verify": "Your terminal prompt now starts with (.venv), and the install ended with \"Successfully installed\". Each time you open a new terminal for this project, run the activate line again first - while it is active, plain `python` works on every system, and that is the command every step below uses."
-        },
-        {
-          "prompt": "\"\"\"\nSocial Dev Technologies - your connection to the AI.\n\nYou have TWO ways to power this file. Pick ONE and set it in your .env:\n\n  AI_PROVIDER=gemini    -> your own FREE Google Gemini API key\n  AI_PROVIDER=claude    -> your own Claude/Anthropic API key\n\nEvery project in this course calls ask_ai(...) the exact same way no\nmatter which one you pick - this file is the only place that changes.\n\nSETUP - OPTION 1: Gemini (free, no billing needed):\n\n  1. Go to https://aistudio.google.com/apikey and sign in with any Google\n     account. Click \"Create API key\" - free, no card required.\n  2. In the same folder as this file, create a file named exactly: .env\n  3. Put these two lines inside it:\n\n         AI_PROVIDER=gemini\n         GEMINI_API_KEY=paste_your_own_key_here\n\nSETUP - OPTION 2: Claude (if you already have a paid Claude account):\n\n  1. Go to https://console.anthropic.com/settings/keys and create an API\n     key. This needs billing set up on your Anthropic account - it is a\n     separate thing from a claude.ai Pro subscription, and is billed by\n     Anthropic based on what you actually use.\n  2. In your .env file, put these two lines instead:\n\n         AI_PROVIDER=claude\n         ANTHROPIC_API_KEY=paste_your_own_key_here\n\nNever share either key or put it on GitHub - each one is billed to YOUR\naccount. That's it. Every project in this course reuses this same file.\n\"\"\"\n\nimport os\nimport time\n\nimport requests\nfrom dotenv import load_dotenv\n\n# Reads the .env file sitting next to your project and loads your keys.\nload_dotenv()\n\n# \"gemini-flash-latest\" is Google's name for whatever its newest Flash model\n# is, so this file keeps working when Google retires an older model - which\n# it does regularly. You can pin one specific model with GEMINI_MODEL=... in\n# your .env, but if you ever get a \"not available\" error, delete that line.\nGEMINI_MODEL = os.environ.get(\"GEMINI_MODEL\", \"gemini-flash-latest\")\nGEMINI_URL_TEMPLATE = \"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent\"\n\n# Gemini \"thinks\" before it answers, and that hidden thinking counts toward\n# the same token limit as the answer itself. With a small max_tokens (the\n# 50-300 used for short replies in this course) the thinking could use up\n# the whole limit and the answer would come back empty. So this file turns\n# thinking down to its minimum (these projects don't need it) and gives\n# Gemini this many extra tokens on top of your max_tokens for whatever\n# thinking is left.\nTHINKING_ALLOWANCE = 1024\n\nCLAUDE_MODEL = os.environ.get(\"CLAUDE_MODEL\", \"claude-haiku-4-5\")\nANTHROPIC_URL = \"https://api.anthropic.com/v1/messages\"\nANTHROPIC_VERSION = \"2023-06-01\"\n\n# Both AIs occasionally answer \"overloaded\" during busy periods (Gemini's\n# free tier especially). That's not your code being wrong - retrying a\n# couple of times almost always gets a real answer, so it's built in here\n# rather than left for every project to handle separately.\nMAX_ATTEMPTS = 3\nRETRY_DELAY_SECONDS = 3\n\n\nclass AIError(Exception):\n    \"\"\"Something went wrong talking to the AI. The message explains what.\"\"\"\n\n\ndef _get_provider():\n    \"\"\"\n    Reads AI_PROVIDER from .env. Falls back to guessing from whichever key\n    is actually present, so forgetting to set AI_PROVIDER explicitly\n    doesn't crash a setup that only has one key configured.\n    \"\"\"\n    provider = os.environ.get(\"AI_PROVIDER\", \"\").strip().lower()\n    if provider in (\"gemini\", \"claude\"):\n        return provider\n\n    if os.environ.get(\"GEMINI_API_KEY\"):\n        return \"gemini\"\n    if os.environ.get(\"ANTHROPIC_API_KEY\"):\n        return \"claude\"\n\n    raise AIError(\n        \"No AI provider configured.\\n\"\n        \"Add ONE of these pairs to your .env file:\\n\\n\"\n        \"    AI_PROVIDER=gemini\\n\"\n        \"    GEMINI_API_KEY=paste_your_free_key_here\\n\\n\"\n        \"  ...or...\\n\\n\"\n        \"    AI_PROVIDER=claude\\n\"\n        \"    ANTHROPIC_API_KEY=paste_your_own_key_here\\n\\n\"\n        \"Get a free Gemini key at https://aistudio.google.com/apikey\"\n    )\n\n\ndef _ask_gemini(prompt, system=None, max_tokens=1000):\n    api_key = os.environ.get(\"GEMINI_API_KEY\")\n    if not api_key:\n        raise AIError(\n            \"AI_PROVIDER is set to gemini but no GEMINI_API_KEY was found.\\n\"\n            \"Get a free key at https://aistudio.google.com/apikey and add \"\n            \"it to .env:\\n\"\n            \"    GEMINI_API_KEY=paste_your_own_key_here\"\n        )\n\n    generation_config = {\"maxOutputTokens\": max_tokens + THINKING_ALLOWANCE}\n    # thinkingBudget 0 = \"as little thinking as possible\". Pro models can't\n    # turn thinking down and reject this setting, so it's left off for them.\n    if \"-pro\" not in GEMINI_MODEL:\n        generation_config[\"thinkingConfig\"] = {\"thinkingBudget\": 0}\n\n    payload = {\n        \"contents\": [{\"role\": \"user\", \"parts\": [{\"text\": prompt}]}],\n        \"generationConfig\": generation_config,\n    }\n    if system:\n        payload[\"systemInstruction\"] = {\"parts\": [{\"text\": system}]}\n\n    url = GEMINI_URL_TEMPLATE.format(model=GEMINI_MODEL)\n    # The key goes in a header rather than the URL, so it never shows up in\n    # an error message or traceback you might paste somewhere for help.\n    headers = {\"x-goog-api-key\": api_key}\n\n    last_problem = \"no response\"\n    for attempt in range(MAX_ATTEMPTS):\n        try:\n            response = requests.post(url, headers=headers, json=payload, timeout=90)\n        except requests.RequestException:\n            raise AIError(\n                \"Could not reach Gemini. Check your internet connection and try again.\"\n            ) from None\n\n        if response.status_code in (500, 503):\n            last_problem = f\"Gemini is busy ({response.status_code} - high demand on the free tier)\"\n            if attempt < MAX_ATTEMPTS - 1:\n                time.sleep(RETRY_DELAY_SECONDS)\n            continue\n\n        if response.status_code == 429:\n            raise AIError(\n                \"Gemini says you've hit the free tier's rate limit. Wait a \"\n                \"minute and try again - the free tier only allows a \"\n                \"limited number of requests per minute.\"\n            )\n\n        if response.status_code == 404:\n            if os.environ.get(\"GEMINI_MODEL\"):\n                advice = (\n                    \"Your .env file sets GEMINI_MODEL - delete that line so this \"\n                    \"file uses its default model, then try again.\"\n                )\n            else:\n                advice = \"Check the course page for an updated copy of sdt_ai.py.\"\n            raise AIError(\n                f'Gemini says the model \"{GEMINI_MODEL}\" isn\\'t available to your '\n                f\"API key - Google retires older models.\\n{advice}\\n\"\n                f\"Details: {response.text[:300]}\"\n            )\n\n        if response.status_code == 400:\n            # If a future Gemini model ever refuses the thinking setting\n            # above, ask again without it instead of failing.\n            if \"thinkingConfig\" in generation_config and \"thinking\" in response.text.lower():\n                del generation_config[\"thinkingConfig\"]\n                last_problem = \"Gemini rejected the thinking setting\"\n                continue\n            raise AIError(\n                f\"Gemini rejected the request - double check your GEMINI_API_KEY \"\n                f\"is correct: {response.text[:300]}\"\n            )\n\n        if response.status_code != 200:\n            raise AIError(\n                f\"Gemini returned an error (status {response.status_code}): {response.text[:300]}\"\n            )\n\n        data = response.json()\n        candidates = data.get(\"candidates\") or []\n        if not candidates:\n            block_reason = (data.get(\"promptFeedback\") or {}).get(\"blockReason\")\n            if block_reason:\n                raise AIError(f\"Gemini refused the prompt ({block_reason}). Try rephrasing it.\")\n            raise AIError(f\"Unexpected reply from Gemini: {data}\")\n        candidate = candidates[0]\n        finish_reason = candidate.get(\"finishReason\")\n\n        # A response can come back with no text because Gemini's safety\n        # filters blocked it (finishReason == \"SAFETY\"), not because of a\n        # network problem - so this is not retried like the cases above.\n        if finish_reason == \"SAFETY\":\n            raise AIError(\"Gemini declined to answer (safety filter). Try rephrasing your prompt.\")\n\n        # An answer can arrive split across several parts, so join them all.\n        # Any part marked \"thought\" is Gemini's thinking, not its answer.\n        parts = (candidate.get(\"content\") or {}).get(\"parts\") or []\n        text = \"\".join(part.get(\"text\", \"\") for part in parts if not part.get(\"thought\"))\n        if not text:\n            if finish_reason == \"MAX_TOKENS\":\n                raise AIError(\n                    \"Gemini ran out of room before it wrote any answer - its thinking \"\n                    f\"used up all {generation_config['maxOutputTokens']} tokens it was \"\n                    \"allowed. Raise max_tokens in this ask_ai(...) call (try \"\n                    f\"max_tokens={max(max_tokens * 2, 4000)}) and run it again.\"\n                )\n            raise AIError(\n                f\"Gemini sent back an empty answer (finishReason: {finish_reason}). \"\n                \"Try again, or rephrase your prompt.\"\n            )\n\n        usage = data.get(\"usageMetadata\") or {}\n        return {\n            \"text\": text,\n            \"input_tokens\": usage.get(\"promptTokenCount\"),\n            \"output_tokens\": usage.get(\"candidatesTokenCount\"),\n        }\n\n    raise AIError(\n        f\"Gemini was unavailable after {MAX_ATTEMPTS} tries ({last_problem}). \"\n        \"This happens sometimes on the free tier during high demand - wait \"\n        \"a minute and try again.\"\n    )\n\n\ndef _ask_claude(prompt, system=None, max_tokens=1000):\n    api_key = os.environ.get(\"ANTHROPIC_API_KEY\")\n    if not api_key:\n        raise AIError(\n            \"AI_PROVIDER is set to claude but no ANTHROPIC_API_KEY was found.\\n\"\n            \"Create one at https://console.anthropic.com/settings/keys and \"\n            \"add it to .env:\\n\"\n            \"    ANTHROPIC_API_KEY=paste_your_own_key_here\"\n        )\n\n    payload = {\n        \"model\": CLAUDE_MODEL,\n        \"max_tokens\": max_tokens,\n        \"messages\": [{\"role\": \"user\", \"content\": prompt}],\n    }\n    if system:\n        payload[\"system\"] = system\n\n    last_problem = \"no response\"\n    for attempt in range(MAX_ATTEMPTS):\n        try:\n            response = requests.post(\n                ANTHROPIC_URL,\n                headers={\n                    \"x-api-key\": api_key,\n                    \"anthropic-version\": ANTHROPIC_VERSION,\n                    \"Content-Type\": \"application/json\",\n                },\n                json=payload,\n                timeout=90,\n            )\n        except requests.RequestException:\n            raise AIError(\n                \"Could not reach Claude. Check your internet connection and try again.\"\n            ) from None\n\n        # 529 is Anthropic's \"overloaded\" - like Gemini's 503, a retry\n        # usually works.\n        if response.status_code in (500, 503, 529):\n            last_problem = f\"Claude is busy ({response.status_code} - overloaded)\"\n            if attempt < MAX_ATTEMPTS - 1:\n                time.sleep(RETRY_DELAY_SECONDS)\n            continue\n\n        try:\n            data = response.json()\n        except ValueError:\n            raise AIError(f\"Unexpected reply from Claude (status {response.status_code}).\") from None\n\n        if response.status_code == 401:\n            raise AIError(\n                \"Claude rejected your ANTHROPIC_API_KEY - double check it was copied correctly.\"\n            )\n\n        if response.status_code == 429:\n            raise AIError(\"Claude says you've hit your rate or usage limit. Wait a moment and try again.\")\n\n        if response.status_code == 404:\n            if os.environ.get(\"CLAUDE_MODEL\"):\n                advice = (\n                    \"Your .env file sets CLAUDE_MODEL - delete that line so this \"\n                    \"file uses its default model, then try again.\"\n                )\n            else:\n                advice = \"Check the course page for an updated copy of sdt_ai.py.\"\n            raise AIError(\n                f'Claude says the model \"{CLAUDE_MODEL}\" isn\\'t available to your '\n                f\"API key.\\n{advice}\"\n            )\n\n        if \"error\" in data or response.status_code != 200:\n            error = data.get(\"error\") or {}\n            message = error.get(\"message\") if isinstance(error, dict) else str(error)\n            raise AIError(\n                f\"Claude returned an error (status {response.status_code}): \"\n                f\"{message or str(data)[:300]}\"\n            )\n\n        text = \"\".join(\n            block.get(\"text\", \"\") for block in data.get(\"content\", []) if block.get(\"type\") == \"text\"\n        )\n        if not text:\n            raise AIError(\n                f\"Claude sent back an empty answer (stop_reason: {data.get('stop_reason')}). \"\n                \"Try again, or rephrase your prompt.\"\n            )\n\n        usage = data.get(\"usage\") or {}\n        return {\n            \"text\": text,\n            \"input_tokens\": usage.get(\"input_tokens\"),\n            \"output_tokens\": usage.get(\"output_tokens\"),\n        }\n\n    raise AIError(\n        f\"Claude was unavailable after {MAX_ATTEMPTS} tries ({last_problem}). \"\n        \"Wait a minute and try again.\"\n    )\n\n\ndef ask_ai_detailed(prompt, system=None, max_tokens=1000, project=None):\n    \"\"\"\n    Same as ask_ai, but returns the whole reply as a dict.\n\n        result = ask_ai_detailed(\"Summarise this\", max_tokens=200)\n        print(result[\"text\"])\n    \"\"\"\n    provider = _get_provider()\n    if provider == \"gemini\":\n        return _ask_gemini(prompt, system=system, max_tokens=max_tokens)\n    return _ask_claude(prompt, system=system, max_tokens=max_tokens)\n\n\ndef ask_ai(prompt, system=None, max_tokens=1000, project=None):\n    \"\"\"\n    Send a question to the AI and get the answer back as text.\n\n        answer = ask_ai(\"Write a haiku about Lagos traffic\")\n        print(answer)\n\n    prompt      - what you want the AI to do. This is the important part.\n    system      - optional. Sets the AI's role, e.g. \"You are a careful editor.\"\n    max_tokens  - roughly how long the answer may be. 1000 is plenty for most.\n    project     - unused, kept so call sites read the same across every\n                  project regardless of which AI is behind this file.\n\n    Works identically whichever provider your .env is set to - every\n    project in this course calls this one function and never needs to\n    know which AI is actually answering.\n\n    Returns the AI's answer as a plain string.\n    Raises AIError with a readable message if something is wrong.\n    \"\"\"\n    return ask_ai_detailed(prompt, system=system, max_tokens=max_tokens, project=project)[\"text\"]\n\n\nif __name__ == \"__main__\":\n    # Running this file directly checks that your setup works.\n    print(\"Testing your AI connection...\\n\")\n    try:\n        provider = _get_provider()\n        model = GEMINI_MODEL if provider == \"gemini\" else CLAUDE_MODEL\n        result = ask_ai_detailed(\"Say hello in exactly five words.\", max_tokens=50)\n        print(f\"Provider: {provider} ({model})\")\n        print(\"The AI said:\", result[\"text\"])\n        print(\"\\nYour setup works. You are ready to build.\")\n    except AIError as problem:\n        print(\"Setup problem:\\n\")\n        print(problem)\n",
-          "verify": "Nothing to check yet — you'll test this file once your .env is filled in, in the next step.",
-          "instruction": "Create `sdt_ai.py` with this code — copy it exactly, you'll never edit it. This is the ONLY file that talks to the AI in this whole project:"
-        },
-        {
-          "prompt": "# OPTION 1: your own free Gemini key (recommended - no billing needed)\n# Get one free at https://aistudio.google.com/apikey - no credit card needed\nAI_PROVIDER=gemini\nGEMINI_API_KEY=paste_your_own_key_here\n\n# OPTION 2: your own Claude/Anthropic key (comment OPTION 1 out above,\n# uncomment these two lines instead - needs billing set up on your own\n# Anthropic account)\n# Get one at https://console.anthropic.com/settings/keys\n# AI_PROVIDER=claude\n# ANTHROPIC_API_KEY=paste_your_own_key_here\n",
-          "verify": "Run `python sdt_ai.py` - it should print which provider you're using, then `The AI said: ...`, and end with `Your setup works. You are ready to build.` If you see `No AI provider configured` instead, check that .env sits next to sdt_ai.py and that AI_PROVIDER plus its matching key are both uncommented.",
-          "instruction": "Create `.env` in the same folder with this content. Pick ONE AI option (Gemini or Claude) below."
-        }
-      ],
-      "title": "Connect your AI (Gemini or Claude)",
-      "number": 1,
-      "description": "Before touching Google Calendar's API, wire up the one file every build in this project calls to reach the AI - so the builds ahead have something real to import."
-    },
-    {
-      "time": "25 min",
-      "steps": [
-        {
-          "prompt": "\"\"\"\nStep 1 of the Calendar & Task Prioritizer Agent.\n\nLogs into Google Calendar and turns its raw JSON reply into the small,\nclean list of dicts the rest of this project works with.\n\"\"\"\n\nimport datetime\nimport os\n\nfrom google.auth.transport.requests import Request\nfrom google.oauth2.credentials import Credentials\nfrom google_auth_oauthlib.flow import InstalledAppFlow\nfrom googleapiclient.discovery import build\n\n# Read-only is the correct scope here. This project only ever reads your\n# calendar to build a plan - it never creates, edits or deletes an event.\n# Asking for the narrowest scope that does the job is good practice, and\n# it also means the Google consent screen shows a shorter, less alarming\n# permission list to whoever approves it (you, or a test user you add).\nSCOPES = [\"https://www.googleapis.com/auth/calendar.readonly\"]\n\nTOKEN_FILE = \"token.json\"\nCREDENTIALS_FILE = \"credentials.json\"\n\n\ndef get_calendar_service():\n    \"\"\"\n    Returns an authenticated Google Calendar API client.\n\n    The first time you run this, a browser tab opens asking you to log in\n    and approve access - that's the OAuth \"consent screen\". Approve it and\n    a token.json file is written next to this one, so every run after that\n    is silent. Delete token.json if you ever need to log in again (e.g. you\n    revoked access, or you want to switch Google accounts).\n    \"\"\"\n    creds = None\n    if os.path.exists(TOKEN_FILE):\n        creds = Credentials.from_authorized_user_file(TOKEN_FILE, SCOPES)\n\n    # Tokens expire after about an hour. Refreshing silently with the\n    # long-lived refresh token is much less annoying than re-opening a\n    # browser tab to log in again every time you run this.\n    if creds and creds.expired and creds.refresh_token:\n        creds.refresh(Request())\n    elif not creds or not creds.valid:\n        if not os.path.exists(CREDENTIALS_FILE):\n            raise FileNotFoundError(\n                f\"Missing {CREDENTIALS_FILE}.\\n\"\n                \"Download it from Google Cloud Console (Build 3 of the guide shows how) \"\n                \"and put it in this same folder, then run this again.\"\n            )\n        flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_FILE, SCOPES)\n        creds = flow.run_local_server(port=0)\n        with open(TOKEN_FILE, \"w\") as token:\n            token.write(creds.to_json())\n\n    return build(\"calendar\", \"v3\", credentials=creds)\n\n\ndef fetch_todays_events(service, calendar_id=\"primary\"):\n    \"\"\"\n    Asks Google for today's raw events.\n\n    Deliberately split from get_today_events() below so the parsing logic\n    (parse_events, further down) can be unit-tested against a realistic\n    fake response dict without ever touching the network or needing a\n    real Google account - which matters because this course can't assume\n    every student has one, or that a live OAuth flow can be verified from\n    an automated test.\n    \"\"\"\n    # Midnight to midnight in YOUR timezone. astimezone() attaches your\n    # computer's UTC offset, so isoformat() writes e.g.\n    # \"2026-09-02T00:00:00+01:00\". Gluing a \"Z\" (UTC) onto a local time\n    # instead would shift the whole day by your UTC offset - pulling in\n    # yesterday's late events or dropping tonight's.\n    today_start = datetime.datetime.now().astimezone().replace(hour=0, minute=0, second=0, microsecond=0)\n    today_end = today_start + datetime.timedelta(days=1)\n\n    return service.events().list(\n        calendarId=calendar_id,\n        timeMin=today_start.isoformat(),\n        timeMax=today_end.isoformat(),\n        singleEvents=True,\n        orderBy=\"startTime\",\n    ).execute()\n\n\ndef _clock_time(when):\n    \"\"\"\n    Pulls just the HH:MM out of a Calendar API dateTime string, dropping\n    the date and timezone offset - the prompt only needs to know when in\n    the day something happens, not a full ISO timestamp.\n\n        \"2026-09-02T09:00:00+01:00\" -> \"09:00\"\n    \"\"\"\n    raw = when.get(\"dateTime\", \"\")\n    return raw[11:16] if len(raw) >= 16 else raw\n\n\ndef parse_events(response):\n    \"\"\"\n    Turns Google's raw Calendar API response into the small, clean shape\n    the rest of this project uses:\n\n        [{\"summary\": \"Standup\", \"start\": \"09:00\", \"end\": \"09:15\", \"all_day\": False}, ...]\n\n    Google represents two different kinds of events with two different\n    keys, and this is the one place that deals with the difference:\n\n    - Timed events:   start = {\"dateTime\": \"2026-09-02T09:00:00+01:00\"}\n    - All-day events: start = {\"date\": \"2026-09-02\"}                <- no time at all!\n\n    Skip that distinction and an all-day event crashes the whole run with\n    a KeyError the first time your calendar has one - which, for most\n    people, is more often than you'd think (birthdays, holidays, and\n    \"deadline\" reminders people put on the calendar as all-day entries).\n    \"\"\"\n    events = []\n    for item in response.get(\"items\", []):\n        start = item.get(\"start\", {})\n        end = item.get(\"end\", {})\n        is_all_day = \"dateTime\" not in start\n\n        events.append({\n            \"summary\": item.get(\"summary\", \"(no title)\"),\n            \"start\": \"all day\" if is_all_day else _clock_time(start),\n            \"end\": \"all day\" if is_all_day else _clock_time(end),\n            \"all_day\": is_all_day,\n        })\n    return events\n\n\ndef get_today_events(calendar_id=\"primary\"):\n    \"\"\"\n    The one function main.py actually calls: authenticate, fetch, parse.\n\n        events = get_today_events()\n    \"\"\"\n    service = get_calendar_service()\n    response = fetch_todays_events(service, calendar_id)\n    return parse_events(response)\n\n\nif __name__ == \"__main__\":\n    # Run this file on its own to check the parsing logic works - no live\n    # Google account, browser login or network access required:\n    #     python calendar_client.py\n    #\n    # This is a realistic shape for what the Calendar API actually\n    # returns (see https://developers.google.com/calendar/api/v3/reference/events/list),\n    # not a simplified stand-in for it.\n    fake_response = {\n        \"items\": [\n            {\n                \"summary\": \"Team standup\",\n                \"start\": {\"dateTime\": \"2026-09-02T09:00:00+01:00\"},\n                \"end\": {\"dateTime\": \"2026-09-02T09:15:00+01:00\"},\n            },\n            {\n                \"summary\": \"Company holiday\",\n                \"start\": {\"date\": \"2026-09-02\"},\n                \"end\": {\"date\": \"2026-09-03\"},\n            },\n            {\n                \"summary\": \"Client call\",\n                \"start\": {\"dateTime\": \"2026-09-02T14:30:00+01:00\"},\n                \"end\": {\"dateTime\": \"2026-09-02T15:00:00+01:00\"},\n            },\n        ]\n    }\n\n    result = parse_events(fake_response)\n    print(f\"Parsed {len(result)} events:\\n\")\n    for event in result:\n        when = \"all day\" if event[\"all_day\"] else f\"{event['start']}-{event['end']}\"\n        print(f\"  {when:>14}  {event['summary']}\")\n\n    assert len(result) == 3\n    assert result[0][\"start\"] == \"09:00\" and result[0][\"end\"] == \"09:15\"\n    assert result[1][\"all_day\"] is True and result[1][\"start\"] == \"all day\"\n    assert result[2][\"summary\"] == \"Client call\" and result[2][\"all_day\"] is False\n\n    # An empty calendar day is a real case (weekends, holidays) and must\n    # not crash - it should just produce an empty list.\n    assert parse_events({\"items\": []}) == []\n    assert parse_events({}) == []\n\n    # The day window sent to Google must carry your real UTC offset and\n    # start at your local midnight. A stand-in for the Calendar service\n    # records what fetch_todays_events() asks for, without any network.\n    class _FakeRequest:\n        def list(self, **kwargs):\n            self.kwargs = kwargs\n            return self\n\n        def execute(self):\n            return {\"items\": []}\n\n    class _FakeService:\n        request = _FakeRequest()\n\n        def events(self):\n            return self.request\n\n    fake_service = _FakeService()\n    fetch_todays_events(fake_service)\n    start = datetime.datetime.fromisoformat(fake_service.request.kwargs[\"timeMin\"])\n    assert start.utcoffset() == datetime.datetime.now().astimezone().utcoffset()\n    assert (start.hour, start.minute) == (0, 0)\n\n    print(\"\\nAll checks passed.\")\n",
-          "verify": "Run `python calendar_client.py`. You should see `Parsed 3 events:` followed by three lines -- two showing real times and one showing `all day` for the Company holiday -- and finally `All checks passed.`",
-          "instruction": "Create `calendar_client.py` with this code:"
-        }
-      ],
-      "title": "Parse real Google Calendar data -- before you touch OAuth",
-      "number": 2,
-      "goFurther": "Add a fourth fake event whose `start` dict has neither `dateTime` nor `date` at all (a genuinely malformed API response). Confirm `parse_events` still returns something for it instead of raising -- `is_all_day = \"dateTime\" not in start` means it gets treated as all-day rather than crashing, which is the safer default when a response doesn't match the shape you expected.",
-      "description": "Google's Calendar API returns two different shapes for an event depending on whether it's timed or all-day, and the fastest way to learn that shape is against a fake copy of it you already have -- not live, while also fighting a browser consent screen. This build writes and tests every parsing helper calendar_client.py needs."
-    },
-    {
-      "time": "25 min",
-      "steps": [
-        {
-          "instruction": "In your browser, go to console.cloud.google.com and create a new project (any name, e.g. \"Calendar Prioritizer\"). Go to APIs & Services > Library, search for \"Google Calendar API\", and click Enable."
-        },
-        {
-          "instruction": "Still in Google Cloud Console, go to APIs & Services > OAuth consent screen, choose \"External\", fill in an app name and your email, and add your own Google account as a Test User (apps in \"Testing\" mode only allow logins from accounts on that list). Then go to Credentials > Create Credentials > OAuth client ID, choose \"Desktop app\", and download the JSON file. Rename it to exactly `credentials.json` and put it in the same folder as `calendar_client.py`."
-        },
-        {
-          "prompt": "python -c \"from calendar_client import get_calendar_service; get_calendar_service(); print('Logged in. token.json saved.')\"",
-          "verify": "A browser tab opens asking you to log in to Google and approve read-only access to your calendar. After you approve it, your terminal prints `Logged in. token.json saved.` and a new `token.json` file appears in your project folder.",
-          "instruction": "Test the real login. In your terminal, run:"
-        }
-      ],
-      "title": "Connect to your real Google Calendar",
-      "number": 3,
-      "goFurther": "Go to myaccount.google.com/permissions, find this app, and click Remove Access. Run the login test again -- Google makes you re-approve, and a fresh token.json is written. This is why SCOPES only asks for calendar.readonly: even a leaked or revoked token can only ever read your calendar, never create, move, or delete an event on it.",
-      "description": "OAuth is the one part of this project you can't fake -- it needs your actual Google account and a real consent screen. This build is mostly clicking through Google Cloud Console, then running the login flow calendar_client.py already has from Build 2."
-    },
-    {
-      "time": "15 min",
-      "steps": [
-        {
-          "prompt": "\"\"\"\nStep 2 of the Calendar & Task Prioritizer Agent.\n\nReads your task list. Deliberately boring: a plain text file, one task per\nline. No task-manager account, no API, no OAuth - just something you can\nopen and edit in two seconds when your day changes.\n\"\"\"\n\nimport os\n\nDEFAULT_TASKS_FILE = \"tasks.txt\"\n\n# Written to tasks.txt the first time this runs, so the project works out\n# of the box before you've written your own list - you see the expected\n# format instead of the program crashing on a missing file.\nSAMPLE_TASKS = [\n    \"Finish the Q3 budget review\",\n    \"Reply to the vendor contract email\",\n    \"Prepare slides for Friday's demo\",\n    \"Review pull request #482\",\n    \"Book the dentist appointment\",\n]\n\n\ndef clean_task_line(line):\n    \"\"\"\n    Strips one raw line from tasks.txt down to the task text, or returns\n    \"\" if the line isn't a task at all (blank, or a \"# comment\").\n\n    Split out from get_tasks() below so it can be tested against a list\n    of fake lines without needing a real tasks.txt on disk.\n    \"\"\"\n    stripped = line.strip()\n    if not stripped or stripped.startswith(\"#\"):\n        return \"\"\n\n    # People naturally write \"- Finish the report\" or \"* Finish the\n    # report\" in a plain text list. Strip the common leading markers so\n    # they don't end up as literal characters inside the AI prompt later.\n    for marker in (\"- \", \"* \"):\n        if stripped.startswith(marker):\n            stripped = stripped[len(marker):]\n            break\n\n    return stripped.strip()\n\n\ndef get_tasks(path=DEFAULT_TASKS_FILE):\n    \"\"\"\n    Returns your tasks as a list of plain strings, one per line.\n\n        tasks = get_tasks()\n\n    Creates tasks.txt with sample tasks the first time it's called, so\n    running main.py before you've customised anything still works and\n    shows you what the file should look like, instead of crashing.\n    \"\"\"\n    if not os.path.exists(path):\n        _write_sample_file(path)\n\n    with open(path, \"r\", encoding=\"utf-8\") as f:\n        lines = f.readlines()\n\n    cleaned = [clean_task_line(line) for line in lines]\n    return [task for task in cleaned if task]\n\n\ndef _write_sample_file(path):\n    with open(path, \"w\", encoding=\"utf-8\") as f:\n        f.write(\"# One task per line. Lines starting with # are ignored.\\n\")\n        for task in SAMPLE_TASKS:\n            f.write(f\"- {task}\\n\")\n\n\nif __name__ == \"__main__\":\n    # Run this file on its own to check the line-cleaning logic works:\n    #     python tasks.py\n    fake_lines = [\n        \"- Finish the Q3 budget review\\n\",\n        \"\\n\",\n        \"# this is a comment, skip it\\n\",\n        \"* Reply to the vendor contract email\\n\",\n        \"Book the dentist appointment\\n\",\n        \"   \\n\",\n    ]\n\n    cleaned = [clean_task_line(line) for line in fake_lines]\n    cleaned = [task for task in cleaned if task]\n\n    print(f\"Cleaned {len(cleaned)} tasks from {len(fake_lines)} raw lines:\\n\")\n    for task in cleaned:\n        print(f\"  - {task}\")\n\n    assert cleaned == [\n        \"Finish the Q3 budget review\",\n        \"Reply to the vendor contract email\",\n        \"Book the dentist appointment\",\n    ]\n    print(\"\\nAll checks passed.\")\n",
-          "verify": "Run `python tasks.py`. You should see `Cleaned 3 tasks from 6 raw lines:` followed by the three real tasks with their markers stripped (the blank line and the comment line are dropped), then `All checks passed.`",
-          "instruction": "Create `tasks.py` with this code:"
-        }
-      ],
-      "title": "Read your task list",
-      "number": 4,
-      "goFurther": "Delete tasks.txt entirely, then run `python -c \"from tasks import get_tasks; print(get_tasks())\"` in that same folder. Confirm it creates tasks.txt with the 5 sample tasks and returns them, instead of crashing on a missing file -- that's the difference between a tool a beginner can open cold and one that needs a setup step nobody wrote down.",
-      "description": "Not every part of this project needs an external account -- your task list is just a text file, so the code that reads it can be fully written and tested right now, no Google or AI account required."
-    },
-    {
-      "time": "30 min",
-      "steps": [
-        {
-          "prompt": "\"\"\"\nStep 3 of the Calendar & Task Prioritizer Agent - the actual \"prioritizer\".\n\nBuilds one prompt out of today's calendar events and open tasks, asks the\nAI for a plan, and turns its reply into time-of-day blocks you can read,\nprint, or hand to main.py to save as a file.\n\"\"\"\n\nfrom sdt_ai import ask_ai\n\n# Three broad blocks rather than exact time slots. Asking the AI to place\n# things at precise minutes (like \"09:07\") invites it to invent precision\n# it doesn't have - it doesn't know how long your commute is or how\n# focused you'll actually be. Morning/afternoon/evening is honest about\n# what an AI reading a calendar and a to-do list can judge well (relative\n# priority, rough sequencing), and not what it can't (your real day).\nSECTIONS = [\"MORNING\", \"AFTERNOON\", \"EVENING\"]\n\n# Anything that doesn't fit lands here instead of vanishing. This section\n# only appears in the AI's reply when something is genuinely left over.\nOVERFLOW_SECTION = \"UNSCHEDULED\"\n\nALL_SECTIONS = SECTIONS + [OVERFLOW_SECTION]\n\n\ndef format_events_for_prompt(events):\n    \"\"\"Turns the list of event dicts from calendar_client into readable\n    lines for the prompt. Kept separate so build_prompt stays skimmable.\"\"\"\n    if not events:\n        return \"(no calendar events today)\"\n    lines = []\n    for event in events:\n        when = \"all day\" if event[\"all_day\"] else f\"{event['start']}-{event['end']}\"\n        lines.append(f\"- {when}: {event['summary']}\")\n    return \"\\n\".join(lines)\n\n\ndef format_tasks_for_prompt(tasks):\n    if not tasks:\n        return \"(no open tasks)\"\n    return \"\\n\".join(f\"- {task}\" for task in tasks)\n\n\ndef build_prompt(events, tasks):\n    \"\"\"\n    Writes the instructions sent to the AI. Kept in its own function so\n    you can print it and read exactly what's being asked - the fastest\n    way to fix a plan you don't like is to fix the prompt, not to argue\n    with the AI about it.\n    \"\"\"\n    return f\"\"\"You are a calendar assistant. Build today's plan from the\nfixed calendar events and open tasks listed below.\n\nTODAY'S CALENDAR EVENTS (fixed - do not move them or invent new ones):\n{format_events_for_prompt(events)}\n\nOPEN TASKS (fit these around the events above, in priority order):\n{format_tasks_for_prompt(tasks)}\n\nRules:\n- Every calendar event listed above must appear in the plan exactly once.\n- Every task listed above must appear in the plan exactly once. If a task\n  genuinely will not fit anywhere today, still list it - in an\n  [{OVERFLOW_SECTION}] section at the end - with a one-line reason why.\n- Do not invent tasks or events that were not given to you.\n\nFormat your answer EXACTLY like this, with the section name in square\nbrackets on its own line, then bullet points underneath it. Use only the\nsection names below, in this order, and skip a section entirely if\nnothing belongs in it:\n\n[MORNING]\n- ...\n\n[AFTERNOON]\n- ...\n\n[EVENING]\n- ...\n\n[{OVERFLOW_SECTION}]\n- ...\n\nAfter the last section, write [END] on its own line.\n\nDo not add any explanation, introduction or closing remark.\n\"\"\"\n\n\ndef split_plan(reply):\n    \"\"\"\n    Turns the AI's one long answer into a dict, one entry per section:\n\n        {\"MORNING\": \"- ...\\n- ...\", \"AFTERNOON\": \"...\", ...}\n\n    Same [MARKER] approach as the Social Post Generator project, for the\n    same reason: markers degrade gracefully (a line we don't recognise is\n    simply ignored) where asking for JSON instead degrades by crashing\n    the whole program the first time the AI adds a stray comma.\n    \"\"\"\n    plan = {}\n    current_section = None\n    current_lines = []\n\n    for line in reply.splitlines():\n        stripped = line.strip()\n        marker = stripped.strip(\"[]\").upper()\n        is_marker = stripped.startswith(\"[\") and stripped.endswith(\"]\")\n\n        # [END] tells us the plan is finished. Without it, a friendly\n        # sign-off like \"Let me know if you'd like adjustments!\" gets\n        # glued onto the last section and saved into your plan file.\n        if is_marker and marker == \"END\":\n            break\n\n        if is_marker and marker in ALL_SECTIONS:\n            if current_section:\n                plan[current_section] = \"\\n\".join(current_lines).strip()\n            current_section = marker\n            current_lines = []\n        elif current_section:\n            # The AI sometimes wraps its whole answer in ``` code fences.\n            # Those aren't part of the plan, so drop them.\n            if stripped.startswith(\"```\"):\n                continue\n            current_lines.append(line)\n\n    if current_section:\n        plan[current_section] = \"\\n\".join(current_lines).strip()\n\n    return plan\n\n\ndef check_plan_coverage(plan, tasks):\n    \"\"\"\n    Compares the parsed plan against the original task list and reports\n    anything that looks wrong, INSTEAD OF trusting that the AI followed\n    the \"every task exactly once\" rule we asked for in the prompt.\n\n    Returns a list of human-readable warning strings (empty if the plan\n    looks complete). Two specific failure modes this catches, because\n    they are the two ways a plan that \"looks fine at a glance\" quietly\n    loses real work:\n\n    - A DROPPED task: it never appears anywhere in the reply. Easy to\n      miss when skimming a long plan - you only notice at 4pm that the\n      thing you asked about never got scheduled at all.\n    - A DOUBLE-BOOKED task: the same task text shows up in more than one\n      section. This happens more than you'd expect when a model is asked\n      to both \"prioritise\" and \"don't drop anything\" for an ambiguous\n      task - it sometimes hedges by placing it in two blocks instead of\n      picking one.\n\n    This is substring matching on the task text, not exact matching -\n    the AI usually restates a task with a little of its own phrasing\n    around it (e.g. adding a time or a note), so requiring an identical\n    string would produce false \"DROPPED\" warnings on a plan that is\n    actually fine.\n    \"\"\"\n    warnings = []\n\n    for task in tasks:\n        task_lower = task.lower()\n        appearances = sum(\n            1 for section_text in plan.values() if task_lower in section_text.lower()\n        )\n\n        if appearances == 0:\n            warnings.append(f'DROPPED: \"{task}\" does not appear anywhere in the plan.')\n        elif appearances > 1:\n            warnings.append(f'DOUBLE-BOOKED: \"{task}\" appears in {appearances} sections.')\n\n    return warnings\n\n\ndef plan_day(events, tasks):\n    \"\"\"\n    The main function. Give it events and tasks, get back a checked plan.\n\n        result = plan_day(events, tasks)\n        print(result[\"plan\"])\n        print(result[\"warnings\"])\n\n    Returns a dict rather than raw text because a plan you can't verify\n    isn't a plan you can trust with your actual day - this hands back\n    both what the AI said AND what we double-checked about it.\n    \"\"\"\n    prompt = build_prompt(events, tasks)\n\n    # max_tokens: a full day's plan (three sections plus a possible\n    # overflow one, each a handful of bullets) fits comfortably in 700\n    # tokens. This is also a Haiku-tier task - reorganising a short list\n    # you already gave it is not a job that needs a pricier model.\n    reply = ask_ai(\n        prompt,\n        max_tokens=700,\n        project=\"calendar-task-prioritizer-agent\",\n    )\n\n    plan = split_plan(reply)\n\n    if not plan:\n        raise ValueError(\n            \"The AI replied, but not in the format we asked for.\\n\"\n            \"Run it again - this usually fixes itself.\\n\"\n            \"If it keeps happening, print(reply) to see what came back.\"\n        )\n\n    warnings = check_plan_coverage(plan, tasks)\n\n    return {\"plan\": plan, \"warnings\": warnings, \"raw_reply\": reply}\n\n\nif __name__ == \"__main__\":\n    # Run this file on its own to check both the parsing AND the\n    # coverage-check logic, using two fake AI replies - one well-formed,\n    # one broken the way a real model occasionally is:\n    #     python prioritizer.py\n    fake_tasks = [\n        \"Finish the Q3 budget review\",\n        \"Reply to the vendor contract email\",\n        \"Review pull request #482\",\n    ]\n\n    good_reply = \"\"\"[MORNING]\n- 09:00-09:15 Team standup\n- Finish the Q3 budget review\n\n[AFTERNOON]\n- 14:30-15:00 Client call\n- Reply to the vendor contract email\n- Review pull request #482\n\n[EVENING]\n- Wind down, nothing else scheduled\n\n[END]\"\"\"\n\n    print(\"--- Well-formed reply ---\")\n    good_plan = split_plan(good_reply)\n    good_warnings = check_plan_coverage(good_plan, fake_tasks)\n    print(f\"Sections found: {list(good_plan.keys())}\")\n    print(f\"Warnings: {good_warnings}\")\n    assert list(good_plan.keys()) == [\"MORNING\", \"AFTERNOON\", \"EVENING\"]\n    assert good_warnings == []\n\n    # A malformed reply: drops \"Review pull request #482\" entirely, and\n    # double-books \"Reply to the vendor contract email\" into two sections.\n    # A real model produces this kind of thing occasionally - the parser\n    # must surface it, not silently hand back an incomplete plan.\n    broken_reply = \"\"\"[MORNING]\n- 09:00-09:15 Team standup\n- Finish the Q3 budget review\n- Reply to the vendor contract email\n\n[AFTERNOON]\n- 14:30-15:00 Client call\n- Reply to the vendor contract email\n\n[END]\"\"\"\n\n    print(\"\\n--- Malformed reply (dropped + double-booked task) ---\")\n    broken_plan = split_plan(broken_reply)\n    broken_warnings = check_plan_coverage(broken_plan, fake_tasks)\n    for warning in broken_warnings:\n        print(f\"  {warning}\")\n\n    assert any(\"DROPPED\" in w and \"pull request #482\" in w for w in broken_warnings)\n    assert any(\"DOUBLE-BOOKED\" in w and \"vendor contract email\" in w for w in broken_warnings)\n    assert len(broken_warnings) == 2\n\n    print(\"\\nAll checks passed.\")\n",
-          "verify": "Run `python prioritizer.py`. The well-formed reply should print `Warnings: []`. The malformed one should print a DOUBLE-BOOKED warning naming the vendor contract email task and a DROPPED warning naming pull request #482, then `All checks passed.`",
-          "instruction": "Create `prioritizer.py` with this code:"
-        }
-      ],
-      "title": "Build the AI prioritizer",
-      "number": 5,
-      "goFurther": "Break it on purpose: in a Python shell in this folder, build a fake `tasks` list of 15 short, unrelated tasks and an `events` list that's already packed solid (say, six back-to-back 1-hour meetings), then call `plan_day(events, tasks)` for real (this makes a real AI call). Does everything land somewhere, with anything that didn't fit named explicitly under `[UNSCHEDULED]`? That's the prompt's own instructions doing the work. Now ask yourself: if the AI reworded a task slightly instead of dropping it (\"Reply to vendor\" instead of \"Reply to the vendor contract email\"), would `check_plan_coverage` still flag it as DROPPED? It would -- incorrectly. Substring matching only survives extra text AROUND a task, not different wording FOR it. That's a real limit of this approach, not a bug you're expected to fix here.",
-      "description": "This is the one point in the whole project where the AI gets called. It has to turn a fixed calendar and an open task list into a plan without inventing events, silently dropping a task, or scheduling the same task twice -- three ways this kind of request can go wrong that a prompt alone can ask for but never guarantee."
-    },
-    {
-      "time": "25 min",
-      "steps": [
-        {
-          "prompt": "\"\"\"\nCalendar & Task Prioritizer Agent - runs the whole pipeline.\n\nRun with:      python main.py\n\nThis is deliberately a single plain script with no screen to click\n\"Generate\" on (unlike the Social Post Generator's Streamlit app). A\nmorning-planning tool you'd actually want to run automatically - from\ncron on Mac/Linux, or Task Scheduler on Windows - needs to work as a\nscript with no browser tab involved, which is also why it saves the plan\nto a file instead of only printing it.\n\"\"\"\n\nimport datetime\n\nfrom calendar_client import get_today_events\nfrom tasks import get_tasks\nfrom prioritizer import ALL_SECTIONS, plan_day\nfrom sdt_ai import AIError\n\nPLAN_FILE = \"todays_plan.txt\"\n\n# Fixed display order. The AI writes sections in whatever order it\n# chooses, and split_plan() (in prioritizer.py) hands them back as a\n# dict, so relying on dict order would mean today's saved file might\n# read Morning/Evening/Afternoon depending on how the model felt like\n# answering. Pinning the order here means it always reads top-to-bottom.\nDISPLAY_ORDER = ALL_SECTIONS\n\n\ndef render_plan_text(plan, warnings):\n    \"\"\"\n    Turns the {\"MORNING\": ..., ...} dict into one plain-text document,\n    ready to print or save. Pure formatting - no network calls - so it's\n    the one piece of main.py's logic that can be checked with a fake\n    plan below, no live Google or AI account required.\n    \"\"\"\n    today = datetime.date.today().strftime(\"%A, %B %d\")\n    lines = [f\"Your plan for {today}\", \"=\" * 40, \"\"]\n\n    for section in DISPLAY_ORDER:\n        if section not in plan:\n            continue\n        lines.append(section.title())\n        lines.append(\"-\" * len(section))\n        lines.append(plan[section])\n        lines.append(\"\")\n\n    if warnings:\n        lines.append(\"Double-check these before trusting the plan:\")\n        for warning in warnings:\n            lines.append(f\"  - {warning}\")\n        lines.append(\"\")\n\n    return \"\\n\".join(lines)\n\n\ndef main():\n    print(\"Fetching today's calendar events...\")\n    try:\n        events = get_today_events()\n    except FileNotFoundError as problem:\n        # This is the expected failure the first time anyone runs this\n        # without having done the Google Cloud Console setup in Build 3 -\n        # show the friendly message from calendar_client.py, not a stack\n        # trace, and stop cleanly instead of crashing further down.\n        print(problem)\n        return\n    print(f\"Found {len(events)} event(s).\")\n\n    print(\"Reading your task list...\")\n    tasks = get_tasks()\n    print(f\"Found {len(tasks)} task(s).\")\n\n    if not events and not tasks:\n        print(\n            \"Nothing to plan - add events to your Google Calendar or \"\n            \"tasks to tasks.txt, then try again.\"\n        )\n        return\n\n    print(\"Asking the AI to build today's plan...\")\n    try:\n        result = plan_day(events, tasks)\n    except (AIError, ValueError) as problem:\n        # AIError: the AI couldn't be reached. ValueError: it answered, but\n        # not in the format plan_day() asked for. Both messages are written\n        # to be read - show them as-is, same convention as every other\n        # project in this course.\n        print(problem)\n        return\n\n    text = render_plan_text(result[\"plan\"], result[\"warnings\"])\n    print(\"\\n\" + text)\n\n    with open(PLAN_FILE, \"w\", encoding=\"utf-8\") as f:\n        f.write(text)\n    print(f\"Saved to {PLAN_FILE}\")\n\n    if result[\"warnings\"]:\n        print(\n            f\"\\n{len(result['warnings'])} warning(s) above - the AI's plan \"\n            \"didn't fully match your task list. Read them before you rely \"\n            \"on this plan for your day.\"\n        )\n\n\nif __name__ == \"__main__\":\n    # A quick self-check of the pure formatting logic before doing\n    # anything that needs live accounts - if this fails, nothing below\n    # it will work right either, so it's worth 5 lines to catch early.\n    _fake_plan = {\n        \"MORNING\": \"- Standup\",\n        \"UNSCHEDULED\": '- Book dentist appointment (no free slot today)',\n    }\n    _text = render_plan_text(_fake_plan, warnings=['DROPPED: \"Something\" does not appear anywhere in the plan.'])\n    assert \"Morning\" in _text and \"Unscheduled\" in _text and \"DROPPED\" in _text\n    assert \"Afternoon\" not in _text  # sections with nothing in them are skipped entirely\n\n    main()\n",
-          "verify": "Run `python main.py`. Before Build 3's OAuth setup is done, you should see `Fetching today's calendar events...` followed by the friendly `Missing credentials.json.` message -- not a crash. Once Build 3 is done, it fetches your real events, reads (or creates) tasks.txt, asks the AI for a plan, prints it, and saves it to `todays_plan.txt`.",
-          "instruction": "Create `main.py` with this code:"
-        }
-      ],
-      "title": "Wire it together and run a real morning plan",
-      "number": 6,
-      "goFurther": "Real email sending: add a `mailer.py` using Python's built-in `smtplib` and a Gmail App Password (not your real Gmail password -- generate one at myaccount.google.com/apppasswords), and call it from main.py alongside saving todays_plan.txt. This is exactly what the course description's \"emails you a plan\" line means in a fully wired-up version -- it's left as a stretch here so the core build only needs a Google Calendar account, not a second one for SMTP.",
-      "description": "Fetching, task-reading, and prioritizing are each already written and tested on their own. This build is only the wiring, plus turning the AI's plan and any coverage warnings into one saved file."
-    },
-    {
-      "time": "20 min",
-      "steps": [
-        {
-          "prompt": "def find_invented_lines(plan, events, tasks):\n    \"\"\"\n    Returns a list of bullet lines from the plan that don't match any\n    given task or event -- the reverse of check_plan_coverage: that\n    function asks \"did every task make it into the plan?\", this one asks\n    \"does everything IN the plan trace back to something we gave it?\"\n\n    A known line is one that contains at least one task's text, or at\n    least one event's summary, as a substring (same matching approach as\n    check_plan_coverage -- reuse that idea here, applied in reverse).\n    \"\"\"\n    known_snippets = [task.lower() for task in tasks]\n    known_snippets += [event[\"summary\"].lower() for event in events]\n\n    invented = []\n    # TODO: loop over every section's text in `plan`, split it into\n    # lines, and keep only the lines that start with \"- \" (real bullets,\n    # not blank lines). For each bullet, check whether it contains ANY\n    # of `known_snippets` as a substring. If none match, the AI added\n    # something nobody gave it -- append that line to `invented`.\n\n    return invented",
-          "verify": "Take the `good_reply` string from prioritizer.py's own self-test and add one extra bullet nobody asked for, e.g. \"- Call the printer about the annual report\" under [AFTERNOON]. Parse it with `split_plan`, then run your `find_invented_lines` against the result with the same `fake_tasks` list and an empty `events` list ([]). It must return exactly that one invented line -- and it must return an empty list when you run it against the ORIGINAL, unmodified `good_reply`.",
-          "instruction": "In `prioritizer.py`, add a new function, `find_invented_lines(plan, events, tasks)`, using this as your starting point:"
-        }
-      ],
-      "title": "Challenge: Catch the AI when it invents a task you never gave it",
-      "number": 7,
-      "phaseLabel": "🎯 Challenge",
-      "description": "The prompt tells the AI not to invent tasks or events you never gave it -- but nothing today actually checks that rule was followed. A hallucinated task is arguably worse than a dropped one: a dropped task is at least invisible, while an invented one looks like real, legitimate work you never asked for. This is the real test of whether you understand how check_plan_coverage works, not just whether main.py runs."
-    }
+  "model": "Gemini (free API key) in Google Apps Script",
+  "totalTime": "60 min",
+  "buildCount": 6,
+  "whatYouNeed": [
+    "A Google account with Google Calendar and Google Tasks (the account whose calendar you want planned)",
+    "A free Gemini API key from aistudio.google.com/apikey (no credit card needed)",
+    "A computer with a browser. Nothing to install, and your computer can be off once it is set up",
+    "A few events in your calendar and 4 to 5 open tasks at tasks.google.com to test with"
   ],
   "outcomes": [
-    "Pull today's real events straight from your Google Calendar via OAuth",
-    "Turn a plain-text task list into something an AI prompt can use",
-    "Have the AI turn both into a time-blocked plan with a Morning / Afternoon / Evening structure",
-    "Catch the AI if it drops or double-books a task, instead of trusting it blindly",
-    "Save (and print) a plan file you could hook up to a daily scheduled task"
+    "Read today's meetings from Google Calendar and your open tasks from Google Tasks, with nothing installed",
+    "Have Gemini fit your tasks into the free gaps between meetings",
+    "Catch the AI when it drops, repeats or invents a task, or schedules over a meeting, before you trust the plan",
+    "Receive a clean plan by email every morning, plus an optional refresh at 1pm",
+    "Know how a canceled or moved meeting affects the plan, and how to get a fresh one"
   ],
-  "portfolio": "You built a morning planning agent that logs into your real Google Calendar, reads your open tasks, and uses AI to generate a time-blocked daily plan -- with built-in checks that catch the AI if it drops or double-books a task, through your own AI key - a free Gemini key, or your own Claude account if you already have one.",
-  "totalTime": "155 min",
-  "buildCount": 7,
-  "whatYouNeed": [
-    "A free Gemini API key (aistudio.google.com/apikey) OR your own Claude/Anthropic API key (console.anthropic.com/settings/keys)",
-    "Python 3.10+ installed",
-    "A free Google Cloud account (console.cloud.google.com)",
-    "A Google Calendar (a personal Gmail calendar works fine)"
+  "builds": [
+    {
+      "number": 1,
+      "title": "Get your free Gemini key and create the project",
+      "time": "10 min",
+      "description": "Everything runs in Google Apps Script, a free tool that lives in your browser and runs your code on Google's servers, so your computer can be off. First you need a key so the script can talk to Gemini, and a project to hold the code.",
+      "steps": [
+        {
+          "instruction": "Read this first. Every morning your agent will (1) read today's events from Google Calendar, (2) read your open tasks from Google Tasks, (3) ask Gemini, Google's free AI, to fit the tasks into the gaps between meetings, (4) check the AI's work with ordinary code, and (5) email you a styled plan.",
+          "callout": {
+            "variant": "tip",
+            "title": "Why the safety check matters.",
+            "text": "AI can drop, repeat or invent tasks. So each task gets an ID (T1, T2 and so on), the AI must answer using IDs only, and the code counts them. It also catches tasks placed on top of meetings, and retries once automatically. Your real meetings never pass through the AI, so it can't lose or invent one."
+          }
+        },
+        {
+          "instruction": "Go to aistudio.google.com/apikey and sign in with a Google account. Click Create API key, then copy it. No credit card is needed. Paste it into a private note for Build 2.",
+          "callout": {
+            "variant": "warning",
+            "text": "Free-tier limits can change, so check them in your AI Studio account. One or two requests a day is very light. On the free tier, Google may use requests to improve its products, so keep sensitive details out of event and task titles."
+          },
+          "verify": "Your key is copied into a private note. Never share it."
+        },
+        {
+          "instruction": "Go to script.google.com on a computer, signed in to the Google account whose calendar you want. Click New project, then rename \"Untitled project\" to Morning Planner.",
+          "verify": "Your project is named Morning Planner and you can see an empty code editor."
+        },
+        {
+          "instruction": "Know the screen before you continue. In the left sidebar, <> is the Editor (your code), the clock is Triggers, the gear is Project Settings, and Services has a + beside it. Above the code are Run, Debug and a function dropdown. The dropdown only shows names after you paste code and save. If it is hidden, zoom out with Ctrl and minus, or widen the window. These words are used throughout the guide:",
+          "table": {
+            "header": [
+              "Word",
+              "Meaning"
+            ],
+            "rows": [
+              [
+                "Function",
+                "One named job in the code, for example function testCalendar() { ... }"
+              ],
+              [
+                "Run",
+                "The button that runs **only the function selected in the dropdown** beside it"
+              ],
+              [
+                "Execution log",
+                "The panel at the bottom that shows results and errors"
+              ],
+              [
+                "API key",
+                "A password that lets your script use Gemini. Never share it."
+              ],
+              [
+                "Trigger",
+                "A rule like \"run this every morning\""
+              ]
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "title": "Turn on Google Tasks and save your settings",
+      "time": "10 min",
+      "description": "The script reads your tasks through Google's Tasks service, and it reads your Gemini key from Script Properties, a private settings box that is never part of the code.",
+      "steps": [
+        {
+          "instruction": "In the left sidebar of the Apps Script editor, click the + next to Services. Choose Google Tasks API, then click Add.",
+          "verify": "You see Tasks listed under Services. Skip this step and you will get the error Tasks is not defined."
+        },
+        {
+          "instruction": "Click the gear icon (Project Settings). Under Script Properties, click Add script property."
+        },
+        {
+          "instruction": "Set the property name to GEMINI_API_KEY (exactly, in capitals), paste your key as the value, and click Save script properties.",
+          "verify": "GEMINI_API_KEY now appears in the Script Properties list."
+        },
+        {
+          "instruction": "On the same page, check that the time zone is yours. A wrong time zone shifts every time in your plan.",
+          "verify": "The time zone shown is the one you live in."
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "title": "Paste the full code",
+      "time": "10 min",
+      "description": "One file holds the whole agent: your settings, the calendar and task readers, the AI call, the safety check, the email and the daily trigger.",
+      "steps": [
+        {
+          "instruction": "Click the <> Editor icon. Click inside the code area, press Ctrl+A (Cmd+A on Mac), then press Delete so the editor is empty."
+        },
+        {
+          "instruction": "Copy the code below and paste it into the empty editor. Press Ctrl+S to save. Always save before every Run.",
+          "prompt": "// ===== SETTINGS: the only part you will normally change =====\nconst CONFIG = {\n  MODEL: 'gemini-flash-latest',\n  WORK_START: '09:00',\n  WORK_END: '17:30',\n  SEND_HOUR: 6,            // email arrives between 6:00 and 7:00\n  SKIP_WEEKENDS: true,     // set false if you test on a Saturday or Sunday\n  ALL_CALENDARS: true,     // false = only your main calendar\n  EXTRA_REFRESH_HOURS: [13]  // extra updated plans during the day (13 = 1pm). Use [] for none\n};\n\n// ===== 1. CALENDAR =====\nfunction getEvents_(tz) {\n  const cals = CONFIG.ALL_CALENDARS\n    ? CalendarApp.getAllCalendars().filter(c => c.isSelected())\n    : [CalendarApp.getDefaultCalendar()];\n  const seen = {};\n  const out = [];\n  cals.forEach(cal => {\n    cal.getEventsForDay(new Date()).forEach(e => {\n      if (e.getMyStatus() === CalendarApp.GuestStatus.NO) return;  // skip declined\n      if (seen[e.getId()]) return;                                 // skip duplicates\n      seen[e.getId()] = true;\n      const ad = e.isAllDayEvent();\n      out.push({\n        title: e.getTitle() || '(no title)',\n        allDay: ad,\n        start: ad ? 'all day' : Utilities.formatDate(e.getStartTime(), tz, 'HH:mm'),\n        end: ad ? '' : Utilities.formatDate(e.getEndTime(), tz, 'HH:mm')\n      });\n    });\n  });\n  return out.sort((a, b) => a.start.localeCompare(b.start));\n}\n\nfunction testCalendar() {\n  const events = getEvents_(Session.getScriptTimeZone());\n  Logger.log('Found ' + events.length + ' events today');\n  events.forEach(e => Logger.log(e.start + '-' + e.end + '  ' + e.title));\n}\n\n// ===== 2. TASKS =====\nfunction getTasks_() {\n  const out = [];\n  (Tasks.Tasklists.list().items || []).forEach(list => {\n    const res = Tasks.Tasks.list(list.id, { showCompleted: false, maxResults: 100 });\n    (res.items || []).forEach(t => {\n      if (t.title) out.push({ title: t.title, due: t.due ? t.due.slice(0, 10) : null });\n    });\n  });\n  return out.map((t, i) => ({ id: 'T' + (i + 1), title: t.title, due: t.due }));\n}\n\nfunction testTasks() {\n  const tasks = getTasks_();\n  Logger.log('Found ' + tasks.length + ' open tasks');\n  tasks.forEach(t => Logger.log(t.id + ': ' + t.title + (t.due ? ' (due ' + t.due + ')' : '')));\n}\n\n// ===== 3. THE AI =====\nfunction buildPrompt_(events, tasks, tz) {\n  const today = Utilities.formatDate(new Date(), tz, 'yyyy-MM-dd');\n  const ev = events.length\n    ? events.map(e => '- ' + e.start + (e.end ? '-' + e.end : '') + ' ' + e.title).join('\\n')\n    : '(none)';\n  const tk = tasks.map(t => '- ' + t.id + ': ' + t.title + (t.due ? ' (due ' + t.due + ')' : '')).join('\\n');\n\n  return `You are a daily planning assistant. Today is ${today}.\nWorking hours: ${CONFIG.WORK_START}-${CONFIG.WORK_END}.\n\nFIXED CALENDAR EVENTS (do not move or repeat these):\n${ev}\n\nTASKS (refer to them ONLY by their ID):\n${tk}\n\nSchedule the tasks into free gaps between events, most urgent and important first\n(overdue and due-today tasks come first). Never overlap an event.\nTask titles may end with a duration like [60m]; use it as the block length. If there is none, assume 30 minutes.\nTasks starting with [High] must be scheduled first.\nEvery task ID must appear exactly once: either in \"plan\" or in \"unscheduled\".\nDo not invent IDs.\n\nReply with JSON only, in this shape:\n{\"plan\":[{\"time\":\"HH:MM-HH:MM\",\"task_id\":\"T1\",\"note\":\"short reason\"}],\n \"unscheduled\":[{\"task_id\":\"T2\",\"reason\":\"short reason\"}],\n \"tip\":\"one sentence of advice for the day\"}`;\n}\n\nfunction askGemini_(prompt) {\n  const key = PropertiesService.getScriptProperties().getProperty('GEMINI_API_KEY');\n  if (!key) throw new Error('GEMINI_API_KEY is missing in Script Properties');\n\n  const url = 'https://generativelanguage.googleapis.com/v1beta/models/' + CONFIG.MODEL + ':generateContent';\n  const options = {\n    method: 'post',\n    contentType: 'application/json',\n    headers: { 'x-goog-api-key': key },\n    muteHttpExceptions: true,\n    payload: JSON.stringify({\n      contents: [{ parts: [{ text: prompt }] }],\n      generationConfig: { responseMimeType: 'application/json', maxOutputTokens: 4000 }\n    })\n  };\n\n  let res;\n  for (let attempt = 0; attempt < 3; attempt++) {   // retry if Gemini is busy\n    res = UrlFetchApp.fetch(url, options);\n    if (![500, 503].includes(res.getResponseCode())) break;\n    Utilities.sleep(3000);\n  }\n  if (res.getResponseCode() !== 200) {\n    throw new Error('Gemini ' + res.getResponseCode() + ': ' + res.getContentText().slice(0, 150));\n  }\n  const parts = JSON.parse(res.getContentText()).candidates[0].content.parts;\n  const text = parts.filter(p => !p.thought).map(p => p.text).join('');\n  return JSON.parse(text);\n}\n\nfunction testAI() {\n  const tz = Session.getScriptTimeZone();\n  const events = [{ title: 'Team standup', allDay: false, start: '09:00', end: '09:15' }];\n  const tasks = [\n    { id: 'T1', title: 'Finish budget review', due: null },\n    { id: 'T2', title: 'Book dentist appointment', due: null }\n  ];\n  Logger.log(JSON.stringify(askGemini_(buildPrompt_(events, tasks, tz)), null, 2));\n}\n\n// ===== 4. THE SAFETY CHECK =====\nfunction toMin_(hhmm) {\n  const p = String(hhmm).trim().split(':').map(Number);\n  return p[0] * 60 + p[1];\n}\n\nfunction checkPlan_(result, tasks, events = []) {\n  const problems = [];\n  const count = {};\n  const seen = (result.plan || []).map(p => p.task_id)\n    .concat((result.unscheduled || []).map(u => u.task_id));\n  seen.forEach(id => count[id] = (count[id] || 0) + 1);\n\n  const known = tasks.map(t => t.id);\n  tasks.forEach(t => {\n    if (!count[t.id]) problems.push('DROPPED: \"' + t.title + '\" was left out of the plan.');\n    else if (count[t.id] > 1) problems.push('DOUBLE-BOOKED: \"' + t.title + '\" appears ' + count[t.id] + ' times.');\n  });\n  Object.keys(count).forEach(id => {\n    if (!known.includes(id)) problems.push('INVENTED: the AI added a task \"' + id + '\" you never gave it (ignored).');\n  });\n\n  // Does any scheduled task overlap a real meeting?\n  (result.plan || []).forEach(p => {\n    const parts = (p.time || '').split('-');\n    if (parts.length !== 2) return;\n    const s = toMin_(parts[0]), e = toMin_(parts[1]);\n    events.filter(ev => !ev.allDay).forEach(ev => {\n      if (s < toMin_(ev.end) && e > toMin_(ev.start)) {\n        problems.push('OVERLAP: task ' + p.task_id + ' (' + p.time + ') clashes with \"' + ev.title + '\".');\n      }\n    });\n  });\n  return problems;\n}\n\nfunction testCheck() {\n  const tasks = [\n    { id: 'T1', title: 'Budget' },\n    { id: 'T2', title: 'Dentist' },\n    { id: 'T3', title: 'Slides' }\n  ];\n  const broken = { plan: [{ task_id: 'T1' }, { task_id: 'T1' }, { task_id: 'T9' }], unscheduled: [] };\n  const problems = checkPlan_(broken, tasks);\n  problems.forEach(p => Logger.log(p));\n  if (problems.length !== 4) throw new Error('Expected 4 problems, got ' + problems.length);\n  Logger.log('All checks passed.');\n}\n\n// ===== 5. THE EMAIL =====\nfunction esc_(s) {\n  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\n}\n\nfunction render_(events, tasks, result, problems) {\n  const tz = Session.getScriptTimeZone();\n  const dateText = Utilities.formatDate(new Date(), tz, 'EEEE, MMMM d');\n  const byId = {};\n  tasks.forEach(t => byId[t.id] = t);\n\n  // Colors: change these to restyle the email\n  const C = {\n    brand: '#264D73',\n    event: '#264D73', eventBg: '#E8EDF3',\n    task: '#15803D', taskBg: '#EAFAF1',\n    warn: '#D98F1F', warnBg: '#FEF9E7',\n    bad: '#B3261E', badBg: '#FDECEA',\n    text: '#0F1A2A', muted: '#4A5B6C', page: '#F6F8FB'\n  };\n\n  const sectionTitle = (title, color) =>\n    '<div style=\"font-size:12px;font-weight:bold;letter-spacing:1.5px;text-transform:uppercase;color:' +\n    color + ';margin:26px 0 10px\">' + esc_(title) + '</div>';\n\n  const row = (label, text, note, color, bg) =>\n    '<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin-bottom:8px\"><tr>' +\n      '<td width=\"100\" valign=\"top\" style=\"padding:12px 10px 0 0;font-size:12px;font-weight:bold;color:' +\n        C.muted + ';white-space:nowrap\">' + esc_(label) + '</td>' +\n      '<td style=\"background:' + bg + ';border-left:4px solid ' + color + ';border-radius:6px;padding:10px 14px\">' +\n        '<div style=\"font-size:15px;font-weight:bold;color:' + C.text + '\">' + esc_(text) + '</div>' +\n        (note ? '<div style=\"font-size:13px;color:' + C.muted + ';margin-top:3px\">' + esc_(note) + '</div>' : '') +\n      '</td></tr></table>';\n\n  const statBox = (number, label, color) =>\n    '<td align=\"center\" style=\"background:#ffffff;border-radius:8px;padding:12px 6px\">' +\n      '<div style=\"font-size:26px;font-weight:bold;color:' + color + '\">' + number + '</div>' +\n      '<div style=\"font-size:12px;color:' + C.muted + '\">' + label + '</div></td>';\n\n  const allDay = events.filter(e => e.allDay);\n  const timed = events.filter(e => !e.allDay);\n  const scheduled = result ? (result.plan || []).filter(p => byId[p.task_id]) : [];\n  const notToday = result ? (result.unscheduled || []).filter(u => byId[u.task_id]) : [];\n  let body = '';\n\n  if (allDay.length) {\n    body += sectionTitle('All day', C.event);\n    allDay.forEach(e => {\n      body += '<div style=\"background:' + C.eventBg + ';border-radius:20px;display:inline-block;padding:6px 14px;' +\n        'margin:0 6px 6px 0;font-size:14px;color:' + C.event + '\">' + esc_(e.title) + '</div>';\n    });\n  }\n\n  if (result) {\n    const rows = timed.map(e => ({\n      sort: e.start, label: e.start + ' - ' + e.end, text: e.title, note: '', color: C.event, bg: C.eventBg\n    }));\n    scheduled.forEach(p => rows.push({\n      sort: (p.time || '99:99').split('-')[0].trim(),\n      label: (p.time || '').replace('-', ' - '),\n      text: byId[p.task_id].title, note: p.note || '', color: C.task, bg: C.taskBg\n    }));\n    rows.sort((a, b) => a.sort.localeCompare(b.sort));\n\n    body += sectionTitle('Your day', C.brand);\n    if (!rows.length) body += '<div style=\"color:' + C.muted + ';font-size:14px\">Nothing scheduled for today.</div>';\n    rows.forEach(r => { body += row(r.label, r.text, r.note, r.color, r.bg); });\n\n    if (notToday.length) {\n      body += sectionTitle('Not today', C.warn);\n      notToday.forEach(u => { body += row('Later', byId[u.task_id].title, u.reason || '', C.warn, C.warnBg); });\n    }\n    if (result.tip) {\n      body += '<div style=\"background:' + C.eventBg + ';border-radius:8px;padding:14px 16px;margin-top:24px;font-size:14px;color:' +\n        C.brand + '\"><b>Tip for today:</b> ' + esc_(result.tip) + '</div>';\n    }\n  } else {\n    body += sectionTitle('Calendar', C.event);\n    if (!timed.length) body += '<div style=\"color:' + C.muted + ';font-size:14px\">No timed events today.</div>';\n    timed.forEach(e => { body += row(e.start + ' - ' + e.end, e.title, '', C.event, C.eventBg); });\n    body += sectionTitle('Tasks', C.task);\n    tasks.forEach(t => { body += row('To do', t.title, t.due ? 'Due ' + t.due : '', C.task, C.taskBg); });\n  }\n\n  if (problems.length) {\n    body += '<div style=\"background:' + C.badBg + ';border-left:4px solid ' + C.bad + ';border-radius:6px;' +\n      'padding:12px 16px;margin-top:24px;font-size:13px;color:' + C.bad + '\"><b>Double-check:</b><br>' +\n      problems.map(esc_).join('<br>') + '</div>';\n  }\n\n  const stats =\n    '<table width=\"100%\" cellpadding=\"0\" cellspacing=\"8\" style=\"margin:16px -8px 0\"><tr>' +\n      statBox(events.length, 'Meetings', C.event) +\n      statBox(result ? scheduled.length : tasks.length, result ? 'Tasks scheduled' : 'Open tasks', C.task) +\n      (result ? statBox(notToday.length, 'For later', C.warn) : '') +\n    '</tr></table>';\n\n  return '<div style=\"background:' + C.page + ';padding:20px 10px;font-family:Arial,Helvetica,sans-serif\">' +\n    '<div style=\"max-width:600px;margin:0 auto\">' +\n      '<div style=\"background:' + C.brand + ';border-radius:12px 12px 0 0;padding:26px 24px;color:#ffffff\">' +\n        '<div style=\"font-size:13px;opacity:0.85\">Good morning</div>' +\n        '<div style=\"font-size:24px;font-weight:bold;margin-top:4px\">' + esc_(dateText) + '</div></div>' +\n      '<div style=\"background:#ffffff;border-radius:0 0 12px 12px;padding:8px 24px 28px\">' +\n        '<div style=\"background:' + C.page + ';border-radius:10px;padding:0 8px 8px;margin-top:18px\">' + stats + '</div>' +\n        body + '</div>' +\n      '<div style=\"text-align:center;font-size:12px;color:' + C.muted + ';margin-top:14px\">Made by your Morning Planner</div>' +\n    '</div></div>';\n}\n\n// ===== 6. MAIN: runs every morning =====\nfunction sendMorningPlan() {\n  if (CONFIG.SKIP_WEEKENDS && [0, 6].includes(new Date().getDay())) return;\n\n  const tz = Session.getScriptTimeZone();\n  const events = getEvents_(tz);\n  const tasks = getTasks_();\n  if (!events.length && !tasks.length) return;\n\n  let result = null;\n  let problems = [];\n  if (tasks.length) {\n    try {\n      const prompt = buildPrompt_(events, tasks, tz);\n      result = askGemini_(prompt);\n      problems = checkPlan_(result, tasks, events);\n      if (problems.length) {   // ask once more, telling the AI what it got wrong\n        result = askGemini_(prompt + '\\n\\nYour previous answer had these problems. Fix them:\\n' + problems.join('\\n'));\n        problems = checkPlan_(result, tasks, events);\n      }\n    } catch (err) {\n      problems.push('The AI step failed (' + err.message + '). Showing what is available.');\n    }\n  }\n\n  MailApp.sendEmail({\n    to: Session.getEffectiveUser().getEmail(),\n    subject: 'Your plan for ' + Utilities.formatDate(new Date(), tz, 'EEEE, MMMM d'),\n    htmlBody: render_(events, tasks, result, problems)\n  });\n}\n\n// ===== RUN ONCE to schedule the morning email and the refreshes =====\nfunction setupDailyTrigger() {\n  ScriptApp.getProjectTriggers().forEach(t => ScriptApp.deleteTrigger(t));\n  ScriptApp.newTrigger('sendMorningPlan').timeBased().everyDays(1).atHour(CONFIG.SEND_HOUR).create();\n  // Midday refresh(es): picks up meetings that were canceled or moved after the morning email\n  CONFIG.EXTRA_REFRESH_HOURS.forEach(h => {\n    ScriptApp.newTrigger('sendMorningPlan').timeBased().everyDays(1).atHour(h).create();\n  });\n}\n",
+          "promptKind": "code",
+          "verify": "After saving, the toolbar's function dropdown lists your functions, and the code shows no red marks."
+        },
+        {
+          "instruction": "Know the settings at the top of the code. The CONFIG block is the only part you will normally change.",
+          "table": {
+            "header": [
+              "Setting",
+              "What it does"
+            ],
+            "rows": [
+              [
+                "WORK_START / WORK_END",
+                "Your working day. Tasks are only planned inside these hours."
+              ],
+              [
+                "SEND_HOUR",
+                "The hour the morning email is sent. 6 means between 6:00 and 7:00."
+              ],
+              [
+                "SKIP_WEEKENDS",
+                "true sends nothing on Saturday and Sunday. Set it to false if you test on a weekend."
+              ],
+              [
+                "ALL_CALENDARS",
+                "true reads every ticked calendar. false reads only your main calendar."
+              ],
+              [
+                "EXTRA_REFRESH_HOURS",
+                "Hours for extra updated plans. [13, 16] means 1pm and 4pm. [] means none."
+              ]
+            ]
+          }
+        },
+        {
+          "instruction": "Optional: add hints to your task titles in Google Tasks.",
+          "callout": {
+            "variant": "tip",
+            "text": "**[High] Reply to vendor [15m]** means top priority and a 15-minute block. A task with no duration is given 30 minutes."
+          }
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "title": "Test one function at a time",
+      "time": "15 min",
+      "description": "For each test: pick the function in the dropdown, click Run, and read the Execution log. Run only runs the function selected in the dropdown beside it.",
+      "steps": [
+        {
+          "instruction": "Run your first function and approve permissions. Choose testCalendar in the dropdown and click Run. The first run asks for permission: click Review permissions, choose your account, and if you see \"Google hasn't verified this app\" click Advanced, then Go to Morning Planner (unsafe), then Allow. That is normal for your own script."
+        },
+        {
+          "instruction": "Now run each function below, in this order.",
+          "table": {
+            "header": [
+              "Run this",
+              "Before",
+              "You should see"
+            ],
+            "rows": [
+              [
+                "testCalendar",
+                "Add an event for later today in Google Calendar",
+                "Found 1 events today, then its time and title"
+              ],
+              [
+                "testTasks",
+                "Add 4 to 5 tasks at tasks.google.com",
+                "Found 5 open tasks, then T1: ..., T2: ..."
+              ],
+              [
+                "testAI",
+                "Your key saved (Build 2)",
+                "A JSON block with plan, unscheduled and tip"
+              ],
+              [
+                "testCheck",
+                "Nothing",
+                "Four warnings (expected, it uses fake broken data), then All checks passed."
+              ],
+              [
+                "sendMorningPlan",
+                "Everything above done",
+                "An email \"Your plan for ...\" in your inbox (check Spam)"
+              ]
+            ]
+          },
+          "callout": {
+            "variant": "warning",
+            "text": "Only function names without a trailing underscore (_) are meant to be run by you."
+          },
+          "verify": "The email arrived and the Execution log showed no errors."
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "title": "Make it automatic",
+      "time": "5 min",
+      "description": "A trigger runs your script on a schedule, even when your computer is off.",
+      "steps": [
+        {
+          "instruction": "Choose setupDailyTrigger in the dropdown and click Run once."
+        },
+        {
+          "instruction": "Click the clock icon (Triggers).",
+          "verify": "You see one trigger for sendMorningPlan at your morning hour, plus one more for each hour in EXTRA_REFRESH_HOURS (by default 1pm)."
+        },
+        {
+          "instruction": "Changed SEND_HOUR or EXTRA_REFRESH_HOURS later? Run setupDailyTrigger again.",
+          "callout": {
+            "variant": "tip",
+            "text": "It deletes the old triggers first, so you never get duplicates."
+          }
+        }
+      ]
+    },
+    {
+      "number": 6,
+      "title": "When plans change, and how it all works",
+      "time": "10 min",
+      "description": "The agent has no memory. Every run reads your calendar fresh and builds a new plan, so what happens when a meeting changes depends on when the change is made.",
+      "steps": [
+        {
+          "instruction": "See what the agent does when a meeting is canceled or moved.",
+          "table": {
+            "header": [
+              "What happened",
+              "What the agent does"
+            ],
+            "rows": [
+              [
+                "Canceled or deleted **before** a run",
+                "The meeting is gone, its slot is free, and tasks can use it"
+              ],
+              [
+                "Moved to another day",
+                "It leaves today's plan and appears on its new day's plan"
+              ],
+              [
+                "Moved to another time today",
+                "The new time is used and tasks are planned around it"
+              ],
+              [
+                "You declined it",
+                "Treated like a cancellation (declined events are skipped)"
+              ],
+              [
+                "Only \"CANCELED\" typed in the title",
+                "Still counts as a real meeting. Delete or decline it instead."
+              ],
+              [
+                "Changed **after** the morning email",
+                "The earlier email does not update. A later run does."
+              ]
+            ]
+          }
+        },
+        {
+          "instruction": "Get an updated plan after a change in one of two ways. Automatic: EXTRA_REFRESH_HOURS: [13] sends a fresh plan at about 1pm. Add more hours, such as [13, 16], then run setupDailyTrigger again. Manual: in the editor choose sendMorningPlan and click Run, and a new email arrives with your current calendar.",
+          "callout": {
+            "variant": "warning",
+            "text": "Each refresh is one more AI request (two if the safety check triggers a retry), so more refreshes use more of your free limit. The agent never edits your calendar or your Google Tasks. It only reads them and emails you a plan."
+          }
+        },
+        {
+          "instruction": "Learn what each part of the code does.",
+          "table": {
+            "header": [
+              "Part",
+              "Job"
+            ],
+            "rows": [
+              [
+                "CONFIG",
+                "Your settings in one place"
+              ],
+              [
+                "getEvents_",
+                "Reads today's events (all ticked calendars), skips declined ones, handles all-day events"
+              ],
+              [
+                "getTasks_",
+                "Reads open Google Tasks and gives each an ID"
+              ],
+              [
+                "buildPrompt_",
+                "Writes the instructions for the AI"
+              ],
+              [
+                "askGemini_",
+                "Calls Gemini, retries if it is busy, returns the answer as data"
+              ],
+              [
+                "checkPlan_",
+                "Flags DROPPED, DOUBLE-BOOKED, INVENTED and OVERLAP problems"
+              ],
+              [
+                "render_",
+                "Builds the email: blue meetings, green tasks, amber for tasks left for later"
+              ],
+              [
+                "sendMorningPlan",
+                "Runs everything, retries once if the check fails, sends the email"
+              ]
+            ]
+          }
+        }
+      ],
+      "goFurther": "Restyle the email by editing the colors in the C list inside render_. Try changing WORK_END, then run sendMorningPlan and watch the plan change."
+    }
   ],
-  "portfolioPrompt": "I just built a Calendar & Task Prioritizer Agent that logs into my real Google Calendar via OAuth, reads my open tasks from a plain-text file, and uses AI to generate a time-blocked Morning/Afternoon/Evening plan -- with a coverage check that catches the AI if it silently drops or double-books a task before I trust the output.\n\nHelp me write:\n1. A 2-3 sentence project description for my portfolio site\n2. A short LinkedIn post announcing it\n3. Three resume-style bullet points describing what I built and the skills it shows"
+  "portfolio": "You built an agent that plans your day for free: it reads your calendar and tasks, has Gemini fit them together, checks the AI's work in code, and emails you a clean plan every morning. Take a screenshot of one of your plan emails (hide anything private) and add \"Calendar & Task Prioritizer Agent\" to your build portfolio.",
+  "portfolioPrompt": "I just built a Calendar & Task Prioritizer Agent in Google Apps Script. Every morning it reads my Google Calendar and Google Tasks, asks Gemini (free API key) to fit my tasks around my meetings, checks the AI's plan with code for dropped, duplicated or invented tasks and tasks scheduled on top of meetings, retries once if it finds a problem, and emails me a styled daily plan. It needs no installs and runs on Google's servers.\n\nHelp me write:\n1. A 2-3 sentence project description for my portfolio site\n2. A short LinkedIn post announcing it\n3. Three resume-style bullet points describing what I built and the skills it shows"
 }$sess$::jsonb,
-  null,
-  null,
+  null, null,
   $tsh$[
   {
-    "fix": "Go to Google Cloud Console -> OAuth consent screen -> Test users, and add your own Google account to the list. Apps left in \"Testing\" mode only allow logins from accounts you've explicitly added there.",
-    "issue": "Error 403: access_denied on the Google login screen"
+    "issue": "No function dropdown",
+    "fix": "Paste the code, save with Ctrl+S, refresh the page, zoom out with Ctrl and minus, or use a computer."
   },
   {
-    "fix": "Check which calendar_id you're querying. \"primary\" is your main calendar -- events on a shared or secondary calendar live under that calendar's own ID, which you can find on that calendar's own Settings page.",
-    "issue": "\"No events found\" even though your calendar clearly has events today"
+    "issue": "Tasks is not defined",
+    "fix": "Redo Build 2 and add the Google Tasks API under Services."
   },
   {
-    "fix": "This is exactly what check_plan_coverage() in prioritizer.py is for -- read the warnings main.py prints above the plan. A DROPPED or DOUBLE-BOOKED warning means the AI didn't follow the \"every task exactly once\" rule that run; it isn't a bug in your code, it's your code catching a real AI mistake before you trusted a broken plan with your day. Run main.py again -- it usually resolves on a second attempt.",
-    "issue": "The saved plan is missing a task, or the same task shows up twice"
+    "issue": "GEMINI_API_KEY is missing",
+    "fix": "Redo the Script Properties steps in Build 2. The property name must match exactly."
   },
   {
-    "fix": "Activate the virtual environment you installed requirements.txt into (or re-run pip install -r requirements.txt) -- the Google API libraries aren't part of the Python standard library, so a fresh terminal without the venv active won't see them.",
-    "issue": "ModuleNotFoundError when running calendar_client.py or main.py"
+    "issue": "Gemini 400 or 403",
+    "fix": "Wrong key or extra spaces. Make a new key at aistudio.google.com/apikey and save it again."
   },
   {
-    "fix": "Delete token.json and run the login step from Build 3 again. This happens after you revoke access from myaccount.google.com/permissions, or after the refresh token itself expires from long disuse.",
-    "issue": "token.json exists but you keep getting sent back to the Google login screen"
+    "issue": "Gemini 404",
+    "fix": "Change MODEL in the CONFIG block to 'gemini-flash-lite-latest' and save."
+  },
+  {
+    "issue": "Gemini 429",
+    "fix": "You reached the free limit. Wait a while, then try again."
+  },
+  {
+    "issue": "Found 0 events but you have some",
+    "fix": "Wrong Google account, wrong time zone, or the events are not today."
+  },
+  {
+    "issue": "No email arrived",
+    "fix": "Check Spam. On a weekend with SKIP_WEEKENDS set to true, nothing is sent."
+  },
+  {
+    "issue": "Identifier already declared",
+    "fix": "You pasted the code twice. Select all, delete, and paste it once."
+  },
+  {
+    "issue": "Two emails a day",
+    "fix": "Expected: the second is the 1pm refresh. Set EXTRA_REFRESH_HOURS to [] and run setupDailyTrigger again to stop it."
+  },
+  {
+    "issue": "The email shows a Double-check box",
+    "fix": "The safety check caught an AI slip. Run sendMorningPlan again."
   }
 ]$tsh$::jsonb,
   $res$[
   {
-    "url": "https://developers.google.com/calendar/api/guides/overview",
-    "title": "Google Calendar API overview"
+    "title": "Google Apps Script overview",
+    "url": "https://developers.google.com/apps-script/overview"
   },
   {
-    "url": "https://developers.google.com/calendar/api/v3/reference/events/list",
-    "title": "Calendar API reference: events.list"
+    "title": "Apps Script CalendarApp reference",
+    "url": "https://developers.google.com/apps-script/reference/calendar/calendar-app"
   },
   {
-    "url": "https://developers.google.com/identity/protocols/oauth2/native-app",
-    "title": "OAuth 2.0 for Desktop Apps"
+    "title": "Apps Script advanced Tasks service",
+    "url": "https://developers.google.com/apps-script/advanced/tasks"
+  },
+  {
+    "title": "Gemini API documentation",
+    "url": "https://ai.google.dev/gemini-api/docs"
   }
 ]$res$::jsonb,
   'builder1',
-  '2026-09-26 publish: shared sdt_ai.py updated (gemini-flash-latest with thinking turned down, readable errors for retired models and empty answers, Gemini key sent in a header), Python/venv setup steps, current HubSpot/Airtable/DataForSEO/ngrok/Railway/Buffer steps, code fixes. No credits: students use their own Gemini or Claude key.'
+  $note$Replace the Python/OAuth guide with the Google Apps Script + Gemini Free AI Morning Planner (nothing to install; email restyled to Social Dev blue). Content from morning-planner-guide-v2.html; uses step.table / step.callout / step.promptKind (SessionGuide).$note$
 )
 on conflict (course_id) do update set
-  what_you_build = excluded.what_you_build, what_you_learn = excluded.what_you_learn, session = excluded.session,
-  starter_code = excluded.starter_code, test_it_out = excluded.test_it_out, troubleshooting = excluded.troubleshooting,
-  resources = excluded.resources, tier = excluded.tier, change_note = excluded.change_note, updated_at = now();
+  what_you_build = excluded.what_you_build,
+  what_you_learn = excluded.what_you_learn,
+  session = excluded.session,
+  starter_code = excluded.starter_code,
+  test_it_out = excluded.test_it_out,
+  troubleshooting = excluded.troubleshooting,
+  resources = excluded.resources,
+  tier = excluded.tier,
+  change_note = excluded.change_note, updated_at = now();
