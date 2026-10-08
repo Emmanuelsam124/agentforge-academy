@@ -1,7 +1,6 @@
-import { Link } from 'react-router-dom';
-import { ArrowRight, Lightbulb, AlertTriangle, Check } from 'lucide-react';
-import { splitBold } from '../../lib/guideBlocks';
+import { ArrowRight, Check } from 'lucide-react';
 import PromptGenerator from './PromptGenerator';
+import { Rich, GuideLink, Callout, GuideTable } from './GuideParts';
 
 // React counterpart to renderGuideBlocksToHtml in src/lib/guideBlocks.js —
 // same block-type switch, kept small so the two stay easy to keep in sync.
@@ -14,59 +13,6 @@ import PromptGenerator from './PromptGenerator';
 const WIDGETS = {
   'prompt-generator': PromptGenerator,
 };
-
-function Rich({ text }) {
-  return splitBold(text).map((part, i) =>
-    part.bold ? <strong key={i} className="text-ink">{part.text}</strong> : <span key={i}>{part.text}</span>,
-  );
-}
-
-// react-router's <Link to> only understands in-app routes — handing it an
-// absolute URL produces a relative navigation to a path that doesn't exist.
-// Guides cite outside sources, so route on the destination instead. The
-// string renderer in lib/guideBlocks.js emits plain <a href> and already
-// handles both cases.
-function GuideLink({ to, className, children }) {
-  if (/^(https?:)?\/\//i.test(to) || to.startsWith('mailto:')) {
-    return (
-      <a href={to} target="_blank" rel="noopener noreferrer" className={className}>
-        {children}
-      </a>
-    );
-  }
-  return <Link to={to} className={className}>{children}</Link>;
-}
-
-function Callout({ block }) {
-  const isWarning = block.variant === 'warning';
-  return (
-    <div
-      className={`flex items-start gap-3 rounded-xl px-4 py-3.5 my-5 ${
-        isWarning
-          ? 'bg-[#FEF9E7] dark:bg-amber-500/10 border border-amber/30'
-          : 'bg-[#E8EDF3] dark:bg-brand/10 border border-brand/20'
-      }`}
-    >
-      {isWarning ? (
-        <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
-      ) : (
-        <Lightbulb className="w-4 h-4 text-link mt-0.5 flex-shrink-0" />
-      )}
-      <p className="text-[14px] text-body-strong leading-relaxed m-0">
-        {block.title && <strong className="text-ink">{block.title} </strong>}
-        <Rich text={block.text} />
-        {block.linkTo && (
-          <>
-            {' '}
-            <GuideLink to={block.linkTo} className="text-link font-bold hover:underline">
-              {block.linkLabel || 'Read more'}
-            </GuideLink>
-          </>
-        )}
-      </p>
-    </div>
-  );
-}
 
 function Cta({ block }) {
   return (
@@ -133,37 +79,7 @@ export default function GuideBody({ blocks }) {
             );
 
           case 'table':
-            return (
-              <div key={i} className="my-5">
-                {block.caption && (
-                  <p className="text-[13px] font-bold text-ink mb-2"><Rich text={block.caption} /></p>
-                )}
-                <div className="overflow-x-auto rounded-xl border border-border">
-                  <table className="w-full text-[14px] border-collapse">
-                    <thead>
-                      <tr className="bg-border-soft">
-                        {(block.header || []).map((h, ci) => (
-                          <th key={ci} scope="col" className="text-left font-bold text-ink px-4 py-2.5 border-b border-border whitespace-nowrap">
-                            <Rich text={h} />
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {(block.rows || []).map((row, ri) => (
-                        <tr key={ri} className="border-t border-border">
-                          {row.map((cell, ci) => (
-                            <td key={ci} className="px-4 py-2.5 text-body-strong align-top">
-                              <Rich text={cell} />
-                            </td>
-                          ))}
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            );
+            return <GuideTable key={i} block={block} />;
 
           case 'quote':
             return (

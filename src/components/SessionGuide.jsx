@@ -1,6 +1,13 @@
 import { useState } from 'react';
 import { Clock, Layers, Bot, Sparkles, ListChecks, CheckCircle2, Compass, Award, ChevronDown, AlertTriangle, Wrench } from 'lucide-react';
 import PromptBox from './PromptBox';
+import { Callout, GuideTable } from './guides/GuideParts';
+
+// Optional per-step fields beyond instruction / prompt / verify, all backwards
+// compatible (a step without them renders exactly as before):
+//   promptKind: 'code'                   -> monospace "Code to paste" box
+//   table:   { caption?, header[], rows[][] }
+//   callout: { variant: 'tip'|'warning', title?, text }   (**bold** allowed)
 
 export default function SessionGuide({ session, troubleshooting }) {
   // Multi-guide: session is an array of guide objects
@@ -181,7 +188,9 @@ function BuildCard({ build }) {
               <p className="text-sm text-body-strong leading-relaxed">
                 <span className="font-bold text-link"><span>{i + 1}</span>.</span> <span>{step.instruction}</span>
               </p>
-              {step.prompt && <PromptBox text={step.prompt} />}
+              {step.prompt && <PromptBox text={step.prompt} variant={step.promptKind === 'code' ? 'code' : 'prompt'} />}
+              {step.table && <GuideTable block={step.table} className="" />}
+              {step.callout && <Callout block={step.callout} className="" />}
               {step.verify && (
                 <div className="flex gap-2 items-start text-sm text-green bg-[#EAFAF1] dark:bg-green/10 border border-green/20 rounded-lg px-3 py-2">
                   <CheckCircle2 className="w-4 h-4 mt-0.5 flex-shrink-0" />
