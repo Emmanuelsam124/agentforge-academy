@@ -1,179 +1,435 @@
 insert into public.course_content_draft (course_id, what_you_build, what_you_learn, session, starter_code, test_it_out, troubleshooting, resources, tier, change_note)
 values (
   6,
-  $wyb$A Streamlit chat app that answers questions using only a FAQ document you provide, keeps track of the back-and-forth conversation across turns, and is explicitly instructed to admit when a question falls outside what it was given instead of inventing a plausible-sounding answer. There's no vector database or embeddings involved: the whole FAQ is short enough to hand the AI directly in the prompt every time (this is the "RAG-lite" pattern), which is exactly how a real small business's FAQ behaves in practice.$wyb$,
+  $wyb$A friendly FAQ chatbot for your business, built without writing code. You plan your questions and answers, Claude turns them into one self-contained web page (index.html), and you publish it free on Netlify so anyone can open it from a link or see it on your website. It only answers from your FAQ and never invents an answer: when it is not sure, it says so, shows your contact details and offers the closest questions. An optional upgrade adds free Gemini AI for unusual wording, still answering only from your FAQ.$wyb$,
   $wyl$[
-  "Read a real file off disk and turn it into context an AI can answer from",
-  "Write a system prompt that makes an AI refuse to guess outside its source material",
-  "Build a multi-turn chat UI with Streamlit's chat_message and chat_input",
-  "Keep conversation history in st.session_state across Streamlit reruns",
-  "Call the AI through sdt_ai.py using your own API key - a free Gemini key, or your own Claude key",
-  "Test prompt-construction and reply-detection logic without a single real AI call",
-  "Recognize and defend against LLM hallucination through prompt design, not code"
+  "Plan an FAQ a bot can match: short, factual answers plus the extra words people actually use",
+  "Write one clear build prompt and get Claude to produce a complete, working web page",
+  "Save and open an HTML file correctly on Windows or Mac",
+  "Test the bot like a real customer and have Claude fix what it misses",
+  "Publish a site free with Netlify Drop and update it in seconds",
+  "Add the chatbot to WordPress, Wix or Squarespace, or share it as a link or QR code",
+  "Optionally keep an API key private with a Cloudflare Worker that calls Gemini"
 ]$wyl$::jsonb,
   $sess${
-  "model": "Google Gemini (gemini-flash-latest) or Claude Haiku 4.5 - your choice, see sdt_ai.py setup",
-  "builds": [
-    {
-      "time": "15 min",
-      "steps": [
-        {
-          "prompt": "streamlit\nrequests\npython-dotenv\n",
-          "verify": "requirements.txt sits directly inside your project folder, not in a subfolder. The next step installs everything it lists.",
-          "instruction": "Make an empty folder for this project and open it in your code editor (in VS Code: File > Open Folder). Inside it, create `requirements.txt` with this content - it lists every library this project uses:"
-        },
-        {
-          "instruction": "Set up Python for this project (once, about 5 minutes). Check your version with `python3 --version` on Mac/Linux or `py --version` on Windows. If it is missing or older than 3.10, install the latest Python from python.org/downloads (on Windows, tick \"Add python.exe to PATH\" on the installer's first screen), then open a new terminal. Now open a terminal in your project folder (in VS Code: Terminal > New Terminal) and run the commands below for your system. They create a virtual environment - a private set of libraries for this project only - and install everything requirements.txt lists.",
-          "prompt": "# Mac / Linux\npython3 -m venv .venv\nsource .venv/bin/activate\npython -m pip install -r requirements.txt\n\n# Windows (PowerShell)\npy -m venv .venv\n.venv\\Scripts\\Activate.ps1\npython -m pip install -r requirements.txt\n\n# Windows says \"running scripts is disabled\"? Run this once, then the Activate line again:\n#   Set-ExecutionPolicy -Scope CurrentUser RemoteSigned\n# Ubuntu/Debian says venv or ensurepip is not available? Run: sudo apt install python3-venv",
-          "verify": "Your terminal prompt now starts with (.venv), and the install ended with \"Successfully installed\". Each time you open a new terminal for this project, run the activate line again first - while it is active, plain `python` works on every system, and that is the command every step below uses."
-        },
-        {
-          "prompt": "\"\"\"\nSocial Dev Technologies - your connection to the AI.\n\nYou have TWO ways to power this file. Pick ONE and set it in your .env:\n\n  AI_PROVIDER=gemini    -> your own FREE Google Gemini API key\n  AI_PROVIDER=claude    -> your own Claude/Anthropic API key\n\nEvery project in this course calls ask_ai(...) the exact same way no\nmatter which one you pick - this file is the only place that changes.\n\nSETUP - OPTION 1: Gemini (free, no billing needed):\n\n  1. Go to https://aistudio.google.com/apikey and sign in with any Google\n     account. Click \"Create API key\" - free, no card required.\n  2. In the same folder as this file, create a file named exactly: .env\n  3. Put these two lines inside it:\n\n         AI_PROVIDER=gemini\n         GEMINI_API_KEY=paste_your_own_key_here\n\nSETUP - OPTION 2: Claude (if you already have a paid Claude account):\n\n  1. Go to https://console.anthropic.com/settings/keys and create an API\n     key. This needs billing set up on your Anthropic account - it is a\n     separate thing from a claude.ai Pro subscription, and is billed by\n     Anthropic based on what you actually use.\n  2. In your .env file, put these two lines instead:\n\n         AI_PROVIDER=claude\n         ANTHROPIC_API_KEY=paste_your_own_key_here\n\nNever share either key or put it on GitHub - each one is billed to YOUR\naccount. That's it. Every project in this course reuses this same file.\n\"\"\"\n\nimport os\nimport time\n\nimport requests\nfrom dotenv import load_dotenv\n\n# Reads the .env file sitting next to your project and loads your keys.\nload_dotenv()\n\n# \"gemini-flash-latest\" is Google's name for whatever its newest Flash model\n# is, so this file keeps working when Google retires an older model - which\n# it does regularly. You can pin one specific model with GEMINI_MODEL=... in\n# your .env, but if you ever get a \"not available\" error, delete that line.\nGEMINI_MODEL = os.environ.get(\"GEMINI_MODEL\", \"gemini-flash-latest\")\nGEMINI_URL_TEMPLATE = \"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent\"\n\n# Gemini \"thinks\" before it answers, and that hidden thinking counts toward\n# the same token limit as the answer itself. With a small max_tokens (the\n# 50-300 used for short replies in this course) the thinking could use up\n# the whole limit and the answer would come back empty. So this file turns\n# thinking down to its minimum (these projects don't need it) and gives\n# Gemini this many extra tokens on top of your max_tokens for whatever\n# thinking is left.\nTHINKING_ALLOWANCE = 1024\n\nCLAUDE_MODEL = os.environ.get(\"CLAUDE_MODEL\", \"claude-haiku-4-5\")\nANTHROPIC_URL = \"https://api.anthropic.com/v1/messages\"\nANTHROPIC_VERSION = \"2023-06-01\"\n\n# Both AIs occasionally answer \"overloaded\" during busy periods (Gemini's\n# free tier especially). That's not your code being wrong - retrying a\n# couple of times almost always gets a real answer, so it's built in here\n# rather than left for every project to handle separately.\nMAX_ATTEMPTS = 3\nRETRY_DELAY_SECONDS = 3\n\n\nclass AIError(Exception):\n    \"\"\"Something went wrong talking to the AI. The message explains what.\"\"\"\n\n\ndef _get_provider():\n    \"\"\"\n    Reads AI_PROVIDER from .env. Falls back to guessing from whichever key\n    is actually present, so forgetting to set AI_PROVIDER explicitly\n    doesn't crash a setup that only has one key configured.\n    \"\"\"\n    provider = os.environ.get(\"AI_PROVIDER\", \"\").strip().lower()\n    if provider in (\"gemini\", \"claude\"):\n        return provider\n\n    if os.environ.get(\"GEMINI_API_KEY\"):\n        return \"gemini\"\n    if os.environ.get(\"ANTHROPIC_API_KEY\"):\n        return \"claude\"\n\n    raise AIError(\n        \"No AI provider configured.\\n\"\n        \"Add ONE of these pairs to your .env file:\\n\\n\"\n        \"    AI_PROVIDER=gemini\\n\"\n        \"    GEMINI_API_KEY=paste_your_free_key_here\\n\\n\"\n        \"  ...or...\\n\\n\"\n        \"    AI_PROVIDER=claude\\n\"\n        \"    ANTHROPIC_API_KEY=paste_your_own_key_here\\n\\n\"\n        \"Get a free Gemini key at https://aistudio.google.com/apikey\"\n    )\n\n\ndef _ask_gemini(prompt, system=None, max_tokens=1000):\n    api_key = os.environ.get(\"GEMINI_API_KEY\")\n    if not api_key:\n        raise AIError(\n            \"AI_PROVIDER is set to gemini but no GEMINI_API_KEY was found.\\n\"\n            \"Get a free key at https://aistudio.google.com/apikey and add \"\n            \"it to .env:\\n\"\n            \"    GEMINI_API_KEY=paste_your_own_key_here\"\n        )\n\n    generation_config = {\"maxOutputTokens\": max_tokens + THINKING_ALLOWANCE}\n    # thinkingBudget 0 = \"as little thinking as possible\". Pro models can't\n    # turn thinking down and reject this setting, so it's left off for them.\n    if \"-pro\" not in GEMINI_MODEL:\n        generation_config[\"thinkingConfig\"] = {\"thinkingBudget\": 0}\n\n    payload = {\n        \"contents\": [{\"role\": \"user\", \"parts\": [{\"text\": prompt}]}],\n        \"generationConfig\": generation_config,\n    }\n    if system:\n        payload[\"systemInstruction\"] = {\"parts\": [{\"text\": system}]}\n\n    url = GEMINI_URL_TEMPLATE.format(model=GEMINI_MODEL)\n    # The key goes in a header rather than the URL, so it never shows up in\n    # an error message or traceback you might paste somewhere for help.\n    headers = {\"x-goog-api-key\": api_key}\n\n    last_problem = \"no response\"\n    for attempt in range(MAX_ATTEMPTS):\n        try:\n            response = requests.post(url, headers=headers, json=payload, timeout=90)\n        except requests.RequestException:\n            raise AIError(\n                \"Could not reach Gemini. Check your internet connection and try again.\"\n            ) from None\n\n        if response.status_code in (500, 503):\n            last_problem = f\"Gemini is busy ({response.status_code} - high demand on the free tier)\"\n            if attempt < MAX_ATTEMPTS - 1:\n                time.sleep(RETRY_DELAY_SECONDS)\n            continue\n\n        if response.status_code == 429:\n            raise AIError(\n                \"Gemini says you've hit the free tier's rate limit. Wait a \"\n                \"minute and try again - the free tier only allows a \"\n                \"limited number of requests per minute.\"\n            )\n\n        if response.status_code == 404:\n            if os.environ.get(\"GEMINI_MODEL\"):\n                advice = (\n                    \"Your .env file sets GEMINI_MODEL - delete that line so this \"\n                    \"file uses its default model, then try again.\"\n                )\n            else:\n                advice = \"Check the course page for an updated copy of sdt_ai.py.\"\n            raise AIError(\n                f'Gemini says the model \"{GEMINI_MODEL}\" isn\\'t available to your '\n                f\"API key - Google retires older models.\\n{advice}\\n\"\n                f\"Details: {response.text[:300]}\"\n            )\n\n        if response.status_code == 400:\n            # If a future Gemini model ever refuses the thinking setting\n            # above, ask again without it instead of failing.\n            if \"thinkingConfig\" in generation_config and \"thinking\" in response.text.lower():\n                del generation_config[\"thinkingConfig\"]\n                last_problem = \"Gemini rejected the thinking setting\"\n                continue\n            raise AIError(\n                f\"Gemini rejected the request - double check your GEMINI_API_KEY \"\n                f\"is correct: {response.text[:300]}\"\n            )\n\n        if response.status_code != 200:\n            raise AIError(\n                f\"Gemini returned an error (status {response.status_code}): {response.text[:300]}\"\n            )\n\n        data = response.json()\n        candidates = data.get(\"candidates\") or []\n        if not candidates:\n            block_reason = (data.get(\"promptFeedback\") or {}).get(\"blockReason\")\n            if block_reason:\n                raise AIError(f\"Gemini refused the prompt ({block_reason}). Try rephrasing it.\")\n            raise AIError(f\"Unexpected reply from Gemini: {data}\")\n        candidate = candidates[0]\n        finish_reason = candidate.get(\"finishReason\")\n\n        # A response can come back with no text because Gemini's safety\n        # filters blocked it (finishReason == \"SAFETY\"), not because of a\n        # network problem - so this is not retried like the cases above.\n        if finish_reason == \"SAFETY\":\n            raise AIError(\"Gemini declined to answer (safety filter). Try rephrasing your prompt.\")\n\n        # An answer can arrive split across several parts, so join them all.\n        # Any part marked \"thought\" is Gemini's thinking, not its answer.\n        parts = (candidate.get(\"content\") or {}).get(\"parts\") or []\n        text = \"\".join(part.get(\"text\", \"\") for part in parts if not part.get(\"thought\"))\n        if not text:\n            if finish_reason == \"MAX_TOKENS\":\n                raise AIError(\n                    \"Gemini ran out of room before it wrote any answer - its thinking \"\n                    f\"used up all {generation_config['maxOutputTokens']} tokens it was \"\n                    \"allowed. Raise max_tokens in this ask_ai(...) call (try \"\n                    f\"max_tokens={max(max_tokens * 2, 4000)}) and run it again.\"\n                )\n            raise AIError(\n                f\"Gemini sent back an empty answer (finishReason: {finish_reason}). \"\n                \"Try again, or rephrase your prompt.\"\n            )\n\n        usage = data.get(\"usageMetadata\") or {}\n        return {\n            \"text\": text,\n            \"input_tokens\": usage.get(\"promptTokenCount\"),\n            \"output_tokens\": usage.get(\"candidatesTokenCount\"),\n        }\n\n    raise AIError(\n        f\"Gemini was unavailable after {MAX_ATTEMPTS} tries ({last_problem}). \"\n        \"This happens sometimes on the free tier during high demand - wait \"\n        \"a minute and try again.\"\n    )\n\n\ndef _ask_claude(prompt, system=None, max_tokens=1000):\n    api_key = os.environ.get(\"ANTHROPIC_API_KEY\")\n    if not api_key:\n        raise AIError(\n            \"AI_PROVIDER is set to claude but no ANTHROPIC_API_KEY was found.\\n\"\n            \"Create one at https://console.anthropic.com/settings/keys and \"\n            \"add it to .env:\\n\"\n            \"    ANTHROPIC_API_KEY=paste_your_own_key_here\"\n        )\n\n    payload = {\n        \"model\": CLAUDE_MODEL,\n        \"max_tokens\": max_tokens,\n        \"messages\": [{\"role\": \"user\", \"content\": prompt}],\n    }\n    if system:\n        payload[\"system\"] = system\n\n    last_problem = \"no response\"\n    for attempt in range(MAX_ATTEMPTS):\n        try:\n            response = requests.post(\n                ANTHROPIC_URL,\n                headers={\n                    \"x-api-key\": api_key,\n                    \"anthropic-version\": ANTHROPIC_VERSION,\n                    \"Content-Type\": \"application/json\",\n                },\n                json=payload,\n                timeout=90,\n            )\n        except requests.RequestException:\n            raise AIError(\n                \"Could not reach Claude. Check your internet connection and try again.\"\n            ) from None\n\n        # 529 is Anthropic's \"overloaded\" - like Gemini's 503, a retry\n        # usually works.\n        if response.status_code in (500, 503, 529):\n            last_problem = f\"Claude is busy ({response.status_code} - overloaded)\"\n            if attempt < MAX_ATTEMPTS - 1:\n                time.sleep(RETRY_DELAY_SECONDS)\n            continue\n\n        try:\n            data = response.json()\n        except ValueError:\n            raise AIError(f\"Unexpected reply from Claude (status {response.status_code}).\") from None\n\n        if response.status_code == 401:\n            raise AIError(\n                \"Claude rejected your ANTHROPIC_API_KEY - double check it was copied correctly.\"\n            )\n\n        if response.status_code == 429:\n            raise AIError(\"Claude says you've hit your rate or usage limit. Wait a moment and try again.\")\n\n        if response.status_code == 404:\n            if os.environ.get(\"CLAUDE_MODEL\"):\n                advice = (\n                    \"Your .env file sets CLAUDE_MODEL - delete that line so this \"\n                    \"file uses its default model, then try again.\"\n                )\n            else:\n                advice = \"Check the course page for an updated copy of sdt_ai.py.\"\n            raise AIError(\n                f'Claude says the model \"{CLAUDE_MODEL}\" isn\\'t available to your '\n                f\"API key.\\n{advice}\"\n            )\n\n        if \"error\" in data or response.status_code != 200:\n            error = data.get(\"error\") or {}\n            message = error.get(\"message\") if isinstance(error, dict) else str(error)\n            raise AIError(\n                f\"Claude returned an error (status {response.status_code}): \"\n                f\"{message or str(data)[:300]}\"\n            )\n\n        text = \"\".join(\n            block.get(\"text\", \"\") for block in data.get(\"content\", []) if block.get(\"type\") == \"text\"\n        )\n        if not text:\n            raise AIError(\n                f\"Claude sent back an empty answer (stop_reason: {data.get('stop_reason')}). \"\n                \"Try again, or rephrase your prompt.\"\n            )\n\n        usage = data.get(\"usage\") or {}\n        return {\n            \"text\": text,\n            \"input_tokens\": usage.get(\"input_tokens\"),\n            \"output_tokens\": usage.get(\"output_tokens\"),\n        }\n\n    raise AIError(\n        f\"Claude was unavailable after {MAX_ATTEMPTS} tries ({last_problem}). \"\n        \"Wait a minute and try again.\"\n    )\n\n\ndef ask_ai_detailed(prompt, system=None, max_tokens=1000, project=None):\n    \"\"\"\n    Same as ask_ai, but returns the whole reply as a dict.\n\n        result = ask_ai_detailed(\"Summarise this\", max_tokens=200)\n        print(result[\"text\"])\n    \"\"\"\n    provider = _get_provider()\n    if provider == \"gemini\":\n        return _ask_gemini(prompt, system=system, max_tokens=max_tokens)\n    return _ask_claude(prompt, system=system, max_tokens=max_tokens)\n\n\ndef ask_ai(prompt, system=None, max_tokens=1000, project=None):\n    \"\"\"\n    Send a question to the AI and get the answer back as text.\n\n        answer = ask_ai(\"Write a haiku about Lagos traffic\")\n        print(answer)\n\n    prompt      - what you want the AI to do. This is the important part.\n    system      - optional. Sets the AI's role, e.g. \"You are a careful editor.\"\n    max_tokens  - roughly how long the answer may be. 1000 is plenty for most.\n    project     - unused, kept so call sites read the same across every\n                  project regardless of which AI is behind this file.\n\n    Works identically whichever provider your .env is set to - every\n    project in this course calls this one function and never needs to\n    know which AI is actually answering.\n\n    Returns the AI's answer as a plain string.\n    Raises AIError with a readable message if something is wrong.\n    \"\"\"\n    return ask_ai_detailed(prompt, system=system, max_tokens=max_tokens, project=project)[\"text\"]\n\n\nif __name__ == \"__main__\":\n    # Running this file directly checks that your setup works.\n    print(\"Testing your AI connection...\\n\")\n    try:\n        provider = _get_provider()\n        model = GEMINI_MODEL if provider == \"gemini\" else CLAUDE_MODEL\n        result = ask_ai_detailed(\"Say hello in exactly five words.\", max_tokens=50)\n        print(f\"Provider: {provider} ({model})\")\n        print(\"The AI said:\", result[\"text\"])\n        print(\"\\nYour setup works. You are ready to build.\")\n    except AIError as problem:\n        print(\"Setup problem:\\n\")\n        print(problem)\n",
-          "verify": "Nothing to check yet — you'll test this file once your .env is filled in, in the next step.",
-          "instruction": "Create `sdt_ai.py` with this code — copy it exactly, you'll never edit it. This is the ONLY file that talks to the AI in this whole project:"
-        },
-        {
-          "prompt": "# OPTION 1: your own free Gemini key (recommended - no billing needed)\n# Get one free at https://aistudio.google.com/apikey - no credit card needed\nAI_PROVIDER=gemini\nGEMINI_API_KEY=paste_your_own_key_here\n\n# OPTION 2: your own Claude/Anthropic key (comment OPTION 1 out above,\n# uncomment these two lines instead - needs billing set up on your own\n# Anthropic account)\n# Get one at https://console.anthropic.com/settings/keys\n# AI_PROVIDER=claude\n# ANTHROPIC_API_KEY=paste_your_own_key_here\n",
-          "verify": "Run `python sdt_ai.py` - it should print which provider you're using, then `The AI said: ...`, and end with `Your setup works. You are ready to build.` If you see `No AI provider configured` instead, check that .env sits next to sdt_ai.py and that AI_PROVIDER plus its matching key are both uncommented.",
-          "instruction": "Create `.env` in the same folder with this content. Pick ONE AI option (Gemini or Claude) below."
-        }
-      ],
-      "title": "Connect your AI (Gemini or Claude)",
-      "number": 1,
-      "description": "Set up the one file every build in this project calls to reach the AI, before writing the chatbot that actually uses it."
-    },
-    {
-      "time": "20 min",
-      "steps": [
-        {
-          "prompt": "# Golden Crust Bakery - Frequently Asked Questions\n\n## What are your opening hours?\nWe're open Tuesday to Sunday, 8:00 AM to 7:00 PM. We're closed every Monday for baking prep and stock-taking.\n\n## Where are you located?\nWe're at 14 Adeniran Ogunsanya Street, Surulere, Lagos. We don't have a second branch yet.\n\n## Do you deliver?\nYes, we deliver within Lagos mainland for a flat NGN 1,500 fee. Orders placed before 12 PM are usually delivered the same day; anything placed after that goes out the next day.\n\n## How far in advance do I need to order a custom cake?\nCustom and celebration cakes need at least 48 hours' notice. Wedding cakes and orders above 5kg need at least 7 days' notice so we can plan tiers and delivery properly.\n\n## What payment methods do you accept?\nWe accept bank transfer, POS on delivery or pickup, and cash. We don't currently accept cheques.\n\n## Can you cater for allergies or dietary needs?\nWe offer an eggless option for most cakes and a gluten-free vanilla sponge on request. We are NOT a nut-free kitchen - all our cakes are made in the same space as products containing groundnuts and cashews, so we can't guarantee zero cross-contact.\n\n## What sizes and prices do your cakes come in?\nOur round cakes start at NGN 8,000 for a 6-inch (serves 8-10) and go up to NGN 35,000 for a 12-inch (serves 40-50). Custom designs and fondant work are quoted separately based on the design.\n\n## Can I cancel or change my order after paying?\nOrders can be changed or cancelled for a full refund up to 24 hours before your pickup or delivery time. Inside 24 hours, we can only offer a 50% refund since ingredients are already prepped.\n\n## Do you do wholesale or bulk orders for events and offices?\nYes - for orders of 20 units or more (small chops, cupcakes, pastries) we offer a 10% discount and can discuss a standing weekly order for offices. Reach out at least a week ahead.\n\n## How do I get in touch with a real person?\nCall or WhatsApp us on 0803-000-0000 between 8 AM and 7 PM, Tuesday to Sunday, or email goldencrustlagos@example.com.\n",
-          "verify": "Open faq.md and count the sections - you should have 10 \"## question\" headings, each followed by an answer paragraph.",
-          "instruction": "Create `faq.md` with this content (a real, working example FAQ for a small Lagos bakery - you'll make it your own in the Challenge):"
-        },
-        {
-          "prompt": "\"\"\"\nStep 1 of the Simple FAQ Chatbot.\n\nThis file has one job: read the FAQ document off disk and hand back its\ntext, so chatbot.py can drop it straight into the prompt. This project is\n\"RAG-lite\" - no database, no embeddings, no search step. The FAQ file IS\nthe knowledge base. Whatever text is in faq.md is exactly what the AI can\nknow about your business, word for word.\n\"\"\"\n\nimport os\n\nFAQ_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), \"faq.md\")\n\n# Stop after this many characters - the same kind of MONEY decision as\n# article.py's MAX_CHARACTERS in the Social Post Generator project.\n# chatbot.py resends this whole file with EVERY question a customer asks\n# (see the caching note in chatbot.py for how prompt caching keeps repeat\n# sends cheap), so a 200-page FAQ would make every single question\n# expensive. 8000 characters is roughly 15-20 well-written Q&A pairs -\n# plenty for a small business, and a hard ceiling that keeps costs\n# predictable even if someone pastes in a much bigger document later.\nMAX_CHARACTERS = 8000\n\n\ndef load_faq(path=FAQ_PATH):\n    \"\"\"\n    Reads the FAQ file and returns its text.\n\n        text = load_faq()\n\n    Raises a clear error if the file is missing or empty - an empty FAQ\n    means the chatbot has nothing to answer from, which would otherwise\n    fail silently and confusingly deep inside a prompt to the AI instead\n    of here, where the problem is obvious.\n    \"\"\"\n    if not os.path.exists(path):\n        raise FileNotFoundError(\n            f\"Could not find {path}.\\n\"\n            f\"Create a faq.md file next to this one with your questions and answers.\"\n        )\n\n    with open(path, \"r\", encoding=\"utf-8\") as f:\n        text = f.read().strip()\n\n    if not text:\n        raise ValueError(\n            f\"{path} is empty.\\n\"\n            f\"Add at least a few questions and answers before running the chatbot.\"\n        )\n\n    return text[:MAX_CHARACTERS]\n\n\nif __name__ == \"__main__\":\n    # Run this file on its own to check it works:  python faq.py\n    text = load_faq()\n    print(f\"Loaded {len(text)} characters from {FAQ_PATH}\\n\")\n    print(text[:300])\n",
-          "verify": "Run `python faq.py` - it should print `Loaded 2060 characters from <the path to your faq.md>` followed by the start of the Golden Crust Bakery FAQ text. The character count will be exactly 2060 if you used the faq.md above unchanged.",
-          "instruction": "Create `faq.py` with this code:"
-        }
-      ],
-      "title": "Give the bot something to know",
-      "number": 2,
-      "goFurther": "Add a few more Q&A pairs of your own to faq.md - no code changes needed, faq.py picks up whatever is in the file at load time.",
-      "description": "The FAQ file is the entire brain of this bot. Before any AI is involved, there needs to be real content sitting on disk that Python can reliably read - get that right first and everything downstream is simple."
-    },
-    {
-      "time": "30 min",
-      "steps": [
-        {
-          "prompt": "\"\"\"\nStep 2 of the Simple FAQ Chatbot.\n\nThis file builds the prompt that turns the AI into a chatbot that only\nknows what's in your FAQ - and, just as importantly, admits when a\nquestion isn't covered instead of guessing.\n\"\"\"\n\nfrom sdt_ai import ask_ai\n\n# The single most important instruction in this whole project. Language\n# models are trained to be helpful, and their default instinct when they\n# don't actually know something is to guess a plausible-sounding answer\n# rather than say \"I don't know\" - a well-documented failure mode called\n# hallucination. Telling the AI, in plain words, that it is ALLOWED and\n# EXPECTED to say \"I don't know\" is the fix. Skip this instruction and you\n# will get confident, wrong answers about your own business - see the\n# hallucination entry in the guide's troubleshooting section.\nSYSTEM_INSTRUCTIONS = (\n    \"You are a helpful customer support assistant. Answer the customer's \"\n    \"question using ONLY the FAQ content below - do not use any outside \"\n    \"knowledge, and do not guess. If the question is not answered by the \"\n    \"FAQ, say plainly that you don't have that information and suggest \"\n    \"they contact the business directly. Keep answers short and friendly.\"\n)\n\n# Phrases the AI tends to use (because SYSTEM_INSTRUCTIONS asks it to)\n# when the FAQ doesn't cover a question. Used only to decide whether to\n# show a \"still stuck?\" nudge in the chat UI - it is NOT what keeps the\n# AI honest, SYSTEM_INSTRUCTIONS is. A missed phrase here just means the\n# nudge doesn't show up; the AI's own reply is shown to the customer\n# either way.\nUNKNOWN_PHRASES = [\n    \"don't have that information\",\n    \"do not have that information\",\n    \"don't know\",\n    \"do not know\",\n    \"not sure\",\n    \"can't answer\",\n    \"cannot answer\",\n    \"not covered\",\n    \"isn't in the faq\",\n    \"not in the faq\",\n    \"contact us directly\",\n    \"contact the business directly\",\n]\n\n\ndef build_prompt(faq_text, question, history=None):\n    \"\"\"\n    Assembles the full prompt sent to the AI: instructions + the FAQ +\n    recent conversation + the new question.\n\n        prompt = build_prompt(faq_text, \"What are your opening hours?\")\n\n    Keeping this separate from the network call means you can print\n    exactly what the AI is being asked - the fastest way to work out\n    why an answer came back wrong or oddly worded.\n    \"\"\"\n    history = history or []\n\n    conversation = \"\"\n    if history:\n        lines = [\n            f\"{'Customer' if turn['role'] == 'user' else 'You'}: {turn['content']}\"\n            for turn in history\n        ]\n        conversation = \"\\n\\nEarlier in this conversation:\\n\" + \"\\n\".join(lines)\n\n    return f\"\"\"{SYSTEM_INSTRUCTIONS}\n\nFAQ:\n{faq_text}\n{conversation}\n\nCustomer's new question: {question}\"\"\"\n\n\ndef looks_unanswered(reply):\n    \"\"\"\n    True if the AI's reply looks like an \"I don't know\" answer rather\n    than a real answer pulled from the FAQ.\n\n    This is a best-effort keyword check, not proof of anything - the AI\n    writes in its own words every time, so no fixed list catches every\n    phrasing, and a fluent WRONG guess looks exactly like a fluent RIGHT\n    answer to this function. That's exactly why SYSTEM_INSTRUCTIONS,\n    not this function, is what actually prevents hallucination - this\n    only decides whether to show an extra \"still stuck?\" nudge.\n    \"\"\"\n    lowered = reply.lower()\n    return any(phrase in lowered for phrase in UNKNOWN_PHRASES)\n\n\ndef ask_faq_bot(faq_text, question, history=None):\n    \"\"\"\n    The main function. Give it the FAQ text and a question, get back an\n    answer grounded in that FAQ.\n\n        answer = ask_faq_bot(faq_text, \"Do you deliver?\")\n    \"\"\"\n    prompt = build_prompt(faq_text, question, history)\n\n    # max_tokens caps the answer length, which caps what this costs you.\n    # 300 is generous for a short support answer - FAQ answers are not\n    # essays, and a shorter cap also means a lower worst-case cost\n    # on every single question, and keeps usage down whether\n    # you're on Gemini's free tier or paying per token on your own Claude account.\n    return ask_ai(\n        prompt,\n        max_tokens=300,\n        project=\"simple-faq-chatbot\",\n    )\n\n\nif __name__ == \"__main__\":\n    # Run this file on its own to check the prompt-building and the\n    # \"did it admit it doesn't know\" detector both work:\n    #     python chatbot.py\n    sample_faq = \"Q: What are your hours?\\nA: We're open 8am-6pm, Tuesday-Sunday.\"\n\n    prompt = build_prompt(sample_faq, \"What time do you open?\")\n    assert \"8am-6pm\" in prompt\n    assert \"What time do you open?\" in prompt\n    print(\"build_prompt: FAQ text and question are both present. OK\")\n\n    prompt_with_history = build_prompt(\n        sample_faq,\n        \"What about Mondays?\",\n        history=[\n            {\"role\": \"user\", \"content\": \"What time do you open?\"},\n            {\"role\": \"assistant\", \"content\": \"We open at 8am.\"},\n        ],\n    )\n    assert \"Customer: What time do you open?\" in prompt_with_history\n    print(\"build_prompt: earlier conversation turns are included. OK\")\n\n    # Two synthetic AI replies stand in for the live AI here, because we\n    # can't force the real AI to misbehave inside an automated test - one\n    # reply correctly admits it doesn't know, the other is what a normal\n    # (or a confidently WRONG, hallucinated) answer looks like. Notice\n    # looks_unanswered() cannot tell \"answered_reply\" apart from a\n    # hallucination that happens to read fluently - only a human checking\n    # a real off-FAQ question against the live bot can catch that. See\n    # the guide's troubleshooting entry on hallucination for that manual\n    # verification step.\n    honest_reply = \"I don't have that information in the FAQ - please contact us directly.\"\n    answered_reply = \"We're open Tuesday to Sunday, 8am to 6pm.\"\n\n    assert looks_unanswered(honest_reply) is True\n    assert looks_unanswered(answered_reply) is False\n    print(\"looks_unanswered: tells an 'I don't know' reply apart from an answered one. OK\")\n\n    print(\"\\nAll chatbot.py checks passed.\")\n",
-          "verify": "Run `python chatbot.py` - it should print exactly:\n\nbuild_prompt: FAQ text and question are both present. OK\nbuild_prompt: earlier conversation turns are included. OK\nlooks_unanswered: tells an 'I don't know' reply apart from an answered one. OK\n\nAll chatbot.py checks passed.",
-          "instruction": "Create `chatbot.py` with this code:"
-        }
-      ],
-      "title": "Build the chatbot's brain",
-      "number": 3,
-      "goFurther": "Change the wording in SYSTEM_INSTRUCTIONS to answer in a different tone (more formal, or bilingual) and see how the AI's real answers change.",
-      "description": "This is where the actual defense against hallucination lives: the instructions you write here decide whether the bot admits it doesn't know something or confidently invents an answer."
-    },
-    {
-      "time": "40 min",
-      "steps": [
-        {
-          "prompt": "\"\"\"\nStep 3 of the Simple FAQ Chatbot - the screen you actually use.\n\nRun it with:      streamlit run app.py\nStop it with:     Ctrl+C in the terminal\n\nStreamlit reruns this whole file top-to-bottom every time you send a\nmessage. That is normal - it's why the FAQ text and chat history both\nlive in st.session_state below, instead of a plain variable, which would\nreset to empty on every single message.\n\"\"\"\n\nimport streamlit as st\n\nfrom chatbot import ask_faq_bot, looks_unanswered\nfrom faq import load_faq\nfrom sdt_ai import AIError\n\nst.set_page_config(page_title=\"FAQ Assistant\", page_icon=\"💬\")\n\nst.title(\"💬 FAQ Assistant\")\nst.caption(\"Ask a question - answers come only from the FAQ this bot was given.\")\n\n# Load the FAQ once per session, not on every rerun. It's the same file\n# every time, so re-reading it on every keystroke is wasted disk work -\n# cheap on its own, but there's no reason to pay it repeatedly.\nif \"faq_text\" not in st.session_state:\n    try:\n        st.session_state.faq_text = load_faq()\n    except (FileNotFoundError, ValueError) as problem:\n        st.error(str(problem))\n        st.stop()\n\nif \"messages\" not in st.session_state:\n    st.session_state.messages = []\n\n# Replay the conversation so far on every rerun - without this, the chat\n# window would appear empty again after every message you send, even\n# mid-conversation.\nfor message in st.session_state.messages:\n    with st.chat_message(message[\"role\"]):\n        st.write(message[\"content\"])\n\nquestion = st.chat_input(\"Ask a question about the business...\")\n\nif question:\n    st.session_state.messages.append({\"role\": \"user\", \"content\": question})\n    with st.chat_message(\"user\"):\n        st.write(question)\n\n    answer = None\n    with st.chat_message(\"assistant\"):\n        try:\n            # Send only the last 6 messages as history - enough for the AI\n            # to follow a quick \"what about weekends?\" follow-up, without\n            # resending an ever-growing transcript that costs more tokens\n            # with every single turn of a long conversation.\n            with st.spinner(\"Checking the FAQ...\"):\n                answer = ask_faq_bot(\n                    st.session_state.faq_text,\n                    question,\n                    history=st.session_state.messages[:-1][-6:],\n                )\n            st.write(answer)\n\n            if looks_unanswered(answer):\n                st.info(\n                    \"Didn't find what you needed? Contact the business \"\n                    \"directly using the details in the FAQ.\"\n                )\n        except AIError as problem:\n            # These messages are written to be read - show them as they are.\n            st.error(str(problem))\n\n    if answer is not None:\n        st.session_state.messages.append({\"role\": \"assistant\", \"content\": answer})\n",
-          "verify": "Run `streamlit run app.py`. The terminal should print \"You can now view your Streamlit app in your browser\" with nothing that looks like an error below it, and a browser tab should open showing \"💬 FAQ Assistant\". Ask \"What are your opening hours?\" - the reply should mention Tuesday to Sunday, 8am to 7pm, matching faq.md.",
-          "instruction": "Create `app.py` with this code:"
-        },
-        {
-          "prompt": "echo .env > .gitignore\ngit init\ngit add app.py chatbot.py faq.py faq.md sdt_ai.py requirements.txt .gitignore\ngit commit -m \"Simple FAQ Chatbot\"\ngit branch -M main\ngit remote add origin https://github.com/<your-username>/<your-repo>.git\ngit push -u origin main\n\n# .gitignore stops .env - and your real key inside it - from ever being\n# tracked by git. Run \"git status\" before pushing and confirm .env does\n# NOT appear as a file git wants to add.\n\nThen on share.streamlit.io: click \"New app\", pick your repo and branch, set the main file path to app.py, and click Deploy. Once it's building, open your app's Settings -> Secrets and paste:\n\nAI_PROVIDER = \"gemini\"\nGEMINI_API_KEY = \"your_real_key_here\"\n\n# ...or, if using your own Claude/Anthropic key instead, comment the two lines above out and use:\n# AI_PROVIDER = \"claude\"\n# ANTHROPIC_API_KEY = \"your_real_key_here\"\n\n(sdt_ai.py reads AI_PROVIDER and your key from the environment, and Streamlit exposes anything you put in Secrets as an environment variable the same way it exposes a local .env - so no code change is needed to deploy.)",
-          "verify": "Visit your live Streamlit Cloud URL and ask the same FAQ question you tested locally - you should get an answer the same way it worked on your machine. (The first load after a period of inactivity can take about 30 seconds on the free tier - that's normal, not a bug.)",
-          "instruction": "Push your project to GitHub, then deploy it on Streamlit Cloud:"
-        }
-      ],
-      "title": "Build the chat interface and put it online",
-      "number": 4,
-      "goFurther": "🛠️ Break it on purpose: ask the deployed bot something totally unrelated to the business, like \"What's the capital of France?\". It should decline rather than guess - if it doesn't, tighten the wording in SYSTEM_INSTRUCTIONS (chatbot.py) and redeploy.",
-      "description": "Turn the chatbot function into something a real customer could actually talk to, with memory of what they already asked, then make it reachable by anyone with a link."
-    },
-    {
-      "time": "30 min",
-      "steps": [
-        {
-          "prompt": "def log_unanswered(question, answer, path=\"unanswered.log\"):\n    \"\"\"\n    Appends a line to a text file whenever the bot admits it doesn't know\n    an answer, so you can review real gaps in your FAQ later without\n    reading through every conversation by hand.\n\n    TODO 1: only write anything when looks_unanswered(answer) is True.\n    TODO 2: write one line per entry, formatted as:  question <TAB> answer\n    TODO 3: open the file in append mode, so earlier entries aren't erased.\n    \"\"\"\n    # Your code here\n    pass\n",
-          "verify": "Run `python -c \"from chatbot import log_unanswered; log_unanswered('a test question', 'I do not have that information.'); print(open('unanswered.log').read())\"` - it should print a line containing \"a test question\".",
-          "instruction": "Add this skeleton to chatbot.py and finish the three TODOs so unanswered questions get logged to a file for later review:"
-        },
-        {
-          "prompt": "# <Your Business Name> - Frequently Asked Questions\n\n## <A real question your customers actually ask>\n<A real, specific answer - not a placeholder>\n\n## <Another real question>\n<Another real answer>\n\n# Add at least 3 more Q&A pairs of your own below.\n# (Or, if you don't have a business in mind yet, add 3 more pairs to\n# Golden Crust Bakery's FAQ instead - just keep the same \"## question\"\n# format so faq.py's loader treats them the same way.)\n",
-          "verify": "Ask a question with no answer in your FAQ. The reply must say it does not know - not invent a plausible-sounding answer. Then ask a question that IS covered, and confirm the reply matches what's actually written in your faq.md, not a guess.",
-          "instruction": "Now make the FAQ genuinely yours. Replace faq.md's content with this starting shape, filled in for a real business you know (or extend Golden Crust Bakery's FAQ with 3 more entries of your own):"
-        }
-      ],
-      "title": "Challenge: make it actually yours",
-      "number": 5,
-      "phaseLabel": "🎯 Challenge",
-      "description": "The real test of whether you understand this tool isn't whether the demo runs - it's whether it still correctly refuses to answer once you point it at content you wrote yourself, and whether you can extend it without breaking that guarantee."
-    }
+  "model": "Claude chat (free account), optional Gemini",
+  "totalTime": "75 min",
+  "buildCount": 8,
+  "whatYouNeed": [
+    "A laptop or desktop computer (phones make saving and uploading files hard)",
+    "A free Claude account at claude.ai",
+    "Your business name, contact details and the questions customers ask you most",
+    "A free Netlify account to put the bot online (Build 6)",
+    "Optional, for Build 8 only: a free Gemini API key and a free Cloudflare account"
   ],
   "outcomes": [
-    "Turn a real FAQ document into an AI's entire knowledge base - no database required",
-    "Write a system prompt that makes an AI say \"I don't know\" instead of guessing",
-    "Build a working multi-turn chat interface with Streamlit",
-    "Call the AI through one small helper file (sdt_ai.py) that works with your own free Gemini key or your own Claude key",
-    "Test prompt-construction and reply-detection logic offline, for free",
-    "Deploy a Python chat app live on the web for free"
+    "Plan an FAQ that a bot can match, with short answers and the extra words people use",
+    "Get Claude to build a complete chatbot as one index.html file, with no coding",
+    "Test it like a real customer and have Claude fix what it misses",
+    "Publish it free on Netlify and open it from your phone",
+    "Put it on your website or share the link anywhere",
+    "Optionally add Gemini for unusual wording, still answering only from your FAQ"
   ],
-  "portfolio": "You built and can demo a live chat interface that answers only from a document you provided, and correctly declines when a question falls outside it - a pattern used in real customer-support tools. Share a screenshot of it correctly refusing an out-of-scope question alongside one it answers well.",
-  "totalTime": "135 min",
-  "buildCount": 5,
-  "whatYouNeed": [
-    "A free Gemini API key (aistudio.google.com/apikey) OR your own Claude/Anthropic API key (console.anthropic.com/settings/keys)",
-    "Python 3.10+ installed",
-    "A free Streamlit Cloud account (share.streamlit.io) - only needed for the deploy step"
+  "builds": [
+    {
+      "number": 1,
+      "title": "Get ready",
+      "time": "10 min",
+      "description": "You will not write code. You copy a prompt, paste it to Claude, save what Claude gives you, and put it online.",
+      "steps": [
+        {
+          "instruction": "Know what you are building. An FAQ chatbot is a small chat window on a web page. A visitor types \"do you deliver?\" and the bot replies with the answer you wrote. It only knows what you give it, so it cannot invent answers. If it does not know, it says so and shows your contact details.",
+          "callout": {
+            "variant": "tip",
+            "text": "The whole bot is **one file** named **index.html**. A web page is just a text file that browsers can display. **Claude writes that file for you** from a prompt, and you then publish it free with Netlify."
+          }
+        },
+        {
+          "instruction": "Learn the words you will see in this guide.",
+          "table": {
+            "header": [
+              "Word",
+              "Meaning"
+            ],
+            "rows": [
+              [
+                "Prompt",
+                "The message you send Claude. In this guide you copy prompts from the boxes."
+              ],
+              [
+                "Browser",
+                "Chrome, Safari, Edge or Firefox."
+              ],
+              [
+                "Text editor",
+                "A program for plain text, like Notepad."
+              ],
+              [
+                "Host / deploy",
+                "Put your file on the internet so anyone can open it by link."
+              ],
+              [
+                "Embed",
+                "Show your chatbot inside another website."
+              ]
+            ]
+          }
+        },
+        {
+          "instruction": "Check you have a laptop or desktop computer, and that you can chat with Claude at claude.ai. A free account is fine.",
+          "verify": "You can open claude.ai on your computer and start a new chat."
+        },
+        {
+          "instruction": "On your Desktop, create a folder named my-faq-bot. Everything for this build goes in it."
+        },
+        {
+          "instruction": "Turn on file extensions. The extension is the end of a file name, like .html. Hidden extensions cause confusing mistakes later.",
+          "table": {
+            "header": [
+              "Computer",
+              "How to show extensions"
+            ],
+            "rows": [
+              [
+                "Windows 11",
+                "Open the folder, click **View**, then **Show**, then tick **File name extensions**."
+              ],
+              [
+                "Windows 10",
+                "Open the folder, click **View**, tick **File name extensions**."
+              ],
+              [
+                "Mac",
+                "In Finder go to **Finder**, **Settings**, **Advanced**, tick **Show all filename extensions**."
+              ]
+            ]
+          },
+          "verify": "Files in your folder now show their endings, such as .txt or .html."
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "title": "Plan your FAQ on paper",
+      "time": "15 min",
+      "description": "The bot is only as good as the content you give it, so do this first.",
+      "steps": [
+        {
+          "instruction": "Collect questions. Check your WhatsApp chats, emails and DMs for what customers ask. Aim for 15 to 30. Starting something new? Imagine a first-time visitor."
+        },
+        {
+          "instruction": "Write each answer in 1 to 3 short sentences with real facts: prices, times, addresses, deadlines."
+        },
+        {
+          "instruction": "Add extra words for each one. These are other words people might use. For \"Do you deliver?\" the extras are delivery shipping dispatch send bring fee. This is what makes the bot feel smart.",
+          "callout": {
+            "variant": "tip",
+            "text": "No extras yet? Skip them. In Build 3 you can tell Claude to **invent the extra words for you**."
+          }
+        },
+        {
+          "instruction": "Write everything in a Notepad file in this layout, starting with your business name and contact details:",
+          "prompt": "Business name: Golden Crust Bakery\nContact: Call 0803-000-0000 or email hello@example.com\n\nQ: Do you deliver?\nA: Yes, within the city for a flat 1,500 fee.\nExtras: delivery shipping dispatch send bring fee\n\nQ: What are your opening hours?\nA: Tuesday to Sunday, 8 AM to 7 PM. Closed Mondays.\nExtras: open close time schedule hours monday",
+          "promptKind": "example",
+          "callout": {
+            "variant": "warning",
+            "text": "Do not include private customer information or passwords. Anyone can read what is in the file."
+          },
+          "verify": "You have a Notepad file with your business name, contact details, and at least 10 questions and answers."
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "title": "Ask Claude to build the chatbot",
+      "time": "10 min",
+      "description": "One prompt turns your FAQ into a complete chatbot. It matches questions in plain JavaScript, so it needs no API key and works offline.",
+      "steps": [
+        {
+          "instruction": "Open a new chat with Claude."
+        },
+        {
+          "instruction": "Click Copy on the prompt below and paste it into the message box.",
+          "prompt": "Build me a complete FAQ chatbot as ONE self-contained HTML file (no external libraries, no API keys, works offline, free). I am a complete beginner, so keep it simple and put everything I need to edit in one clearly labelled section at the top of the script.\n\nRequirements:\n1. At the top of the script, a section labelled \"EDIT THIS SECTION ONLY\" with: BUSINESS_NAME, CONTACT (shown when the bot cannot answer), a FAQS list where each entry has q (question), a (answer) and k (extra words people might use, including synonyms and slang), PROXY_URL (empty string for now, for an optional AI upgrade later) and CONFIDENCE (a number 0 to 1, default 0.34).\n2. Matching with plain JavaScript: lowercase the visitor's text, remove common filler words, simple stemming (strip s, es, ed, ing), then score each FAQ by overlap with its question, its extra words, and its answer. Show the best answer only if its score is above CONFIDENCE.\n3. If no answer is confident enough: say \"I'm not sure about that one\", show CONTACT, and offer up to 3 of the closest questions as tappable buttons. The bot must NEVER guess or invent answers.\n4. A friendly welcome message and 4 tappable quick-question buttons.\n5. Save every unanswered question to the browser's localStorage, with a small \"Copy list of unanswered questions\" button at the bottom.\n6. If PROXY_URL is not empty and the local match is not confident, POST {question, faqs:[{q,a}]} to PROXY_URL as JSON and show the \"answer\" field from the reply if there is one. If that fails, fall back to the normal \"not sure\" message.\n7. Clean, modern, mobile-friendly design with a chat window, message bubbles, light and dark mode, and large readable text. Use textContent (not innerHTML) for visitor text.\n8. Comment the code in plain English so a beginner can follow it.\n\nPut my content into the FAQS list. Where an entry has no extra words, invent good ones. Fix any small spelling issues in my questions.\n\nGive me the result as a downloadable file named index.html if you can. If you cannot, give it as one code block.\n\nMY FAQ:\n[PASTE YOUR FAQ HERE]"
+        },
+        {
+          "instruction": "Replace the line [PASTE YOUR FAQ HERE] with everything from your Notepad file (Build 2)."
+        },
+        {
+          "instruction": "Press Enter. Claude builds the chatbot in under a minute.",
+          "verify": "Claude has replied with the chatbot, as a file or a code block."
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "title": "Save the file and try it",
+      "time": "10 min",
+      "description": "Claude gives you the chatbot either as a download or as a code block. Either way it ends up as index.html in your my-faq-bot folder.",
+      "steps": [
+        {
+          "instruction": "If Claude gave you a download, click it, then move index.html into your my-faq-bot folder."
+        },
+        {
+          "instruction": "If Claude gave you a code block, click the Copy button on the code block, then save it carefully:",
+          "table": {
+            "header": [
+              "Computer",
+              "How to save it"
+            ],
+            "rows": [
+              [
+                "Windows",
+                "Open **Notepad** and press **Ctrl + V**. Then **File**, **Save As**. Set **Save as type** to **All files**, **File name** to **index.html**, **Encoding** to **UTF-8**, and save inside **my-faq-bot**."
+              ],
+              [
+                "Mac",
+                "Open **TextEdit**, choose **Format**, then **Make Plain Text**, and paste with **Cmd + V**. Then **File**, **Save**. Name it **index.html** and click **Use .html** if asked."
+              ]
+            ]
+          }
+        },
+        {
+          "instruction": "Double-click index.html. It opens in your browser with your chatbot."
+        },
+        {
+          "instruction": "Ask a question from your list, then ask something unrelated like \"What is the capital of France?\". The bot should say it is not sure and show your contact details.",
+          "callout": {
+            "variant": "warning",
+            "text": "See code text instead of a chat window? The file was saved as **index.html.txt** or as rich text. Turn on extensions (Build 1) and save it again as above."
+          },
+          "verify": "Your chatbot opens from index.html and shows your business name."
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "title": "Test it and let Claude fix it",
+      "time": "10 min",
+      "description": "Real visitors word things differently from your list. Find the misses now and let Claude fix them.",
+      "steps": [
+        {
+          "instruction": "Ask 10 questions the way a real person would, not copied from your list. A friend can help."
+        },
+        {
+          "instruction": "Write down every question the bot got wrong or missed."
+        },
+        {
+          "instruction": "Go back to the same Claude chat, paste this prompt and fill in your list:",
+          "prompt": "Please update the chatbot. These questions were answered wrongly or not answered:\n- [question 1] (should give the answer about: [topic])\n- [question 2] (should give the answer about: [topic])\n\nAdd the words from these questions to the matching entries' extra words (k), or add new FAQ entries if needed. Give me the full updated index.html file."
+        },
+        {
+          "instruction": "Save the new file over your old index.html, refresh the browser, and test again."
+        },
+        {
+          "instruction": "Click Copy list of unanswered questions at the bottom of the bot. Paste the list into Claude with this message:",
+          "prompt": "Here are questions my bot could not answer. Draft short answers for the ones that fit an FAQ, and tell me which ones I must answer myself.",
+          "callout": {
+            "variant": "tip",
+            "title": "Too strict or too loose?",
+            "text": "Tell Claude \"Make the bot stricter\" or \"Make the bot more forgiving\". It will change the CONFIDENCE number."
+          },
+          "verify": "Your bot answers at least 8 of 10 test questions correctly."
+        }
+      ]
+    },
+    {
+      "number": 6,
+      "title": "Put it on the internet for free",
+      "time": "10 min",
+      "description": "Netlify hosts simple sites like this one for free.",
+      "steps": [
+        {
+          "instruction": "Make sure your my-faq-bot folder contains a file named exactly index.html (not index.html.txt)."
+        },
+        {
+          "instruction": "Go to app.netlify.com/drop in your browser. Sign up if asked (Google or email). This stops your site from expiring."
+        },
+        {
+          "instruction": "Drag the whole my-faq-bot folder onto the page."
+        },
+        {
+          "instruction": "After a few seconds you get a link like https://random-name.netlify.app. Open it on your phone. Your chatbot is live.",
+          "verify": "Your chatbot opens from that link on your phone."
+        },
+        {
+          "instruction": "Optional: in Netlify, open Site configuration and change the site name to something nicer, like mybusiness-faq."
+        },
+        {
+          "instruction": "To update it later, ask Claude for changes (the Build 5 prompt), save the new index.html, then drag the folder onto your site's Deploys page in Netlify. It takes about 30 seconds.",
+          "callout": {
+            "variant": "tip",
+            "text": "Other free hosts that work the same way: GitHub Pages and Cloudflare Pages."
+          }
+        }
+      ]
+    },
+    {
+      "number": 7,
+      "title": "Use it on your website or anywhere",
+      "time": "10 min",
+      "description": "Three ways to put the bot in front of customers. Use your own Netlify link wherever you see your-site.netlify.app.",
+      "steps": [
+        {
+          "instruction": "Option A: show it inside your website. Copy this code and replace the address with your own Netlify link:",
+          "prompt": "<iframe src=\"https://your-site.netlify.app\"\n  style=\"width:100%;max-width:420px;height:600px;border:0;border-radius:12px\"\n  title=\"FAQ chatbot\"></iframe>",
+          "promptKind": "code"
+        },
+        {
+          "instruction": "Paste the code in the right place for your website builder:",
+          "table": {
+            "header": [
+              "Website builder",
+              "Where to paste"
+            ],
+            "rows": [
+              [
+                "WordPress",
+                "Edit a page, add a **Custom HTML** block, paste."
+              ],
+              [
+                "Wix",
+                "Add, then Embed Code, then **Embed a Site**, enter your link."
+              ],
+              [
+                "Squarespace",
+                "Add a **Code** block, paste."
+              ],
+              [
+                "Hand-written HTML",
+                "Paste inside the **<body>**."
+              ]
+            ]
+          },
+          "callout": {
+            "variant": "warning",
+            "text": "If nothing shows, your plan may block embeds. Use Option B."
+          }
+        },
+        {
+          "instruction": "Option B: share the link. Put it in your WhatsApp status and business profile, Instagram bio, email signature, Facebook buttons or invoices. For print, make a QR code of the link with any free QR generator."
+        },
+        {
+          "instruction": "Option C: use your own web address. If you own a domain, open Domain management in Netlify and add something like faq.yourbusiness.com. Netlify shows the exact steps."
+        }
+      ],
+      "goFurther": "Keep it fresh every week: copy the unanswered list and ask Claude to add the useful ones, update prices and hours the day they change, then re-upload to Netlify."
+    },
+    {
+      "number": 8,
+      "title": "Optional upgrade: add AI",
+      "time": "20 min",
+      "description": "Skip this until Builds 1 to 7 work. AI helps with unusual wording. It still answers only from your FAQ, and if it is unavailable the bot falls back to its normal behaviour.",
+      "steps": [
+        {
+          "instruction": "Get Claude to write the helper. The helper (a Cloudflare Worker) keeps your key private. Paste this prompt into a Claude chat and save the result as worker.js.",
+          "prompt": "Write a Cloudflare Worker (a single worker.js file, ES module format) for my FAQ chatbot. It must:\n- Accept POST requests with JSON {question, faqs:[{q,a}]} and answer CORS preflight (OPTIONS).\n- Call the Google Gemini API (model \"gemini-flash-latest\", generateContent endpoint) with my key from the Worker secret env.GEMINI_API_KEY, sent in the x-goog-api-key header, never in the URL.\n- Use a system instruction that says: answer ONLY from the FAQ provided, never guess, keep it short, and reply with exactly NO_MATCH if the FAQ does not cover it.\n- Return JSON {answer: \"...\"} on success, and {} if the model says NO_MATCH, if there is any error, or if the free limit is hit.\n- Limit the question to 500 characters and the FAQ text to 12000 characters.\n- Include comments in plain English, and a comment showing where to replace the allowed website address (CORS).\nExplain in 5 short steps how to deploy it on Cloudflare Workers for free and add the secret."
+        },
+        {
+          "instruction": "Get a free key. Go to aistudio.google.com/apikey, sign in with Google, click Create API key, and copy it.",
+          "callout": {
+            "variant": "warning",
+            "text": "Never paste the key into your web page or share it. It goes only into the Worker's secret settings."
+          }
+        },
+        {
+          "instruction": "Create a free Cloudflare account at dash.cloudflare.com, then go to Workers & Pages, Create, Hello World, Deploy."
+        },
+        {
+          "instruction": "Click Edit code, delete everything, paste the contents of worker.js, and click Deploy."
+        },
+        {
+          "instruction": "In the Worker's Settings, open Variables and Secrets and add a Secret named exactly GEMINI_API_KEY with your key."
+        },
+        {
+          "instruction": "Copy the Worker's address (it looks like https://something.workers.dev)."
+        },
+        {
+          "instruction": "Connect it. Send Claude this message with your Worker's address, save the new file, upload it to Netlify, and test with an oddly worded question.",
+          "prompt": "Set PROXY_URL in my chatbot to https://something.workers.dev and give me the full updated index.html",
+          "callout": {
+            "variant": "warning",
+            "title": "Free-tier limits.",
+            "text": "Google's free tier has request limits that change over time, and content sent to it may be used to improve Google products. Keep private data out of your FAQ and check Google's rate-limits page if the AI stops answering."
+          }
+        },
+        {
+          "instruction": "Lock it down: ask Claude to show you where in worker.js to replace \"*\" with your site address, so other sites cannot use your Worker.",
+          "verify": "An oddly worded question gets a correct answer from your FAQ, and an unrelated one still gets the \"not sure\" message."
+        }
+      ]
+    }
   ],
-  "portfolioPrompt": "I built a Streamlit FAQ chatbot in Python that answers customer questions using only a business's own FAQ document (a lightweight retrieval pattern with no vector database - the FAQ is short enough to send directly in the prompt), keeps multi-turn conversation history, and is explicitly instructed to say it doesn't know rather than invent an answer when a question falls outside the FAQ.\n\nHelp me write:\n1. A 2-3 sentence project description for my portfolio site\n2. A short LinkedIn post announcing it\n3. Three resume-style bullet points describing what I built and the skills it shows"
+  "portfolio": "You built and published a working FAQ chatbot for a real business without writing code, and it answers only from your own FAQ. Share the live link, plus a screenshot of it answering a real question and correctly saying it is not sure about an unrelated one.",
+  "portfolioPrompt": "I just built an FAQ chatbot for [business name] without writing code. I planned the questions and answers, had Claude build it as a single HTML file that matches visitors' questions to my FAQ, never guesses, shows my contact details when it is not sure, and logs unanswered questions. I published it free on Netlify and [embedded it on my website / shared the link]. [Optional: I added Gemini through a Cloudflare Worker to handle unusual wording.]\n\nHelp me write:\n1. A 2-3 sentence project description for my portfolio site\n2. A short LinkedIn post announcing it\n3. Three resume-style bullet points describing what I built and the skills it shows"
 }$sess$::jsonb,
-  null,
-  null,
+  null, null,
   $tsh$[
   {
-    "fix": "This is the core risk of any tool like this: language models default to sounding helpful even when they don't actually know something, instead of admitting it. The real defense is SYSTEM_INSTRUCTIONS in chatbot.py, which explicitly tells the AI to answer ONLY from the FAQ and to say when it doesn't know - the looks_unanswered() keyword check in the same file only decides whether to show an extra nudge in the UI, it does not keep the AI honest. If you see a confidently wrong answer, tighten the wording (e.g. add \"If the FAQ does not clearly answer this, you MUST say so\") and re-test with the same off-FAQ question. You have to check this by hand against the real, live bot - an automated test can't force the live AI to misbehave on demand, which is why this isn't something chatbot.py's self-test can cover.",
-    "issue": "The chatbot confidently answers a question that isn't actually in your FAQ (hallucination)"
+    "issue": "I see code instead of a chat window",
+    "fix": "The file was saved as .txt or as rich text. Save it again with the Build 4 settings."
   },
   {
-    "fix": "Your terminal is likely using a different Python environment than the one you installed Streamlit into. Reinstall with `python -m pip install streamlit` and run it with `python -m streamlit run app.py`.",
-    "issue": "\"streamlit: command not found\" in the terminal"
+    "issue": "The page is blank",
+    "fix": "Tell Claude: \"My chatbot page is blank. Here is the file,\" and paste it. Ask for a fixed version."
   },
   {
-    "fix": "Conversation history needs to live in st.session_state, not a plain local variable - a local variable resets every time Streamlit reruns the script after each message.",
-    "issue": "The chatbot forgets earlier messages in the conversation"
+    "issue": "Netlify says \"Page not found\"",
+    "fix": "The file must be named exactly index.html and sit directly in the folder you dropped."
   },
   {
-    "fix": "faq.py looks for faq.md next to its own file location, not your terminal's current folder - so this usually means faq.md was renamed, moved, or the two files ended up in different folders. Keep faq.md in the same folder as faq.py.",
-    "issue": "faq.py raises FileNotFoundError even though faq.md clearly exists"
+    "issue": "Changes don't show",
+    "fix": "Save, then refresh. Press Ctrl + F5 to force it."
   },
   {
-    "fix": "Your .env file is either missing, misnamed, or not in the same folder as sdt_ai.py. Create a file named exactly .env (not .env.example or .env.txt), and set AI_PROVIDER plus its matching key (GEMINI_API_KEY for the free Gemini path, or ANTHROPIC_API_KEY for your own Claude account).",
-    "issue": "Getting an AIError that says \"No AI provider configured\""
+    "issue": "Wrong answers or too many \"not sure\" replies",
+    "fix": "Use the Build 5 prompt, or tell Claude to make the bot stricter or more forgiving."
+  },
+  {
+    "issue": "The AI doesn't answer",
+    "fix": "The Worker secret must be named exactly GEMINI_API_KEY. The bot still works without it."
+  },
+  {
+    "issue": "The embed shows nothing",
+    "fix": "Your website plan may block embeds. Share the direct link instead."
+  },
+  {
+    "issue": "Stuck on a step",
+    "fix": "Tell Claude the build and step number and what you see on your screen, and ask it to walk you through the fix."
   }
 ]$tsh$::jsonb,
   $res$[
   {
-    "url": "https://docs.streamlit.io/develop/api-reference/chat",
-    "title": "Streamlit Chat Elements"
+    "title": "Claude (free account)",
+    "url": "https://claude.ai"
   },
   {
-    "url": "https://docs.streamlit.io/develop/api-reference/caching-and-state/st.session_state",
-    "title": "Streamlit Session State"
+    "title": "Netlify Drop: publish a folder by dragging it",
+    "url": "https://app.netlify.com/drop"
   },
   {
-    "url": "https://docs.streamlit.io/deploy/streamlit-community-cloud",
-    "title": "Streamlit Community Cloud Deployment"
+    "title": "Netlify documentation",
+    "url": "https://docs.netlify.com"
+  },
+  {
+    "title": "Google AI Studio: create a Gemini API key",
+    "url": "https://aistudio.google.com/apikey"
+  },
+  {
+    "title": "Cloudflare Workers documentation",
+    "url": "https://developers.cloudflare.com/workers/"
   }
 ]$res$::jsonb,
   'builder1',
-  '2026-09-26 publish: shared sdt_ai.py updated (gemini-flash-latest with thinking turned down, readable errors for retired models and empty answers, Gemini key sent in a header), Python/venv setup steps, current HubSpot/Airtable/DataForSEO/ngrok/Railway/Buffer steps, code fixes. No credits: students use their own Gemini or Claude key.'
+  $note$Replace the Python/Streamlit guide with the no-code "Get Claude to build your FAQ chatbot, then publish it for free" guide (Claude writes one index.html, Netlify hosts it, optional Gemini via a Cloudflare Worker). Content from "Build Your FAQ Chatbot with Claude: Complete Beginner Guide.html"; uses step.table / step.callout / step.promptKind (code, example).$note$
 )
 on conflict (course_id) do update set
-  what_you_build = excluded.what_you_build, what_you_learn = excluded.what_you_learn, session = excluded.session,
-  starter_code = excluded.starter_code, test_it_out = excluded.test_it_out, troubleshooting = excluded.troubleshooting,
-  resources = excluded.resources, tier = excluded.tier, change_note = excluded.change_note, updated_at = now();
+  what_you_build = excluded.what_you_build,
+  what_you_learn = excluded.what_you_learn,
+  session = excluded.session,
+  starter_code = excluded.starter_code,
+  test_it_out = excluded.test_it_out,
+  troubleshooting = excluded.troubleshooting,
+  resources = excluded.resources,
+  tier = excluded.tier,
+  change_note = excluded.change_note, updated_at = now();
