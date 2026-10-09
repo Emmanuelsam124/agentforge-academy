@@ -15,6 +15,13 @@ values (
   "model": "Gemini (free API key) in Google Apps Script",
   "totalTime": "60 min",
   "buildCount": 6,
+  "video": {
+    "url": "/videos/calendar-task-prioritizer-walkthrough.mp4",
+    "title": "Watch the full build",
+    "duration": "16 min",
+    "text": "Follow along as every step is done on screen, from creating the key to the first plan email.",
+    "note": "The email in the video uses an earlier purple design. The code in this guide sends the blue version."
+  },
   "whatYouNeed": [
     "A Google account with Google Calendar and Google Tasks (the account whose calendar you want planned)",
     "A free Gemini API key from aistudio.google.com/apikey (no credit card needed)",
@@ -405,7 +412,7 @@ values (
   }
 ]$res$::jsonb,
   'builder1',
-  $note$Replace the Python/OAuth guide with the Google Apps Script + Gemini Free AI Morning Planner (nothing to install; email restyled to Social Dev blue). Content from morning-planner-guide-v2.html; uses step.table / step.callout / step.promptKind (SessionGuide).$note$
+  $note$Replace the Python/OAuth guide with the Google Apps Script + Gemini Free AI Morning Planner (nothing to install; email restyled to Social Dev blue). Content from morning-planner-guide-v2.html; uses step.table / step.callout / step.promptKind (SessionGuide). 2026-10-09: adds session.video, the walkthrough recording.$note$
 )
 on conflict (course_id) do update set
   what_you_build = excluded.what_you_build,

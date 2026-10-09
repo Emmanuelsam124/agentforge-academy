@@ -1,13 +1,16 @@
 import { useState } from 'react';
-import { Clock, Layers, Bot, Sparkles, ListChecks, CheckCircle2, Compass, Award, ChevronDown, AlertTriangle, Wrench } from 'lucide-react';
+import { Clock, Layers, Bot, Sparkles, ListChecks, CheckCircle2, Compass, Award, ChevronDown, AlertTriangle, Wrench, Play, ExternalLink } from 'lucide-react';
 import PromptBox from './PromptBox';
 import { Callout, GuideTable } from './guides/GuideParts';
 
 // Optional per-step fields beyond instruction / prompt / verify, all backwards
 // compatible (a step without them renders exactly as before):
 //   promptKind: 'code'                   -> monospace "Code to paste" box
+//               'example'                -> monospace "Example" box
 //   table:   { caption?, header[], rows[][] }
 //   callout: { variant: 'tip'|'warning', title?, text }   (**bold** allowed)
+// Optional on the session itself:
+//   video: { url, title?, duration?, text?, note? }  -> walkthrough link card
 
 export default function SessionGuide({ session, troubleshooting }) {
   // Multi-guide: session is an array of guide objects
@@ -67,6 +70,8 @@ function GuideContent({ session, troubleshooting }) {
         <Badge icon={Layers} label={`${session.buildCount} builds`} />
         <Badge icon={Bot} label={session.model} />
       </div>
+
+      {session.video?.url && <VideoLink video={session.video} />}
 
       {/* By the end of this session */}
       <section className="rounded-xl border-[1.5px] border-green/25 bg-[#EAFAF1] dark:bg-green/10 p-5">
@@ -135,6 +140,34 @@ function GuideContent({ session, troubleshooting }) {
 
 // ── Sub-components ────────────────────────────────────────────────────────────
 
+// A plain link to the recording, opened in a new tab so the browser's own
+// player handles it and the student keeps their place in the guide.
+function VideoLink({ video }) {
+  return (
+    <a
+      href={video.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group flex items-center gap-4 rounded-xl border border-brand/25 bg-white dark:bg-[#131E2F] p-4 hover:border-brand/50 hover:bg-[#F6F8FB] dark:hover:bg-brand/10 transition-colors"
+    >
+      <span className="flex-shrink-0 w-11 h-11 rounded-full bg-brand text-white flex items-center justify-center group-hover:bg-brand-deep transition-colors">
+        <Play className="w-5 h-5 ml-0.5" fill="currentColor" aria-hidden="true" />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block text-[10px] font-bold uppercase tracking-widest text-link mb-0.5">Video walkthrough</span>
+        <span className="block font-bold text-ink text-sm sm:text-base">
+          {video.title || 'Watch the full build'}
+          {video.duration && <span className="font-semibold text-body"> · {video.duration}</span>}
+        </span>
+        {video.text && <span className="block text-sm text-body mt-0.5">{video.text}</span>}
+        {video.note && <span className="block text-xs text-body mt-1.5">{video.note}</span>}
+        <span className="sr-only"> (opens in a new tab)</span>
+      </span>
+      <ExternalLink className="w-4 h-4 text-link flex-shrink-0" aria-hidden="true" />
+    </a>
+  );
+}
+
 function PortfolioPromptDropdown({ prompt }) {
   const [open, setOpen] = useState(false);
   return (
@@ -188,7 +221,7 @@ function BuildCard({ build }) {
               <p className="text-sm text-body-strong leading-relaxed">
                 <span className="font-bold text-link"><span>{i + 1}</span>.</span> <span>{step.instruction}</span>
               </p>
-              {step.prompt && <PromptBox text={step.prompt} variant={step.promptKind === 'code' ? 'code' : 'prompt'} />}
+              {step.prompt && <PromptBox text={step.prompt} variant={step.promptKind} />}
               {step.table && <GuideTable block={step.table} className="" />}
               {step.callout && <Callout block={step.callout} className="" />}
               {step.verify && (
