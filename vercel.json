@@ -57,7 +57,7 @@
         { "key": "Access-Control-Allow-Origin", "value": "https://socialdevtechnologies.com" },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'sha256-VPPDARgqKRNqsVuQJlRWFH9sv3GcyUFdInDb6z2Akds=' https://www.googletagmanager.com https://connect.facebook.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://www.googletagmanager.com https://connect.facebook.net https://www.facebook.com https://*.google-analytics.com https://*.analytics.google.com; frame-src https://www.youtube.com https://*.zoom.us; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
+          "value": "default-src 'self'; script-src 'self' 'sha256-uVUD49vG7TDHbdWcXnPRPT8Fl0DNEhUTOYjOpQbdAKo=' https://www.googletagmanager.com https://connect.facebook.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://www.googletagmanager.com https://connect.facebook.net https://www.facebook.com https://*.google-analytics.com https://*.analytics.google.com; frame-src https://www.youtube.com https://*.zoom.us; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
         }
       ]
     }
