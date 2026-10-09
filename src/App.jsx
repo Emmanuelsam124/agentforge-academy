@@ -89,7 +89,7 @@ function AppShell() {
   const location = useLocation();
   const isWebinar = location.pathname === '/webinar';
 
-  // Meta Pixel (public/meta-pixel-init.js) reports the first page load itself.
+  // Meta Pixel (inline script in index.html) reports the first page load itself.
   // This is a single-page app, so every later route change needs its own PageView.
   const pixelFirstRoute = useRef(true);
   useEffect(() => {

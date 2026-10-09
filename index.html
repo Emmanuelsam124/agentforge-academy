@@ -27,7 +27,31 @@
          queued into dataLayer immediately either way, so nothing is lost
          for anyone who stays on the page. -->
     <script defer src="/gtag-init.js"></script>
-    <script defer src="/meta-pixel-init.js"></script>
+    <!-- Meta Pixel — Meta's standard base code, inline so Meta's own tooling
+         (Events Manager "Set up events", Pixel Helper) can see it in the page
+         source. The CSP has no script-src 'unsafe-inline', so this one script
+         is allowed by its sha256 hash in vercel.json instead; `npm run build`
+         runs scripts/check-pixel-csp.mjs and fails if the two ever drift
+         apart (editing even one character of the script changes the hash).
+         The only change from Meta's snippet is data-runtime-injected on the
+         script tag it creates, so scripts/prerender.mjs strips fbevents.js
+         from committed snapshots. The noscript fallback is the first thing
+         inside the body. SPA route changes are reported by AppShell in
+         src/App.jsx. (Keep the literal body-open tag out of comments up here:
+         scripts/inject-home.mjs splices the homepage in at the first one.) -->
+    <script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.setAttribute('data-runtime-injected','1');
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1148513550838930');
+fbq('track', 'PageView');
+</script>
 
     <!-- Fonts are self-hosted (public/fonts, @font-face in src/index.css), so
          there is no third-party font request and nothing render-blocking: the
