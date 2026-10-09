@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node scripts/inline-css.mjs && node scripts/inject-home.mjs",
+    "build": "vite build && node scripts/inline-css.mjs && node scripts/inject-home.mjs && node scripts/check-pixel-csp.mjs",
     "prerender": "node scripts/prerender.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
