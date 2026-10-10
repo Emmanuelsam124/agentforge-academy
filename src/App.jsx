@@ -22,6 +22,7 @@ import AIAgentMastery from './pages/AIAgentMastery';
 import Builder1Guide from './pages/Builder1Guide';
 import PortfolioSessionGuide from './pages/PortfolioSessionGuide';
 import DailyNewsSessionGuide from './pages/DailyNewsSessionGuide';
+import AIAgentMasterySessionGuide from './pages/AIAgentMasterySessionGuide';
 import WebinarSurvey from './pages/WebinarSurvey';
 // /news and /guides are the one group of PUBLIC routes safe to lazy-load.
 // The eager-import rule above exists because a lazy component introduces a
@@ -236,6 +237,7 @@ function AppShell() {
             <Route path="/builder-1-guide" element={<Builder1Guide />} />
             <Route path="/session/build-real-product" element={<PortfolioSessionGuide />} />
             <Route path="/session/daily-news-agent" element={<DailyNewsSessionGuide />} />
+            <Route path="/session/ai-chief-of-staff" element={<AIAgentMasterySessionGuide />} />
             <Route path="/webinar-survey" element={<WebinarSurvey />} />
             <Route path="/news" element={<Suspense fallback={null}><News /></Suspense>} />
             <Route path="/news/:slug" element={<Suspense fallback={null}><NewsArticle /></Suspense>} />
