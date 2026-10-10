@@ -17,6 +17,7 @@ values (
   "buildCount": 6,
   "video": {
     "url": "/videos/calendar-task-prioritizer-walkthrough.mp4",
+    "poster": "/videos/calendar-task-prioritizer-walkthrough-poster.jpg",
     "title": "Watch the full build",
     "duration": "16 min",
     "text": "Follow along as every step is done on screen, from creating the key to the first plan email.",
@@ -412,7 +413,7 @@ values (
   }
 ]$res$::jsonb,
   'builder1',
-  $note$Replace the Python/OAuth guide with the Google Apps Script + Gemini Free AI Morning Planner (nothing to install; email restyled to Social Dev blue). Content from morning-planner-guide-v2.html; uses step.table / step.callout / step.promptKind (SessionGuide). 2026-10-09: adds session.video, the walkthrough recording.$note$
+  $note$Replace the Python/OAuth guide with the Google Apps Script + Gemini Free AI Morning Planner (nothing to install; email restyled to Social Dev blue). Content from morning-planner-guide-v2.html; uses step.table / step.callout / step.promptKind (SessionGuide). 2026-10-09: adds session.video, the walkthrough recording. 2026-10-10: video.poster, now played in the page.$note$
 )
 on conflict (course_id) do update set
   what_you_build = excluded.what_you_build,
