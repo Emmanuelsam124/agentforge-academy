@@ -84,9 +84,12 @@ export function useCommunityMessages(channelId) {
           supabase.rpc('community_mark_channel_read', { p_channel_id: channelId });
         },
       )
+      // No channel_id filter here: Supabase can't filter DELETE events, and with
+      // RLS on the old row carries only its id, so a filtered DELETE subscription
+      // never fires at all. Ids from other rooms just don't match anything.
       .on(
         'postgres_changes',
-        { event: 'DELETE', schema: 'public', table: 'community_messages', filter: `channel_id=eq.${channelId}` },
+        { event: 'DELETE', schema: 'public', table: 'community_messages' },
         ({ old: row }) => {
           setMessages((prev) => prev.filter((m) => m.id !== row.id));
         },
@@ -115,10 +118,19 @@ export function useCommunityMessages(channelId) {
     [channelId],
   );
 
-  const deleteMessage = useCallback(
-    async (id) => supabase.from('community_messages').delete().eq('id', id),
-    [],
-  );
+  // Removes the message locally once the server confirms, rather than waiting
+  // for the Realtime echo. `.select()` matters: a delete that RLS refuses still
+  // answers 204 with no error, so "a row came back" is the only real success.
+  const deleteMessage = useCallback(async (id) => {
+    const { data, error: deleteErr } = await supabase
+      .from('community_messages')
+      .delete()
+      .eq('id', id)
+      .select('id');
+    if (deleteErr || !data?.length) return { error: deleteErr ?? new Error('Message was not deleted') };
+    setMessages((prev) => prev.filter((m) => m.id !== id));
+    return { error: null };
+  }, []);
 
   return { messages, members, memberByUserId, loading, error, sendMessage, deleteMessage };
 }
